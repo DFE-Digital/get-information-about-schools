@@ -4,14 +4,15 @@ using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Filters;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
     [Authorize]
-    public class EstablishmentApiController : ApiController
+    public class EstablishmentApiController : ControllerBase
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly ICachedLookupService _lookupService;
@@ -23,7 +24,7 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         [Route("api/establishment/{urn:int}"), HttpGet, EdubaseAuthorize]
-        public async Task<IHttpActionResult> Get(int urn)
+        public async Task<IActionResult> Get(int urn)
         {
             var retVal = await _establishmentReadService.GetAsync(urn, User);
             if (retVal.ReturnValue == null) return NotFound();

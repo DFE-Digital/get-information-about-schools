@@ -13,6 +13,7 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Web.UI.Models.Search;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -24,7 +25,6 @@ namespace Edubase.Web.UI.Controllers
     using Services.Texuna.ChangeHistory.Models;
     using System;
     using System.Threading.Tasks;
-    using System.Web.Mvc;
 
     [RoutePrefix("ChangeHistory"), Route("{action=index}"), EdubaseAuthorize]
     public class ChangeHistoryController : Controller
@@ -47,13 +47,13 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route(Name = "ChangeHistoryCriteria")]
         public ActionResult Index(ChangeHistoryViewModel viewModel)
         {
-            return View("Index", viewModel);    
+            return View("Index", viewModel);
         }
 
         [HttpGet, Route("Search", Name = "ChangeHistorySearch")]
         public ActionResult SearchChangeHistory(ChangeHistoryViewModel viewModel)
         {
-            if (viewModel.SearchType == eSearchType.Text  && viewModel.NoResultsForName)
+            if (viewModel.SearchType == eSearchType.Text && viewModel.NoResultsForName)
             {
                 var errorMessage = "We could not find any establishments matching your search criteria";
                 if (viewModel.TextSearchModel.Text == string.Empty)
@@ -72,12 +72,12 @@ namespace Edubase.Web.UI.Controllers
                     {
                         if (viewModel.SearchType.OneOfThese(eSearchType.Text, eSearchType.EstablishmentAll))
                         {
-                            return Redirect(Url.RouteUrl("ChangeHistoryEstablishments") + "?" + Request.QueryString);
+                            return Redirect(Url.RouteUrl("ChangeHistoryEstablishments") + "?" + Request.Query);
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
-                            return Redirect(Url.RouteUrl("ChangeHistoryGroups") + "?" + Request.QueryString);
+                            return Redirect(Url.RouteUrl("ChangeHistoryGroups") + "?" + Request.Query);
                         }
 
                         throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
@@ -149,7 +149,7 @@ namespace Edubase.Web.UI.Controllers
             return PartialView("Partials/_GroupResults", viewModel);
         }
 
-        [HttpGet, Route("Search/Download", Name="DownloadChangeHistory")]
+        [HttpGet, Route("Search/Download", Name = "DownloadChangeHistory")]
         public async Task<ActionResult> Download(ChangeHistoryViewModel viewModel)
         {
             if (!viewModel.DownloadFormat.HasValue)
@@ -206,7 +206,7 @@ namespace Edubase.Web.UI.Controllers
                         new SearchChangeHistoryDownloadPayload(viewModel.DownloadFormat.Value));
                     var progress = await _svc.SearchWithDownloadGenerationAsync(payload, User);
                     return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new { id = progress.Id }),
-                        "?", Request.QueryString));
+                        "?", Request.Query));
                 }
             }
 
@@ -229,8 +229,8 @@ namespace Edubase.Web.UI.Controllers
             var payloadAll = PopulatePayload(viewModel,
                 new SearchChangeHistoryDownloadPayload(viewModel.DownloadFormat.Value));
             var progressAll = await _svc.SearchWithDownloadGenerationAsync(payloadAll, User);
-            return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new {id = progressAll.Id}),
-                "?", Request.QueryString));
+            return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new { id = progressAll.Id }),
+                "?", Request.Query));
 
         }
 
@@ -338,18 +338,18 @@ namespace Edubase.Web.UI.Controllers
         {
             return new List<ChangeHistorySearchItem>(
                 changes.Items.Select(i => new ChangeHistorySearchItem
-                    {
-                        EstablishmentName = estabName,
-                        SuggesterName = i.OriginatorUserName,
-                        ApproverName = i.ApproverUserName,
-                        EffectiveDate = i.EffectiveDateUtc,
-                        RequestedDate = i.RequestedDateUtc,
-                        DateChanged = i.ChangedDateUtc,
-                        EstablishmentUrn = i.Urn,
-                        FieldName = i.Name,
-                        OldValue = i.OldValue,
-                        NewValue = i.NewValue
-                    }).ToList());
+                {
+                    EstablishmentName = estabName,
+                    SuggesterName = i.OriginatorUserName,
+                    ApproverName = i.ApproverUserName,
+                    EffectiveDate = i.EffectiveDateUtc,
+                    RequestedDate = i.RequestedDateUtc,
+                    DateChanged = i.ChangedDateUtc,
+                    EstablishmentUrn = i.Urn,
+                    FieldName = i.Name,
+                    OldValue = i.OldValue,
+                    NewValue = i.NewValue
+                }).ToList());
         }
 
         private List<ChangeHistorySearchItem> ConvertGroupChanges(PaginatedResult<GroupChangeDto> changes,
@@ -373,7 +373,7 @@ namespace Edubase.Web.UI.Controllers
                     FieldName = i.Name,
                     OldValue = i.OldValue,
                     NewValue = i.NewValue
-                 }).ToList());
+                }).ToList());
         }
 
         [HttpGet, Route("Download/{id}", Name = "ChangeHistoryDownload")]
@@ -394,14 +394,16 @@ namespace Edubase.Web.UI.Controllers
                 return Json(
                     JsonConvert.SerializeObject(new
                     {
-                        status = progress.IsComplete, redirect = "/ChangeHistory/Search/Download/"
+                        status = progress.IsComplete,
+                        redirect = "/ChangeHistory/Search/Download/"
                     }), JsonRequestBehavior.AllowGet);
             }
 
             return Json(
                 JsonConvert.SerializeObject(new
                 {
-                    status = progress.IsComplete, redirect = string.Concat("/ChangeHistory/Download/", id)
+                    status = progress.IsComplete,
+                    redirect = string.Concat("/ChangeHistory/Download/", id)
                 }), JsonRequestBehavior.AllowGet);
 
         }
@@ -506,7 +508,7 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<Tuple<int, string>> TryGetGoupUid(ChangeHistoryViewModel model)
         {
-            int? groupUid= null;
+            int? groupUid = null;
             var groupName = "";
 
             if (model.GroupSearchModel.AutoSuggestValueAsInt.HasValue)

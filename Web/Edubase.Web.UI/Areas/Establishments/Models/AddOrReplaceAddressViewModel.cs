@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;

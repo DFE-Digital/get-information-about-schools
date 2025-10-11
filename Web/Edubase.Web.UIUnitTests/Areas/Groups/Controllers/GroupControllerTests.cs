@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
@@ -31,6 +30,7 @@ using Xunit;
 using Xunit.Abstractions;
 using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModelBase;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 {
@@ -47,7 +47,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         private readonly Mock<ICompaniesHouseService> mockCompaniesHouseService = new Mock<ICompaniesHouseService>(MockBehavior.Strict);
         private readonly Mock<ISecurityService> mockSecurityService = new Mock<ISecurityService>(MockBehavior.Strict);
         private readonly Mock<IExternalLookupService> mockExternalLookupService = new Mock<IExternalLookupService>(MockBehavior.Strict);
-        private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
+        private readonly Mock<IUrlHelper> mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Loose);
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
         private readonly Mock<HttpRequestBase> mockHttpRequestBase = new Mock<HttpRequestBase>(MockBehavior.Strict);
         private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
@@ -85,7 +85,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         {
             SetupHttpRequest();
             controller.ControllerContext = mockControllerContext.Object;
-            mockControllerContext.SetupGet(c => c.Controller).Returns(controller);
+            mockControllerContext.SetupGet(c => Microsoft.AspNetCore.Mvc.Controller).Returns(controller);
             controller.Url = mockUrlHelper.Object;
         }
 

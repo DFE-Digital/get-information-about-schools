@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
@@ -11,6 +10,7 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Tools;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.UnitTests
 {

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using Edubase.Web.UI.Models;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models

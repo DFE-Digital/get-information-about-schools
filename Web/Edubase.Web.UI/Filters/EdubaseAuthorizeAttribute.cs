@@ -1,8 +1,9 @@
 using Edubase.Web.UI.MvcResult;
 using System;
 using System.Net;
-using System.Web.Mvc;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -13,7 +14,7 @@ namespace Edubase.Web.UI.Filters
         {
             if (filterContext.HttpContext.Request.IsAuthenticated)
             {
-                filterContext.Result = new HttpStatusCodeResult((int)HttpStatusCode.Forbidden);
+                filterContext.Result = new StatusCodeResult((int)HttpStatusCode.Forbidden);
             }
             else
             {

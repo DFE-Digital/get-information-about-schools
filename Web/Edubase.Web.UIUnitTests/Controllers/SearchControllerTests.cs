@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Geo;
@@ -12,6 +10,7 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Models.Search;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.UnitTests
 {
@@ -163,7 +162,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             context.SetupGet(x => x.Request).Returns(request.Object);
 
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
             mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Establishments/Search");
 
             var subject = new SearchController(ers, cls.Object, grs, gps.Object);
@@ -206,7 +205,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             context.SetupGet(x => x.Request).Returns(request.Object);
 
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
             mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Group/Search");
 
             var subject = new SearchController(ers, cls.Object, grs, gps.Object);
@@ -234,7 +233,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             context.SetupGet(x => x.Request).Returns(request.Object);
 
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
             mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Governor/Search");
 
             var subject = new SearchController(ers, cls.Object, grs, gps.Object);

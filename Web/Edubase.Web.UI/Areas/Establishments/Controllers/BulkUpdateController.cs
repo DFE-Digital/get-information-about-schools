@@ -6,9 +6,9 @@ using Edubase.Web.UI.Helpers;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Newtonsoft.Json;
 using Edubase.Web.UI.Mappers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {

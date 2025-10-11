@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Governors;
@@ -15,6 +13,7 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 {

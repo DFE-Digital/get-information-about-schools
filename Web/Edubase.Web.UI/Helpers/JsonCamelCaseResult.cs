@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -28,7 +28,7 @@ namespace Edubase.Web.UI.Helpers
             {
                 throw new ArgumentNullException("context");
             }
-            if (JsonRequestBehavior == JsonRequestBehavior.DenyGet && String.Equals(context.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
+            if (JsonRequestBehavior == JsonRequestBehavior.DenyGet && String.Equals(context.HttpContext.Request.Method, "GET", StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException("This request has been blocked because sensitive information could be disclosed to third party web sites when this is used in a GET request. To allow GET requests, set JsonRequestBehavior to AllowGet.");
             }

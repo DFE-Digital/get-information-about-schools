@@ -1,44 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Edubase.Services.Texuna</RootNamespace>
-    <AssemblyName>Edubase.Services.Texuna</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Configurations>Debug (QA);Debug;Debug-TexunaAPI;Release;ReleaseTexunaAPI</Configurations>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyTitle>Edubase.Services.Texuna</AssemblyTitle>
+    <Product>Edubase.Services.Texuna</Product>
+    <Copyright>Copyright ©  2017</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-TexunaAPI|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-TexunaAPI\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -46,119 +25,24 @@
     <OutputPath>bin\ReleaseTexunaAPI\</OutputPath>
     <DefineConstants>TRACE;TEXAPI</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
-      <HintPath>..\packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
-    </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+    <PackageReference Include="morelinq" Version="4.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters.CoreServices" Version="2.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.9" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Approvals\ApprovalService.cs" />
-    <Compile Include="ChangeHistory\ChangeHistoryService.cs" />
-    <Compile Include="ChangeHistory\IChangeHistoryService.cs" />
-    <Compile Include="ChangeHistory\Models\ChangeHistorySearchItem.cs" />
-    <Compile Include="ChangeHistory\Models\EstablishmentField.cs" />
-    <Compile Include="ChangeHistory\Models\SearchChangeHistoryBrowsePayload.cs" />
-    <Compile Include="ChangeHistory\Models\SearchChangeHistoryDownloadPayload.cs" />
-    <Compile Include="ChangeHistory\Models\SearchChangeHistoryPayload.cs" />
-    <Compile Include="ChangeHistory\Models\UserGroupModel.cs" />
-    <Compile Include="Core\BasicAuthCredentials.cs" />
-    <Compile Include="Core\FormatterError.cs" />
-    <Compile Include="Core\FormatterErrorLogger.cs" />
-    <Compile Include="Core\HttpClientWrapper.cs" />
-    <Compile Include="Core\IHttpClientWrapper.cs" />
-    <Compile Include="Downloads\DownloadsApiService.cs" />
-    <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
-    <Compile Include="Establishments\EstablishmentReadApiService.cs" />
-    <Compile Include="Establishments\EstablishmentWriteApiService.cs" />
-    <Compile Include="Glimpse\ApiTrace.cs" />
-    <Compile Include="Glimpse\ApiTraceData.cs" />
-    <Compile Include="Glimpse\ApiTraceList.cs" />
-    <Compile Include="Governors\GovernorDownloadApiService.cs" />
-    <Compile Include="Governors\GovernorsReadApiService.cs" />
-    <Compile Include="Governors\GovernorsWriteApiService.cs" />
-    <Compile Include="Groups\GroupDownloadApiService.cs" />
-    <Compile Include="Groups\GroupReadApiService.cs" />
-    <Compile Include="Groups\GroupsWriteApiService.cs" />
-    <Compile Include="LanguageExtensions.cs" />
-    <Compile Include="Lookup\Constants.cs" />
-    <Compile Include="Lookup\LookupApiService.cs" />
-    <Compile Include="Models\BoolResult.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\SecurityApiService.cs" />
-    <Compile Include="Serialization\TexunaCamelCasePropertyNamesContractResolver.cs" />
+    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj" />
+    <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj" />
+    <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
-      <Project>{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}</Project>
-      <Name>Edubase.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj">
-      <Project>{8c3d6834-3fa1-440a-a396-6489e22e8063}</Project>
-      <Name>Edubase.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
-      <Project>{d605ace4-2659-48dc-bf21-94e7b8d230da}</Project>
-      <Name>Edubase.Services</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

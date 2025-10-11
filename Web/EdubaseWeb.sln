@@ -1,19 +1,18 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11018.127 d18.0
+VisualStudioVersion = 18.0.11018.127
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Data", "Edubase.Data\Edubase.Data.csproj", "{8C3D6834-3FA1-440A-A396-6489E22E8063}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Data", "Edubase.Data\Edubase.Data.csproj", "{8C3D6834-3FA1-440A-A396-6489E22E8063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services", "Edubase.Services\Edubase.Services.csproj", "{D605ACE4-2659-48DC-BF21-94E7B8D230DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Services", "Edubase.Services\Edubase.Services.csproj", "{D605ACE4-2659-48DC-BF21-94E7B8D230DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Common", "Edubase.Common\Edubase.Common.csproj", "{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Common", "Edubase.Common\Edubase.Common.csproj", "{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Web.UI", "Edubase.Web.UI\Edubase.Web.UI.csproj", "{F32E2A2E-6782-4293-B533-284FF1B17FF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.UI", "Edubase.Web.UI\Edubase.Web.UI.csproj", "{F32E2A2E-6782-4293-B533-284FF1B17FF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services.Texuna", "Edubase.Services.Texuna\Edubase.Services.Texuna.csproj", "{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Services.Texuna", "Edubase.Services.Texuna\Edubase.Services.Texuna.csproj", "{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Web.Resources", "Edubase.Web.Resources\Edubase.Web.Resources.csproj", "{7BB77B74-4669-44B7-85C0-F7980274C105}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.Resources", "Edubase.Web.Resources\Edubase.Web.Resources.csproj", "{7BB77B74-4669-44B7-85C0-F7980274C105}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5831CAFE-9479-4D97-817A-A419E99E2B02}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,19 +21,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F2669A17-B808-472E-ADE7-0BE8E61BDAE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.CommonUnitTests", "Edubase.CommonUnitTests\Edubase.CommonUnitTests.csproj", "{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.CommonUnitTests", "Edubase.CommonUnitTests\Edubase.CommonUnitTests.csproj", "{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.DataUnitTests", "Edubase.DataUnitTests\Edubase.DataUnitTests.csproj", "{51BF61CC-040F-4CA4-8571-0B10D56B56B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.DataUnitTests", "Edubase.DataUnitTests\Edubase.DataUnitTests.csproj", "{51BF61CC-040F-4CA4-8571-0B10D56B56B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.ServicesUnitTests", "Edubase.ServicesUnitTests\Edubase.ServicesUnitTests.csproj", "{9708EF96-6579-4C74-A044-7916972BFB07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.ServicesUnitTests", "Edubase.ServicesUnitTests\Edubase.ServicesUnitTests.csproj", "{9708EF96-6579-4C74-A044-7916972BFB07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.ResourcesUnitTests", "Edubase.Web.ResourcesUnitTests\Edubase.Web.ResourcesUnitTests.csproj", "{97624040-4B3F-41E0-9F37-E3F166C38931}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.UIUnitTests", "Edubase.Web.UIUnitTests\Edubase.Web.UIUnitTests.csproj", "{041CB9C1-ABF4-4FF0-9260-AC63F700704E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services.TexunaUnitTests", "Edubase.Services.TexunaUnitTests\Edubase.Services.TexunaUnitTests.csproj", "{F1905AE0-B4EC-4F4A-8241-E8EB12249F3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Services.TexunaUnitTests", "Edubase.Services.TexunaUnitTests\Edubase.Services.TexunaUnitTests.csproj", "{F1905AE0-B4EC-4F4A-8241-E8EB12249F3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfE.GIAS.Core", "DfE.GIAS.Core\DfE.GIAS.Core.csproj", "{E7811A7A-C287-4C8E-B0C0-271EA14B2BD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DfE.GIAS.Core", "DfE.GIAS.Core\DfE.GIAS.Core.csproj", "{E7811A7A-C287-4C8E-B0C0-271EA14B2BD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

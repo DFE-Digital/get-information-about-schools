@@ -5,8 +5,6 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Web;
-using System.Web.Http;
-using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
@@ -317,7 +315,7 @@ namespace Edubase.Web.UI
 
             var header = new ProductHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             var userAgent = new ProductInfoHeaderValue(header);
-            client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+            client.DefaultRequestHeaders.Headers["User-Agent"].ToString().Add(userAgent);
 
             return client;
         }
@@ -347,8 +345,8 @@ namespace Edubase.Web.UI
             var productValue = new ProductInfoHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             var commentValue = new ProductInfoHeaderValue("(Chrome; Edge; Mozilla; +https://www.get-information-schools.service.gov.uk)");
 
-            client.DefaultRequestHeaders.UserAgent.Add(productValue);
-            client.DefaultRequestHeaders.UserAgent.Add(commentValue);
+            client.DefaultRequestHeaders.Headers["User-Agent"].ToString().Add(productValue);
+            client.DefaultRequestHeaders.Headers["User-Agent"].ToString().Add(commentValue);
 
             return client;
         }

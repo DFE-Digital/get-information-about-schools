@@ -12,10 +12,9 @@ using Edubase.Web.UI.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Web.UI.Models.Search;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -54,7 +53,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (!viewModel.FileFormat.HasValue)
             {
-                viewModel.SearchQueryString = Request.QueryString.ToString();
+                viewModel.SearchQueryString = Request.Query.ToString();
                 viewModel.Step = 1;
                 return View("Downloads/SelectFormat", viewModel);
             }
@@ -130,13 +129,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
-                    status = "error", redirect = "/Groups/Search/Download"
+                    status = "error",
+                    redirect = "/Groups/Search/Download"
                 }));
             }
 
             return Json(JsonConvert.SerializeObject(new
             {
-                status = model.IsComplete, redirect = "/Groups/Search/Download"
+                status = model.IsComplete,
+                redirect = "/Groups/Search/Download"
             }));
         }
 
@@ -151,7 +152,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (model.GroupSearchModel.AutoSuggestValueAsInt.HasValue) return RedirectToDetailPage(model.GroupSearchModel.AutoSuggestValueAsInt.Value);
             else
             {
-                model.SearchQueryString = Request.QueryString.ToString();
+                model.SearchQueryString = Request.Query.ToString();
                 var text = model.GroupSearchModel.Text.Clean();
                 model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
                 model.GroupStatuses = (await _lookupService.GroupStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
@@ -172,8 +173,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     if (model.StartIndex == 0) model.Count = results.Count;
                 }
 
-                if (model.Count == 1) {return RedirectToDetailPage(model.Results.Single().GroupUId);}
-                if (model.Count == 0) {return RedirectToSearchPage(model);}
+                if (model.Count == 1) { return RedirectToDetailPage(model.Results.Single().GroupUId); }
+                if (model.Count == 0) { return RedirectToSearchPage(model); }
 
                 return View("GroupResults", model);
             }

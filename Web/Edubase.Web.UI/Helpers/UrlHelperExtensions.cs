@@ -5,22 +5,22 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Common;
 using Edubase.Web.UI.Exceptions;
 using Glimpse.AspNet.Tab;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Helpers
 {
     public static class UrlHelperExtensions
     {
-        public static string CookieDomain(this UrlHelper helper)
+        public static string CookieDomain(this IUrlHelper helper)
         {
             return string.Concat(".", GetForwardedHeaderAwareUrl(helper).Host);
         }
 
-        public static Uri GetForwardedHeaderAwareUrl(this UrlHelper helper)
+        public static Uri GetForwardedHeaderAwareUrl(this IUrlHelper helper)
         {
             var request = helper.RequestContext.HttpContext.Request;
             var originalUrl = request.Url;
@@ -69,7 +69,7 @@ namespace Edubase.Web.UI.Helpers
             return uriBuilder.Uri;
         }
 
-        public static MvcHtmlString Current(this UrlHelper helper, object substitutes, string fragment = null)
+        public static HtmlString Current(this IUrlHelper helper, object substitutes, string fragment = null)
         {
             var url = GetForwardedHeaderAwareUrl(helper);
             var uriBuilder = new UriBuilder(url);
@@ -93,16 +93,16 @@ namespace Edubase.Web.UI.Helpers
 
             uriBuilder.Query = query.ToString();
 
-            return new MvcHtmlString(uriBuilder.Uri.MakeRelativeUri(uriBuilder.Uri).ToString() + fragment);
+            return new HtmlString(uriBuilder.Uri.MakeRelativeUri(uriBuilder.Uri).ToString() + fragment);
         }
-        public static MvcHtmlString SortUrl(this UrlHelper helper, string sortKey, string fragment = null)
+        public static HtmlString SortUrl(this IUrlHelper helper, string sortKey, string fragment = null)
         {
             var request = helper.RequestContext.HttpContext.Request;
             var modifier = (request.QueryString["sortby"] ?? "").Contains($"{sortKey}-asc") ? $"{sortKey}-desc" : $"{sortKey}-asc";
             return Current(helper, new { sortby = modifier }, fragment);
         }
 
-        public static MvcHtmlString CurrentQueryString(this UrlHelper helper, object substitutes = null)
+        public static HtmlString CurrentQueryString(this IUrlHelper helper, object substitutes = null)
         {
             // Making this "forwarded-header-aware" is not strictly required,
             // but it's easier and safer to be consistent and just do it everywhere.
@@ -125,7 +125,7 @@ namespace Edubase.Web.UI.Helpers
                     }
                 }
             }
-            return new MvcHtmlString(query.ToString());
+            return new HtmlString(query.ToString());
         }
 
         public static string ToQueryString(this NameValueCollection nvc)

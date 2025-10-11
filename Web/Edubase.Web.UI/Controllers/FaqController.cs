@@ -4,10 +4,10 @@ using Edubase.Data.Repositories;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Faq;
 using Glimpse.AspNet.Tab;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -49,7 +49,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var item = await _FaqItemRepository.GetAsync(id);
             var groups = await _FaqGroupRepository.GetAllAsync(1000);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
             else return View("CreateEdit", new FaqItemViewModel
             {
                 Id = id,
@@ -64,7 +64,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditAsync(FaqItemViewModel viewModel)
         {
             var item = await _FaqItemRepository.GetAsync(viewModel.Id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             if (viewModel.IsDeleting)
             {
@@ -80,12 +80,12 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditItemOrderAsync(string id, string order)
         {
             var item = await _FaqItemRepository.GetAsync(id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             var newOrder = item.DisplayOrder + (order == "down" ? 1 : -1);
             var list = await _FaqItemRepository.GetAllAsync(1000);
             var swap = list.Items.FirstOrDefault(x => x.GroupId == item.GroupId && x.DisplayOrder == newOrder);
-            if (swap == null) return HttpNotFound();
+            if (swap == null) return NotFound();
 
             swap.DisplayOrder = item.DisplayOrder;
             await _FaqItemRepository.UpdateAsync(swap);
@@ -189,7 +189,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditGroupAsync(string id)
         {
             var item = await _FaqGroupRepository.GetAsync(id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
             var empty = (await _FaqItemRepository.GetAllAsync(1000)).Items.All(x => x.GroupId != item.RowKey);
 
             return View("EditGroup", new FaqGroupViewModel
@@ -207,7 +207,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _FaqGroupRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             if (viewModel.IsDeleting)
@@ -224,12 +224,12 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditGroupOrderAsync(string id, string order)
         {
             var item = await _FaqGroupRepository.GetAsync(id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             var newOrder = item.DisplayOrder + (order == "down" ? 1 : -1);
             var groups = await _FaqGroupRepository.GetAllAsync(1000);
             var swap = groups.Items.FirstOrDefault(x => x.DisplayOrder == newOrder);
-            if (swap == null) return HttpNotFound();
+            if (swap == null) return NotFound();
 
             swap.DisplayOrder = item.DisplayOrder;
             await _FaqGroupRepository.UpdateAsync(swap);

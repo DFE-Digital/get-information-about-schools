@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.Xml.Linq;
 using Edubase.Common;
 using Edubase.Common.Cache;
@@ -23,6 +22,7 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -389,7 +389,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         private static string AbsoluteActionUrl(
-            UrlHelper urlHelper,
+            IUrlHelper urlHelper,
             string actionName,
             string controllerName,
             object routeValues = null)

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Data.Entity;
 
@@ -25,7 +24,7 @@ namespace Edubase.Web.UI.Models.Notifications
         public IEnumerable<NotificationTemplate> Templates { get; set; }
         public string TemplateSelected { get; set; }
 
-        [MaxLength(500, ErrorMessage = "The Content field cannot have more than 500 characters"), AllowHtml]
+        [MaxLength(500, ErrorMessage = "The Content field cannot have more than 500 characters")]
         public string Content { get; set; }
         public DateTimeViewModel Start { get; set; }
         public DateTime? StartOriginal { get; set; }

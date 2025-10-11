@@ -11,14 +11,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
     using M = EstablishmentSearchResultModel;
 
     [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecureAcademy16To19Openings)]
-    public class AcademyOpeningsApiController : ApiController
+    public class AcademyOpeningsApiController : ControllerBase
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IEstablishmentWriteService _establishmentWriteService;

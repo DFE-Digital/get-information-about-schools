@@ -13,11 +13,10 @@ using Edubase.Web.UI.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -59,7 +58,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> PrepareDownload(GovernorSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Governors;
-            if(viewModel.SearchQueryString == null) viewModel.SearchQueryString = Request.QueryString.ToString();
+            if (viewModel.SearchQueryString == null) viewModel.SearchQueryString = Request.Query.ToString();
 
             var allowNonPublicDataDownload = User.InRole(EdubaseRoles.EDUBASE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.EFADO, EdubaseRoles.edubase_ddce, EdubaseRoles.SFC);
             viewModel.TotalSteps = allowNonPublicDataDownload ? 4 : 3;
@@ -150,7 +149,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
-                    status = "error", redirect = "/Governors/Search/Download"
+                    status = "error",
+                    redirect = "/Governors/Search/Download"
                 }));
             }
             // return View("Downloads/DownloadError", new DownloadErrorViewModel { SearchQueryString = searchQueryString, SearchSource = searchSource, NeedsRegenerating = true });
@@ -159,7 +159,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             return Json(JsonConvert.SerializeObject(new
             {
-                status = model.IsComplete, redirect = "/Governors/Search/Download"
+                status = model.IsComplete,
+                redirect = "/Governors/Search/Download"
             }));
         }
 
@@ -183,7 +184,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .Cast<int>());
             }
 
-            model.SearchQueryString = Request.QueryString.ToString();
+            model.SearchQueryString = Request.Query.ToString();
             model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
@@ -240,7 +241,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             RoleIds = model.SelectedRoleIds.ToArray(),
             SortBy = model.SortOption,
             IncludeHistoric = model.GovernorSearchModel.IncludeHistoric,
-            GovernorTypesFlags = model.SelectedGovernorTypeFlagIds.Select(x => (eGovernorTypesFlag)x).ToArray(),
+            GovernorTypesFlags = model.SelectedGovernorTypeFlagIds.Select(x => (eGovernorTypesFlag) x).ToArray(),
             LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray()
         };
 

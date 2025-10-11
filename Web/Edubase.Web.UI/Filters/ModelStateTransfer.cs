@@ -1,4 +1,5 @@
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc;
 namespace Edubase.Web.UI.Filters
 {
     public abstract class ModelStateTransfer : ActionFilterAttribute

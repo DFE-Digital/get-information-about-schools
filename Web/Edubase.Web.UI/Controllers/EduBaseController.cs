@@ -4,7 +4,7 @@ using Edubase.Web.UI.Helpers;
 using FluentValidation.Mvc;
 using MoreLinq;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {

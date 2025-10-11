@@ -1,991 +1,145 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F32E2A2E-6782-4293-B533-284FF1B17FF6}</ProjectGuid>
-    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Edubase.Web.UI</RootNamespace>
-    <AssemblyName>Edubase.Web.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>44309</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>
-    </IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>
-    </IISExpressWindowsAuthentication>
-    <IISExpressUseClassicPipelineMode>
-    </IISExpressUseClassicPipelineMode>
-    <UseGlobalApplicationHostFile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>net8.0</TargetFramework>
     <WebProject_DirectoryAccessLevelKey>1</WebProject_DirectoryAccessLevelKey>
-    <TargetFrameworkProfile />
-    <Use64BitIISExpress />
+    <Configurations>Debug (QA);Debug;Debug-TexunaAPI;Release;ReleaseTexunaAPI</Configurations>
+    <AssemblyTitle>Edubase Web UI layer</AssemblyTitle>
+    <Product>Edubase</Product>
+    <Copyright>Copyright © Department for Education 2016</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac, Version=8.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.8.0.0\lib\netstandard2.0\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Integration.Mvc, Version=6.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Mvc5.6.1.0\lib\net472\Autofac.Integration.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Integration.WebApi, Version=6.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.WebApi2.6.1.1\lib\net472\Autofac.Integration.WebApi.dll</HintPath>
-    </Reference>
-    <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.10.1.1\lib\net461\AutoMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="AzureTableLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AzureTableLogger.1.1.3\lib\net461\AzureTableLogger.dll</HintPath>
-    </Reference>
-    <Reference Include="BeginCollectionItem, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BeginCollectionItem.1.2.1.0\lib\net35\BeginCollectionItem.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Core, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.5.1.1\lib\net462\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="CsvHelper, Version=33.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>..\packages\CsvHelper.33.0.1\lib\net48\CsvHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.8.6.2\lib\net45\FluentValidation.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentValidation.Mvc, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.Mvc5.8.6.1\lib\net45\FluentValidation.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentValidation.ValidatorAttribute, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.ValidatorAttribute.8.6.1\lib\net45\FluentValidation.ValidatorAttribute.dll</HintPath>
-    </Reference>
-    <Reference Include="Glimpse.AspNet, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Glimpse.AspNet.1.9.2\lib\net45\Glimpse.AspNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Glimpse.Core, Version=1.8.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Glimpse.1.8.6\lib\net45\Glimpse.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Glimpse.Mvc5, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Glimpse.Mvc5.1.5.3\lib\net45\Glimpse.Mvc5.dll</HintPath>
-    </Reference>
-    <Reference Include="HttpAuthModule, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HttpAuthModule.2.3.0\lib\net45\HttpAuthModule.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.4.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.22.0\lib\net452\Microsoft.AI.DependencyCollector.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.22.0\lib\net452\Microsoft.AI.PerfCounterCollector.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.22.0\lib\net452\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.Web, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.22.0\lib\net452\Microsoft.AI.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.WindowsServer, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.22.0\lib\net452\Microsoft.AI.WindowsServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ApplicationInsights, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.2.22.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.4\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.8\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=3.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.3.0.5\lib\net461\Microsoft.Azure.KeyVault.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Edm.5.8.5\lib\net40\Microsoft.Data.Edm.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.OData.5.8.5\lib\net40\Microsoft.Data.OData.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.5\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=7.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.7.6.3\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Logging, Version=7.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Logging.7.6.3\lib\net472\Microsoft.IdentityModel.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Protocols, Version=7.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Protocols.7.6.3\lib\net472\Microsoft.IdentityModel.Protocols.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Tokens, Version=7.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.7.6.3\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Tokens.Saml, Version=7.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.Saml.7.6.3\lib\net472\Microsoft.IdentityModel.Tokens.Saml.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Xml, Version=7.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Xml.7.6.3\lib\net472\Microsoft.IdentityModel.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.2.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.2.2\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.24\lib\net461\Microsoft.Rest.ClientRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.19\lib\net461\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Storage.9.3.3\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
-    </Reference>
-    <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
-      <HintPath>..\packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
-    </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
-    </Reference>
-    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="RouteDebugger, Version=2.1.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\routedebugger.2.1.5\lib\net40\RouteDebugger.dll</HintPath>
-    </Reference>
-    <Reference Include="Sustainsys.Saml2, Version=2.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sustainsys.Saml2.2.10.0\lib\net47\Sustainsys.Saml2.dll</HintPath>
-    </Reference>
-    <Reference Include="Sustainsys.Saml2.Owin, Version=2.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sustainsys.Saml2.Owin.2.10.0\lib\net461\Sustainsys.Saml2.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Configuration.ConfigurationManager, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Configuration.ConfigurationManager.8.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.8.0.1\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.InteropServices" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=6.0.0.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.6.0.1\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Xml.8.0.1\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Permissions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Permissions.8.0.0\lib\net462\System.Security.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Spatial, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Spatial.5.8.5\lib\net40\System.Spatial.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Json, Version=8.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Json.8.0.5\lib\net462\System.Text.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System.Threading.Thread" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http.OData, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.OData.5.7.0\lib\net45\System.Web.Http.OData.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http.WebHost, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.9\lib\net45\System.Web.Http.WebHost.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.3.0\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.3.0\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Net.Http">
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase" />
+    <PackageReference Include="Antlr" Version="3.5.0.2" />
+    <PackageReference Include="Autofac" Version="8.0.0" />
+    <PackageReference Include="Autofac.Mvc5" Version="6.1.0" />
+    <PackageReference Include="Autofac.WebApi2" Version="6.1.1" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AzureTableLogger" Version="1.1.3" />
+    <PackageReference Include="BeginCollectionItem" Version="1.2.1.0" />
+    <PackageReference Include="Castle.Core" Version="5.1.1" />
+    <PackageReference Include="CsvHelper" Version="33.0.1" />
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
+    <PackageReference Include="FluentValidation" Version="8.6.2" />
+    <PackageReference Include="FluentValidation.Mvc5" Version="8.6.1" />
+    <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.6.1" />
+    <PackageReference Include="Glimpse" Version="1.8.6" />
+    <PackageReference Include="Glimpse.AspNet" Version="1.9.2" />
+    <PackageReference Include="Glimpse.Mvc5" Version="1.5.3" />
+    <PackageReference Include="HttpAuthModule" Version="2.3.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.Agent.Intercept" Version="2.4.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.22.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.22.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.Web" Version="2.22.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.22.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.22.0" />
+    <PackageReference Include="Microsoft.AspNet.TelemetryCorrelation" Version="1.0.8" />
+    <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.OData" Version="5.7.0" />
+    <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="3.0.5" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Data.Edm" Version="5.8.5" />
+    <PackageReference Include="Microsoft.Data.OData" Version="5.8.5" />
+    <PackageReference Include="Microsoft.Data.Services.Client" Version="5.8.5" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="7.6.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Logging" Version="7.6.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="7.6.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.6.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.6.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Xml" Version="7.6.3" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.19" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+    <PackageReference Include="routedebugger" Version="2.1.5" />
+    <PackageReference Include="Sustainsys.Saml2" Version="2.10.0" />
+    <PackageReference Include="Sustainsys.Saml2.Owin" Version="2.10.0" />
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.ComponentModel.EventBasedAsync" Version="4.3.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.1" />
+    <PackageReference Include="System.DirectoryServices" Version="9.0.9" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
+    <PackageReference Include="System.Management" Version="9.0.9" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Net.Requests" Version="4.3.0" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="9.0.9" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.1" />
+    <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
+    <PackageReference Include="System.Spatial" Version="5.8.5" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="WebGrease" Version="1.6.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\AutoMapperWebProfile.cs" />
-    <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
-    <Compile Include="App_Start\StartupSASimulator.cs" />
-    <Compile Include="App_Start\StartupSecureAccess.cs" />
-    <Compile Include="Areas\GovernorsGridViewModelFactory.cs" />
-    <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\BulkAssociateEstabs2GroupsController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\BulkCreateFreeSchoolsController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
-    <Compile Include="Areas\Establishments\Models\AdditionalAddressViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\BulkAssociateEstabs2GroupsViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EditAcademyOpeningViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\ManageAcademyOpeningsViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\TabEditPolicy.cs" />
-    <Compile Include="Areas\Establishments\Models\TabWarningsModel.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GroupCorporateContactController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
-    <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
-    <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
-    <Compile Include="Areas\Groups\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
-    <Compile Include="Areas\IGovernorsGridViewModelFactory.cs" />
-    <Compile Include="Controllers\AmalgamateMergeController.cs" />
-    <Compile Include="Controllers\Api\UtilApiController.cs" />
-    <Compile Include="Controllers\FaqController.cs" />
-    <Compile Include="Controllers\GlossaryController.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
-    <Compile Include="Controllers\GuidanceController.cs" />
-    <Compile Include="Controllers\NewsController.cs" />
-    <Compile Include="Controllers\NotificationsController.cs" />
-    <Compile Include="Controllers\SitemapController.cs" />
-    <Compile Include="Controllers\TermsofUseController.cs" />
-    <Compile Include="Exceptions\InvalidForwardedHostException.cs" />
-    <Compile Include="Filters\ModelStateTransfer.cs" />
-    <Compile Include="GlimpseSecurityPolicy.cs" />
-    <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
-    <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
-    <Compile Include="Helpers\AuthorizedRoles.cs" />
-    <Compile Include="Helpers\BrowserClientStorage.cs" />
-    <Compile Include="Helpers\CannotBeEmptyAttribute.cs" />
-    <Compile Include="Helpers\FormHelpers.cs" />
-    <Compile Include="Helpers\GetEstabSearchFiltersParam.cs" />
-    <Compile Include="Helpers\ILayoutHelper.cs" />
-    <Compile Include="Helpers\LayoutHelper.cs" />
-    <Compile Include="Helpers\NonceHelper.cs" />
-    <Compile Include="Helpers\QueryValidator.cs" />
-    <Compile Include="Helpers\RouteDto.cs" />
-    <Compile Include="Helpers\AcademyUtility.cs" />
-    <Compile Include="Helpers\StringUtils.cs" />
-    <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
-    <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
-    <Compile Include="Models\Admin\LogsViewModel.cs" />
-    <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
-    <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
-    <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
-    <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
-    <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
-    <Compile Include="Models\Guidance\LaNameCodes.cs" />
-    <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
-    <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
-    <Compile Include="Models\News\NewsArticlesViewModel.cs" />
-    <Compile Include="Models\News\NewsArticleViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsBannerAuditViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsBannersAuditViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsBannersViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsTemplateViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsTemplatesViewModel.cs" />
-    <Compile Include="Models\Notifications\Validators\NotificationsBannerValidator.cs" />
-    <Compile Include="Models\ProprietorViewModel.cs" />
-    <Compile Include="Models\SiteMapNode.cs" />
-    <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
-    <Compile Include="Models\AgeRangeFilterViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\BulkUpdateViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernorController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernorsBulkUpdateController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
-    <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\EditGovernanceModeViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\EditGroupDelegationInformationViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\EditSharedGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorsBulkUpdateViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\GovernorsBulkUpdateViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\ReplaceGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\ReplaceChairViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\SelectSharedGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\SharedGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\CreateEditGovernorViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\EditGroupDelegationInformationViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\GovernorsGridViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\GovernorViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\ReplaceChairViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\SelectSharedGovernorViewModelValidator.cs" />
-    <Compile Include="Areas\Groups\Controllers\GroupApiController.cs" />
-    <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
-    <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\CreateAcademyTrustViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditGovernanceViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditorViewModelBase.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\IGroupPageViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\LinkedEstablishmentSearchViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateChildrensCentreStep2.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateCCGroupWithEstablishments.cs" />
-    <Compile Include="Areas\Groups\Models\Validators\ValidateChildrensCentreStep2Validator.cs" />
-    <Compile Include="Areas\Groups\Models\EstablishmentGroupViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupDetailViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditorViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\GroupLinkedEstablishmentsViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupSearchDownloadGenerationProgressViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
-    <Compile Include="Controllers\Api\BulkCreateAcademiesApiController.cs" />
-    <Compile Include="Controllers\Api\EstablishmentApiController.cs" />
-    <Compile Include="Controllers\Api\SearchApiController.cs" />
-    <Compile Include="Controllers\Api\AmalgamateMergeApiController.cs" />
-    <Compile Include="Controllers\Api\AcademyOpeningsApiController.cs" />
-    <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
-    <Compile Include="Controllers\Api\UserRolesController.cs" />
-    <Compile Include="Controllers\ChangeHistoryController.cs" />
-    <Compile Include="Controllers\ApprovalsController.cs" />
-    <Compile Include="Controllers\DataQualityController.cs" />
-    <Compile Include="Controllers\DownloadsController.cs" />
-    <Compile Include="Controllers\EduBaseController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\EstablishmentController.cs" />
-    <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\IocConfig.cs" />
-    <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\UnauthorizedAccessAttribute.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\ToolsController.cs" />
-    <Compile Include="Controllers\UnauthorizedController.cs" />
-    <Compile Include="Exceptions\InvalidParameterException.cs" />
-    <Compile Include="Filters\ApiExceptionFilter.cs" />
-    <Compile Include="Filters\EdubaseAuthorizeAttribute.cs" />
-    <Compile Include="Filters\ExceptionFilter.cs" />
-    <Compile Include="Filters\PendingApprovalsFilter.cs" />
-    <Compile Include="Global.asax.cs">
+    <Compile Update="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
-    <Compile Include="Helpers\AuthorizeRolesAttribute.cs" />
-    <Compile Include="Helpers\EnumExtensions.cs" />
-    <Compile Include="Helpers\RoleEquivalence.cs" />
-    <Compile Include="Helpers\ValidationExtensions.cs" />
-    <Compile Include="Models\ApiSessionRecorderViewModel.cs" />
-    <Compile Include="Models\ChangeHistoryViewModel.cs" />
-    <Compile Include="Models\DataQuality\DataQualityStatusItem.cs" />
-    <Compile Include="Models\DataQuality\DataQualityStatusViewModel.cs" />
-    <Compile Include="Models\DataQuality\EditDataQualityStatusViewModel.cs" />
-    <Compile Include="Models\DataQuality\FullDataQualityStatusItem.cs" />
-    <Compile Include="Models\DataQuality\FullDataQualityStatusViewModel.cs" />
-    <Compile Include="Models\DataQuality\Validators\DataQualityStatusItemValidator.cs" />
-    <Compile Include="Models\DownloadsViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\CreateChildrensCentreViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\CreateEstablishmentViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EditEstablishmentLinksViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\IEstablishmentPageViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\AddOrReplaceAddressViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\SearchForEstablishmentViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\CreateEstablishmentViewModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\SearchForEstablishmentViewModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentLinksViewModelValidator.cs" />
-    <Compile Include="Models\Faq\FaqItemViewModel.cs" />
-    <Compile Include="Models\GlossaryItemViewModel.cs" />
-    <Compile Include="Models\Faq\FaqViewModel.cs" />
-    <Compile Include="Models\GlossaryViewModel.cs" />
-    <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
-    <Compile Include="Models\Grid\GridCellViewModel.cs" />
-    <Compile Include="Models\Grid\GridRowViewModel.cs" />
-    <Compile Include="Models\Grid\GridViewModel.cs" />
-    <Compile Include="Models\HeirarchicalLookupItemViewModel.cs" />
-    <Compile Include="Models\PaginationViewModel.cs" />
-    <Compile Include="Models\Search\DownloadErrorViewModel.cs" />
-    <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
-    <Compile Include="Models\Tools\AmalgamateEstablishmentsModel.cs" />
-    <Compile Include="Models\Tools\ApprovalsViewModel.cs" />
-    <Compile Include="Models\Tools\BulkAcademiesCreateViewModel.cs" />
-    <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
-    <Compile Include="Models\Tools\MergeEstablishmentsModel.cs" />
-    <Compile Include="Models\Tools\PredefinedLASetViewModel.cs" />
-    <Compile Include="Models\Tools\PredefinedLASetsViewModel.cs" />
-    <Compile Include="Models\UserRolesViewModel.cs" />
-    <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
-    <Compile Include="Models\ViewModelBase.cs" />
-    <Compile Include="Validation\AutofacValidationModule.cs" />
-    <Compile Include="Validation\AutofacValidatorFactory.cs" />
-    <Compile Include="Helpers\FormatHelpers.cs" />
-    <Compile Include="Helpers\HtmlHelperExtensions.cs" />
-    <Compile Include="Helpers\JsonCamelCaseResult.cs" />
-    <Compile Include="Helpers\LangExt.cs" />
-    <Compile Include="Helpers\ModelBinding\AliasedPropertyDescriptor.cs" />
-    <Compile Include="Helpers\ModelBinding\BindAliasAttribute.cs" />
-    <Compile Include="Helpers\ModelBinding\DefaultModelBinderEx.cs" />
-    <Compile Include="Helpers\QueryStringHelper.cs" />
-    <Compile Include="Helpers\UrlHelperExtensions.cs" />
-    <Compile Include="Models\AddressViewModel.cs" />
-    <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
-    <Compile Include="Models\ContactDetailsViewModel.cs" />
-    <Compile Include="Models\EditEstablishmentModel.cs" />
-    <Compile Include="Areas\Establishments\Models\TabDisplayPolicy.cs" />
-    <Compile Include="Models\LookupItemViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\SearchCompaniesHouseModel.cs" />
-    <Compile Include="Models\DateTimeViewModel.cs" />
-    <Compile Include="Models\EstablishmentDetailViewModel.cs" />
-    <Compile Include="Models\HomepageViewModel.cs" />
-    <Compile Include="Models\LinkedEstabViewModel.cs" />
-    <Compile Include="Models\Search\eSearchType.cs" />
-    <Compile Include="Models\Search\IDownloadGenerationProgressModel.cs" />
-    <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
-    <Compile Include="Models\Search\GovernorSearchPayloadViewModel.cs" />
-    <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
-    <Compile Include="Models\Search\SearchViewModel.cs" />
-    <Compile Include="Models\ToolsViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentModelValidator.cs" />
-    <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
-    <Compile Include="MvcResult\ChallengeResult.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validation\EdubaseAbstractValidator.cs" />
-    <Compile Include="Validation\ValidationExtensions.cs" />
-    <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="403.aspx" />
-    <Content Include="403.html" />
-    <Content Include="500.aspx" />
-    <Content Include="500.html" />
-    <Content Include="404.html" />
-    <Content Include="404.aspx" />
-    <Content Include="Areas\Establishments\Views\AcademyOpenings\EditAcademyOpening.cshtml" />
-    <Content Include="Areas\Establishments\Views\AcademyOpenings\SearchAcademyOpenings.cshtml" />
-    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
-    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_UserFilterSets.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\_UpdateConfirmEmails.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\EditDetailsEmpty.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
-    <Content Include="Assets\Sass\govuk-core.scss" />
-    <Content Include="Assets\Scripts\Entry\add-edit-governor.js" />
-    <Content Include="Assets\Scripts\Entry\approvals-tool.js" />
-    <Content Include="Assets\Scripts\Entry\bulk-academies.js" />
-    <Content Include="Assets\Scripts\Entry\bundle.js" />
-    <Content Include="Assets\Scripts\Entry\change-history-results.js" />
-    <Content Include="Assets\Scripts\Entry\change-history-search.js" />
-    <Content Include="Assets\Scripts\Entry\create-childrens-centre.js" />
-    <Content Include="Assets\Scripts\Entry\create-establishment.js" />
-    <Content Include="Assets\Scripts\Entry\delegated-authority.js" />
-    <Content Include="Assets\Scripts\Entry\download-select-fields.js" />
-    <Content Include="Assets\Scripts\Entry\downloads.js" />
-    <Content Include="Assets\Scripts\Entry\edit-details.js" />
-    <Content Include="Assets\Scripts\Entry\edit-establishment-links.js" />
-    <Content Include="Assets\Scripts\Entry\edit-faq-glossary.js" />
-    <Content Include="Assets\Scripts\Entry\edit-group-details.js" />
-    <Content Include="Assets\Scripts\Entry\edit-group-links.js" />
-    <Content Include="Assets\Scripts\Entry\edit-helpdesk.js" />
-    <Content Include="Assets\Scripts\Entry\edit-iebt.js" />
-    <Content Include="Assets\Scripts\Entry\edit-location.js" />
-    <Content Include="Assets\Scripts\Entry\independent-schools-predefinedsets.js" />
-    <Content Include="Assets\Scripts\Entry\independent-schools-sig-search-results.js" />
-    <Content Include="Assets\Scripts\Entry\independent-schools-sig-search.js" />
-    <Content Include="Assets\Scripts\Entry\landing-page-bundle.js" />
-    <Content Include="Assets\Scripts\Entry\manage-academy-openings.js" />
-    <Content Include="Assets\Scripts\Entry\merge-amalgamate.js" />
-    <Content Include="Assets\Scripts\Entry\polling.js" />
-    <Content Include="Assets\Scripts\Entry\search-bundle.js" />
-    <Content Include="Assets\Scripts\Entry\search-results-bundle.js" />
-    <Content Include="Assets\Scripts\GiasEdit\iebtRadios.js" />
-    <Content Include="Assets\Scripts\GiasEdit\locationAutoSuggests.js" />
-    <Content Include="Assets\Scripts\GiasGlobal\GiasAccordionExtensions.js" />
-    <Content Include="Assets\Scripts\GiasGlobal\giasAriaLive.js" />
-    <Content Include="Assets\Scripts\GiasGlobal\GiasCookieBanner.js" />
-    <Content Include="Assets\Scripts\GiasGlobal\GiasReOrderValidationSummary.js" />
-    <Content Include="Assets\Scripts\GiasHelpers\QueryString.js" />
-    <Content Include="Assets\Scripts\GiasHelpers\supportsHistory.js" />
-    <Content Include="Assets\Scripts\GiasHelpers\throttle.js" />
-    <Content Include="Assets\Scripts\GiasLandingPages\GiasLandingMap.js" />
-    <Content Include="Assets\Scripts\GiasModules\DfeCookieManager.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasDismissMessage.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasEditTypePhases.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasModals\GiasAttachUnload.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasModals\GiasModal.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasModals\GiasOkCancel.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasPolling.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasSearchMap.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasTableSort.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasTabs.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasTextCounter.js" />
-    <Content Include="Assets\Scripts\GiasModules\GiasWaitMask.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasAdditionalFilters.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasDownloadFilters.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasFiltering.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasFilterToggle.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasFilterValidation.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasGovernorsDownloadWarning.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasNestedFilters.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasSearchChangeHistory.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasSearchWithin.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\GiasSelectAll.js" />
-    <Content Include="Assets\Scripts\GiasSearchFilters\OptionSelect.js" />
-    <Content Include="Assets\Scripts\GiasSearchForm\autocomplete-setup.js" />
-    <Content Include="Assets\Scripts\GiasSearchForm\GiasRadioToggles.js" />
-    <Content Include="Assets\Scripts\GiasSearchForm\GiasSearchErrors.js" />
-    <Content Include="Assets\Scripts\GiasStandalone\GiasDataStatus.js" />
-    <Content Include="public\assets\images\accessibility\accessibility_links_misplaced.png" />
-    <Content Include="public\assets\images\guidance\*.*" />
-    <Content Include="public\assets\images\icons\*.*" />
-    <Content Include="public\assets\images\maps\*.*" />
-    <Content Include="public\assets\images\maps\google-closed-marker.png" />
-    <Content Include="public\assets\images\*.*" />
-    <Content Include="public\assets\scripts\**\*.*" />
-    <Content Include="public\assets\stylesheets\main.css" />
-    <Content Include="Areas\Establishments\Views\Web.config" />
-    <Content Include="Areas\Establishments\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Groups\Views\Web.config" />
-    <Content Include="Areas\Groups\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Governors\Views\GovernorSearch\Partials\_GovernorSearchResults.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\Details.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\Create.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\SearchCompaniesHouse.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\CreateAcademyTrust.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\EditLinks.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\_EditLayoutPage.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\EditDetails.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\ViewEdit.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\AddEditOrReplace.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\SharedGovernor\SelectSharedGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
-    <Content Include="Areas\Governors\Views\GovernanceDelegation\GroupEditDelegation.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkUpdate\Index.cshtml" />
-    <Content Include="Areas\Establishments\Views\AcademyOpenings\Index.cshtml" />
-    <Content Include="Areas\Governors\Views\GovernorsBulkUpdate\Index.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
-    <Content Include="Assets\Scripts\JSON\establishmentLinks.js" />
-    <Content Include="favicon.ico" />
-    <Content Include="Global.asax" />
-    <Content Include="public\assets\images\*.*" />
-    <Content Include="public\govuk-frontend\images\favicon.ico" />
-    <Content Include="public\govuk-frontend\images\*.*" />
-    <Content Include="ci\compile.cmd" />
-    <Content Include="ci\unit-tests.cmd" />
-    <Content Include="Areas\Governors\Views\web.config" />
-    <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Governors\Views\GovernorSearch\Index.cshtml" />
-    <Content Include="Assets\Scripts\JSON\establishmentphases.js" />
-    <Content Include="Assets\Scripts\JSON\establishmenttypes.js" />
-    <Content Include="Assets\Scripts\JSON\localauthorities.js" />
-    <Content Include="Assets\Scripts\JSON\academyOpenings.stub.js" />
-    <Content Include="Areas\Governors\Views\Governance\EditGovernanceMode.cshtml" />
-    <Content Include="fb6k7l-throwex.aspx" />
-    <Content Include="Areas\Groups\Views\Group\Convert.cshtml" />
-    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchMap.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\BulkCreateFreeSchools.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\InProgress.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\Completed.cshtml" />
-    <Content Include="Areas\Governors\Views\GroupCorporateContact\GroupEditCorporateContact.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\ConfirmationNotifications.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\Partials\GroupConfirmationNotifications.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditAddresses.cshtml" />
-    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectCustomFields.cshtml" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Areas\Establishments\Views\BulkAssociateEstabs2Groups\BulkAssociateEstabs2Groups.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkAssociateEstabs2Groups\Completed.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkAssociateEstabs2Groups\InProgress.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\GovernanceChangeHistory.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\GovernanceChangeHistory.cshtml" />
-    <Content Include="App_Code\helpers.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietorList.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietors.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\Partials\_ConfirmChanges.cshtml" />
-    <Content Include="Properties\webjobs-list.json" />
-    <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
-    <Content Include="robots.txt" />
-    <Content Include="App_offline_x.htm" />
-    <Content Include="Views\Admin\ViewLogs.cshtml" />
-    <Content Include="Views\Approvals\ExplainRejections.cshtml" />
-    <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
-    <Content Include="Views\DataQuality\EditDataOwnerDetails.cshtml" />
-    <Content Include="Views\Home\Accessibility.cshtml" />
-    <Content Include="Views\Tools\DownloadClosedTrustsInformation.cshtml" />
-    <Content Include="Views\Tools\Mergers\AmalgamateEstablishments.cshtml" />
-    <Content Include="Views\Tools\Mergers\AmalgamationComplete.cshtml" />
-    <Content Include="Views\Tools\Mergers\ConfirmAmalgamation.cshtml" />
-    <Content Include="Views\Tools\Mergers\ConfirmMerger.cshtml" />
-    <Content Include="Views\Tools\Mergers\MergeEstablishments.cshtml" />
-    <Content Include="Views\Tools\Mergers\MergerComplete.cshtml" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Views\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\DfE\Layouts\template.cshtml" />
-    <Content Include="Views\GOVUK\Layouts\template.cshtml" />
-    <Content Include="Views\GOVUK\Partials\footer-support-links.cshtml" />
-    <Content Include="Views\GOVUK\Partials\footer-top.cshtml" />
-    <Content Include="Views\GOVUK\Partials\phase\alpha.cshtml" />
-    <Content Include="Views\GOVUK\Partials\phase\beta.cshtml" />
-    <Content Include="Views\GOVUK\Views\ga\google-analytics.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\EditDetails.cshtml" />
-    <Content Include="Views\Downloads\Index.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Create.cshtml" />
-    <Content Include="Views\Downloads\PreparingFilePleaseWait.cshtml" />
-    <Content Include="Views\ChangeHistory\Index.cshtml" />
-    <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
-    <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\AddOrReplaceAddress.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Details.cshtml" />
-    <Content Include="Views\Search\Index.cshtml" />
-    <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
-    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Index.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabDetails.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabIEBT.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabLinks.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabGovernance.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabLocation.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabChangeHistory.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\Header.cshtml" />
-    <Content Include="Views\Shared\Downloads\SelectFormat.cshtml" />
-    <Content Include="Areas\Governors\Views\GovernorSearch\Downloads\SelectDataset.cshtml" />
-    <Content Include="Views\Shared\Downloads\PreparingFilePleaseWait.cshtml" />
-    <Content Include="Views\Shared\Downloads\ReadyToDownload.cshtml" />
-    <Content Include="Views\Search\LocalAuthorityDisambiguation.cshtml" />
-    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchResults.cshtml" />
-    <Content Include="Areas\Groups\Views\GroupSearch\Partials\_GroupSearchResults.cshtml" />
-    <Content Include="Views\Shared\_ValidationSummary.cshtml" />
-    <Content Include="Views\Shared\_GenericPagination.cshtml" />
-    <Content Include="Views\Tools\Index.cshtml" />
-    <Content Include="Views\Shared\DomainError.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\_EditLayoutPage.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\_ConfirmChanges.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\EditIEBT.cshtml" />
-    <Content Include="Views\Tools\BulkAcademies.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\EditLocation.cshtml" />
-    <Content Include="Views\Tools\MergersTool.cshtml" />
-    <Content Include="Views\Approvals\Index.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\DateTimeViewModel.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\SharedGovernorViewModel.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\GovernorViewModel.cshtml" />
-    <Content Include="Views\Search\Partials\_EstablishmentSearch.cshtml" />
-    <Content Include="Views\Search\Partials\_GovernorSearch.cshtml" />
-    <Content Include="Views\Search\Partials\_GroupSearch.cshtml" />
-    <Content Include="Views\Search\Partials\_HelpText.cshtml" />
-    <Content Include="Views\Search\Partials\_SearchHeader.cshtml" />
-    <Content Include="Views\Search\LocationDisambiguation.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\GovernorGridViewModel.cshtml" />
-    <Content Include="Views\DataQuality\EditStatus.cshtml" />
-    <Content Include="Views\DataQuality\ViewStatus.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabHelpdesk.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\EditHelpdesk.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\EditLinks.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\AddEditLink.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
-    <Content Include="Views\Guidance\Index.cshtml" />
-    <Content Include="Views\Home\Cookies.cshtml" />
-    <Content Include="Views\Shared\FullErrorDetail.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\AgeRangeFilterViewModel.cshtml" />
-    <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
-    <Content Include="Views\Tools\ApiSessionRecorder.cshtml" />
-    <Content Include="Views\Glossary\Index.cshtml" />
-    <Content Include="Views\Glossary\CreateEdit.cshtml" />
-    <Content Include="Views\Tools\IndependentSchoolsSearch.cshtml" />
-    <Content Include="Views\Tools\IndependentSchoolsSearchResults.cshtml" />
-    <Content Include="Views\Tools\_IndSchSearchResults.cshtml" />
-    <Content Include="Views\Tools\PredefinedLASets.cshtml" />
-    <Content Include="Views\Tools\CreateEditPredefinedLASet.cshtml" />
-    <Content Include="Views\Tools\IndSchoolSearchDownload\PreparingFilePleaseWait.cshtml" />
-    <Content Include="Views\Tools\IndSchoolSearchDownload\ReadyToDownload.cshtml" />
-    <Content Include="Views\Downloads\SelectFormat.cshtml" />
-    <Content Include="Views\Downloads\Download.cshtml" />
-    <Content Include="Views\DataQuality\Status.cshtml" />
-    <Content Include="Views\ChangeHistory\Results.cshtml" />
-    <Content Include="Views\ChangeHistory\Partials\_Helptext.cshtml" />
-    <Content Include="Views\ChangeHistory\Partials\_EstablishmentResults.cshtml" />
-    <Content Include="Views\ChangeHistory\Partials\_GroupResults.cshtml" />
-    <Content Include="Views\ChangeHistory\Download.cshtml" />
-    <Content Include="Views\Approvals\Partials\_RejectionReasons.cshtml" />
-    <Content Include="Views\Home\Help.cshtml" />
-    <Content Include="Views\Faq\CreateEdit.cshtml" />
-    <Content Include="Views\Faq\Index.cshtml" />
-    <Content Include="Views\Shared\Downloads\DownloadError.cshtml" />
-    <Content Include="Views\Home\Responsibilities.cshtml" />
-    <Content Include="Views\Downloads\ReadyToDownload.cshtml" />
-    <Content Include="Views\Home\Privacy.cshtml" />
-    <Content Include="Views\Guidance\General.cshtml" />
-    <Content Include="Views\Guidance\EstablishmentBulkUpdate.cshtml" />
-    <Content Include="Views\Guidance\ChildrensCentre.cshtml" />
-    <Content Include="Views\Guidance\Federation.cshtml" />
-    <Content Include="Views\Guidance\Governance.cshtml" />
-    <Content Include="Views\Home\AccessibilityReport.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\ProprietorModel.cshtml" />
-    <Content Include="Views\Downloads\Partials\_DownloadsResults.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\ProprietorViewModel.cshtml" />
-    <Content Include="public\govuk-frontend\fonts\bold-affa96571d-v2.woff" />
-    <Content Include="public\govuk-frontend\fonts\bold-b542beb274-v2.woff2" />
-    <Content Include="public\govuk-frontend\fonts\light-94a07e06a1-v2.woff2" />
-    <Content Include="public\govuk-frontend\fonts\light-f591b13f7d-v2.woff" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Shared\_NotificationsBannersPartial.cshtml" />
-    <Content Include="Views\Notifications\Index.cshtml" />
-    <Content Include="Views\Notifications\Banners.cshtml" />
-    <Content Include="Views\Notifications\Templates.cshtml" />
-    <Content Include="Views\Notifications\EditBanner.cshtml" />
-    <Content Include="Views\Notifications\EditTemplate.cshtml" />
-    <Content Include="Views\Shared\_NotificationBannerPartial.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\DateTimeViewModelExtended.cshtml" />
-    <Content Include="Views\Notifications\ConfirmDeleteBanner.cshtml" />
-    <Content Include="Views\Notifications\ConfirmDeleteTemplate.cshtml" />
-    <Content Include="Areas\Establishments\Views\Establishment\EditDetailsEmpty.cshtml" />
-    <Content Include="Views\Faq\Groups.cshtml" />
-    <Content Include="Views\Faq\EditGroup.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\Partials\Details\_ChildrensCentresGroupDetails.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\Partials\Details\_GenericGroupDetails.cshtml" />
-    <Content Include="Views\TermsofUse\Index.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
-    <Content Include="Views\Notifications\AuditBanners.cshtml" />
-    <Content Include="Views\Notifications\AuditBanner.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Assets\Scripts\GiasVueComponents\checkbox.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\DownloadCategorisedFields.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\Download\checkboxRemoteSelection.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\Download\searchByFieldName.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\Download\viewSwitcher.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\errorSummary.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\GiasApiError.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\GiasRadio.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\GiasWaitSpinner.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\GovukAccordion.vue" />
-    <Content Include="Assets\Scripts\GiasVueComponents\textFieldFormGroup.vue" />
-    <Content Include="Views\News\Index.cshtml" />
-    <Content Include="Views\News\Article.cshtml" />
-    <Content Include="Views\News\Manage.cshtml" />
-    <Content Include="Views\News\ConfirmDeleteArticle.cshtml" />
-    <Content Include="Views\News\EditArticle.cshtml" />
-    <Content Include="Views\News\AuditArticles.cshtml" />
-    <Content Include="Views\News\AuditArticle.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\_LegalDutySecureAcademyTrustStatement.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\_LegalDutyStatement.cshtml" />
-    <None Include="packages.config" />
-    <Content Include="Views\Guidance\LaNameCodes.cshtml" />
-    <Content Include="Views\Guidance\SelectFormat.cshtml" />
-    <Content Include="Views\Guidance\SelectData.cshtml" />
-    <Content Include="Views\Guidance\ReadyToDownload.cshtml" />
-    <None Include="Views\Unauthorized\Index.cshtml" />
-    <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
-    <Folder Include="Views\GOVUK\Views\errors\" />
+    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj" />
+    <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj" />
+    <ProjectReference Include="..\Edubase.Services.Texuna\Edubase.Services.Texuna.csproj" />
+    <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj" />
+    <ProjectReference Include="..\Edubase.Web.Resources\Edubase.Web.Resources.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
-      <Project>{8e4a0f2b-368f-4c22-8723-7e234a8c46f3}</Project>
-      <Name>Edubase.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj">
-      <Project>{8C3D6834-3FA1-440A-A396-6489E22E8063}</Project>
-      <Name>Edubase.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Edubase.Services.Texuna\Edubase.Services.Texuna.csproj">
-      <Project>{b42efca1-48e9-4c63-9fb3-7be4d2f22efb}</Project>
-      <Name>Edubase.Services.Texuna</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
-      <Project>{d605ace4-2659-48dc-bf21-94e7b8d230da}</Project>
-      <Name>Edubase.Services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Edubase.Web.Resources\Edubase.Web.Resources.csproj">
-      <Project>{7bb77b74-4669-44b7-85c0-f7980274c105}</Project>
-      <Name>Edubase.Web.Resources</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28QA%29|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;QA</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-TexunaAPI|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;TEXAPI</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseTexunaAPI|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;TEXAPI</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
-    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
-  </Target>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
@@ -1004,19 +158,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <!--<Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-  </Target>-->
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target> -->
   <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild">
     <ItemGroup>
       <RoslynFiles Include="$(SolutionDir)packages\Microsoft.Net.Compilers.3.5.0\tools\*" />
@@ -1024,24 +165,4 @@
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
   </Target>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.22.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.22.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.22.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.22.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.22.0\build\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.22.0\build\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.WindowsServer.2.22.0\build\Microsoft.ApplicationInsights.WindowsServer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.WindowsServer.2.22.0\build\Microsoft.ApplicationInsights.WindowsServer.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.Web.2.22.0\build\Microsoft.ApplicationInsights.Web.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.Web.2.22.0\build\Microsoft.ApplicationInsights.Web.targets'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
-  </Target>
-  <Import Project="..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.22.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.22.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets')" />
-  <Import Project="..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.22.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.22.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets')" />
-  <Import Project="..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.22.0\build\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.22.0\build\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.targets')" />
-  <Import Project="..\packages\Microsoft.ApplicationInsights.WindowsServer.2.22.0\build\Microsoft.ApplicationInsights.WindowsServer.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.WindowsServer.2.22.0\build\Microsoft.ApplicationInsights.WindowsServer.targets')" />
-  <Import Project="..\packages\Microsoft.ApplicationInsights.Web.2.22.0\build\Microsoft.ApplicationInsights.Web.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.Web.2.22.0\build\Microsoft.ApplicationInsights.Web.targets')" />
-  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
 </Project>

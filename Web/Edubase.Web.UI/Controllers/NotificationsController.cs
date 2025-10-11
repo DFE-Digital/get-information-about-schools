@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
@@ -10,6 +9,7 @@ using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Notifications;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -114,7 +114,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _BannerRepository.GetAsync(id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var banners = await _BannerRepository.GetAllAsync(1000, null, true);
@@ -146,7 +146,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _BannerRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return await ProcessEditBanner(viewModel, item);
@@ -232,7 +232,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _BannerRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View("ConfirmDeleteBanner", viewModel.Set(item));
@@ -246,7 +246,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _BannerRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             await _BannerRepository.DeleteAsync(viewModel.Id, User.GetUserId());
@@ -296,7 +296,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _TemplateRepository.GetAsync(id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View("EditTemplate",
@@ -309,7 +309,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _TemplateRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return await ProcessEditTemplate(viewModel, item);
@@ -368,7 +368,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _TemplateRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View("ConfirmDeleteTemplate",
@@ -383,7 +383,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _TemplateRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             await _TemplateRepository.DeleteAsync(viewModel.Id);

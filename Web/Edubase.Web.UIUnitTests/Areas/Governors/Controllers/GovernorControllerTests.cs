@@ -4,8 +4,6 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
@@ -24,6 +22,7 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UIUnitTests;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 {
@@ -37,7 +36,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>(MockBehavior.Strict);
         private readonly Mock<IEstablishmentReadService> mockEstablishmentReadService = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
         private readonly Mock<ILayoutHelper> mockLayoutHelper = new Mock<ILayoutHelper>(MockBehavior.Strict);
-        private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
+        private readonly Mock<IUrlHelper> mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Loose);
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
         private readonly Mock<HttpRequestBase> mockHttpRequestBase = new Mock<HttpRequestBase>(MockBehavior.Strict);
         private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
@@ -75,7 +74,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         {
             SetupHttpRequest();
             controller.ControllerContext = mockControllerContext.Object;
-            mockControllerContext.SetupGet(c => c.Controller).Returns(controller);
+            mockControllerContext.SetupGet(c => Microsoft.AspNetCore.Mvc.Controller).Returns(controller);
             controller.Url = mockUrlHelper.Object;
         }
 

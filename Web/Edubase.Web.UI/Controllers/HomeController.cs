@@ -11,12 +11,13 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 using System.Xml.Linq;
 using Edubase.Data.Repositories;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Edubase.Web.UI.Controllers
 {

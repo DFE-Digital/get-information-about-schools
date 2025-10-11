@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.Web.UI;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
@@ -8,6 +7,7 @@ using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {

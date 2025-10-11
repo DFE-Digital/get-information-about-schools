@@ -1,5 +1,4 @@
-﻿using System.Web.Mvc;
-using Edubase.Web.UI.Areas.Governors.Models;
+﻿using Edubase.Web.UI.Areas.Governors.Models;
 using Xunit;
 
 namespace Edubase.Web.UIUnitTests.Areas.Governors.Models

@@ -1,12 +1,11 @@
 using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
-    public class UtilApiController : ApiController
+    public class UtilApiController : ControllerBase
     {
         private readonly IUserPreferenceRepository _userPreferenceRepository;
 
@@ -15,9 +14,9 @@ namespace Edubase.Web.UI.Controllers.Api
             _userPreferenceRepository = userPreferenceRepository;
         }
 
-        [System.Web.Http.Route("api/save-search-token"), System.Web.Http.HttpPost]
+        [Route("api/save-search-token"), HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IHttpActionResult> SaveSearchTokenAsync(dynamic payload)
+        public async Task<IActionResult> SaveSearchTokenAsync(dynamic payload)
         {
             if (User.Identity.IsAuthenticated)
             {

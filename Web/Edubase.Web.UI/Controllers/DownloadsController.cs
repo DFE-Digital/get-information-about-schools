@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
 using Edubase.Web.UI.Models;
@@ -14,12 +13,11 @@ using Edubase.Common;
 using Edubase.Web.UI.Helpers;
 using System.Linq;
 using System.Net.Http;
-using System.Web.Http.Results;
-using System.Web.Routing;
 using Edubase.Services;
 using Edubase.Services.Downloads.Models;
 using Edubase.Web.UI.Models.Search;
 using Edubase.Web.UI.Models.Guidance;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -256,7 +254,7 @@ namespace Edubase.Web.UI.Controllers
             }
             else
             {
-                return HttpNotFound();
+                return NotFound();
             }
         }
 
@@ -291,7 +289,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             else
             {

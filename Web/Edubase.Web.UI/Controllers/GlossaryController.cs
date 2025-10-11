@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -37,7 +37,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditAsync(string id)
         {
             var item = await _glossaryRepository.GetAsync(id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
             else return View("CreateEdit", new GlossaryItemViewModel
             {
                 Id = id,
@@ -50,7 +50,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditAsync(GlossaryItemViewModel viewModel)
         {
             var item = await _glossaryRepository.GetAsync(viewModel.Id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             if (viewModel.IsDeleting)
             {

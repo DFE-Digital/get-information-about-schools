@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Castle.Core.Internal;
 using Edubase.Common;
 using Edubase.Services.Domain;
@@ -24,6 +22,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -227,11 +226,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.QueryString["gid2"].ToInteger(),
-                AppointmentEndDateDay = Request.QueryString["d"].ToInteger(),
-                AppointmentEndDateMonth = Request.QueryString["m"].ToInteger(),
-                AppointmentEndDateYear = Request.QueryString["y"].ToInteger(),
-                Reinstate = Request.QueryString["rag"] == "true"
+                ReplacementGovernorId = Request.Query["gid2"].ToInteger(),
+                AppointmentEndDateDay = Request.Query["d"].ToInteger(),
+                AppointmentEndDateMonth = Request.Query["m"].ToInteger(),
+                AppointmentEndDateYear = Request.Query["y"].ToInteger(),
+                Reinstate = Request.Query["rag"] == "true"
             };
 
             var replaceMode =
@@ -665,11 +664,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.QueryString["rgid"].ToInteger(),
-                DateTermEndsDay = Request.QueryString["d"].ToInteger(),
-                DateTermEndsMonth = Request.QueryString["m"].ToInteger(),
-                DateTermEndsYear = Request.QueryString["y"].ToInteger(),
-                Reinstate = Request.QueryString["ri"] == "true"
+                ReplacementGovernorId = Request.Query["rgid"].ToInteger(),
+                DateTermEndsDay = Request.Query["d"].ToInteger(),
+                DateTermEndsMonth = Request.Query["m"].ToInteger(),
+                DateTermEndsYear = Request.Query["y"].ToInteger(),
+                Reinstate = Request.Query["ri"] == "true"
             };
 
             var governor = await _governorsReadService.GetGovernorAsync(gid, User);
