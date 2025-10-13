@@ -3,7 +3,11 @@
 @{
     ViewBag.bodyClasses = "manage-academy-openings";
     ViewBag.SiteSection = "tools";
-    var establishmentTypeId = Request.QueryString["establishmentTypeId"];
+    var establishmentTypeId = (ViewBag.EstablishmentTypeId as string) ?? Request.QueryString["establishmentTypeId"] ?? string.Empty;
+    var manageRouteName = (ViewBag.ManageRouteName as string) ??
+                          (string.Equals(establishmentTypeId, "46", StringComparison.OrdinalIgnoreCase)
+                              ? "ManageSecureAcademy16To19Openings"
+                              : "ManageAcademyOpenings");
 }
 
 @section BreadCrumbs
@@ -33,10 +37,9 @@
         <div class="tab-wrap" id="academy-opening-tab-wrap">
             <ul class="gias-tabs">
                 <li class="gias-tabs__list-item">
-                    @Html.ActionLink("Opening calendar",
-                        "ManageAcademyOpenings",
-                        "AcademyOpenings",
-                        new {area = "Establishments", establishmentTypeId},
+                    @Html.RouteLink("Opening calendar",
+                        manageRouteName,
+                        new { establishmentTypeId},
                         new {@class = "gias-tabs__tab"})
                 </li>
                 <li class="gias-tabs__list-item gias-tabs__list-item--selected">
@@ -58,7 +61,8 @@
             </div>
         </div>
     </div>
-    @Html.HiddenFor(x => x.IsSearching, new {Value = "true"})
+    <input type="hidden" name="establishmentTypeId" value="@establishmentTypeId" />
+    @Html.Hidden("isSearching", "true")
 }
 
 @if (Model.EstablishmentName != null)
@@ -111,7 +115,7 @@
                     @Html.ActionLink("Edit opening details",
                         "EditAcademyOpening",
                         "AcademyOpenings",
-                        new {urn = Model.Urn, area = "Establishments"},
+                        new {urn = Model.Urn, area = "Establishments", establishmentTypeId = establishmentTypeId, returnTo = manageRouteName},
                         new {@class = "govuk-button"})
                 </div>
             </div>
