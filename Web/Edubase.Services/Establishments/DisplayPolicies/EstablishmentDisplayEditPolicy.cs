@@ -40,10 +40,6 @@ namespace Edubase.Services.Establishments.DisplayPolicies
                 IEBTDetail = new IEBTDetailDisplayEditPolicy();
             }
 
-            IEBTDetail.RegistrationSuspended = establishment.TypeId.OneOfThese(
-                    eLookupEstablishmentType.OtherIndependentSchool,
-                    eLookupEstablishmentType.OtherIndependentSpecialSchool);
-
             return this;
         }
 

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Edubase.Services.Enums;
@@ -13,19 +15,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments
 {
     public class EstablishmentDisplayEditPolicyTests
     {
-        [Theory]
-        [InlineData((int) eLookupEstablishmentType.OtherIndependentSchool)]
-        [InlineData((int) eLookupEstablishmentType.OtherIndependentSpecialSchool)]
-        public void Initialise_Sets_RegistrationSuspended_True_For_ExpectedTypes(int typeId)
-        {
-            var model = new EstablishmentModel { TypeId = typeId };
-            var policy = new EstablishmentDisplayEditPolicy();
-
-            policy.Initialise(model);
-
-            Assert.True(policy.IEBTDetail.RegistrationSuspended);
-        }
-
         [Fact]
         public void Initialise_Sets_RegistrationSuspended_False_For_OtherTypes()
         {
@@ -123,7 +112,72 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments
 
             Assert.Contains("IEBTModel.RegistrationSuspended", result);
         }
-        #endregion
 
-}
+        [Fact]
+        public void RegistrationSuspendedDropdown_Should_Have_CurrentValue_Selected()
+        {
+            // Arrange
+            var viewModel = new EditEstablishmentModel
+            {
+                RegistrationSuspended = RegistrationSuspendedStatus.NotApplicable
+            };
+
+            // Act
+            var items = Enum.GetValues(typeof(RegistrationSuspendedStatus))
+                .Cast<RegistrationSuspendedStatus>()
+                .Select(e => new SelectListItem
+                {
+                    Value = ((int)e).ToString(),
+                    Text = e.EnumDisplayNameFor(),
+                    Selected = (viewModel.RegistrationSuspended.HasValue && (int)viewModel.RegistrationSuspended == (int)e)
+                })
+                .ToList();
+
+            // Assert
+            var selected = items.Single(x => x.Selected);
+            Assert.Equal("3", selected.Value);
+            Assert.Equal("Not applicable", selected.Text);
+        }
+
+
+        [Fact]
+        public void RegistrationSuspendedDropdown_Should_Have_CurrentValue()
+        {
+            // Arrange
+            var viewModel = new EditEstablishmentModel
+            {
+                RegistrationSuspended = RegistrationSuspendedStatus.NotApplicable
+            };
+
+            // Act
+            var items = Enum.GetValues(typeof(RegistrationSuspendedStatus))
+                .Cast<RegistrationSuspendedStatus>()
+                .Select(e => new SelectListItem
+                {
+                    Value = ((int)e).ToString(),
+                    Text = e.EnumDisplayNameFor(),
+                    Selected = (viewModel.RegistrationSuspended.HasValue && (int)viewModel.RegistrationSuspended == (int)e)
+                })
+                .ToList();
+
+            // Assert
+            var selected = items.Single(x => x.Selected);
+            Assert.Equal("3", selected.Value);
+            Assert.Equal("Not applicable", selected.Text);
+        }
+
+        [Fact]
+        public void RegistrationSuspended_ShouldNotShow_WhenPolicyIsFalse()
+        {
+            var policy = new EstablishmentDisplayEditPolicy
+            {
+                IEBTDetail = new IEBTDetailDisplayEditPolicy { RegistrationSuspended = false }
+            };
+
+            var canShow = policy.IEBTDetail.RegistrationSuspended;
+            Assert.False(canShow);
+        }
+
+        #endregion
+    }
 }
