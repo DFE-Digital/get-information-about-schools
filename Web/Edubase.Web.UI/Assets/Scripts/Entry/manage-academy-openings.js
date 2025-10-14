@@ -38,6 +38,13 @@ $(function () {
     total: allItems.length
   };
 
+  if (typeof state.detailUrlTemplate !== 'string' || state.detailUrlTemplate.indexOf('__urn__') === -1) {
+    state.detailUrlTemplate = '/Establishments/Establishment/Details/__urn__';
+  }
+  if (typeof state.editUrlTemplate !== 'string' || state.editUrlTemplate.indexOf('__urn__') === -1) {
+    state.editUrlTemplate = '/Establishments/manage/edit-academy-opening/__urn__';
+  }
+
   state.currentPage = state.take > 0 ? Math.floor(state.skip / state.take) : 0;
 
   function parseDate(value) {

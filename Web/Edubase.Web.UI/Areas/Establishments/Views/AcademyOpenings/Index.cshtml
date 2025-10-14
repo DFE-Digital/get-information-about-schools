@@ -25,7 +25,7 @@
     var currentRouteName = !string.IsNullOrWhiteSpace(Model.CurrentRouteName) ? Model.CurrentRouteName : "ManageAcademyOpenings";
     var baseUrl = Request?.Url?.AbsolutePath ?? Url.RouteUrl(currentRouteName);
     var detailUrlTemplate = Url.Action("Details", "Establishment", new { area = "Establishments", id = "__urn__" });
-    var editUrlTemplate = Url.RouteUrl("EditAcademyOpening", new { area = "Establishments", urn = "__urn__", establishmentTypeId = establishmentTypeId, returnTo = currentRouteName });
+    var editUrlTemplate = Url.Action("EditAcademyOpening", "AcademyOpenings", new { area = "Establishments", urn = "__urn__", establishmentTypeId = establishmentTypeId, returnTo = currentRouteName });
     var allOpeningsPayload = (Model.AllAcademyOpenings ?? Enumerable.Empty<EditAcademyOpeningViewModel>()).Select(x => new
     {
         urn = x.Urn,
