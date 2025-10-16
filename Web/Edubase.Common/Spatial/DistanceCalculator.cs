@@ -1,5 +1,5 @@
-﻿using System;
-using System.Device.Location;
+using System;
+using GeoCoordinatePortable;
 
 namespace Edubase.Common.Spatial
 {
