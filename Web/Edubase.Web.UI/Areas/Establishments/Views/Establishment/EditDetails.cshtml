@@ -328,29 +328,39 @@
                 </div>
             }
 
-            @if (Model.EditPolicy.IEBTDetail.RegistrationSuspended)
+            @if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
             {
+                var editable = Model.EditPolicy.IEBTDetail.RegistrationSuspended;
+                var currentStatus = Model.RegistrationSuspended?.EnumDisplayNameFor() ?? "Not recorded";
+
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RegistrationSuspended)">
                     @Html.LabelFor(x => x.RegistrationSuspended, new { @class = "govuk-label" })
-                    @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message" })
 
-                    @Html.DropDownListFor(
-                        x => x.RegistrationSuspended,
-                        new SelectList(
-                            Enum.GetValues(typeof(Edubase.Services.Enums.RegistrationSuspendedStatus))
-                                .Cast<Edubase.Services.Enums.RegistrationSuspendedStatus>()
-                                .Select(e => new SelectListItem
-                                {
-                                    Value = ((int)e).ToString(),
-                                    Text = e.EnumDisplayNameFor(),
-                                    Selected = (Model.RegistrationSuspended.HasValue && (int)Model.RegistrationSuspended == (int)e)
-                                }),
-                            "Value",
-                            "Text",
-                            Model.RegistrationSuspended.HasValue ? ((int)Model.RegistrationSuspended).ToString() : null
-                        ),
-                        new { @class = "govuk-select" }
-                    )
+                    @if (editable)
+                    {
+                        @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message" })
+                        @Html.DropDownListFor(
+                            x => x.RegistrationSuspended,
+                            new SelectList(
+                                Enum.GetValues(typeof(Edubase.Services.Enums.RegistrationSuspendedStatus))
+                                    .Cast<Edubase.Services.Enums.RegistrationSuspendedStatus>()
+                                    .Select(e => new SelectListItem
+                                    {
+                                        Value = ((int)e).ToString(),
+                                        Text = e.EnumDisplayNameFor(),
+                                        Selected = (Model.RegistrationSuspended.HasValue && (int)Model.RegistrationSuspended == (int)e)
+                                    }),
+                                "Value",
+                                "Text",
+                                Model.RegistrationSuspended.HasValue ? ((int)Model.RegistrationSuspended).ToString() : null
+                            ),
+                            new { @class = "govuk-select" }
+                        )
+                    }
+                    else
+                    {
+                        <p class="govuk-body">@currentStatus</p>
+                    }
                 </div>
             }
 
