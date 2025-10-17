@@ -5,132 +5,121 @@ using Edubase.Data.Entity;
 using Edubase.Data.Repositories.TableStorage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;
+using Azure.Data.Tables;
 
-namespace Edubase.Data.Repositories
+namespace Edubase.Data.Repositories;
+
+public class WebLogItemRepository : TableStorageBase<AZTLoggerMessages>
 {
-    public class WebLogItemRepository : TableStorageBase<AZTLoggerMessages>
+    private const int LogsLimit = 1000;
+    public WebLogItemRepository()
+        : base("DataConnectionString")
     {
-        public WebLogItemRepository()
-            : base("DataConnectionString")
+    }
+
+    public async Task<IEnumerable<AZTLoggerMessages>> GetById(string value)
+    {
+        List<AZTLoggerMessages> items = [];
+
+        // ID format is {rowKey}{partitionKey}, where the partition key is eight digits YYYYMMDD
+
+        // If the query is far too short, it's not a valid ID and we can exit early
+        if (value.Length < 8)
         {
-        }
-
-        public async Task<List<AZTLoggerMessages>> GetById(string value)
-        {
-            var items = new List<AZTLoggerMessages>();
-
-            // ID format is {rowKey}{partitionKey}, where the partition key is eight digits YYYYMMDD
-            // we need to split the value into the row key and partition key
-            if (value.Length < 8)
-            {
-                // If the query is far too short, it's not a valid ID and we can exit early
-                return items;
-            }
-
-            // Additional validation _could_ be done here, but for our purposes it is not necessary
-            var rowKey = value.Substring(0, value.Length - 8);
-            var partitionKey = value.Substring(value.Length - 8);
-
-            TableContinuationToken currentToken = null;
-            do
-            {
-                var query = new TableQuery<AZTLoggerMessages>().Where(
-                    TableQuery.CombineFilters(
-                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey),
-                        TableOperators.And,
-                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey)                        
-                    )
-                );
-                query.TakeCount = 1000;//limit to 1000 rows to avoid performance problems
-
-                var segment = await Table.ExecuteQuerySegmentedAsync(query, currentToken);
-                items.AddRange(segment.Results);
-                currentToken = segment.ContinuationToken;
-            } while (currentToken != null);
-
             return items;
         }
 
+        // Additional validation _could_ be done here, but for our purposes it is not necessary
+        var rowKey = value.Substring(0, value.Length - 8);
+        var partitionKey = value.Substring(value.Length - 8);
 
-        public async Task<List<AZTLoggerMessages>> GetWithinDateRange(DateTime startDateTime, DateTime endDateTime)
+        var query =
+            Table.QueryAsync<AZTLoggerMessages>(
+                (msg) =>
+                    msg.RowKey == rowKey &&
+                    msg.PartitionKey == partitionKey);
+
+        await foreach (var msg in query)
         {
-            var items = new List<AZTLoggerMessages>();
+            items.Add(msg);
 
-            TableContinuationToken currentToken = null;
-            do
+            if (items.Count >= LogsLimit) // mimic legacy TakeCount limit
             {
-                var query = new TableQuery<AZTLoggerMessages>().Where(
-                    TableQuery.CombineFilters(
-                        TableQuery.GenerateFilterConditionForDate(
-                            "DateUtc",
-                            QueryComparisons.GreaterThanOrEqual,
-                            startDateTime
-                        ),
-                        TableOperators.And,
-                        TableQuery.GenerateFilterConditionForDate(
-                            "DateUtc",
-                            QueryComparisons.LessThanOrEqual,
-                            endDateTime
-                        )
-                    )
-                );
-                query.TakeCount = 1000;//limit to 1000 rows to avoid performance problems
-
-                var segment = await Table.ExecuteQuerySegmentedAsync(query, currentToken);
-                items.AddRange(segment.Results);
-                currentToken = segment.ContinuationToken;
-            } while (currentToken != null);
-
-            return items;
+                return items.Take(LogsLimit);
+            }
         }
 
+        return items;
+    }
 
-        public static List<AZTLoggerMessages> FilterPurgeZeroLogsMessage(List<AZTLoggerMessages> webLogMessages, bool includePurgeZeroLogsMessage)
+    public async Task<IEnumerable<AZTLoggerMessages>> GetWithinDateRange(DateTime startDateTime, DateTime endDateTime)
+    {
+        var items = new List<AZTLoggerMessages>();
+
+        var query = Table.QueryAsync<AZTLoggerMessages>(
+            (msg) =>
+                msg.DateUtc >= startDateTime &&
+                msg.DateUtc <= endDateTime);
+
+        await foreach (var msg in query)
         {
-            if (includePurgeZeroLogsMessage)
+            items.Add(msg);
+
+            if (items.Count >= LogsLimit) //limit to 1000 rows to avoid performance problems
             {
-                return webLogMessages;
+                return items.Take(LogsLimit);
             }
+        }
 
-            webLogMessages = webLogMessages
-                .Where(m => !m.Message.Equals("LOG PURGE REPORT: There were 0 logs purged from storage."))
-                .ToList();
+        return items;
+    }
 
+
+    public static List<AZTLoggerMessages> FilterPurgeZeroLogsMessage(List<AZTLoggerMessages> webLogMessages, bool includePurgeZeroLogsMessage)
+    {
+        if (includePurgeZeroLogsMessage)
+        {
             return webLogMessages;
         }
 
-        private static bool ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(string value, string query)
+        webLogMessages = webLogMessages
+            .Where(m => !m.Message.Equals("LOG PURGE REPORT: There were 0 logs purged from storage."))
+            .ToList();
+
+        return webLogMessages;
+    }
+
+    private static bool ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(string value, string query)
+    {
+        return !string.IsNullOrWhiteSpace(value) && value.ToLowerInvariant().Contains(query.ToLowerInvariant());
+    }
+
+    public static List<AZTLoggerMessages> FilterByAllTextColumns(
+        List<AZTLoggerMessages> webLogMessages,
+        string queryString
+    )
+    {
+        if (string.IsNullOrWhiteSpace(queryString))
         {
-            return !string.IsNullOrWhiteSpace(value) && value.ToLowerInvariant().Contains(query.ToLowerInvariant());
-        }
-
-        public static List<AZTLoggerMessages> FilterByAllTextColumns(
-            List<AZTLoggerMessages> webLogMessages,
-            string queryString
-        )
-        {
-            if (string.IsNullOrWhiteSpace(queryString))
-            {
-                return webLogMessages;
-            }
-
-            webLogMessages = webLogMessages.Where(m =>
-                ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Id, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.ClientIpAddress, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Environment, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Exception, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.HttpMethod, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Level, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Message, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.ReferrerUrl, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.RequestJsonBody, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Url, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserAgent, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserId, queryString)
-                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserName, queryString)
-            ).ToList();
-
             return webLogMessages;
         }
+
+        webLogMessages = webLogMessages.Where(m =>
+            ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Id, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.ClientIpAddress, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Environment, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Exception, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.HttpMethod, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Level, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Message, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.ReferrerUrl, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.RequestJsonBody, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Url, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserAgent, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserId, queryString)
+            || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserName, queryString)
+        ).ToList();
+
+        return webLogMessages;
     }
 }

@@ -1,61 +1,52 @@
 using System;
 using System.Runtime.Serialization;
-using Microsoft.WindowsAzure.Storage.Table;
+using Azure.Data.Tables;
+using Azure;
 
-namespace Edubase.Data.Entity
+namespace Edubase.Data.Entity;
+
+public class DataQualityStatus : ITableEntity
 {
-    public class DataQualityStatus : TableEntity
+    public string PartitionKey { get; set; } = "DataQuality";
+    public string RowKey { get; set; }
+    public DateTimeOffset? Timestamp { get; set; }
+    public ETag ETag { get; set; }
+
+    /// <summary>
+    /// Note that the enum indices are important to remain consistent:
+    ///  - Azure Table Storage - table `DataQualityStatus` column `RowKey`
+    /// </summary>
+    public DataQualityEstablishmentType EstablishmentType
     {
-        /// <summary>
-        /// Note that the enum indices are important to remain consistent:
-        ///  - Azure Table Storage - table `DataQualityStatus` column `RowKey`
-        /// </summary>
-        public enum DataQualityEstablishmentType
-        {
-            [EnumMember(Value = "Academy openers")]
-            AcademyOpeners,
+        get => (DataQualityEstablishmentType) int.Parse(RowKey);
+        set => RowKey = ((int) value).ToString();
+    }
 
-            [EnumMember(Value = "Free school openers")]
-            FreeSchoolOpeners,
+    public DateTime LastUpdated { get; set; }
+    public string DataOwner { get; set; }
+    public string Email { get; set; }
 
-            [EnumMember(Value = "Open academies and free schools")]
-            OpenAcademiesAndFreeSchools,
+    public enum DataQualityEstablishmentType
+    {
+        [EnumMember(Value = "Academy openers")]
+        AcademyOpeners,
 
-            [EnumMember(Value = "LA maintained schools")]
-            LaMaintainedSchools,
+        [EnumMember(Value = "Free school openers")]
+        FreeSchoolOpeners,
 
-            [EnumMember(Value = "Independent schools")]
-            IndependentSchools,
+        [EnumMember(Value = "Open academies and free schools")]
+        OpenAcademiesAndFreeSchools,
 
-            [EnumMember(Value = "Pupil referral units")]
-            PupilReferralUnits,
+        [EnumMember(Value = "LA maintained schools")]
+        LaMaintainedSchools,
 
-            [EnumMember(Value = "Secure academy 16-19 openers")]
-            AcademySecure16to19Openers
+        [EnumMember(Value = "Independent schools")]
+        IndependentSchools,
 
-        }
+        [EnumMember(Value = "Pupil referral units")]
+        PupilReferralUnits,
 
-        public DataQualityStatus()
-        {
-            PartitionKey = "DataQuality";
-        }
-
-        public DataQualityEstablishmentType EstablishmentType
-        {
-            get
-            {
-                return (DataQualityEstablishmentType)int.Parse(RowKey);
-            }
-            set
-            {
-                RowKey = ((int)value).ToString();
-            }
-        }
-
-        public DateTime LastUpdated { get; set; }
-
-        public string DataOwner { get; set; }
-
-        public string Email { get; set; }
+        [EnumMember(Value = "Secure academy 16-19 openers")]
+        AcademySecure16to19Openers
     }
 }

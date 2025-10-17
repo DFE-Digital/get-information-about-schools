@@ -188,7 +188,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> AuditArticles(string sortBy)
         {
             var result = await _newsRepository.GetAllAsync(1000, false);
-            var audit = await _newsRepository.GetAllAsync(1000, false,null,null, eNewsArticlePartition.Archive);
+            var audit = await _newsRepository.GetAllAsync(1000, false,null,eNewsArticlePartition.Archive);
             var items = result.Items.ToList();
             items.AddRange(audit.Items);
 
@@ -204,7 +204,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> AuditArticle(string id, string sortBy)
         {
             var result = await _newsRepository.GetAllAsync(1000, false);
-            var audit = await _newsRepository.GetAllAsync(1000, false, null, null, eNewsArticlePartition.Archive);
+            var audit = await _newsRepository.GetAllAsync(1000, false, null, eNewsArticlePartition.Archive);
             var items = result.Items.ToList();
             items.AddRange(audit.Items);
 

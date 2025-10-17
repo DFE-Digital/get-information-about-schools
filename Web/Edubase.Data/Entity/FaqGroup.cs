@@ -1,22 +1,23 @@
 using System;
-using Microsoft.WindowsAzure.Storage.Table;
+using Azure;
+using Azure.Data.Tables;
 
-namespace Edubase.Data.Entity
+namespace Edubase.Data.Entity;
+
+public class FaqGroup : ITableEntity
 {
-    public class FaqGroup : TableEntity
+    public string PartitionKey { get; set; } = string.Empty;
+    public string RowKey { get; set; } = Guid.NewGuid().ToString("N").Substring(0, 8);
+    public DateTimeOffset? Timestamp { get; set; }
+    public ETag ETag { get; set; }
+
+    public string GroupName { get; set; }
+    public int DisplayOrder { get; set; }
+
+    public FaqGroup() { }
+
+    public FaqGroup ShallowCopy()
     {
-        public string GroupName { get; set; }
-        public int DisplayOrder { get; set; }
-
-        public FaqGroup()
-        {
-            PartitionKey = string.Empty;
-            RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
-        }
-
-        public FaqGroup ShallowCopy()
-        {
-            return (FaqGroup) this.MemberwiseClone();
-        }
+        return (FaqGroup) this.MemberwiseClone();
     }
 }
