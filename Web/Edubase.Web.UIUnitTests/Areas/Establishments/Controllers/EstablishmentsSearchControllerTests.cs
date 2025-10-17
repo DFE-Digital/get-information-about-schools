@@ -235,7 +235,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 }
             }));
 
-            upr.Setup(x => x.Get(It.IsAny<string>())).Returns(new UserPreference());
+            upr.Setup(x => x.Get(It.IsAny<string>())).Returns(new UserPreference(string.Empty));
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;

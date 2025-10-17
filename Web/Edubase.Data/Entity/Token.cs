@@ -1,40 +1,38 @@
+using System;
+using System.Runtime.Serialization;
+using Azure;
+using Azure.Data.Tables;
 using Edubase.Common;
 using Edubase.Common.Formatting;
-using Microsoft.WindowsAzure.Storage.Table;
-using System;
 
-namespace Edubase.Data.Entity
+namespace Edubase.Data.Entity;
+
+public class Token : ITableEntity
 {
-    public class Token : TableEntity
+    public string PartitionKey { get; set; }
+    public string RowKey { get; set; }
+    public DateTimeOffset? Timestamp { get; set; }
+    public ETag ETag { get; set; }
+
+    public string Data { get; set; }
+
+    [IgnoreDataMember]
+    public string Id => string.Concat(PartitionKey, RowKey);
+
+    public Token() : this(null, null)
     {
-        public string Data { get; set; }
+    }
 
-        [IgnoreProperty]
-        public string Id => string.Concat(PartitionKey, RowKey);
+    public Token(string data, DateTime? date = null)
+    {
+        Data = data ?? string.Empty;
 
-        public Token(string data) : this()
-        {
-            Data = data;
-        }
+        string partitionKey = Base62.FromDate(date ?? DateTime.Now);
 
-        public Token() : this(DateTime.Now)
-        {
+        PartitionKey = partitionKey.Length < 4
+            ? partitionKey.PadLeft(4, '0')
+            : partitionKey[..4];
 
-        }
-
-        public Token(DateTime tokenDate)
-        {
-            var partitionKey = Base62.FromDate(tokenDate);
-            if (partitionKey.Length < 4)
-            {
-                partitionKey = partitionKey.PadLeft(4, '0');
-            }
-            else
-            {
-                partitionKey = partitionKey.Substring(0, 4);
-            }
-            PartitionKey = partitionKey;
-            RowKey = Base62.Encode(RandomNumber.Next(1, 10_000_000));
-        }
+        RowKey = Base62.Encode(RandomNumber.Next(1, 10_000_000));
     }
 }

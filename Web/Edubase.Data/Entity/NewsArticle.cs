@@ -1,64 +1,66 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.WindowsAzure.Storage.Table;
+using System.Runtime.Serialization;
+using Azure;
+using Azure.Data.Tables;
 
-namespace Edubase.Data.Entity
+namespace Edubase.Data.Entity;
+
+public enum eNewsArticlePartition
 {
-    public enum eNewsArticlePartition
+    Current,
+    Archive
+}
+
+public enum eNewsArticleEvent
+{
+    [Display(Name = "Created")]
+    Create,
+    [Display(Name = "Updated")]
+    Update,
+    [Display(Name = "Deleted")]
+    Delete
+}
+
+public enum eNewsArticleStatus
+{
+    [Display(Name = "Active")]
+    Live,
+    [Display(Name = "Future")]
+    Future
+}
+
+public class NewsArticle : ITableEntity
+{
+    public string PartitionKey { get; set; } = eNewsArticlePartition.Current.ToString();
+    public string RowKey { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public DateTimeOffset? Timestamp { get; set; }
+    public ETag ETag { get; set; }
+
+    public string Title { get; set; }
+
+    private DateTime _articleDate;
+    public DateTime ArticleDate
     {
-        Current,
-        Archive
+        get => _articleDate.ToLocalTime();
+        set => _articleDate = value;
     }
 
-    public enum eNewsArticleEvent
-    {
-        [Display(Name = "Created")]
-        Create,
-        [Display(Name = "Updated")]
-        Update,
-        [Display(Name = "Deleted")]
-        Delete
-    }
+    public bool ShowDate { get; set; } = true;
+    public string Content { get; set; }
 
-    public enum eNewsArticleStatus
-    {
-        [Display(Name = "Active")]
-        Live,
-        [Display(Name = "Future")]
-        Future
-    }
+    public int Version { get; set; } = 1;
+    public string Tracker { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public string AuditUser { get; set; }
+    public string AuditEvent { get; set; }
+    public DateTime AuditTimestamp { get; set; }
 
-    public class NewsArticle : TableEntity
-    {
-        public string Title { get; set; }
-       
-        private DateTime _articleDate;
-        public DateTime ArticleDate
-        {
-            get => _articleDate.ToLocalTime(); set => _articleDate = value;
-        }
-        public bool ShowDate { get; set; } = true;
-        public string Content { get; set; }
+    [IgnoreDataMember]
+    public bool Visible => Status == eNewsArticleStatus.Live;
 
-        public int Version { get; set; } = 1;
-        public string Tracker { get; set; }
-        public string AuditUser { get; set; }
-        public string AuditEvent { get; set; }
-        public DateTime AuditTimestamp { get; set; }
-
-        public NewsArticle()
-        {
-            PartitionKey = eNewsArticlePartition.Current.ToString();
-            RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
-            Tracker = RowKey;
-        }
-
-        [IgnoreProperty]
-        public bool Visible => Status == eNewsArticleStatus.Live;
-
-        public eNewsArticleStatus Status =>
-            ArticleDate <= DateTime.Now ?
-                (eNewsArticleStatus) eNewsArticleStatus.Live :
-                (eNewsArticleStatus) eNewsArticleStatus.Future;
-    }
+    [IgnoreDataMember]
+    public eNewsArticleStatus Status =>
+        ArticleDate <= DateTime.Now
+            ? eNewsArticleStatus.Live
+            : eNewsArticleStatus.Future;
 }

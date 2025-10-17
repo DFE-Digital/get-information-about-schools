@@ -1,119 +1,131 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Azure.Data.Tables;
 using Edubase.Common;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories.TableStorage;
-using Microsoft.WindowsAzure.Storage.Table;
-using Microsoft.WindowsAzure.Storage.Table.Queryable;
 
-namespace Edubase.Data.Repositories
+namespace Edubase.Data.Repositories;
+
+public class DataQualityStatusRepository : TableStorageBase<DataQualityStatus>, IDataQualityStatusRepository
 {
-    public class DataQualityStatusRepository : TableStorageBase<DataQualityStatus>, IDataQualityStatusRepository
+
+    private const string DataQualityStatusPartitionKey = "DataQuality";
+
+    public DataQualityStatusRepository()
+        : base("DataConnectionString")
     {
-        public DataQualityStatusRepository()
-            : base("DataConnectionString")
+        SeedTable();
+    }
+
+    public async Task<IEnumerable<DataQualityStatus>> GetAllAsync()
+    {
+        List<DataQualityStatus> results = [];
+
+        await foreach (var entity in Table.QueryAsync<DataQualityStatus>())
         {
-            SeedTable();
+            results.Add(entity);
         }
 
-        public async Task<List<DataQualityStatus>> GetAllAsync()
+        return results;
+    }
+
+
+    public async Task UpdateDataQualityAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated)
+    {
+        var response = await Table.GetEntityIfExistsAsync<DataQualityStatus>(
+            partitionKey: DataQualityStatusPartitionKey,
+            rowKey: ((int) establishmentType).ToString());
+
+        if (response.HasValue)
         {
-            var query = Table.CreateQuery<DataQualityStatus>();
-            var results = await query.ExecuteSegmentedAsync(null);
-            return results.Results;
+            var entity = response.Value;
+            entity.LastUpdated = lastUpdated;
+            await Table.UpdateEntityAsync(entity, entity.ETag, TableUpdateMode.Replace);
         }
 
+    }
 
-        public async Task UpdateDataQualityAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated)
+
+    public async Task UpdateDataQualityDataOwnerDetailsAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, string dataOwnerName, string dataOwnerEmail)
+    {
+        var response = await Table.GetEntityIfExistsAsync<DataQualityStatus>(
+            partitionKey: DataQualityStatusPartitionKey,
+            rowKey: ((int) establishmentType).ToString());
+
+        if (response.HasValue)
         {
-            var query = Table.CreateQuery<DataQualityStatus>().Where(d => d.RowKey == ((int)establishmentType).ToString()).AsTableQuery();
-            var results = await query.ExecuteSegmentedAsync(null);
-            var dataQualityRecord = results.FirstOrDefault();
-            if (dataQualityRecord != null)
+            var entity = response.Value;
+            entity.DataOwner = dataOwnerName;
+            entity.Email = dataOwnerEmail;
+            await Table.UpdateEntityAsync(entity, entity.ETag, TableUpdateMode.Replace);
+        }
+    }
+
+    private void SeedTable()
+    {
+        var seedData = new List<DataQualityStatus>
+        {
+            new()
             {
-                dataQualityRecord.LastUpdated = lastUpdated;
+                EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.AcademyOpeners,
+                LastUpdated = new DateTime(1601, 1, 1),
+                DataOwner = "Academies Operation and Strategy",
+                Email = "academies.data@education.gov.uk"
+            },
+            new()
+            {
+                EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners,
+                LastUpdated = new DateTime(1601, 1, 1),
+                DataOwner = "Free Schools Delivery 1",
+                Email = "freeschools.pre-opening@education.gov.uk"
+            },
+            new()
+            {
+                EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.OpenAcademiesAndFreeSchools,
+                LastUpdated = new DateTime(1601, 1, 1),
+                DataOwner = "EFA Academies Enquiries Team",
+                Email = "academiesdata.esfa@education.gov.uk"
+            },
+            new()
+            {
+                EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.LaMaintainedSchools,
+                LastUpdated = new DateTime(1601, 1, 1),
+                DataOwner = "School Organisation Team",
+                Email = "schoolorganisation.notifications@education.gov.uk"
+            },
+            new()
+            {
+                EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.IndependentSchools,
+                LastUpdated = new DateTime(1601, 1, 1),
+                DataOwner = "Independent Education and Boarding Team",
+                Email = "registration.enquiries@education.gov.uk"
+            },
+            new()
+            {
+                EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.PupilReferralUnits,
+                LastUpdated = new DateTime(1601, 1, 1),
+                DataOwner = "Alternative Provision and Exclusions Team",
+                Email = "alternativeprovision.pru@education.gov.uk"
+            },
+        };
 
-                var operation = TableOperation.InsertOrReplace(dataQualityRecord);
-                await Table.ExecuteAsync(operation);
-            }
-        }
 
-        public async Task UpdateDataQualityDataOwnerDetailsAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, string dataOwnerName, string dataOwnerEmail)
+        foreach (var _ in Table.Query<DataQualityStatus>())
         {
-            var query = Table.CreateQuery<DataQualityStatus>().Where(d => d.RowKey == ((int)establishmentType).ToString()).AsTableQuery();
-            var results = await query.ExecuteSegmentedAsync(null);
-            var dataQualityRecord = results.FirstOrDefault();
-            if (dataQualityRecord != null)
-            {
-                dataQualityRecord.DataOwner = dataOwnerName;
-                dataQualityRecord.Email = dataOwnerEmail;
-
-                var operation = TableOperation.InsertOrReplace(dataQualityRecord);
-                await Table.ExecuteAsync(operation);
-            }
+            // Found at least one entity — table is not empty
+            return;
         }
 
-        private void SeedTable()
+        // Table is empty — seed it
+        foreach (var data in seedData)
         {
-            var seedData = new List<DataQualityStatus>
-            {
-                new DataQualityStatus
-                {
-                    EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.AcademyOpeners,
-                    LastUpdated = new DateTime(1601, 1, 1),
-                    DataOwner = "Academies Operation and Strategy",
-                    Email = "academies.data@education.gov.uk"
-                },
-                new DataQualityStatus
-                {
-                    EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners,
-                    LastUpdated = new DateTime(1601, 1, 1),
-                    DataOwner = "Free Schools Delivery 1",
-                    Email = "freeschools.pre-opening@education.gov.uk"
-                },
-                new DataQualityStatus
-                {
-                    EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.OpenAcademiesAndFreeSchools,
-                    LastUpdated = new DateTime(1601, 1, 1),
-                    DataOwner = "EFA Academies Enquiries Team",
-                    Email = "academiesdata.esfa@education.gov.uk"
-                },
-                new DataQualityStatus
-                {
-                    EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.LaMaintainedSchools,
-                    LastUpdated = new DateTime(1601, 1, 1),
-                    DataOwner = "School Organisation Team",
-                    Email = "schoolorganisation.notifications@education.gov.uk"
-                },
-                new DataQualityStatus
-                {
-                    EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.IndependentSchools,
-                    LastUpdated = new DateTime(1601, 1, 1),
-                    DataOwner = "Independent Education and Boarding Team",
-                    Email = "registration.enquiries@education.gov.uk"
-                },
-                new DataQualityStatus
-                {
-                    EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.PupilReferralUnits,
-                    LastUpdated = new DateTime(1601, 1, 1),
-                    DataOwner = "Alternative Provision and Exclusions Team",
-                    Email = "alternativeprovision.pru@education.gov.uk"
-                },
-            };
-
-            var query = Table.CreateQuery<DataQualityStatus>();
-            var results = query.Execute();
-            if (!results.Any())
-            {
-                foreach (var data in seedData)
-                {
-                    var operation = TableOperation.Insert(data);
-                    Table.Execute(operation);
-                }
-            }
+            Table.AddEntity(data);
         }
+
     }
 }
