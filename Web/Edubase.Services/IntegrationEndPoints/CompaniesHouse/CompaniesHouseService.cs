@@ -49,7 +49,7 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
                     Address = new CompanyAddress { Line1 = x.Address?.AddressLine1, Line2 = x.Address?.AddressLine2, CityOrTown = x.Address?.Locality, PostCode = x.Address?.PostalCode },
                     IncorporationDate = x.DateOfCreation,
                     Number = x.CompanyNumber
-                }).ToList(), Math.Min(result.Data.TotalResults.GetValueOrDefault(), COMPANIES_HOUSE_SIZE_LIMIT));
+                }).ToList(), Math.Min(result.Data.TotalResults, COMPANIES_HOUSE_SIZE_LIMIT));
             }
             else return PagedDto<CompanyProfile>.Empty;
         }

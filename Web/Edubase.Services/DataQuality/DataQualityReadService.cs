@@ -1,22 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 
-namespace Edubase.Services.DataQuality
+namespace Edubase.Services.DataQuality;
+
+public class DataQualityReadService : IDataQualityReadService
 {
-    public class DataQualityReadService : IDataQualityReadService
+    public DataQualityReadService(IDataQualityStatusRepository repository)
     {
-        public DataQualityReadService(IDataQualityStatusRepository repository)
-        {
-            Repository = repository;
-        }
+        Repository = repository;
+    }
 
-        protected IDataQualityStatusRepository Repository { get; }
+    protected IDataQualityStatusRepository Repository { get; }
 
-        public async Task<List<DataQualityStatus>> GetDataQualityStatus()
-        {
-            return await Repository.GetAllAsync();
-        }
+    public async Task<IEnumerable<DataQualityStatus>> GetDataQualityStatus()
+    {
+        return await Repository.GetAllAsync();
     }
 }
