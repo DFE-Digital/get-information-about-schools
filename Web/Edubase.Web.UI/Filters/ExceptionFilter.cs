@@ -11,6 +11,7 @@ using Sustainsys.Saml2.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Edubase.Services.Texuna;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -92,7 +93,7 @@ namespace Edubase.Web.UI.Filters
 
             try
             {
-                userId = ctx?.User?.Identity?.GetUserId();
+                userId = ctx?.User?.GetUserId();
                 userName = ctx?.User?.Identity?.GetUserName();
             }
             catch
