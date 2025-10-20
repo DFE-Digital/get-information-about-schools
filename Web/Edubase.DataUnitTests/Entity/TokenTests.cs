@@ -1,5 +1,4 @@
 using System;
-using Edubase.Common.Formatting;
 using Edubase.Data.Entity;
 using Xunit;
 

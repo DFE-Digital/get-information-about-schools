@@ -40,8 +40,6 @@ namespace Edubase.Common.Formatting
             return value;
         }
 
-        public static string FromCurrentDate() => FromDate(DateTime.Now);
-
         public static string FromDate(DateTime date) => Encode(int.Parse(string.Concat(date.Year, date.Month, date.Day)));
     }
 }
