@@ -1,13 +1,10 @@
-using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.WindowsAzure.Storage.Table;
-using System.Threading.Tasks;
-using MoreLinq;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using System.Threading.Tasks;
 using Azure;
 using Azure.Data.Tables;
+using Edubase.Data.Entity;
+using Edubase.Data.Repositories.TableStorage;
 
 namespace Edubase.Data.Repositories;
 

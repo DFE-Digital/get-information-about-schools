@@ -1,40 +1,39 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Edubase.Services.TexunaUnitTests.Core
+namespace Edubase.Services.TexunaUnitTests.Core;
+
+public class MockHttpMessageHandler : HttpMessageHandler
 {
-    public class MockHttpMessageHandler : HttpMessageHandler
+    public bool AlwaysTimeout { get; set; }
+
+    private Dictionary<Uri, HttpResponseMessage> Response2UriMap { get; }
+        = new Dictionary<Uri, HttpResponseMessage>();
+
+    public void Add(Uri uri, HttpResponseMessage responseMessage)
     {
-        public bool AlwaysTimeout { get; set; }
+        Response2UriMap.Add(uri, responseMessage);
+    }
 
-        private Dictionary<Uri, HttpResponseMessage> Response2UriMap { get; }
-            = new Dictionary<Uri, HttpResponseMessage>();
+    public void Clear()
+    {
+        Response2UriMap.Clear();
+    }
 
-        public void Add(Uri uri, HttpResponseMessage responseMessage)
+    protected override Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        if (AlwaysTimeout)
         {
-            Response2UriMap.Add(uri, responseMessage);
+            throw new TaskCanceledException();
         }
 
-        public void Clear()
-        {
-            Response2UriMap.Clear();
-        }
-
-        protected override Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            if (AlwaysTimeout)
-            {
-                throw new TaskCanceledException();
-            }
-
-            return Task.FromResult(Response2UriMap.ContainsKey(request.RequestUri)
-                ? Response2UriMap[request.RequestUri]
-                : new HttpResponseMessage(HttpStatusCode.NotFound) { RequestMessage = request });
-        }
+        return Task.FromResult(Response2UriMap.ContainsKey(request.RequestUri)
+            ? Response2UriMap[request.RequestUri]
+            : new HttpResponseMessage(HttpStatusCode.NotFound) { RequestMessage = request });
     }
 }
