@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
@@ -40,6 +39,7 @@ using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
 using EnumExtensions = Edubase.Services.Establishments.EnumExtensions;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -352,7 +352,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var result = await _establishmentReadService.GetAsync(id, User);
             if (result.ReturnValue == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             viewModel.Establishment = result.ReturnValue;
@@ -394,7 +394,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (result.ReturnValue == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var changes = await _establishmentReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User);
@@ -421,7 +421,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             var result = await _establishmentReadService.GetAsync(urn, User);
-            return result.ReturnValue == null ? HttpNotFound() : new HttpStatusCodeResult(200);
+            return result.ReturnValue == null ? NotFound() : new StatusCodeResult((int) 200);
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}", Name = "EditEstablishmentDetail")]
@@ -429,7 +429,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = await CreateEditViewModel(id, vm =>
@@ -451,7 +451,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = await CreateEditViewModel(id);
@@ -482,7 +482,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View("EditIEBT", viewModel);
             }
 
-            return HttpNotFound();
+            return NotFound();
         }
 
         [HttpGet, EdubaseAuthorize, Route("Proprietor/Add/{urn:int}/{counter:int}")]
@@ -510,7 +510,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new EditEstablishmentLinksViewModel();
@@ -526,7 +526,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = await CreateEditViewModel(id);
@@ -641,7 +641,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel = viewModel ?? new SearchForEstablishmentViewModel();
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             await PopulateEstablishmentPageViewModel(viewModel, id.Value, "links");

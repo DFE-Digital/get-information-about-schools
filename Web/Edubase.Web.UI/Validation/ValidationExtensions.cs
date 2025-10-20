@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using System.Web.Mvc;
 using Edubase.Services.Domain;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Validation
 {

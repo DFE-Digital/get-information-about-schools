@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Models
 {
@@ -8,7 +8,7 @@ namespace Edubase.Web.UI.Models
     {
         public class LinkAction
         {
-            public MvcHtmlString Link { get; set; }
+            public HtmlString Link { get; set; }
             public string Description { get; set; }
         }
 
@@ -36,7 +36,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanViewLogs { get; internal set; }
         public bool UserCanResetCaches { get; internal set; }
 
-        public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
+        public List<LinkAction> GetCreateActions(IHtmlHelper htmlHelper)
         {
             var retVal = new List<LinkAction>();
 
@@ -150,7 +150,7 @@ namespace Edubase.Web.UI.Models
             return retVal;
         }
 
-        public List<LinkAction> GetUpdateActions(HtmlHelper htmlHelper)
+        public List<LinkAction> GetUpdateActions(IHtmlHelper htmlHelper)
         {
             var retVal = new List<LinkAction>();
             if (UserCanBulkUpdateEstablishments)
@@ -186,7 +186,7 @@ namespace Edubase.Web.UI.Models
             return retVal;
         }
 
-        public List<LinkAction> GetAdminActions(HtmlHelper htmlHelper)
+        public List<LinkAction> GetAdminActions(IHtmlHelper htmlHelper)
         {
             var retVal = new List<LinkAction>();
 
@@ -275,7 +275,7 @@ namespace Edubase.Web.UI.Models
             return retVal;
         }
 
-        public List<LinkAction> GetSupportActions(HtmlHelper htmlHelper)
+        public List<LinkAction> GetSupportActions(IHtmlHelper htmlHelper)
         {
             var retVal = new List<LinkAction>();
 

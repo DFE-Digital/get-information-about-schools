@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Data.Entity;
 using Edubase.Services.DataQuality;
 using Edubase.Services.Security;
@@ -11,6 +10,7 @@ using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.DataQuality;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {

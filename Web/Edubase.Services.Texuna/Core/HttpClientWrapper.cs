@@ -6,7 +6,6 @@ namespace Edubase.Services
     using Data.Repositories;
     using Domain;
     using Exceptions;
-    using Microsoft.AspNet.Identity;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;

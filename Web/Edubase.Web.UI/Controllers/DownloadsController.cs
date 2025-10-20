@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
-using System.Web.Mvc;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
 using Edubase.Web.UI.Models;
@@ -15,13 +14,12 @@ using Edubase.Common;
 using Edubase.Web.UI.Helpers;
 using System.Linq;
 using System.Net.Http;
-using System.Web.Http.Results;
-using System.Web.Routing;
 using Edubase.Services;
 using Edubase.Services.Downloads.Models;
 using Edubase.Web.UI.Models.Search;
 using Edubase.Web.UI.Models.Guidance;
 using Glimpse.Core.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -280,7 +278,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (string.IsNullOrWhiteSpace(state))
                 {
-                    return new HttpStatusCodeResult(400, "State parameter cannot be empty");
+                    return new StatusCodeResult((int) 400);
                 }
 
                 ViewBag.RouteName = "GroupDataDownload";
@@ -291,7 +289,7 @@ namespace Edubase.Web.UI.Controllers
                 }
                 catch (FormatException ex)
                 {
-                    return new HttpStatusCodeResult(400, "Invalid state parameter");
+                    return new StatusCodeResult((int) 400);
                 }
 
                 if (downloadType.HasValue && !start) return View("Download");
@@ -301,7 +299,7 @@ namespace Edubase.Web.UI.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(500, "An unexpected error occured");
+                return new StatusCodeResult((int) 500);
             }
         }
 
@@ -348,7 +346,7 @@ namespace Edubase.Web.UI.Controllers
             }
             else
             {
-                return HttpNotFound();
+                return NotFound();
             }
         }
 
@@ -383,7 +381,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             else
             {

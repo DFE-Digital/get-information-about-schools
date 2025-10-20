@@ -3,7 +3,6 @@ using System.Web;
 using Edubase.Services.Texuna.Glimpse;
 using Glimpse.AspNet.Extensibility;
 using Glimpse.Core.Extensibility;
-using Microsoft.AspNet.Identity;
 
 namespace Edubase.Web.UI.Glimpse
 {

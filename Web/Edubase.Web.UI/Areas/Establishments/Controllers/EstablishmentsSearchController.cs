@@ -3,12 +3,9 @@ using Edubase.Web.UI.Models;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Data.Repositories;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -54,7 +51,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route(Name = "EstabSearch")]
         public async Task<ActionResult> Index(EstablishmentSearchViewModel model)
         {
-            model.SearchQueryString = Request.QueryString.ToString();
+            model.SearchQueryString = Request.Query.ToString();
 
             var retVal = await SearchByUrnAsync(model);
             if (retVal != null)
@@ -83,7 +80,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("results-js")]
         public async Task<PartialViewResult> ResultsPartial(EstablishmentSearchViewModel model)
         {
-            model.SearchQueryString = Request.QueryString.ToString();
+            model.SearchQueryString = Request.Query.ToString();
             var payload = await GetEstablishmentSearchPayload(model);
             if (!payload.Success)
             {
@@ -119,7 +116,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var filtered = model.Results
                 .Select(result => new
                 {
-                    Result = result, LA = localAuthorities.SingleOrDefault(la => la.Id == result.LocalAuthorityId)
+                    Result = result,
+                    LA = localAuthorities.SingleOrDefault(la => la.Id == result.LocalAuthorityId)
                 })
                 .Select(a => new
                 {
@@ -163,7 +161,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (!viewModel.Dataset.HasValue)
             {
                 viewModel.Dataset = eDataSet.Custom;
-                viewModel.SearchQueryString = Request.QueryString.ToString();
+                viewModel.SearchQueryString = Request.Query.ToString();
                 return View("Downloads/SelectDataset", viewModel);
             }
 
@@ -180,7 +178,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
 
                 // the SearchQueryString is used for the breadcrumb response. We dont want to retain the Dataset selection as part of that
-                var queryString = new NameValueCollection(Request.QueryString);
+                var queryString = new NameValueCollection(Request.Query);
                 queryString.Remove("Dataset");
                 viewModel.SearchQueryString = queryString.ToQueryString();
                 viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User))
@@ -238,7 +236,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             };
 
             if (model.HasErrored)
-                return View("Downloads/DownloadError", new DownloadErrorViewModel{SearchQueryString = searchQueryString, SearchSource = searchSource, NeedsRegenerating = true});
+                return View("Downloads/DownloadError", new DownloadErrorViewModel { SearchQueryString = searchQueryString, SearchSource = searchSource, NeedsRegenerating = true });
 
             if (!model.IsComplete)
                 return View("Downloads/PreparingFilePleaseWait", viewModel);
@@ -273,13 +271,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 // reload the current page so the server can prepare the error view and redirect the user
                 return Json(JsonConvert.SerializeObject(new
                 {
-                    status = "error", redirect = "/Establishments/Search/Download"
+                    status = "error",
+                    redirect = "/Establishments/Search/Download"
                 }));
             }
 
             return Json(JsonConvert.SerializeObject(new
             {
-                status = model.IsComplete, redirect = "/Establishments/Search/Download"
+                status = model.IsComplete,
+                redirect = "/Establishments/Search/Download"
             }));
 
         }
@@ -361,7 +361,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     var laestab = LAESTAB.TryParse(model.TextSearchModel.Text).Value;
                     var localAuthorityId = (await _lookupService.LocalAuthorityGetAllAsync())
                         .FirstOrDefault(x => x.Code == laestab.LocalAuthorityCode)?.Id;
-                    if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] {localAuthorityId.Value};
+                    if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] { localAuthorityId.Value };
                     filters.EstablishmentNumber = laestab.EstablishmentNumber;
                 }
                 else if ((model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName &&
@@ -561,9 +561,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 if (!model.SelectedEstablishmentStatusIds.Any() ||
                     model.SelectedEstablishmentStatusIds.Contains((await _establishmentReadService.GetAsync(urn.Value, User)).GetResult().StatusId.GetValueOrDefault()))
-                        {
-                            return RedirectToEstabDetail(urn.Value);
-                        }
+                {
+                    return RedirectToEstabDetail(urn.Value);
+                }
             }
 
             return null;

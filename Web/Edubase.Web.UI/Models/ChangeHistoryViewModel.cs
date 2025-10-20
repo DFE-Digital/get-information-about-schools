@@ -3,7 +3,6 @@ using Edubase.Services.Enums;
 namespace Edubase.Web.UI.Models
 {
     using System.Collections.Generic;
-    using System.Web.Mvc;
 
     using Common;
     using Helpers.ModelBinding;

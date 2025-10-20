@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -22,8 +23,8 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="additionalLabelClasses"></param>
         /// <param name="htmlAttributes"></param>
         /// <returns></returns>
-        public static MvcHtmlString GiasRadioFor<TModel, TProperty>(
-            this HtmlHelper<TModel> helper,
+        public static HtmlString GiasRadioFor<TModel, TProperty>(
+            this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, TProperty>> expression,
             object value,
             string labelText = "",
@@ -56,7 +57,7 @@ namespace Edubase.Web.UI.Helpers
             tagBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-radios__label", additionalLabelClasses));
             tagBuilder.InnerHtml = labelText;
 
-            return new MvcHtmlString(radioButton.ToHtmlString() + tagBuilder);
+            return new HtmlString(radioButton.ToHtmlString() + tagBuilder);
         }
 
 
@@ -69,7 +70,7 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="additionalLabelClasses"></param>
         /// <param name="htmlAttributes"></param>
         /// <returns></returns>
-        public static MvcHtmlString GiasRadio(
+        public static HtmlString GiasRadio(
             string inputValue,
             string inputName,
             string labelText,
@@ -106,7 +107,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return new MvcHtmlString("<div class=\"govuk-radios__item\">" + checkbox + labelBuilder + "</div>");
+            return new HtmlString("<div class=\"govuk-radios__item\">" + checkbox + labelBuilder + "</div>");
         }
 
         /// <summary>
@@ -119,8 +120,8 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="additionalLabelClasses"></param>
         /// <param name="htmlAttributes"></param>
         /// <returns></returns>
-        public static MvcHtmlString GiasCheckboxFor<TModel>(
-            this HtmlHelper<TModel> helper,
+        public static HtmlString GiasCheckboxFor<TModel>(
+            this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             string labelText = "",
             string additionalLabelClasses = "",
@@ -152,7 +153,7 @@ namespace Edubase.Web.UI.Helpers
             tagBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-checkboxes__label", additionalLabelClasses));
             tagBuilder.InnerHtml = labelText;
 
-            return new MvcHtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox.ToHtmlString() + tagBuilder +"</div>" );
+            return new HtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox.ToHtmlString() + tagBuilder +"</div>" );
         }
 
         /// <summary>
@@ -165,7 +166,7 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="htmlAttributes"></param>
         /// <param name="isChecked"></param>
         /// <returns></returns>
-        public static MvcHtmlString GiasCheckbox(
+        public static HtmlString GiasCheckbox(
             string inputValue,
             string inputName,
             string labelText,
@@ -203,7 +204,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return new MvcHtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox + labelBuilder + "</div>");
+            return new HtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox + labelBuilder + "</div>");
 
         }
     }

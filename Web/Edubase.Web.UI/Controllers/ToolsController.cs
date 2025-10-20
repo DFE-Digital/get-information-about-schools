@@ -1,6 +1,7 @@
 using Edubase.Services.Domain;
 using Microsoft.Ajax.Utilities;
 using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -26,7 +27,6 @@ namespace Edubase.Web.UI.Controllers
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web.Mvc;
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
 

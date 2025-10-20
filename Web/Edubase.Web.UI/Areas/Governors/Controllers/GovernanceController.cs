@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services;
 using Edubase.Services.Enums;
@@ -11,6 +10,7 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {

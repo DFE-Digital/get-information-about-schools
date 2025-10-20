@@ -2,14 +2,15 @@ using System;
 using System.Configuration;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using Edubase.Common;
 using Edubase.Services.Exceptions;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
 using Edubase.Web.UI.Helpers;
 using Sustainsys.Saml2.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -69,7 +70,7 @@ namespace Edubase.Web.UI.Filters
                         ["Exception"] = msg.Exception,
                         ["UserId"] = msg.UserId,
                         ["UserName"] = msg.UserName,
-                        ["UserAgent"] = msg.UserAgent,
+                        ["UserAgent"] = msg.Headers["User-Agent"].ToString(),
                         ["ClientIpAddress"] = msg.ClientIpAddress,
                         ["ReferrerUrl"] = msg.ReferrerUrl,
                         ["HttpMethod"] = msg.HttpMethod,
@@ -108,14 +109,14 @@ namespace Edubase.Web.UI.Filters
                 ReferrerUrl = ctx?.Request.UrlReferrer?.ToString(),
                 Message = exception?.GetBaseException().Message,
                 Url = ctx?.Request.Url?.ToString(),
-                UserAgent = ctx?.Request.UserAgent,
+                UserAgent = ctx?.Request.Headers["User-Agent"].ToString(),
                 UserId = userId,
                 UserName = userName,
                 RequestJsonBody = (exception as TexunaApiSystemException)?.ApiRequestJsonPayload ?? string.Empty
             };
 
             if (!new[] {string.Empty, "POST", "GET"}.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase))) return msg; // only log errors GET/POST or empty http method
-            if ((msg.UserAgent ?? string.Empty).IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
+            if ((msg.Headers["User-Agent"].ToString() ?? string.Empty).IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
             {
                 _logger.Log(msg);
             }

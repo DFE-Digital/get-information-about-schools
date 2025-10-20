@@ -10,57 +10,59 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Helpers
 {
     public static class HtmlHelperExtensions
     {
-        public static MvcHtmlString ValidationCssClassFor<TModel, TProperty>(
-            this HtmlHelper<TModel> htmlHelper,
+        public static HtmlString ValidationCssClassFor<TModel, TProperty>(
+            this IHtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> expression)
         {
             var expressionText = ExpressionHelper.GetExpressionText(expression);
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
             return state == null
-                ? MvcHtmlString.Empty
-                : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-form-group--error");
+                ? HtmlString.Empty
+                : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-form-group--error");
         }
 
-        public static MvcHtmlString ValidationCssClass(this HtmlHelper htmlHelper, string modelName)
+        public static HtmlString ValidationCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            return state == null ? MvcHtmlString.Empty : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-error-message");
+            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-error-message");
         }
 
-        public static MvcHtmlString ValidationGroupCssClass(this HtmlHelper htmlHelper, string modelName)
+        public static HtmlString ValidationGroupCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
             return state == null
-                ? MvcHtmlString.Empty
-                : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-form-group--error");
+                ? HtmlString.Empty
+                : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-form-group--error");
         }
 
-        public static MvcHtmlString ValidationSelectCssClass(this HtmlHelper htmlHelper, string modelName)
+        public static HtmlString ValidationSelectCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            return state == null ? MvcHtmlString.Empty : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-select--error");
+            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-select--error");
         }
 
-        public static MvcHtmlString TextBoxValidationClass<TModel, TProperty>(
-            this HtmlHelper<TModel> htmlHelper,
+        public static HtmlString TextBoxValidationClass<TModel, TProperty>(
+            this IHtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> expression)
         {
             var expressionText = ExpressionHelper.GetExpressionText(expression);
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
-            return state == null ? MvcHtmlString.Empty : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-input--error");
+            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-input--error");
         }
 
-        public static MvcHtmlString ValidationMessageNested(this HtmlHelper htmlHelper, string modelName)
+        public static HtmlString ValidationMessageNested(this IHtmlHelper htmlHelper, string modelName)
         {
             var fullFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(modelName);
             if (!htmlHelper.ViewData.ModelState.ContainsKey(fullFieldName))
@@ -82,7 +84,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return htmlHelper.ValidationMessage(modelName, (string) null, new { @class = "govuk-error-message"});
+            return htmlHelper.ValidationMessage(modelName, (string) null, new { @class = "govuk-error-message" });
         }
 
         /// <summary>
@@ -108,42 +110,42 @@ namespace Edubase.Web.UI.Helpers
             return splitName;
         }
 
-        public static MvcHtmlString DuplicateCssClassFor(this HtmlHelper htmlHelper, int? governorId)
+        public static HtmlString DuplicateCssClassFor(this IHtmlHelper htmlHelper, int? governorId)
         {
             if (htmlHelper.ViewContext.ViewData.ContainsKey("DuplicateGovernor") && governorId.HasValue)
             {
-                var duplicate = (GovernorModel)htmlHelper.ViewContext.ViewData["DuplicateGovernor"];
+                var duplicate = (GovernorModel) htmlHelper.ViewContext.ViewData["DuplicateGovernor"];
                 if (governorId == duplicate.Id)
                 {
-                    return new MvcHtmlString("error");
+                    return new HtmlString("error");
                 }
             }
 
-            return MvcHtmlString.Empty;
+            return HtmlString.Empty;
         }
 
 
-        public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None,
+        public static IHtmlString Json<TModel>(this IHtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None,
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
 
-        public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, string text)
-            => condition ? htmlHelper.Raw(text) : MvcHtmlString.Empty;
+        public static IHtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, string text)
+            => condition ? htmlHelper.Raw(text) : HtmlString.Empty;
 
-        public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, IHtmlString html)
-            => condition ? html : MvcHtmlString.Empty;
+        public static IHtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, IHtmlString html)
+            => condition ? html : HtmlString.Empty;
 
-        public static IHtmlString HiddenFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
-         => condition ? htmlHelper.HiddenFor(expression) : MvcHtmlString.Empty;
+        public static IHtmlString HiddenFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
+         => condition ? htmlHelper.HiddenFor(expression) : HtmlString.Empty;
 
         /// <summary>
         /// Puts all the stuff that's current in the querystring into hidden form fields.
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
-        public static IHtmlString HiddenFieldsFromQueryString(this HtmlHelper html, string[] keysToExclude = null)
+        public static IHtmlString HiddenFieldsFromQueryString(this IHtmlHelper html, string[] keysToExclude = null)
         {
             var sb = new StringBuilder();
-            var query = html.ViewContext.HttpContext.Request.QueryString;
+            var query = html.ViewContext.HttpContext.Request.Query;
             var keys = query.AllKeys;
 
             if (keysToExclude != null)
@@ -159,27 +161,27 @@ namespace Edubase.Web.UI.Helpers
                     sb.AppendLine("\r\n\t\t\t\t\t\t\t\t\t" + $@"<input type=""hidden"" name=""{HttpUtility.HtmlEncode(item)}"" value=""{HttpUtility.HtmlEncode(item2)}"" />");
                 }
             }
-            return new MvcHtmlString(sb.ToString());
+            return new HtmlString(sb.ToString());
 
         }
 
-        public static HtmlHelper<TModel> For<TModel>(this HtmlHelper helper) where TModel : class, new()
+        public static IHtmlHelper<TModel> For<TModel>(this IHtmlHelper helper) where TModel : class, new()
         {
             return For<TModel>(helper.ViewContext, helper.ViewDataContainer.ViewData, helper.RouteCollection);
         }
 
-        public static HtmlHelper<TModel> For<TModel>(this HtmlHelper helper, TModel model)
+        public static IHtmlHelper<TModel> For<TModel>(this IHtmlHelper helper, TModel model)
         {
             return For<TModel>(helper.ViewContext, helper.ViewDataContainer.ViewData, helper.RouteCollection, model);
         }
 
-        public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection) where TModel : class, new()
+        public static IHtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection) where TModel : class, new()
         {
             var model = new TModel();
             return For<TModel>(viewContext, viewData, routeCollection, model);
         }
 
-        public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection, TModel model)
+        public static IHtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection, TModel model)
         {
             var newViewData = new ViewDataDictionary(viewData) { Model = model };
             var newViewContext = new ViewContext(
@@ -210,17 +212,17 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="decimalPlaces"></param>
         /// <param name="minimumValue"></param>
         /// <returns></returns>
-        public static IHtmlString FileSizeInMegabytes(this HtmlHelper html, long? fileSizeInBytes, int decimalPlaces = 2, double minimumValue = 0)
+        public static IHtmlString FileSizeInMegabytes(this IHtmlHelper html, long? fileSizeInBytes, int decimalPlaces = 2, double minimumValue = 0)
         {
             if (fileSizeInBytes.HasValue)
             {
-                var mb = Math.Round((double)fileSizeInBytes.Value / 1024 / 1024, decimalPlaces);
+                var mb = Math.Round((double) fileSizeInBytes.Value / 1024 / 1024, decimalPlaces);
                 var result = mb > minimumValue ? mb : minimumValue;
-                return new MvcHtmlString(result.ToString() + " MB");
+                return new HtmlString(result.ToString() + " MB");
             }
             else
             {
-                return new MvcHtmlString(string.Empty);
+                return new HtmlString(string.Empty);
             }
         }
 
@@ -231,8 +233,8 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="htmlHelper"></param>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static string Field<TModel>(this HtmlHelper<TModel> htmlHelper, object obj, string dateFormat = null)
-            => (obj is DateTime? ? ((DateTime?)obj)?.ToString(dateFormat ?? "d MMMM yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
+        public static string Field<TModel>(this IHtmlHelper<TModel> htmlHelper, object obj, string dateFormat = null)
+            => (obj is DateTime? ? ((DateTime?) obj)?.ToString(dateFormat ?? "d MMMM yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
 
 
         private const string AssetsPath = "public/assets/scripts/build";
@@ -243,7 +245,7 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="expression"></param>
         /// <param name="path"></param>
         /// <returns>path to js file</returns>
-        public static string GetWebpackScriptUrl(this HtmlHelper helper, string expression, string path = null)
+        public static string GetWebpackScriptUrl(this IHtmlHelper helper, string expression, string path = null)
         {
             if (path == null)
             {
@@ -263,7 +265,7 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="dynamicHtmlAttributes">A dynamic set of htmlAttributes (Dictionary)</param>
         /// <returns>A collection of htmlAttributes including a merge of the given set(s)</returns>
         public static IDictionary<string, object> GetHtmlAttributes(
-            this HtmlHelper helper,
+            this IHtmlHelper helper,
             object fixedHtmlAttributes = null,
             IDictionary<string, object> dynamicHtmlAttributes = null
         )
@@ -291,8 +293,8 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="selectListItem">Items of the dropdown list. Usually a blank class to populate</param>
         /// <param name="htmlAttributes">Containing additonal attributes for the element, expected class usually</param>
         /// <returns></returns>
-        public static MvcHtmlString DropDownListWithIds<TModel, TProperty>(
-            this HtmlHelper<TModel> htmlHelper,
+        public static HtmlString DropDownListWithIds<TModel, TProperty>(
+            this IHtmlHelper<TModel> htmlHelper,
            Expression<Func<TModel, TProperty>> expression,
            IEnumerable<SelectListItem> selectListItem,
            object htmlAttributes)
@@ -322,7 +324,7 @@ namespace Edubase.Web.UI.Helpers
             dropdown.InnerHtml = options.ToString();
             dropdown.MergeAttributes(new RouteValueDictionary(htmlAttributes));
 
-            return MvcHtmlString.Create(dropdown.ToString(TagRenderMode.Normal));
+            return HtmlString.Create(dropdown.ToString(TagRenderMode.Normal));
         }
 
         /// <summary>
@@ -341,7 +343,7 @@ namespace Edubase.Web.UI.Helpers
         ///         <item>If one or more raw newlines, these will be HTML newlines.</item>
         ///     </list>
         /// </returns>
-        public static MvcHtmlString HtmlNewlines(this HtmlHelper helper, string input)
+        public static HtmlString HtmlNewlines(this IHtmlHelper helper, string input)
         {
             // Restrict/prevent raw HTML coming from API in error message.
             // The string is not trusted (e.g., not generated/assembled via MVC utilities),
@@ -366,7 +368,7 @@ namespace Edubase.Web.UI.Helpers
         ///         <item>If one or more raw newlines, these will be HTML newlines.</item>
         ///     </list>
         /// </returns>
-        public static MvcHtmlString HtmlNewlines(this HtmlHelper helper, MvcHtmlString input)
+        public static HtmlString HtmlNewlines(this IHtmlHelper helper, HtmlString input)
         {
             // Retain context of this being an `MvcHtmlString` when doing the `helper.Encode`,
             // to avoid double-encoding of "trusted" HTML in this (e.g., assembled within the view).
@@ -374,13 +376,13 @@ namespace Edubase.Web.UI.Helpers
             return ConvertRawNewlineToHtmlBr(htmlEncodedString);
         }
 
-        private static MvcHtmlString ConvertRawNewlineToHtmlBr(string input)
+        private static HtmlString ConvertRawNewlineToHtmlBr(string input)
         {
             var newlinePattern = "\r|\n|\r\n";
             var htmlNewlineString = "<br/>";
 
             var replace = Regex.Replace(input, newlinePattern, htmlNewlineString);
-            var inputWithBrNewlines = new MvcHtmlString(replace);
+            var inputWithBrNewlines = new HtmlString(replace);
 
             return inputWithBrNewlines;
         }

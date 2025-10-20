@@ -5,8 +5,8 @@ using System.Linq;
 using System.Web;
 using FluentValidation;
 using FluentValidation.Results;
-using System.Web.Mvc;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Validation
 {

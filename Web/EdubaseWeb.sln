@@ -1,19 +1,19 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Data", "Edubase.Data\Edubase.Data.csproj", "{8C3D6834-3FA1-440A-A396-6489E22E8063}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Data", "Edubase.Data\Edubase.Data.csproj", "{8C3D6834-3FA1-440A-A396-6489E22E8063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services", "Edubase.Services\Edubase.Services.csproj", "{D605ACE4-2659-48DC-BF21-94E7B8D230DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Services", "Edubase.Services\Edubase.Services.csproj", "{D605ACE4-2659-48DC-BF21-94E7B8D230DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Common", "Edubase.Common\Edubase.Common.csproj", "{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Common", "Edubase.Common\Edubase.Common.csproj", "{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Web.UI", "Edubase.Web.UI\Edubase.Web.UI.csproj", "{F32E2A2E-6782-4293-B533-284FF1B17FF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.UI", "Edubase.Web.UI\Edubase.Web.UI.csproj", "{F32E2A2E-6782-4293-B533-284FF1B17FF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services.Texuna", "Edubase.Services.Texuna\Edubase.Services.Texuna.csproj", "{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Services.Texuna", "Edubase.Services.Texuna\Edubase.Services.Texuna.csproj", "{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Web.Resources", "Edubase.Web.Resources\Edubase.Web.Resources.csproj", "{7BB77B74-4669-44B7-85C0-F7980274C105}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.Resources", "Edubase.Web.Resources\Edubase.Web.Resources.csproj", "{7BB77B74-4669-44B7-85C0-F7980274C105}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5831CAFE-9479-4D97-817A-A419E99E2B02}"
 	ProjectSection(SolutionItems) = preProject

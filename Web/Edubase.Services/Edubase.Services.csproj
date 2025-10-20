@@ -1,47 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D605ACE4-2659-48DC-BF21-94E7B8D230DA}</ProjectGuid>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Edubase.Services</RootNamespace>
-    <AssemblyName>Edubase.Services</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <Configurations>Debug (QA);Debug;Debug-TexunaAPI;Release;ReleaseTexunaAPI</Configurations>
+    <AssemblyTitle>Edubase.Services</AssemblyTitle>
+    <Product>Edubase.Services</Product>
+    <Copyright>Copyright ©  2016</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28QA%29|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug %28QA%29\</OutputPath>
     <DefineConstants>TRACE;DEBUG;QA</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
@@ -49,9 +26,6 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-TexunaAPI\</OutputPath>
     <DefineConstants>TRACE;DEBUG;TEXAPI</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -59,326 +33,43 @@
     <OutputPath>bin\ReleaseTexunaAPI\</OutputPath>
     <DefineConstants>TRACE;TEXAPI</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AzureTableLogger, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\AzureTableLogger.1.1.3\lib\net461\AzureTableLogger.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CompaniesHouse, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompaniesHouse.8.0.29\lib\net45\CompaniesHouse.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Humanizer, Version=2.14.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Humanizer.Core.2.14.1\lib\netstandard2.0\Humanizer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=3.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.3.0.5\lib\net461\Microsoft.Azure.KeyVault.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.TimeProvider, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.TimeProvider.8.0.0\lib\net462\Microsoft.Bcl.TimeProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\packages\WindowsAzure.Storage.9.3.3\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
-    </Reference>
-    <Reference Include="Polly, Version=8.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Polly.8.4.1\lib\net472\Polly.dll</HintPath>
-    </Reference>
-    <Reference Include="Polly.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Polly.Core.8.4.1\lib\net472\Polly.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="netstandard" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="9.0.10" />
+    <PackageReference Include="CompaniesHouse" Version="8.0.29" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Bcl" Version="1.1.10" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" />
+    <PackageReference Include="Microsoft.Bcl.TimeProvider" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+    <PackageReference Include="Polly" Version="8.4.1" />
+    <PackageReference Include="Polly.Core" Version="8.4.1" />
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Approvals\IApprovalService.cs" />
-    <Compile Include="Approvals\Models\ePendingChangeRequestAction.cs" />
-    <Compile Include="Approvals\Models\PendingApprovalItem.cs" />
-    <Compile Include="Approvals\Models\PendingApprovalsResult.cs" />
-    <Compile Include="Approvals\Models\PendingChangeRequestAction.cs" />
-    <Compile Include="BlobService.cs" />
-    <Compile Include="Core\IClientStorage.cs" />
-    <Compile Include="Core\Pagination.cs" />
-    <Compile Include="Core\IPagination.cs" />
-    <Compile Include="CustomDateTimeConverter.cs" />
-    <Compile Include="DataQuality\DataQualityReadService.cs" />
-    <Compile Include="DataQuality\DataQualityWriteService.cs" />
-    <Compile Include="DataQuality\IDataQualityReadService.cs" />
-    <Compile Include="DataQuality\IDataQualityWriteService.cs" />
-    <Compile Include="Domain\AddressBaseResult.cs" />
-    <Compile Include="Domain\AddressDto.cs" />
-    <Compile Include="Domain\AddressLookupResult.cs" />
-    <Compile Include="Domain\ApiResponse.cs" />
-    <Compile Include="Domain\ApiPagedResult.cs" />
-    <Compile Include="Domain\ApiResultDto.cs" />
-    <Compile Include="Domain\ApiWarningCodes.cs" />
-    <Compile Include="Domain\AutocompleteItemDto.cs" />
-    <Compile Include="Domain\BulkCreateFreeSchoolsResult.cs" />
-    <Compile Include="Domain\BulkUpdateProgressModel.cs" />
-    <Compile Include="Domain\CreateEstablishmentPermissionDto.cs" />
-    <Compile Include="Domain\CreateGroupPermissionDto.cs" />
-    <Compile Include="Domain\ApiError.cs" />
-    <Compile Include="Domain\DownloadDto.cs" />
-    <Compile Include="Domain\EstablishmentLookupDto.cs" />
-    <Compile Include="Domain\EstablishmentSearchDownloadCustomField.cs" />
-    <Compile Include="Domain\GroupChangeDto.cs" />
-    <Compile Include="Domain\FileDownloadDto.cs" />
-    <Compile Include="Domain\NumericResultDto.cs" />
-    <Compile Include="Domain\SearchDownloadDto.cs" />
-    <Compile Include="Domain\ValidationEnvelopeDto.cs" />
-    <Compile Include="Domain\ApiWarning.cs" />
-    <Compile Include="Downloads\IDownloadsService.cs" />
-    <Compile Include="Downloads\Models\FileDownload.cs" />
-    <Compile Include="Downloads\Models\FileDownloadRequest.cs" />
-    <Compile Include="Downloads\Models\ScheduledExtract.cs" />
-    <Compile Include="Downloads\Models\ScheduledExtractsResult.cs" />
-    <Compile Include="Enums\eDownloadReturnSource.cs" />
-    <Compile Include="Enums\eFileFormat.cs" />
-    <Compile Include="Enums\eGovernanceMode.cs" />
-    <Compile Include="Enums\eLookupEducationPhase.cs" />
-    <Compile Include="Enums\eLookupEstablishmentLinkType.cs" />
-    <Compile Include="Enums\eLookupEstablishmentStatus.cs" />
-    <Compile Include="Enums\eLookupEstablishmentType.cs" />
-    <Compile Include="Enums\eLookupEstablishmentTypeGroup.cs" />
-    <Compile Include="Enums\eLookupGovernorAppointingBody.cs" />
-    <Compile Include="Enums\eLookupGovernorRole.cs" />
-    <Compile Include="Enums\eLookupGroupStatus.cs" />
-    <Compile Include="Enums\eLookupGroupType.cs" />
-    <Compile Include="Enums\EnumHiddenAttribute.cs" />
-    <Compile Include="Enums\eProprietorType.cs" />
-    <Compile Include="Enums\eLookupSearchSource.cs" />
-    <Compile Include="Enums\EnumSets.cs" />
-    <Compile Include="Enums\GroupChangeLinkType.cs" />
-    <Compile Include="Enums\GroupChangeRequestType.cs" />
-    <Compile Include="Enums\RegistrationSuspendedStatus.cs" />
-    <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\IEBTFieldList.cs" />
-    <Compile Include="Establishments\DisplayPolicies\ProprietorFieldList.cs" />
-    <Compile Include="Establishments\Downloads\eDataSet.cs" />
-    <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
-    <Compile Include="Establishments\EditPolicies\EstablishmentEditPolicyEnvelope.cs" />
-    <Compile Include="Establishments\EnumExtensions.cs" />
-    <Compile Include="Establishments\Models\AdditionalAddressModel.cs" />
-    <Compile Include="Establishments\Models\AmalgamateMergeRequest.cs" />
-    <Compile Include="Establishments\Models\BulkCreateAcademiesProgress.cs" />
-    <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
-    <Compile Include="Establishments\Models\CreateNewEstablishment.cs" />
-    <Compile Include="Establishments\Models\Establishment2JsonPropertyMap.cs" />
-    <Compile Include="Establishments\Models\EstablishmentChangeHistoryDownloadFilters.cs" />
-    <Compile Include="Establishments\Models\EstablishmentChangeHistoryFilters.cs" />
-    <Compile Include="Establishments\Models\EstablishmentSearchResultModel.cs" />
-    <Compile Include="Establishments\Models\IEBTModel.cs" />
-    <Compile Include="Establishments\Models\NewAcademyRequest.cs" />
-    <Compile Include="Establishments\Models\NewAcademyRequestValidationEnvelope.cs" />
-    <Compile Include="Establishments\Models\NewAcademyResult.cs" />
-    <Compile Include="Establishments\Models\ProprietorModel.cs" />
-    <Compile Include="Exceptions\RuleViolationEmptyParamException.cs" />
-    <Compile Include="Exceptions\TexunaApiNotFoundException.cs" />
-    <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
-    <Compile Include="Exceptions\TexunaApiSystemException.cs" />
-    <Compile Include="Exceptions\UsageQuotaExceededException.cs" />
-    <Compile Include="ExternalLookup\FSCPService.cs" />
-    <Compile Include="ExternalLookup\ExternalLookupService.cs" />
-    <Compile Include="ExternalLookup\FBService.cs" />
-    <Compile Include="ExternalLookup\IFSCPService.cs" />
-    <Compile Include="ExternalLookup\IExternalLookupService.cs" />
-    <Compile Include="ExternalLookup\IFBService.cs" />
-    <Compile Include="ExternalLookup\IOfstedService.cs" />
-    <Compile Include="ExternalLookup\OfstedService.cs" />
-    <Compile Include="Geo\IPlacesLookupService.cs" />
-    <Compile Include="Geo\PlaceDto.cs" />
-    <Compile Include="Geo\PlacesLookupService.cs" />
-    <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
-    <Compile Include="Governors\Downloads\GovernorSearchDownloadPayload.cs" />
-    <Compile Include="Governors\Factories\GovernorRoleNameFactory.cs" />
-    <Compile Include="Governors\IGovernorsWriteService.cs" />
-    <Compile Include="Governors\Models\GovernorAppointment.cs" />
-    <Compile Include="Governors\Models\GovernorBulkUpdateValidationResult.cs" />
-    <Compile Include="Governors\Models\GovernorPermissions.cs" />
-    <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
-    <Compile Include="Enums\eSortBy.cs" />
-    <Compile Include="Domain\CompaniesHouseNumber.cs" />
-    <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
-    <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
-    <Compile Include="Governors\IGovernorsReadService.cs" />
-    <Compile Include="Governors\Models\GovernorModel.cs" />
-    <Compile Include="Governors\Models\SearchGovernorModel.cs" />
-    <Compile Include="Governors\Search\eGovernorTypesFlag.cs" />
-    <Compile Include="Governors\Search\GovernorSearchPayload.cs" />
-    <Compile Include="Groups\Downloads\IGroupDownloadService.cs" />
-    <Compile Include="Groups\Models\EstablishmentGroupModel.cs" />
-    <Compile Include="Groups\Models\LinkedEstablishmentGroup.cs" />
-    <Compile Include="Groups\Models\LinkedGroupModel.cs" />
-    <Compile Include="Groups\Models\SaveGroupDto.cs" />
-    <Compile Include="Groups\Validation\SaveGroupDtoValidator.cs" />
-    <Compile Include="IntegrationEndPoints\AzureMaps\AzureMapsService.cs" />
-    <Compile Include="IntegrationEndPoints\AzureMaps\IAzureMapsService.cs" />
-    <Compile Include="IntegrationEndPoints\AzureMaps\Models\AzureMapsSearchResponseDto.cs" />
-    <Compile Include="IntegrationEndPoints\CompaniesHouse\ICompaniesHouseService.cs" />
-    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanyAddress.cs" />
-    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanyProfile.cs" />
-    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanySearchModel.cs" />
-    <Compile Include="IntegrationEndPoints\OSPlaces\IOSPlacesApiService.cs" />
-    <Compile Include="IntegrationEndPoints\OSPlaces\Models\OSPlacesModels.cs" />
-    <Compile Include="IntegrationEndPoints\OSPlaces\OSPlacesApiService.cs" />
-    <Compile Include="IntegrationEndPoints\PollyUtil.cs" />
-    <Compile Include="Lookup\CachedLookupService.cs" />
-    <Compile Include="Domain\ApprovalDto.cs" />
-    <Compile Include="Domain\ApprovalItemDto.cs" />
-    <Compile Include="Domain\ChildrensCentreLocalAuthorityDto.cs" />
-    <Compile Include="Domain\ContactDetailDto.cs" />
-    <Compile Include="Domain\EstablishmentChangeDto.cs" />
-    <Compile Include="Domain\EstablishmentDto.cs" />
-    <Compile Include="Domain\LAESTAB.cs" />
-    <Compile Include="Domain\LogMessagesDto.cs" />
-    <Compile Include="Domain\LookupDto.cs" />
-    <Compile Include="Domain\PagedResultDto.cs" />
-    <Compile Include="Domain\ChangeDescriptorDto.cs" />
-    <Compile Include="Domain\PersonDto.cs" />
-    <Compile Include="Domain\ProgressDto.cs" />
-    <Compile Include="Domain\ServiceResultDto.cs" />
-    <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayEditPolicy.cs" />
-    <Compile Include="Establishments\Downloads\IEstablishmentDownloadService.cs" />
-    <Compile Include="Establishments\IEstablishmentWriteService.cs" />
-    <Compile Include="Establishments\Models\EstablishmentFieldList.cs" />
-    <Compile Include="Establishments\Models\EstablishmentFieldListBase.cs" />
-    <Compile Include="Establishments\Models\EstablishmentModel.cs" />
-    <Compile Include="Establishments\Search\EstablishmentSearchFiltersLookups.cs" />
-    <Compile Include="Establishments\Search\EstablishmentSearchFilters.cs" />
-    <Compile Include="Establishments\Search\EstablishmentSearchPayload.cs" />
-    <Compile Include="Establishments\IEstablishmentReadService.cs" />
-    <Compile Include="Establishments\Models\LinkedEstablishmentModel.cs" />
-    <Compile Include="Establishments\Search\EstablishmentSuggestionItem.cs" />
-    <Compile Include="Governors\Search\GovernorSuggestionItem.cs" />
-    <Compile Include="Groups\IGroupsWriteService.cs" />
-    <Compile Include="Groups\Search\SearchGroupDocument.cs" />
-    <Compile Include="Groups\Search\GroupSearchPayload.cs" />
-    <Compile Include="Groups\Search\GroupSuggestionItem.cs" />
-    <Compile Include="IBlobService.cs" />
-    <Compile Include="Exceptions\EdubaseException.cs" />
-    <Compile Include="Exceptions\EduSecurityException.cs" />
-    <Compile Include="Exceptions\EntityNotFoundException.cs" />
-    <Compile Include="Exceptions\PermissionDeniedException.cs" />
-    <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="Groups\IGroupReadService.cs" />
-    <Compile Include="Groups\Models\GroupModel.cs" />
-    <Compile Include="IntegrationEndPoints\BlobStorage\Base64String.cs" />
-    <Compile Include="IntegrationEndPoints\BlobStorage\PathComponents.cs" />
-    <Compile Include="IntegrationEndPoints\Smtp\ISmtpEndPoint.cs" />
-    <Compile Include="IntegrationEndPoints\Smtp\MockSmtpEndPoint.cs" />
-    <Compile Include="IntegrationEndPoints\Smtp\SmtpEndPoint.cs" />
-    <Compile Include="Lookup\ICachedLookupService.cs" />
-    <Compile Include="Lookup\ILookupService.cs" />
-    <Compile Include="Lookup\IUserDependentLookupService.cs" />
-    <Compile Include="Nomenclature\NomenclatureService.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />
-    <Compile Include="Security\ClaimsIdentityConverters\SecureAccessClaimsIdConverter.cs" />
-    <Compile Include="Security\EdubaseRoles.cs" />
-    <Compile Include="Security\EduClaimTypes.cs" />
-    <Compile Include="Security\ISecurityService.cs" />
-    <Compile Include="Security\SecurityExtensionMethods.cs" />
-    <Compile Include="IntegrationEndPoints\CompaniesHouse\CompaniesHouseService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
-      <Project>{8e4a0f2b-368f-4c22-8723-7e234a8c46f3}</Project>
-      <Name>Edubase.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj">
-      <Project>{8c3d6834-3fa1-440a-a396-6489e22e8063}</Project>
-      <Name>Edubase.Data</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj" />
+    <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <!--<Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />-->
-  </Target>
-  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" />
-  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

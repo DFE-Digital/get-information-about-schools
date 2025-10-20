@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Castle.Core.Internal;
 using Edubase.Common;
 using Edubase.Services.Domain;
@@ -25,6 +23,7 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
 using GR = Edubase.Services.Enums.eLookupGovernorRole;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -234,11 +233,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.QueryString["gid2"].ToInteger(),
-                AppointmentEndDateDay = Request.QueryString["d"].ToInteger(),
-                AppointmentEndDateMonth = Request.QueryString["m"].ToInteger(),
-                AppointmentEndDateYear = Request.QueryString["y"].ToInteger(),
-                Reinstate = Request.QueryString["rag"] == "true"
+                ReplacementGovernorId = Request.Query["gid2"].ToInteger(),
+                AppointmentEndDateDay = Request.Query["d"].ToInteger(),
+                AppointmentEndDateMonth = Request.Query["m"].ToInteger(),
+                AppointmentEndDateYear = Request.Query["y"].ToInteger(),
+                Reinstate = Request.Query["rag"] == "true"
             };
 
             var replaceMode =
@@ -259,9 +258,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     {
                         establishmentUrn = establishmentUrn.Value,
                         gid = gid.Value,
-                        d = Request.QueryString["d"],
-                        m = Request.QueryString["m"],
-                        y = Request.QueryString["y"],
+                        d = Request.Query["d"],
+                        m = Request.Query["m"],
+                        y = Request.Query["y"],
                         ri = "true"
                     });
             }
@@ -696,11 +695,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.QueryString["rgid"].ToInteger(),
-                DateTermEndsDay = Request.QueryString["d"].ToInteger(),
-                DateTermEndsMonth = Request.QueryString["m"].ToInteger(),
-                DateTermEndsYear = Request.QueryString["y"].ToInteger(),
-                Reinstate = Request.QueryString["ri"] == "true"
+                ReplacementGovernorId = Request.Query["rgid"].ToInteger(),
+                DateTermEndsDay = Request.Query["d"].ToInteger(),
+                DateTermEndsMonth = Request.Query["m"].ToInteger(),
+                DateTermEndsYear = Request.Query["y"].ToInteger(),
+                Reinstate = Request.Query["ri"] == "true"
             };
 
             var governor = await _governorsReadService.GetGovernorAsync(gid, User);
@@ -827,7 +826,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                                 Enum.IsDefined(typeof(eLookupGovernorRole), preRetirementModel.RoleId.Value) &&
                                 preRetirementModel.RoleId.Value != 0)
                             {
-                                var oldRole = (eLookupGovernorRole)preRetirementModel.RoleId.Value;
+                                var oldRole = (eLookupGovernorRole) preRetirementModel.RoleId.Value;
 
                                 var newRole = RoleEquivalence.GetEquivalentToLocalRole(oldRole)
                                     .Where(r => r == eLookupGovernorRole.LocalGovernor)
@@ -873,7 +872,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         PreviousPerson_LastName = model.NewLocalGovernor.PreviousLastName,
                         PreviousPerson_TitleId = model.NewLocalGovernor.PreviousTitleId,
                         PostCode = model.NewLocalGovernor.PostCode,
-                        RoleId = (int)(RoleEquivalence.GetLocalEquivalentToSharedRole(model.Role) ?? model.Role),
+                        RoleId = (int) (RoleEquivalence.GetLocalEquivalentToSharedRole(model.Role) ?? model.Role),
                         TelephoneNumber = model.NewLocalGovernor.TelephoneNumber
                     };
 
@@ -904,7 +903,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                                 Enum.IsDefined(typeof(eLookupGovernorRole), oldGovernorModel.RoleId.Value) &&
                                 oldGovernorModel.RoleId.Value != 0)
                             {
-                                var oldRole = (eLookupGovernorRole)oldGovernorModel.RoleId.Value;
+                                var oldRole = (eLookupGovernorRole) oldGovernorModel.RoleId.Value;
 
                                 var newRole = RoleEquivalence.GetEquivalentToLocalRole(oldRole)
                                                 .Where(r => r == eLookupGovernorRole.LocalGovernor)
@@ -934,26 +933,26 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             }
 
             var governor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
-            var roles = new List<eLookupGovernorRole> { (eLookupGovernorRole)governor.RoleId };
+            var roles = new List<eLookupGovernorRole> { (eLookupGovernorRole) governor.RoleId };
 
             if (EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value))
             {
-                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole)governor.RoleId);
+                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId);
                 if (localEquivalent != null)
                     roles.Add(localEquivalent.Value);
             }
             else
             {
-                roles.AddRange(RoleEquivalence.GetEquivalentToLocalRole((eLookupGovernorRole)governor.RoleId));
+                roles.AddRange(RoleEquivalence.GetEquivalentToLocalRole((eLookupGovernorRole) governor.RoleId));
             }
 
             var governors = (await _governorsReadService.GetSharedGovernorsAsync(model.Urn.Value, User))
-                .Where(g => roles.Contains((eLookupGovernorRole)g.RoleId) && g.Id != model.ExistingGovernorId)
+                .Where(g => roles.Contains((eLookupGovernorRole) g.RoleId) && g.Id != model.ExistingGovernorId)
                 .ToList();
 
             model.NewLocalGovernor.DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync(
-                (RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole)governor.RoleId.Value) ??
-                 (eLookupGovernorRole)governor.RoleId.Value), false, User);
+                (RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value) ??
+                 (eLookupGovernorRole) governor.RoleId.Value), false, User);
 
             var sourceGovernors = (await Task.WhenAll(governors.Select(async g =>
                 await SharedGovernorViewModel.MapFromGovernor(g, model.Urn.Value, _cachedLookupService)))).ToList();
@@ -983,7 +982,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await _layoutHelper.PopulateLayoutProperties(model, model.Urn, null, User);
 
             var models = await _governorsReadService.GetGovernorListAsync(model.Urn, principal: User);
-            var localGovernors = models.CurrentGovernors.Where(x => x.RoleId == (int)eLookupGovernorRole.LocalGovernor)
+            var localGovernors = models.CurrentGovernors.Where(x => x.RoleId == (int) eLookupGovernorRole.LocalGovernor)
                 .OrderBy(x => x.Person_LastName)
                 .ToArray();
 
@@ -1028,7 +1027,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 PreviousPerson_LastName = oldGovernor.PreviousPerson_LastName,
                 AppointmentStartDate = appointmentStartDate,
                 AppointmentEndDate = appointmentEndDate,
-                RoleId = (int)role,
+                RoleId = (int) role,
                 DOB = oldGovernor.DOB ?? new DateTime(1970, 1, 1),
                 PostCode = oldGovernor.PostCode,
                 EmailAddress = null,
@@ -1040,7 +1039,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             var result = await _governorsReadService.GetGovernorListAsync(urn);
             var match = result.CurrentGovernors.FirstOrDefault(g =>
-                g.RoleId == (int)role &&
+                g.RoleId == (int) role &&
                 g.Person_FirstName.Equals(newGovernor.Person_FirstName, StringComparison.OrdinalIgnoreCase) &&
                 g.Person_LastName.Equals(newGovernor.Person_LastName, StringComparison.OrdinalIgnoreCase)
             );

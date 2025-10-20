@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
-using System.Web.Mvc;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -14,6 +13,7 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Filters;
 using Microsoft.Ajax.Utilities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -218,7 +218,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             if (!urn.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var result = await _establishmentReadService.GetAsync((int) urn, User);

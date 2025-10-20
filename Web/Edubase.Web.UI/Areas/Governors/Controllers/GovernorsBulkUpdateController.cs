@@ -5,8 +5,8 @@ using Edubase.Web.UI.Helpers;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Web.UI.Filters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {

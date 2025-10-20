@@ -5,12 +5,12 @@ using Autofac;
 using Edubase.Common.Cache;
 using Edubase.Web.UI.Helpers;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using AzureTableLogger.Services;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Admin;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {

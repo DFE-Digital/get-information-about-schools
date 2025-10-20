@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Services.Establishments;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors;
@@ -12,6 +11,7 @@ using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Helpers;
 using FluentValidation.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -207,7 +207,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (string.IsNullOrWhiteSpace(companiesHouseNumber))
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             ViewData["academyTrustRoute"] = academyTrustRoute;
@@ -309,7 +309,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var result = await _groupReadService.GetAsync(id, User);
             if (result.ReturnValue == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var model = result.ReturnValue;
@@ -359,7 +359,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var result = await _groupReadService.GetAsync(id, User);
             if (result.ReturnValue == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             var model = result.ReturnValue;
 

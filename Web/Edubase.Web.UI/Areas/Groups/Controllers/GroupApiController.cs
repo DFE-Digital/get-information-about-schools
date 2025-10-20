@@ -1,16 +1,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
     [RoutePrefix("Groups/Group")]
-    public class GroupApiController : ApiController
+    public class GroupApiController : ControllerBase
     {
         private readonly IGroupsWriteService groupsWriteService;
 
@@ -20,15 +20,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate")]
-        public IHttpActionResult ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
+        public IActionResult ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
         {
             return
                 !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { });
+                    : (IActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/OpenDate")]
-        public IHttpActionResult ValidateGroupOpenDate(DateTimeViewModel openDate)
+        public IActionResult ValidateGroupOpenDate(DateTimeViewModel openDate)
         {
             if (openDate == null || openDate.IsEmpty())
             {
@@ -39,11 +39,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             return
                 !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { });
+                    : (IActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/JoinedDate")]
-        public IHttpActionResult ValidateEstablishmentJoinedDate(ValidateEstablishmentJoinedDateModel model)
+        public IActionResult ValidateEstablishmentJoinedDate(ValidateEstablishmentJoinedDateModel model)
         {
             if (model.JoinDate == null || model.JoinDate.IsEmpty())
             {
@@ -75,11 +75,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             return
                 !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { });
+                    : (IActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/All")]
-        public async Task<IHttpActionResult> ValidateGroupWithEstablishments(ValidateCCGroupWithEstablishments model)
+        public async Task<IActionResult> ValidateGroupWithEstablishments(ValidateCCGroupWithEstablishments model)
         {
             var dto = new SaveGroupDto
             {

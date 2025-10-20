@@ -1,6 +1,5 @@
 ﻿using Edubase.Web.UI.Filters;
 using System.Configuration;
-using System.Web.Mvc;
 
 namespace Edubase.Web.UI
 {

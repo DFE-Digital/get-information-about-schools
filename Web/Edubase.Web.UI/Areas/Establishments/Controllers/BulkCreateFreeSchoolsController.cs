@@ -9,8 +9,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {

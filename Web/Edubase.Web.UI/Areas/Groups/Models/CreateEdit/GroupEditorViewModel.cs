@@ -4,8 +4,6 @@ using Edubase.Web.UI.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Http.Controllers;
-using System.Web.Mvc;
 using Castle.Components.DictionaryAdapter;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit

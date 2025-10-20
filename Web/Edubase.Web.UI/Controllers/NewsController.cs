@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
@@ -10,6 +9,7 @@ using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.News;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -36,7 +36,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Article(string id, string auditRoute)
         {
             var item = await _newsRepository.GetAsync(id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             var model = new NewsArticlesViewModel(new List<NewsArticle> { item }, item.ArticleDate.Year, false, false, auditRoute);
             return View(model);
@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> ArticleAudit(string id, string auditRoute = nameof(AuditArticle))
         {
             var item = await _newsRepository.GetAsync(id, eNewsArticlePartition.Archive);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             var model = new NewsArticlesViewModel(new List<NewsArticle> { item }, item.ArticleDate.Year, false, false, auditRoute);
             return View(nameof(Article), model);
@@ -93,7 +93,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditArticleAsync(string id)
         {
             var item = await _newsRepository.GetAsync(id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             return View("EditArticle", new NewsArticleViewModel
             {
@@ -116,7 +116,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditArticleAsync(NewsArticleViewModel viewModel)
         {
             var item = await _newsRepository.GetAsync(viewModel.Id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             return await ProcessEditArticle(viewModel, item);
         }
@@ -173,7 +173,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> DeleteArticleAsync(NewsArticleViewModel viewModel)
         {
             var item = await _newsRepository.GetAsync(viewModel.Id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
             return View("ConfirmDeleteArticle", viewModel.Set(item));
         }
 
@@ -183,7 +183,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _newsRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             await _newsRepository.DeleteAsync(viewModel.Id, User.GetUserId());

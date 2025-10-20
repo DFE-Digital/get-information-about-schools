@@ -15,11 +15,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
-    public class BulkCreateAcademiesApiController : ApiController
+    public class BulkCreateAcademiesApiController : ControllerBase
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IEstablishmentWriteService _establishmentWriteService;
@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         [Route("api/bulk-create-academies"), HttpPost, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
-        public async Task<IHttpActionResult> ProcessRequestAsync(NewAcademyRequest[] payload)
+        public async Task<IActionResult> ProcessRequestAsync(NewAcademyRequest[] payload)
         {
             var result = await _establishmentWriteService.BulkCreateAcademies(payload, User);
             if (!result.HasErrors) return Ok(result);
@@ -43,7 +43,7 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         [Route("api/bulk-create-academies/validate"), HttpPost, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
-        public async Task<IHttpActionResult> ProcessValidateRequestAsync(NewAcademyRequest[] payload)
+        public async Task<IActionResult> ProcessValidateRequestAsync(NewAcademyRequest[] payload)
         {
             var result = await _establishmentWriteService.ValidateBulkCreateAcademies(payload, User);
             if (result.Success) return Ok(result.GetResponse());
@@ -51,7 +51,7 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         [Route("api/bulk-create-academies/progress/{id}"), HttpGet, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
-        public async Task<IHttpActionResult> ProcessProgressRequestAsync(Guid id)
+        public async Task<IActionResult> ProcessProgressRequestAsync(Guid id)
         {
             var result = await _establishmentWriteService.GetBulkCreateAcademiesProgress(id, User);
             if (result.Success) return Ok(result.GetResponse());

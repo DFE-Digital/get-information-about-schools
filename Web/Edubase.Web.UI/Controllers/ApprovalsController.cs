@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Web.UI.Filters;
-using System.Web.Mvc;
 using Edubase.Services.Approvals;
 using Edubase.Services.Approvals.Models;
 using Edubase.Services.Core;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Tools;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {

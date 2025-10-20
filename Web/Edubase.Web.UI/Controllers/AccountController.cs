@@ -2,13 +2,11 @@ using Edubase.Common;
 using Edubase.Services.Security;
 using Edubase.Services.Security.ClaimsIdentityConverters;
 using Edubase.Web.UI.MvcResult;
-using Microsoft.Owin.Security;
 using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 using System;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
@@ -17,6 +15,7 @@ using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
 using Edubase.Web.UI.Models.Search;
 using Microsoft.Ajax.Utilities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
