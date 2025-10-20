@@ -938,14 +938,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                try
-                {
-                    viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, skip, take, sortBy, User);
-                }
-                catch
-                {
-                    // KHD: Texuna will sometimes return an API error.  I have been asked to ignore it.
-                }
+                viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, skip, take, sortBy, User);
             }
         }
 
