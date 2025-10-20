@@ -421,7 +421,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync()).Items
+            viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync())
                 .OrderBy(x => x.Title)
                 .Select(x => new IndSchoolsSearchViewModel.LASetViewModel(x));
 
@@ -499,7 +499,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
         {
             viewModel.LocalAuthorities = await _lookup.LocalAuthorityGetAllAsync();
-            var items = (await _localAuthoritySetRepository.GetAllAsync()).Items.OrderBy(x => x.Title);
+            var items = (await _localAuthoritySetRepository.GetAllAsync()).OrderBy(x => x.Title);
             viewModel.Results = new PaginatedResult<LocalAuthoritySet>(viewModel.Skip, 100, items.Count(),
                 items.Skip(viewModel.Skip).Take(100).ToList());
             return View(viewModel);
@@ -543,7 +543,7 @@ namespace Edubase.Web.UI.Controllers
             if (ModelState.IsValid)
             {
                 var sets = await _localAuthoritySetRepository.GetAllAsync();
-                var duplicate = sets.Items
+                var duplicate = sets
                     .Where(x => x.Title == viewModel.Title && (viewModel.IsNewEntity || viewModel.Id != x.RowKey))
                     .Select(x => x.RowKey).FirstOrDefault();
 

@@ -1,22 +1,19 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Edubase.Common.IO;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Helpers;
-using MoreLinq;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    using R = Services.Security.EdubaseRoles;
-
     [Route("establishments/[controller]")]
     [Authorize(Roles = $"{AuthorizedRoles.CanBulkCreateFreeSchools}")]
     public class BulkCreateFreeSchoolsController : EduBaseController
@@ -59,7 +56,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [Route("bulk-create-free-schools-ajax/{id}", Name = "BulkCreateFreeSchoolsResultAjax"), HttpGet]
-        public async Task<ActionResult> ResultAsyncAjax(Guid id)
+        public async Task<IActionResult> ResultAsyncAjax(Guid id)
         {
             var viewModel = new BulkCreateFreeSchoolsViewModel();
             var apiResponse = await _establishmentWriteService.BulkCreateFreeSchoolsGetProgressAsync(id, User);
@@ -130,34 +127,34 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        private ActionResult ResultInternalAjax(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
+        private IActionResult ResultInternalAjax(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
         {
-            var redirectUrl = string.Concat("/Establishments/bulk-create-free-schools/", id);
+            var redirectUrl = $"/Establishments/bulk-create-free-schools/{id}";
+
             if (apiResponse.Success)
             {
                 viewModel.Result = apiResponse.GetResponse();
-                return viewModel.Result.IsProgressing()
-                    ? Json(JsonConvert.SerializeObject(new
-                    {
-                        status = false, redirect = redirectUrl
-                    }))
-                    : viewModel.Result.IsCompleted()
-                        ? Json(JsonConvert.SerializeObject(new
-                        {
-                            status = true,
-                            redirect = redirectUrl
-                        }))
-                        : throw new Exception($"The status of task {id} is unclear; the API did not provide a good enough response {Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.Result)}");
+
+                if (viewModel.Result.IsProgressing())
+                {
+                    return Json(new { status = false, redirect = redirectUrl });
+                }
+                else if (viewModel.Result.IsCompleted())
+                {
+                    return Json(new { status = true, redirect = redirectUrl });
+                }
+                else
+                {
+                    throw new Exception($"The status of task {id} is unclear; the API did not provide a good enough response: {System.Text.Json.JsonSerializer.Serialize(viewModel.Result)}");
+                }
+            }
+            else if (apiResponse.HasErrors)
+            {
+                return Json(new { status = true, redirect = redirectUrl });
             }
             else
             {
-                return apiResponse.HasErrors
-                    ? Json(JsonConvert.SerializeObject(new
-                    {
-                        status = true,
-                        redirect = redirectUrl
-                    }))
-                    : throw new Exception("ApiResponse indicated failure, but no errors were supplied");
+                throw new Exception("ApiResponse indicated failure, but no errors were supplied");
             }
         }
     }

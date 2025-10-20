@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Autofac;
 using AzureTableLogger.LogMessages;
 using Edubase.Services.Exceptions;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +10,13 @@ namespace Edubase.Web.UI.Filters
 {
     public class ApiExceptionFilter : IAsyncExceptionFilter
     {
+        private readonly ExceptionHandler _exceptionHandler;
+
+        public ApiExceptionFilter(ExceptionHandler exceptionHandler)
+        {
+            _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
+        }
+
         public class SystemErrorMessage
         {
             public string Message { get; set; } = "Sorry, there is a problem with the service.";
@@ -18,25 +24,22 @@ namespace Edubase.Web.UI.Filters
             public string TechnicalDetails { get; set; }
         }
 
-        public async Task OnExceptionAsync(ExceptionContext context)
+        public Task OnExceptionAsync(ExceptionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
             if (context.Exception is TexunaApiNotFoundException)
             {
                 context.Result = new NotFoundObjectResult("Entity was not found");
-                context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-                return;
+                return Task.CompletedTask;
             }
 
-            var httpContext = context.HttpContext;
-            var exceptionHandler = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>();
-            WebLogMessage msg = exceptionHandler.Log(httpContext, context.Exception);
+            WebLogMessage msg = _exceptionHandler.Log(context.HttpContext, context.Exception);
 
             var error = new SystemErrorMessage
             {
                 ErrorCode = msg.Id,
-                TechnicalDetails = ExceptionHandler.EnableFriendlyErrorPage ? null : context.Exception.ToString()
+                TechnicalDetails = _exceptionHandler.EnableFriendlyErrorPage ? null : context.Exception.ToString()
             };
 
             context.Result = new ObjectResult(error)
@@ -44,7 +47,7 @@ namespace Edubase.Web.UI.Filters
                 StatusCode = StatusCodes.Status500InternalServerError
             };
 
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

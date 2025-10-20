@@ -29,7 +29,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, true, lookupYear);
-            var model = new NewsArticlesViewModel(result.Items, lookupYear);
+            var model = new NewsArticlesViewModel(result, lookupYear);
             return View(model);
         }
 
@@ -63,7 +63,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, false, lookupYear);
-            var model = new NewsArticlesViewModel(result.Items, lookupYear, true);
+            var model = new NewsArticlesViewModel(result, lookupYear, true);
             return View(nameof(Index), model);
         }
 
@@ -73,7 +73,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, false, lookupYear);
-            var model = new NewsArticlesViewModel(result.Items, lookupYear, true, true);
+            var model = new NewsArticlesViewModel(result, lookupYear, true, true);
             return View(nameof(Index), model);
         }
 
@@ -185,8 +185,8 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IActionResult> AuditArticles(string sortBy)
         {
             var result = await _newsRepository.GetAllAsync(1000, false);
-            var audit = await _newsRepository.GetAllAsync(1000, false, null, null, eNewsArticlePartition.Archive);
-            var items = result.Items.Concat(audit.Items).ToList();
+            var audit = await _newsRepository.GetAllAsync(1000, false, null, eNewsArticlePartition.Archive);
+            var items = result.Concat(audit).ToList();
 
             var distinct = items.GroupBy(x => x.Tracker)
                 .Select(grp => grp.OrderByDescending(x => x.Version).First());
@@ -200,8 +200,8 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IActionResult> AuditArticle(string id, string sortBy)
         {
             var result = await _newsRepository.GetAllAsync(1000, false);
-            var audit = await _newsRepository.GetAllAsync(1000, false, null, null, eNewsArticlePartition.Archive);
-            var items = result.Items.Concat(audit.Items).Where(x => x.Tracker == id);
+            var audit = await _newsRepository.GetAllAsync(1000, false, null, eNewsArticlePartition.Archive);
+            var items = result.Concat(audit).Where(x => x.Tracker == id);
 
             var model = new NewsArticleAuditViewModel(items, sortBy);
             return View(model);

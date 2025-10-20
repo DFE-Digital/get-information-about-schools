@@ -23,7 +23,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await _glossaryRepository.GetAllAsync(1000);
-            return View(new GlossaryViewModel(result.Items)
+            return View(new GlossaryViewModel(result)
             {
                 UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin)
             });

@@ -39,7 +39,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IActionResult> Index()
         {
             var results = await _newsRepository.GetAllAsync(1000);
-            var items = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
+            var items = results.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
             return View(new HomepageViewModel(items));
         }
 

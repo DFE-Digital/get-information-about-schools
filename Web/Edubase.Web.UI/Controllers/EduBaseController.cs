@@ -8,7 +8,7 @@ namespace Edubase.Web.UI.Controllers
 {
     public class EduBaseController : Controller
     {
-        protected new JsonCamelCaseResult Json(object data) => new JsonCamelCaseResult(data, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+        protected new JsonCamelCaseResult Json(object data) => new JsonCamelCaseResult(data);
 
         protected void AddApiErrorsToModelState(ApiError[] errors, string keyName = "") => (errors ?? Enumerable.Empty<ApiError>()).ForEach(x => ModelState.AddModelError(keyName, x.GetMessage()));
     }

@@ -1,31 +1,45 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+using System;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Edubase.Web.UI.Helpers.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Edubase.Web.UI.Helpers.ModelBinding
+public class BindAliasModelBinder : IModelBinder
 {
-    internal class DefaultModelBinderEx : DefaultModelBinder
+    public Task BindModelAsync(ModelBindingContext context)
     {
-        protected override PropertyDescriptorCollection GetModelProperties(ControllerContext controllerContext,
-                            ModelBindingContext bindingContext)
+        if (context == null) throw new ArgumentNullException(nameof(context));
+
+        var modelType = context.ModelType;
+        var modelInstance = Activator.CreateInstance(modelType);
+
+        foreach (var property in modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            var toReturn = base.GetModelProperties(controllerContext, bindingContext);
-            var additional = new List<PropertyDescriptor>();
+            var aliases = property.GetCustomAttributes<BindAliasAttribute>().Select(a => a.Alias);
 
-            foreach (var p in GetTypeDescriptor(controllerContext, bindingContext).GetProperties().Cast<PropertyDescriptor>())
+            foreach (var alias in aliases)
             {
-                foreach (var attr in p.Attributes.OfType<BindAliasAttribute>())
+                var valueResult = context.ValueProvider.GetValue(alias);
+                if (valueResult != ValueProviderResult.None)
                 {
-                    additional.Add(new AliasedPropertyDescriptor(attr.Alias, p));
-
-                    if (bindingContext.PropertyMetadata.ContainsKey(p.Name))
-                        bindingContext.PropertyMetadata.Add(attr.Alias,
-                              bindingContext.PropertyMetadata[p.Name]);
+                    var value = valueResult.FirstValue;
+                    var converted = Convert.ChangeType(value, property.PropertyType);
+                    property.SetValue(modelInstance, converted);
                 }
             }
 
-            return new PropertyDescriptorCollection(toReturn.Cast<PropertyDescriptor>().Concat(additional).ToArray());
+            // fallback to normal property name
+            var fallbackValue = context.ValueProvider.GetValue(property.Name);
+            if (fallbackValue != ValueProviderResult.None)
+            {
+                var value = fallbackValue.FirstValue;
+                var converted = Convert.ChangeType(value, property.PropertyType);
+                property.SetValue(modelInstance, converted);
+            }
         }
 
+        context.Result = ModelBindingResult.Success(modelInstance);
+        return Task.CompletedTask;
     }
 }

@@ -1,22 +1,19 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Edubase.Common.IO;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Helpers;
-using MoreLinq;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    using R = Services.Security.EdubaseRoles;
-
     [Route("establishments/[controller]")]
     [Authorize(Roles = $"{AuthorizedRoles.CanBulkAssociateEstabs2Groups}")]
     public class BulkAssociateEstabs2GroupsController : EduBaseController
@@ -56,7 +53,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [Route(BaseUri + "-ajax/{id}", Name = "BulkAssociateEstabs2GroupsResultAjax"), HttpGet]
-        public async Task<ActionResult> ResultAsyncAjax(Guid id)
+        public async Task<IActionResult> ResultAsyncAjax(Guid id)
         {
             var viewModel = new BulkAssociateEstabs2GroupsViewModel();
             var apiResponse = await _establishmentWriteService.BulkAssociateEstabs2GroupsGetProgressAsync(id, User);
@@ -127,24 +124,25 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        private ActionResult ResultInternalAjax(Guid id, BulkAssociateEstabs2GroupsViewModel viewModel, ApiResponse<BulkUpdateProgressModel> apiResponse)
+        private IActionResult ResultInternalAjax(Guid id, BulkAssociateEstabs2GroupsViewModel viewModel, ApiResponse<BulkUpdateProgressModel> apiResponse)
         {
             if (apiResponse.Success)
             {
                 viewModel.Result = apiResponse.GetResponse();
 
-                return Json(JsonConvert.SerializeObject(new
+                return Json(new
                 {
-                    status = viewModel.Result.IsCompleted(), redirect = string.Concat("/Establishments/bulk-associate-estabs-to-groups/", id)
-                }));
+                    status = viewModel.Result.IsCompleted(),
+                    redirect = $"/Establishments/bulk-associate-estabs-to-groups/{id}"
+                });
             }
             else if (apiResponse.HasErrors)
             {
-                // tell the ajax that the request is complete and redirect so the error page loads
-                return Json(JsonConvert.SerializeObject(new
+                return Json(new
                 {
-                    status = true, redirect = string.Concat("/Establishments/bulk-associate-estabs-to-groups/", id)
-                }));
+                    status = true,
+                    redirect = $"/Establishments/bulk-associate-estabs-to-groups/{id}"
+                });
             }
             else
             {

@@ -1,28 +1,38 @@
-﻿using Edubase.Common;
-using Edubase.Data.Repositories;
 using System.Globalization;
-using System.Web;
+using System.Linq;
+using System.Threading.Tasks;
+using Edubase.Common;
+using Edubase.Data.Repositories;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Edubase.Web.UI.Helpers.ValueProviders
 {
-    public class TokenValueProviderFactory : ValueProviderFactory
+    public class TokenValueProviderFactory : IValueProviderFactory
     {
-        public override IValueProvider GetValueProvider(ControllerContext controllerContext)
+        public async Task CreateValueProviderAsync(ValueProviderFactoryContext context)
         {
-            var tokenId = controllerContext.RequestContext.HttpContext.Request.QueryString["tok"];
-            if (tokenId.Clean() != null)
+            var tokenId = context.ActionContext.HttpContext.Request.Query["tok"].ToString();
+            if (!string.IsNullOrWhiteSpace(tokenId.Clean()))
             {
-                var repo = DependencyResolver.Current.GetService<ITokenRepository>();
-                var token = repo.Get(tokenId);
-                if (token != null)
+                var repo = context.ActionContext.HttpContext.RequestServices.GetService<ITokenRepository>();
+                var token = await repo.GetAsync(tokenId); // assuming async version; use `.Get(tokenId)` if sync
+
+                if (token != null && !string.IsNullOrWhiteSpace(token.Data))
                 {
-                    var nvp = HttpUtility.ParseQueryString(token.Data);
-                    return new NameValueCollectionValueProvider(nvp, CultureInfo.CurrentCulture);
+                    var parsed = QueryHelpers.ParseQuery(token.Data);
+                    var dictionary = parsed.ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => new Microsoft.Extensions.Primitives.StringValues(kvp.Value.ToArray())
+                    );
+
+                    context.ValueProviders.Add(new QueryStringValueProvider(
+                        BindingSource.Query,
+                        new Microsoft.AspNetCore.Http.QueryCollection(dictionary),
+                        CultureInfo.CurrentCulture));
                 }
             }
-
-            return null;
         }
     }
 }

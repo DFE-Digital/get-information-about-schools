@@ -1,11 +1,26 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Edubase.Common;
+using Edubase.Services.Governors.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using HtmlHelper = Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlHelper;
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+using ModelError = Microsoft.AspNetCore.Mvc.ModelBinding.ModelError;
+using SelectListItem = Microsoft.AspNetCore.Mvc.Rendering.SelectListItem;
+using TagBuilder = Microsoft.AspNetCore.Mvc.Rendering.TagBuilder;
+using TagRenderMode = Microsoft.AspNetCore.Mvc.Rendering.TagRenderMode;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -80,22 +95,8 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return htmlHelper.ValidationMessage(modelName, null, new { @class = "govuk-error-message" });
+            return (HtmlString) htmlHelper.ValidationMessage(modelName, null, new { @class = "govuk-error-message" });
         }
-
-        private static string SplitNameAndCapitaliseFirstLetter(ModelError error)
-        {
-            var message = error.ErrorMessage ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(message)) return string.Empty;
-
-            var words = message.Split(' ');
-            if (words.Length == 0) return message;
-
-            words[0] = char.ToUpper(words[0][0]) + words[0].Substring(1);
-            return string.Join(" ", words);
-        }
-    
-
 
         /// <summary>
         /// Splits the combined words in an error message where an uppercase letter follows a lowercase
@@ -135,40 +136,41 @@ namespace Edubase.Web.UI.Helpers
         }
 
 
-        public static IHtmlString Json<TModel>(this IHtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None,
+        public static HtmlString Json<TModel>(this IHtmlHelper<TModel> htmlHelper, object data) => (HtmlString) htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None,
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
 
-        public static IHtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, string text)
-            => condition ? htmlHelper.Raw(text) : HtmlString.Empty;
+        public static HtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, string text)
+            => (HtmlString) (condition ? htmlHelper.Raw(text) : HtmlString.Empty);
 
-        public static IHtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, IHtmlString html)
+        public static HtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, HtmlString html)
             => condition ? html : HtmlString.Empty;
 
-        public static IHtmlString HiddenFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
-         => condition ? htmlHelper.HiddenFor(expression) : HtmlString.Empty;
+        public static HtmlString HiddenFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
+         => (HtmlString) (condition ? htmlHelper.HiddenFor(expression) : HtmlString.Empty);
 
         /// <summary>
         /// Puts all the stuff that's current in the querystring into hidden form fields.
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
-        public static IHtmlString HiddenFieldsFromQueryString(this IHtmlHelper html, string[] keysToExclude = null)
+        public static HtmlString HiddenFieldsFromQueryString(this IHtmlHelper html, string[] keysToExclude = null)
         {
             var sb = new StringBuilder();
             var query = html.ViewContext.HttpContext.Request.Query;
-            var keys = query.AllKeys;
+            IEnumerable<KeyValuePair<string, StringValues>> keys = query;
 
             if (keysToExclude != null)
             {
-                keys = keys.Where(k => !keysToExclude.Contains(k)).ToArray();
+                // Filter the keys, but do not try to assign back to IQueryCollection
+                keys = keys.Where(kvp => !keysToExclude.Contains(kvp.Key));
             }
 
             foreach (var item in keys)
             {
-                var vals = query.GetValues(item);
+                var vals = query[item.Key];
                 foreach (var item2 in vals)
                 {
-                    sb.AppendLine("\r\n\t\t\t\t\t\t\t\t\t" + $@"<input type=""hidden"" name=""{HttpUtility.HtmlEncode(item)}"" value=""{HttpUtility.HtmlEncode(item2)}"" />");
+                    sb.AppendLine("\r\n\t\t\t\t\t\t\t\t\t" + $@"<input type=""hidden"" name=""{HttpUtility.HtmlEncode(item.Key)}"" value=""{HttpUtility.HtmlEncode(item2)}"" />");
                 }
             }
             return new HtmlString(sb.ToString());
@@ -177,31 +179,23 @@ namespace Edubase.Web.UI.Helpers
 
         public static IHtmlHelper<TModel> For<TModel>(this IHtmlHelper helper) where TModel : class, new()
         {
-            return For<TModel>(helper.ViewContext, helper.ViewDataContainer.ViewData, helper.RouteCollection);
+            // Use the ASP.NET Core types for ViewContext and ViewDataDictionary
+            return For<TModel>(helper.ViewContext, helper.ViewData);
         }
 
-        public static IHtmlHelper<TModel> For<TModel>(this IHtmlHelper helper, TModel model)
-        {
-            return For<TModel>(helper.ViewContext, helper.ViewDataContainer.ViewData, helper.RouteCollection, model);
-        }
-
-        public static IHtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection) where TModel : class, new()
+        public static IHtmlHelper<TModel> For<TModel>(Microsoft.AspNetCore.Mvc.Rendering.ViewContext viewContext, Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary viewData) where TModel : class, new()
         {
             var model = new TModel();
-            return For<TModel>(viewContext, viewData, routeCollection, model);
-        }
-
-        public static IHtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection, TModel model)
-        {
-            var newViewData = new ViewDataDictionary(viewData) { Model = model };
-            var newViewContext = new ViewContext(
-                viewContext.Controller.ControllerContext,
+            var newViewData = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary<TModel>(viewData, model);
+            var newViewContext = new Microsoft.AspNetCore.Mvc.Rendering.ViewContext(
+                viewContext,
                 viewContext.View,
                 newViewData,
                 viewContext.TempData,
-                viewContext.Writer);
-            var viewDataContainer = new ViewDataContainer(newViewContext.ViewData);
-            return new HtmlHelper<TModel>(newViewContext, viewDataContainer, routeCollection);
+                viewContext.Writer,
+                default
+            );
+            return new HtmlHelper<TModel>(newViewContext, newViewContext.ViewData);
         }
 
         private class ViewDataContainer : System.Web.Mvc.IViewDataContainer
@@ -222,7 +216,7 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="decimalPlaces"></param>
         /// <param name="minimumValue"></param>
         /// <returns></returns>
-        public static IHtmlString FileSizeInMegabytes(this IHtmlHelper html, long? fileSizeInBytes, int decimalPlaces = 2, double minimumValue = 0)
+        public static HtmlString FileSizeInMegabytes(this IHtmlHelper html, long? fileSizeInBytes, int decimalPlaces = 2, double minimumValue = 0)
         {
             if (fileSizeInBytes.HasValue)
             {
@@ -331,10 +325,10 @@ namespace Edubase.Web.UI.Helpers
                 );
             }
 
-            dropdown.InnerHtml = options.ToString();
+            dropdown.InnerHtml.AppendHtml(options.ToString());
             dropdown.MergeAttributes(new RouteValueDictionary(htmlAttributes));
 
-            return HtmlString.Create(dropdown.ToString(TagRenderMode.Normal));
+            return new HtmlString(dropdown.ToString());
         }
 
         /// <summary>

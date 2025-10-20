@@ -4,7 +4,6 @@ using AzureTableLogger;
 using AzureTableLogger.LogMessages;
 using Edubase.Common;
 using Edubase.Services.Exceptions;
-using Edubase.Web.UI.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +58,8 @@ namespace Edubase.Web.UI.Filters
             var httpContext = context.HttpContext;
             var msg = Log(httpContext, exception);
 
-            var url = httpContext.Request.GetForwardedHeaderAwareUrl();
+            var request = httpContext.Request;
+            var url = new Uri($"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}");
 
             context.Result = new ViewResult
             {
@@ -75,7 +75,7 @@ namespace Edubase.Web.UI.Filters
                     ["Exception"] = msg.Exception,
                     ["UserId"] = msg.UserId,
                     ["UserName"] = msg.UserName,
-                    ["UserAgent"] = msg.Headers["User-Agent"].ToString(),
+                    ["UserAgent"] = msg.UserAgent,
                     ["ClientIpAddress"] = msg.ClientIpAddress,
                     ["ReferrerUrl"] = msg.ReferrerUrl,
                     ["HttpMethod"] = msg.HttpMethod,
@@ -119,9 +119,10 @@ namespace Edubase.Web.UI.Filters
                 RequestJsonBody = (exception as TexunaApiSystemException)?.ApiRequestJsonPayload ?? string.Empty
             };
 
+            // Fix: Use msg.UserAgent instead of msg.Headers["User-Agent"]
             if (!new[] { "", "POST", "GET" }.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase))) return msg;
 
-            if ((msg.Headers["User-Agent"].ToString() ?? "").IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
+            if ((msg.UserAgent ?? "").IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
             {
                 _logger.Log(msg);
             }

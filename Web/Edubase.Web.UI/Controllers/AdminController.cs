@@ -64,9 +64,9 @@ namespace Edubase.Web.UI.Controllers
             if (!string.IsNullOrWhiteSpace(model.Query))
             {
                 var searchByIdResults = await _webLogItemRepository.GetById(model.Query.ToLowerInvariant());
-                if (searchByIdResults.Count == 1)
+                if (searchByIdResults.ToList().Count == 1)
                 {
-                    webLogMessages = searchByIdResults;
+                    webLogMessages = searchByIdResults.ToList();
                 }
             }
 
@@ -77,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
 
                 if (model.StartDate.IsValid() && model.EndDate.IsValid() && startDate.HasValue && endDate.HasValue)
                 {
-                    webLogMessages = await _webLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value.AddDays(1));
+                    webLogMessages = (await _webLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value.AddDays(1))).ToList();
                     webLogMessages = WebLogItemRepository.FilterByAllTextColumns(webLogMessages, queryString);
                     webLogMessages = WebLogItemRepository.FilterPurgeZeroLogsMessage(webLogMessages, includePurgeZeroLogsMessage);
                 }

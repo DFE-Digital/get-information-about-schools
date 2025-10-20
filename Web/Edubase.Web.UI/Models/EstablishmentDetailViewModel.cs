@@ -1,18 +1,19 @@
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
 using Edubase.Common;
+using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
-using Edubase.Services.Groups.Models;
-using Edubase.Web.UI.Areas.Governors.Models;
-using System.Collections.Generic;
-using Edubase.Web.UI.Areas.Establishments.Models;
-using Edubase.Services.Core;
-using Edubase.Web.UI.Helpers;
-using System.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
 using Edubase.Services.ExternalLookup;
+using Edubase.Services.Groups.Models;
+using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Web.UI.Areas.Governors.Models;
+using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Routing;
 
 namespace Edubase.Web.UI.Models
 {
@@ -68,9 +69,15 @@ namespace Edubase.Web.UI.Models
 
         public GroupModel LegalParentGroup { get; set; }
 
-        public RouteDto LegalParentGroupRouteDto => LegalParentGroup == null ? null : new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name);
 
-        public RouteDto EstabDetailRouteDto => new RouteDto("EstabDetails", new System.Web.Routing.RouteValueDictionary(new { id = Establishment.Urn }), Establishment.Name);
+        public RouteDto LegalParentGroupRouteDto =>
+            LegalParentGroup == null
+                ? null
+                : new RouteDto("GroupDetails", new RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name);
+
+        public RouteDto EstabDetailRouteDto =>
+                new RouteDto("EstabDetails", new RouteValueDictionary(new { id = Establishment.Urn }), Establishment.Name);
+
 
         public bool IsUserLoggedOn { get; set; }
 

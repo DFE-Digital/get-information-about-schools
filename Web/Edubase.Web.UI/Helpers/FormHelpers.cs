@@ -1,28 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.IO;
 using System.Linq.Expressions;
-using System.Web;
+using System.Text.Encodings.Web;
+using System.Web.Mvc;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using HtmlHelper = Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlHelper;
+using TagBuilder = Microsoft.AspNetCore.Mvc.Rendering.TagBuilder;
 
 namespace Edubase.Web.UI.Helpers
 {
     public static class FormHelpers
     {
-        /// <summary>
-        ///  Radio button helper with model
-        /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="TProperty"></typeparam>
-        /// <param name="helper"></param>
-        /// <param name="expression"></param>
-        /// <param name="value"></param>
-        /// <param name="labelText"></param>
-        /// <param name="additionalLabelClasses"></param>
-        /// <param name="htmlAttributes"></param>
-        /// <returns></returns>
         public static HtmlString GiasRadioFor<TModel, TProperty>(
             this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, TProperty>> expression,
@@ -33,93 +22,69 @@ namespace Edubase.Web.UI.Helpers
         {
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             var name = ExpressionHelper.GetExpressionText(expression);
-            var id = helper.ViewData.TemplateInfo.GetFullHtmlFieldId(name + "_" + value).ToLower();
+            var id = helper.ViewData.TemplateInfo.GetFullHtmlFieldName(name + "_" + value).ToLower();
 
             if (attributes.ContainsKey("id"))
-            { // radio button has a defined ID - be sure to use for the label for attr
+            {
                 id = attributes["id"].ToString();
             }
-            var viewData = new ViewDataDictionary() { { "id", id} };
 
-            if (htmlAttributes != null)
+            var viewData = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary<TModel>(helper.ViewData) { { "id", id } };
+            foreach (var kvp in attributes)
             {
-                var viewDataDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-                foreach (var keyValue in viewDataDictionary)
-                {
-                    viewData[keyValue.Key] = keyValue.Value;
-                }
+                viewData[kvp.Key] = kvp.Value;
             }
 
             var radioButton = helper.RadioButtonFor(expression, value, viewData);
+            var radioHtml = RenderHtmlContent(radioButton);
 
-            var tagBuilder = new TagBuilder("label");
-            tagBuilder.MergeAttribute("for", id);
-            tagBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-radios__label", additionalLabelClasses));
-            tagBuilder.InnerHtml = labelText;
+            var labelBuilder = new TagBuilder("label");
+            labelBuilder.MergeAttribute("for", id);
+            labelBuilder.AddCssClass("govuk-label govuk-radios__label");
+            if (!string.IsNullOrEmpty(additionalLabelClasses))
+                labelBuilder.AddCssClass(additionalLabelClasses);
+            labelBuilder.InnerHtml.Append(labelText);
 
-            return new HtmlString(radioButton.ToHtmlString() + tagBuilder);
+            var labelHtml = RenderTagBuilder(labelBuilder);
+
+            return new HtmlString($"<div class=\"govuk-radios__item\">{radioHtml}{labelHtml}</div>");
         }
 
-
-        /// <summary>
-        /// Radio helper no model
-        /// </summary>
-        /// <param name="inputValue"></param>
-        /// <param name="inputName"></param>
-        /// <param name="labelText"></param>
-        /// <param name="additionalLabelClasses"></param>
-        /// <param name="htmlAttributes"></param>
-        /// <returns></returns>
         public static HtmlString GiasRadio(
             string inputValue,
             string inputName,
             string labelText,
             string additionalLabelClasses = "",
-            object htmlAttributes = null
-        )
+            object htmlAttributes = null)
         {
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            var id = string.Concat(inputName, "_", inputValue);
-            if (attributes.ContainsKey("id"))
-            {
-                id = attributes["id"].ToString();
-            }
+            var id = attributes.ContainsKey("id") ? attributes["id"].ToString() : $"{inputName}_{inputValue}";
 
             var labelBuilder = new TagBuilder("label");
-
             labelBuilder.MergeAttribute("for", id);
-            labelBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-radios__label",additionalLabelClasses));
-            labelBuilder.InnerHtml = labelText;
+            labelBuilder.AddCssClass("govuk-label govuk-radios__label");
+            if (!string.IsNullOrEmpty(additionalLabelClasses))
+                labelBuilder.AddCssClass(additionalLabelClasses);
+            labelBuilder.InnerHtml.Append(labelText);
 
-            var checkbox = new TagBuilder("input");
-            checkbox.Attributes["type"] = "radio";
-            checkbox.Attributes["name"] = inputName;
-            checkbox.Attributes["value"] = inputValue;
-            checkbox.Attributes["id"] = id;
-            checkbox.Attributes["class"] = "govuk-radios__input";
+            var inputBuilder = new TagBuilder("input");
+            inputBuilder.Attributes["type"] = "radio";
+            inputBuilder.Attributes["name"] = inputName;
+            inputBuilder.Attributes["value"] = inputValue;
+            inputBuilder.Attributes["id"] = id;
+            inputBuilder.AddCssClass("govuk-radios__input");
 
-            if (htmlAttributes != null)
+            foreach (var kvp in attributes)
             {
-                var viewDataDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-                foreach (var keyValue in viewDataDictionary)
-                {
-                    checkbox.Attributes[keyValue.Key] = (string)keyValue.Value;
-                }
+                inputBuilder.Attributes[kvp.Key] = kvp.Value?.ToString();
             }
 
-            return new HtmlString("<div class=\"govuk-radios__item\">" + checkbox + labelBuilder + "</div>");
+            var inputHtml = RenderTagBuilder(inputBuilder);
+            var labelHtml = RenderTagBuilder(labelBuilder);
+
+            return new HtmlString($"<div class=\"govuk-radios__item\">{inputHtml}{labelHtml}</div>");
         }
 
-        /// <summary>
-        ///  Checkbox Helper - with model
-        /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <param name="helper"></param>
-        /// <param name="expression"></param>
-        /// <param name="labelText"></param>
-        /// <param name="additionalLabelClasses"></param>
-        /// <param name="htmlAttributes"></param>
-        /// <returns></returns>
         public static HtmlString GiasCheckboxFor<TModel>(
             this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
@@ -129,83 +94,82 @@ namespace Edubase.Web.UI.Helpers
         {
             var name = ExpressionHelper.GetExpressionText(expression);
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            var id = helper.ViewData.TemplateInfo.GetFullHtmlFieldId(name);
-            if (attributes.ContainsKey("id"))
-            {
-                id = attributes["id"].ToString();
-            }
+            var id = attributes.ContainsKey("id") ? attributes["id"].ToString() : helper.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
 
-            var viewData = new ViewDataDictionary() { { "id", id } };
-
-            if (htmlAttributes != null)
+            var viewData = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary<TModel>(helper.ViewData) { { "id", id } };
+            foreach (var kvp in attributes)
             {
-                var viewDataDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-                foreach (var keyValue in viewDataDictionary)
-                {
-                    viewData[keyValue.Key] = keyValue.Value;
-                }
+                viewData[kvp.Key] = kvp.Value;
             }
 
             var checkbox = helper.CheckBoxFor(expression, viewData);
+            var checkboxHtml = RenderHtmlContent(checkbox);
 
-            var tagBuilder = new TagBuilder("label");
-            tagBuilder.MergeAttribute("for", id);
-            tagBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-checkboxes__label", additionalLabelClasses));
-            tagBuilder.InnerHtml = labelText;
+            var labelBuilder = new TagBuilder("label");
+            labelBuilder.MergeAttribute("for", id);
+            labelBuilder.AddCssClass("govuk-label govuk-checkboxes__label");
+            if (!string.IsNullOrEmpty(additionalLabelClasses))
+                labelBuilder.AddCssClass(additionalLabelClasses);
+            labelBuilder.InnerHtml.Append(labelText);
 
-            return new HtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox.ToHtmlString() + tagBuilder +"</div>" );
+            var labelHtml = RenderTagBuilder(labelBuilder);
+
+            return new HtmlString($"<div class=\"govuk-checkboxes__item\">{checkboxHtml}{labelHtml}</div>");
         }
 
-        /// <summary>
-        ///  Checkbox helper
-        /// </summary>
-        /// <param name="inputValue"></param>
-        /// <param name="inputName"></param>
-        /// <param name="labelText"></param>
-        /// <param name="additionalLabelClasses"></param>
-        /// <param name="htmlAttributes"></param>
-        /// <param name="isChecked"></param>
-        /// <returns></returns>
         public static HtmlString GiasCheckbox(
             string inputValue,
             string inputName,
             string labelText,
             string additionalLabelClasses = "",
             object htmlAttributes = null,
-            bool isChecked = false
-        )
+            bool isChecked = false)
         {
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            var id = attributes["id"].ToString();
+            var id = attributes.ContainsKey("id") ? attributes["id"].ToString() : $"{inputName}_{inputValue}";
 
             var labelBuilder = new TagBuilder("label");
-
             labelBuilder.MergeAttribute("for", id);
-            labelBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-checkboxes__label", additionalLabelClasses));
-            labelBuilder.InnerHtml = labelText;
+            labelBuilder.AddCssClass("govuk-label govuk-checkboxes__label");
+            if (!string.IsNullOrEmpty(additionalLabelClasses))
+                labelBuilder.AddCssClass(additionalLabelClasses);
+            labelBuilder.InnerHtml.Append(labelText);
 
-            var checkbox = new TagBuilder("input");
-            checkbox.Attributes["type"] =  "checkbox";
-            checkbox.Attributes["name"] = inputName;
-            checkbox.Attributes["value"] = inputValue;
-            checkbox.Attributes["class"] = "govuk-checkboxes__input";
+            var inputBuilder = new TagBuilder("input");
+            inputBuilder.Attributes["type"] = "checkbox";
+            inputBuilder.Attributes["name"] = inputName;
+            inputBuilder.Attributes["value"] = inputValue;
+            inputBuilder.Attributes["id"] = id;
+            inputBuilder.AddCssClass("govuk-checkboxes__input");
 
             if (isChecked)
             {
-                checkbox.Attributes["checked"] = "checked";
+                inputBuilder.Attributes["checked"] = "checked";
             }
 
-            if (htmlAttributes != null)
+            foreach (var kvp in attributes)
             {
-                var viewDataDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-                foreach (var keyValue in viewDataDictionary)
-                {
-                    checkbox.Attributes[keyValue.Key] = (string) keyValue.Value;
-                }
+                inputBuilder.Attributes[kvp.Key] = kvp.Value?.ToString();
             }
 
-            return new HtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox + labelBuilder + "</div>");
+            var inputHtml = RenderTagBuilder(inputBuilder);
+            var labelHtml = RenderTagBuilder(labelBuilder);
 
+            return new HtmlString($"<div class=\"govuk-checkboxes__item\">{inputHtml}{labelHtml}</div>");
+        }
+
+        private static string RenderHtmlContent(IHtmlContent content)
+        {
+            using var writer = new StringWriter();
+            content.WriteTo(writer, HtmlEncoder.Default);
+            return writer.ToString();
+        }
+
+        private static string RenderTagBuilder(TagBuilder tagBuilder)
+        {
+            using var writer = new StringWriter();
+            tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+            return writer.ToString();
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("~/sitemap.xml")]
-        public async Task<ActionResult> SitemapIndex(bool? refresh)
+        public async Task<IActionResult> SitemapIndex(bool? refresh)
         {
             if (refresh.GetValueOrDefault())
             {
@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("~/sitemap_site.xml")]
-        public async Task<ActionResult> SitemapSite()
+        public async Task<IActionResult> SitemapSite()
         {
             var cacheName = $"{CacheTag}_site";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
@@ -83,35 +83,33 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("~/sitemap_est{estType}.xml")]
-        public async Task<ActionResult> SitemapEstablishmentByType(int estType)
+        public async Task<IActionResult> SitemapEstablishmentByType(int estType)
         {
-            Server.ScriptTimeout = 300;
             var cacheName = $"{CacheTag}_est_{estType}";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
 
-            if (responseCopy.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(responseCopy))
             {
                 responseCopy = await GenerateEstablishmentDocument(estType);
                 await _cacheAccessor.SetAsync(cacheName, responseCopy, TimeSpan.FromDays(_cacheDays));
             }
 
-            return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+            return Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
 
         [Route("~/sitemap_group{groupType}.xml")]
-        public async Task<ActionResult> SitemapGroupByType(int groupType)
+        public async Task<IActionResult> SitemapGroupByType(int groupType)
         {
-            Server.ScriptTimeout = 300;
             var cacheName = $"{CacheTag}_group_{groupType}";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
 
-            if (responseCopy.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(responseCopy))
             {
                 responseCopy = await GenerateGroupDocument(groupType);
                 await _cacheAccessor.SetAsync(cacheName, responseCopy, TimeSpan.FromDays(_cacheDays));
             }
 
-            return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+            return Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
 
         private async Task<string> GetSitemapIndex()

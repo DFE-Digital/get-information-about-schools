@@ -35,8 +35,8 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet("banners")]
         public async Task<IActionResult> Banners()
         {
-            var result = await _BannerRepository.GetAllAsync(2, null, true);
-            var model = new NotificationsBannersViewModel(result.Items);
+            var result = await _BannerRepository.GetAllAsync(2, true);
+            var model = new NotificationsBannersViewModel(result);
 
             if (TempData["ShowSaved"] != null)
             {
@@ -51,8 +51,8 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IActionResult> AuditBanners(string sortBy)
         {
             var result = await _BannerRepository.GetAllAsync(1000);
-            var audit = await _BannerRepository.GetAllAsync(1000, null, false, eNotificationBannerPartition.Archive);
-            var items = result.Items.Concat(audit.Items).ToList();
+            var audit = await _BannerRepository.GetAllAsync(1000, false, eNotificationBannerPartition.Archive);
+            var items = result.Concat(audit).ToList();
 
             var distinct = items.GroupBy(x => x.Tracker)
                 .Select(grp => grp.OrderByDescending(x => x.Version).First());
@@ -65,8 +65,8 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IActionResult> AuditBanner(string id, string sortBy)
         {
             var result = await _BannerRepository.GetAllAsync(1000);
-            var audit = await _BannerRepository.GetAllAsync(1000, null, false, eNotificationBannerPartition.Archive);
-            var items = result.Items.Concat(audit.Items).Where(x => x.Tracker == id);
+            var audit = await _BannerRepository.GetAllAsync(1000, false, eNotificationBannerPartition.Archive);
+            var items = result.Concat(audit).Where(x => x.Tracker == id);
 
             var model = new NotificationsBannerAuditViewModel(items, sortBy);
             return View(model);
@@ -75,12 +75,12 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet("banner/new", Name = "CreateBanner")]
         public async Task<IActionResult> CreateBanner()
         {
-            var banners = await _BannerRepository.GetAllAsync(1000, null, true);
+            var banners = await _BannerRepository.GetAllAsync(1000, true);
             var newBanner = new NotificationsBannerViewModel
             {
-                TotalBanners = banners.Items.Count(),
-                TotalLiveBanners = banners.Items.Count(x => x.Visible),
-                Counter = banners.Items.Count() + 1
+                TotalBanners = banners.Count(),
+                TotalLiveBanners = banners.Count(x => x.Visible),
+                Counter = banners.Count() + 1
             };
             return View("EditBanner", newBanner);
         }
@@ -98,7 +98,7 @@ namespace Edubase.Web.UI.Controllers
             var item = await _BannerRepository.GetAsync(id);
             if (item == null) return NotFound();
 
-            var banners = await _BannerRepository.GetAllAsync(1000, null, true);
+            var banners = await _BannerRepository.GetAllAsync(1000, true);
 
             if (TempData["ShowSaved"] != null)
             {
@@ -115,8 +115,8 @@ namespace Edubase.Web.UI.Controllers
                 End = new DateTimeViewModel(item.End, item.End),
                 Importance = (eNotificationBannerImportance) item.Importance,
                 Content = item.Content,
-                TotalBanners = banners.Items.Count(),
-                TotalLiveBanners = banners.Items.Count(x => x.Visible)
+                TotalBanners = banners.Count(),
+                TotalLiveBanners = banners.Count(x => x.Visible)
             });
         }
 
@@ -149,7 +149,7 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.Action == eNotificationBannerAction.TypeChoice)
                 {
                     var result = await _TemplateRepository.GetAllAsync(1000);
-                    viewModel.Templates = result.Items;
+                    viewModel.Templates = result;
                 }
 
                 if (viewModel.Action == eNotificationBannerAction.TypeChoice &&
@@ -220,7 +220,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IActionResult> Templates()
         {
             var result = await _TemplateRepository.GetAllAsync(1000);
-            var model = new NotificationsTemplatesViewModel(result.Items);
+            var model = new NotificationsTemplatesViewModel(result);
 
             if (TempData["ShowSaved"] != null)
             {
