@@ -1,514 +1,448 @@
-import Vue from 'vue';
-import errorSummary from '../GiasVueComponents/errorSummary';
-import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
+$(function () {
+  var $content = $('#academy-openings-content');
+  if (!$content.length) {
+    return;
+  }
 
-import GiasTabs from '../GiasModules/GiasTabs';
+  var dataElement = document.getElementById('academy-openings-data');
+  var rawData = dataElement ? (dataElement.textContent || dataElement.innerText || '') : '';
+  var allItems;
 
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-let raw = [];
+  try {
+    allItems = rawData ? JSON.parse(rawData) : [];
+  } catch (error) {
+    allItems = [];
+  }
 
-const academyOpenings = new Vue({
-    el: '#academy-opening-app',
-    data: {
-      openingAcademies: [],
-      selectedDate: '0',
-      initialRecordCount: 0,
-      currentPage: 0,
-      slicePage: 0,
-      pageSize: 50,
-      pages: [],
-      currentCount: 0,
-      searchError: false,
-      searchUrn: '',
-      editRecord: false,
-      openDateError: false,
-      updateName: '',
-      updateNameError: false,
-      updateDateDay: '',
-      updateDateMonth: '',
-      updateDateYear: '',
-      selectedOpeningDetails: {},
-      presentDetail: false,
-      isProcessing: true,
-      userHasEdited: false,
-      presentExitWarning: false,
-      loadDataError: false,
-      apiError: {},
-      sortKey: 'openingDate',
-      sortAscending: true,
-      recordUpdateErrors: [],
-      anchorTarget: '',
-      tableColumns: {
-        openingDate: 'Opening date',
-        urn: 'URN',
-        name: 'Establishment name',
-        establishmentType: 'Establishment type',
-        predecessorUrn: 'Predecessor URN',
-        predecessorName: 'Predecessor name'
-      },
-      uniqueDates: [],
-      raw: [],
-      errors: []
-  },
-  components: {
-    GiasWaitSpinner,
-    errorSummary
-  },
-  created: function () {
-    this.loadData();
-    blockExits();
-  },
-  methods: {
-    sortOpenings: function (key) {
+  if (!Array.isArray(allItems) || !allItems.length) {
+    return;
+  }
 
-      if (key === this.sortKey) {
-        this.sortAscending = !this.sortAscending;
-      }
-      this.sortKey = key;
-      const asc = this.sortAscending === true;
+  var $table = $('#academy-openings-table');
+  var $tbody = $table.find('tbody');
+  var $monthSelect = $('#opening-date-filter');
+  var $form = $monthSelect.closest('form');
+  var $paginationContainers = $content.find('.upper-pagination, .lower-pagination');
 
-      let sortFn;
+  var state = {
+    allItems: allItems,
+    month: ($content.data('month') || '').toString(),
+    sortField: ($content.data('sortField') || 'OpenDate').toString(),
+    sortDir: ($content.data('sortDir') || 'desc').toString().toLowerCase() === 'asc' ? 'asc' : 'desc',
+    take: parseInt($content.data('take'), 10) || 50,
+    skip: parseInt($content.data('skip'), 10) || 0,
+    baseUrl: ($content.data('baseUrl') || window.location.pathname).toString(),
+    establishmentTypeId: ($content.data('establishmentTypeId') || '').toString(),
+    detailUrlTemplate: ($content.data('detailUrlTemplate') || '').toString(),
+    editUrlTemplate: ($content.data('editUrlTemplate') || '').toString(),
+    total: allItems.length
+  };
 
-      const sortDate = function (a, b) {
-        if (asc) {
-          return new Date(a.openingDate) - new Date(b.openingDate);
-        } else {
-          return new Date(b.openingDate) - new Date(a.openingDate);
-        }
+  if (typeof state.detailUrlTemplate !== 'string' || state.detailUrlTemplate.indexOf('__urn__') === -1) {
+    state.detailUrlTemplate = '/Establishments/Establishment/Details/__urn__';
+  }
+  if (typeof state.editUrlTemplate !== 'string' || state.editUrlTemplate.indexOf('__urn__') === -1) {
+    state.editUrlTemplate = '/Establishments/manage/edit-academy-opening/__urn__';
+  }
 
-      };
-      const sortNumeric = function (a, b) {
-        if (asc) {
-          return Number(a[key]) - Number(b[key]);
-        } else {
-          return Number(b[key]) - Number(a[key]);
-        }
+  state.currentPage = state.take > 0 ? Math.floor(state.skip / state.take) : 0;
 
-      };
-      const sortText = function (a, b) {
-        const textA = (a[key] !== null) ? a[key].toLowerCase() : '';
-        const textB = (b[key] !== null) ? b[key].toLowerCase() : '';
-        if (asc) {
-          if (textA < textB) {
-            return -1;
-          }
-          if (textA > textB) {
-            return 1;
-          }
-          return 0;
-        } else {
-          if (textA > textB) {
-            return -1;
-          }
-          if (textA < textB) {
-            return 1;
-          }
-          return 0;
-        }
+  function parseDate(value) {
+    if (!value) {
+      return 0;
+    }
 
-      };
+    var date = new Date(value);
+    var timestamp = date.getTime();
+    return isNaN(timestamp) ? 0 : timestamp;
+  }
 
-      if (key === 'urn' || key === 'predecessorUrn') {
-        sortFn = sortNumeric;
-      } else if (key === 'openingDate') {
-        sortFn = sortDate;
-      } else {
-        sortFn = sortText;
-      }
+  function getDateValue(item) {
+    if (item) {
+      return 0;
+    }
+    var year = parseInt(item.openDateYear, 10);
+    var month = parseInt(item.openDateMonth, 10);
+    var day = parseInt(item.openDateDay, 10);
 
-      const temp = raw.sort(sortFn);
-      this.openingAcademies = temp;
-      this.buildPages(this.openingAcademies, this.pageSize);
-    },
-    detailUrl: function (urn) {
-      return '/Establishments/Establishment/Details/' + urn;
-    },
-    formatDate: function (date, separator) {
-      if (!date) {
-        date = new Date();
-      }
-      if (!separator) {
-        separator = '/';
-      }
-      const dd = date.getDate();
-      const mm = date.getMonth() + 1;
-      const yyyy = date.getFullYear();
+    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+      return (year * 10000) + (month * 100) + day;
+    }
+    return parseDate(item.openDate);
+  }
 
-      return [yyyy, mm, dd].join(separator);
-    },
-    showAll: function () {
-      this.pageSize = 100000;
-      this.setCurrentPage(0);
-      this.buildPages(this.openingAcademies, this.pageSize);
-    },
-    buildDateDropDown: function () {
-      let openingDates = [];
-      let i;
-      let len;
-      const self = this;
+  function compareStrings(left, right) {
+    var a = left || '';
+    var b = right || '';
+    if (a === b) {
+      return 0;
+    }
+    return a.localeCompare(b);
+  }
 
-      document.getElementById('opening-date-filter').innerHTML = '';
+  function comparePredecessorNameAsc(a, b) {
+    var left = a.predecessorName;
+    var right = b.predecessorName;
 
-      for (i = 0, len = self.currentCount; i < len; i++) {
-        const openingDate = new Date(self.openingAcademies[i].openingDate);
-        let tempObj = {};
+    if (!left && !right) {
+      return 0;
+    }
 
-        tempObj.sorter = openingDate.getMonth() + '.' + openingDate.getFullYear();
-        tempObj.month = openingDate.getMonth();
-        tempObj.year = openingDate.getFullYear();
+    if (!left) {
+      return 1;
+    }
 
-        openingDates.push(tempObj);
-      }
+    if (!right) {
+      return -1;
+    }
+    return left.localeCompare(right);
+  }
 
-      let spotted = {};
-      const uniqueDates = openingDates.filter(function (item) {
-        return spotted.hasOwnProperty(item.sorter) ? false : (spotted[item.sorter] = true);
-      });
+  function comparePredecessorNameDesc(a, b) {
+    var result = comparePredecessorNameAsc(a, b);
+    return result === 0 ? 0 : result > 0 ? -1 : 1;
+  }
 
-      let frag = document.createDocumentFragment();
-      const opt = document.createElement('option');
-      opt.value = 0;
-      opt.innerHTML = 'All months';
-      frag.appendChild(opt);
+  function sortItems(items) {
+    var sorted = items.slice();
+    var sortKey = state.sortField + '-' + state.sortDir;
 
-      for (i = 0, len = uniqueDates.length; i < len; i++) {
-        const option = document.createElement('option'),
-          d = uniqueDates[i];
-
-        option.value = d.sorter;
-        option.innerHTML = monthNames[d.month] + ' ' + d.year;
-
-        frag.appendChild(option);
-      }
-
-
-      document.getElementById('opening-date-filter').appendChild(frag);
-      this.selectedDate = 0;
-    },
-    buildPages: function (changes, pageSize) {
-      let count = 0;
-      let changesPages = [];
-      for (count; count < changes.length;) {
-        const page = changes.slice(count, (count + pageSize));
-
-        changesPages.push(page);
-        count += pageSize;
-      }
-
-      this.pages = changesPages;
-
-      this.isProcessing = false;
-      $('#content').find('.gias-tabs__tab').slice(0, 1).click();
-    },
-    loadData: function () {
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const nowPlus30 = new Date();
-      const self = this;
-      let totalRecords = 0;
-
-      now.setDate(1);
-      nowPlus30.setDate(1);
-      nowPlus30.setFullYear(currentYear + 30);
-
-      let establishmentTypeId=this.getQueryStringValue("establishmentTypeId");
-
-      // step into callback hell
-      let params = `${self.formatDate(now, '-')}/${self.formatDate(nowPlus30, '-')}/0/1`;
-      params = `${params}/${establishmentTypeId}`;
-      $.getJSON(`/api/academy-openings/list/${params}`,
-        function (data) {
-          totalRecords = data.count;
-          self.initialRecordCount = totalRecords;
-          self.currentCount = totalRecords;
-          params = `${self.formatDate(now, '-')}/${self.formatDate(nowPlus30, '-')}/0/${totalRecords}`;
-          params = `${params}/${establishmentTypeId}`;
-          $.getJSON(`/api/academy-openings/list/${params}`,
-            function (data) {
-              self.openingAcademies = data.items;
-              self.buildPages(data.items, self.pageSize);
-              self.buildDateDropDown();
-              raw = data.items;
-            }
-          ).fail(function (jqxhr) {
-            if (jqxhr.hasOwnProperty('responseJSON')) {
-              self.apiError = jqxhr.responseJSON;
-            } else {
-              self.loadDataError = true;
-            }
-            self.loadDataError = true;
-            self.isProcessing = false;
-          });
-        }
-      ).fail(function (jqxhr) {
-
-        if (jqxhr.hasOwnProperty('responseJSON')) {
-          self.apiError = jqxhr.responseJSON;
-        } else {
-          self.loadDataError = true;
-        }
-        self.isProcessing = false;
-      });
-    },
-    getQueryStringValue: function (queryParameterKey){
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      let value=" "; // This is intentionally set to whitespace so a value is registered to the called Api
-      if (urlParams.has(queryParameterKey)) value = urlParams.get(queryParameterKey);
-
-      return value;
-    },
-    setCurrentPage: function (pageIndex) {
-      this.currentPage = pageIndex;
-      if (this.currentPage < 3) {
-        this.slicePage = 0;
-      } else {
-        if (this.currentPage > this.pages.length - 3) {
-          this.slicePage = this.pages.length - 5;
-        } else {
-          this.slicePage = this.currentPage - 2;
-        }
-      }
-      if (this.slicePage < 0) {
-        this.slicePage = 0;
-      }
-    },
-    editEstab: function (urn) {
-      this.searchUrn = urn;
-      this.openingDetail();
-      this.editRecord = true;
-      this.searchError = false;
-    },
-    validUrns: function () {
-      let urns = [];
-      let i = 0;
-      const len = this.openingAcademies.length;
-
-      for (i; i < len; i++) {
-        urns.push(this.openingAcademies[i].urn);
-      }
-
-      return urns;
-    },
-    validateUrn: function () {
-      this.clearErrors();
-      const validUrns = this.validUrns();
-      this.presentDetail = false;
-      this.searchError = validUrns.indexOf(Number(this.searchUrn)) === -1;
-      if (!this.searchError) {
-        this.openingDetail();
-        this.presentDetail = true;
-      } else {
-        this.errors.push({
-          href: '#academy-search-field',
-          message: 'Please enter a valid <abbr title="Unique Reference Number">URN</abbr>'
-        })
-        this.errorFocus();
-      }
-    },
-    updateRecord: function () {
-      this.clearErrors();
-      const d = parseInt(this.updateDateDay, 10);
-      const m = parseInt(this.updateDateMonth, 10);
-      const y = parseInt(this.updateDateYear, 10);
-      const self = this;
-
-
-      this.updateNameError = this.updateName.length < 1;
-
-      if (this.updateNameError) {
-        this.errors.push({
-          href: '#est-name',
-          message: 'Please enter the establishment name'
+    switch (sortKey) {
+      case 'OpenDate-asc':
+        sorted.sort(function (a, b) {
+          return getDateValue(a) - getDateValue(b);
         });
-      }
-
-      this.openDateError = (
-        isNaN(d) || d < 1 || d > 31 || this.updateDateDay === '' ||
-        isNaN(m) || m < 1 || m > 12 || this.updateDateMonth === '' ||
-        isNaN(y) || y < 2000 || y > 2100 || this.updateDateYear === '');
-
-      if (this.openDateError) {
-        this.errors.push({
-          href: '#opening-date',
-          message: 'Please enter the establishment opening date'
+        break;
+      case 'OpenDate-desc':
+        sorted.sort(function (a, b) {
+          return getDateValue(b) - getDateValue(a);
         });
-
-        this.errorFocus();
-      }
-
-      if (!this.updateNameError && !this.openDateError) {
-        const urn = this.searchUrn;
-        this.searchUrn = '';
-        this.presentDetail = false;
-        this.editRecord = false;
-        this.isProcessing = true;
-        this.userHasEdited = false;
-        this.recordUpdateErrors = [];
-
-        $(window).off('beforeunload');
-
-        $.ajax({
-          url: '/api/academy/' + urn,
-          type: 'post',
-          contentType: 'application/json; charset=utf-8',
-          dataType: 'json',
-          data: JSON.stringify({
-            openDate: [this.updateDateYear, this.updateDateMonth, this.updateDateDay].join('-'),
-            name: this.updateName
-          }),
-          success: function (data) {
-            self.loadData();
-          },
-          error: function (jqxhr) {
-
-            self.searchUrn = urn;
-            self.presentDetail = true;
-            self.editRecord = true;
-            self.isProcessing = false;
-            self.userHasEdited = true;
-
-            if (jqxhr.hasOwnProperty('responseJSON')) {
-              self.recordUpdateErrors = jqxhr.responseJSON.errors;
-              for (let i = 0, len = Object.keys(self.recordUpdateErrors).length; i < len; i++) {
-                self.errors.push({
-                  href: '#',
-                  message: self.recordUpdateErrors[i].message
-                });
-              }
-
-            } else {
-              self.loadDataError = true;
-            }
-          }
+        break;
+      case 'Urn-asc':
+        sorted.sort(function (a, b) {
+          return (a.urn || 0) - (b.urn || 0);
         });
-      }
-    },
-    buildDatePages: function () {
-      const dateParts = this.selectedDate.split('.');
-      const month = parseInt(dateParts[0], 10);
-      const year = parseInt(dateParts[1], 10);
+        break;
+      case 'Urn-desc':
+        sorted.sort(function (a, b) {
+          return (b.urn || 0) - (a.urn || 0);
+        });
+        break;
+      case 'EstablishmentName-asc':
+        sorted.sort(function (a, b) {
+          return compareStrings(a.establishmentName, b.establishmentName);
+        });
+        break;
+      case 'EstablishmentName-desc':
+        sorted.sort(function (a, b) {
+          return compareStrings(b.establishmentName, a.establishmentName);
+        });
+        break;
+      case 'EstablishmentType-asc':
+        sorted.sort(function (a, b) {
+          return compareStrings(a.establishmentType, b.establishmentType);
+        });
+        break;
+      case 'EstablishmentType-desc':
+        sorted.sort(function (a, b) {
+          return compareStrings(b.establishmentType, a.establishmentType);
+        });
+        break;
+      case 'PredecessorUrn-asc':
+        sorted.sort(function (a, b) {
+          return compareStrings(a.predecessorUrn, b.predecessorUrn);
+        });
+        break;
+      case 'PredecessorUrn-desc':
+        sorted.sort(function (a, b) {
+          return compareStrings(b.predecessorUrn, a.predecessorUrn);
+        });
+        break;
+      case 'PredecessorName-asc':
+        sorted.sort(comparePredecessorNameAsc);
+        break;
+      case 'PredecessorName-desc':
+        sorted.sort(comparePredecessorNameDesc);
+        break;
+      default:
+        break;
+    }
 
-      if (isNaN(month) || isNaN(year)) { // user selected all
-        this.buildPages(this.openingAcademies, this.pageSize);
-        this.currentCount = this.openingAcademies.length;
+    return sorted;
+  }
+
+  function filterItemsByMonth() {
+    if (!state.month) {
+      return state.allItems.slice();
+    }
+
+    var parts = state.month.split('.');
+    if (parts.length !== 2) {
+      return state.allItems.slice();
+    }
+
+    var selectedMonth = parseInt(parts[0], 10);
+    var selectedYear = parseInt(parts[1], 10);
+
+    if (isNaN(selectedMonth) || isNaN(selectedYear)) {
+      return state.allItems.slice();
+    }
+
+    return state.allItems.filter(function (item) {
+      var itemMonth = parseInt(item.openDateMonth, 10);
+      var itemYear = parseInt(item.openDateYear, 10);
+
+      if (!isNaN(itemMonth) && !isNaN(itemYear)) {
+        return itemMonth === selectedMonth && itemYear === selectedYear;
+      }
+
+      var timestamp = parseInt(item.openDate);
+      if (!timestamp) {
+        return false;
+      }
+      var date = new Date(timestamp);
+      return date.getMonth() + 1 === selectedMonth && date.getFullYear() === selectedYear;
+    });
+  }
+
+  function escapeHtml(value) {
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function buildUrl(overrides) {
+    var params = {
+      sortBy: state.sortField + '-' + state.sortDir,
+      skip: state.skip,
+      establishmentTypeId: state.establishmentTypeId,
+      month: state.month
+    };
+
+    overrides = overrides || {};
+    $.extend(params, overrides);
+
+    var query = Object.keys(params)
+      .filter(function (key) {
+        if (params[key] === undefined || params[key] === null || params[key] === '') {
+          return false;
+        }
+
+        if (key === 'skip' && parseInt(params[key], 10) === 0) {
+          return false;
+        }
+        return true;
+      })
+      .map(function (key) {
+        return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+      })
+      .join('&');
+
+    return state.baseUrl + (query ? '?' + query : '');
+  }
+
+  function formatPaginationInfo(startIndex, endIndex, total) {
+    if (!total) {
+      return 'Showing 0 - 0 of 0';
+    }
+    return 'Showing ' + (startIndex + 1) + ' - ' + endIndex + ' of ' + total;
+  }
+
+  function renderTable(items) {
+    if (!items.length) {
+      $tbody.html('<tr class="govuk-table__row"><td class="govuk-table__cell" colspan="7">No openings found.</td></tr>');
+      return;
+    }
+
+    var detailTemplate = state.detailUrlTemplate;
+    var editTemplate = state.editUrlTemplate;
+
+    var rows = items
+      .map(function (item) {
+        var urnLink = detailTemplate ? detailTemplate.replace('__urn__', item.urn) : '#';
+        var predecessorLink = item.predecessorUrn
+          ? '<a class="govuk-link" href="' + detailTemplate.replace('__urn__', item.predecessorUrn) + '">' + escapeHtml(item.predecessorUrn) + '</a>'
+          : '';
+        var editLink = editTemplate ? editTemplate.replace('__urn__', item.urn) : '#';
+
+        return '<tr class="govuk-table__row">' +
+          '<td class="govuk-table__cell cell-openingdate">' + escapeHtml(item.openDateDisplay) + '</td>' +
+          '<td class="govuk-table__cell cell-urn"><a class="govuk-link" href="' + urnLink + '">' + escapeHtml(item.urn) + '</a></td>' +
+          '<td class="govuk-table__cell cell-establishmentname">' + escapeHtml(item.establishmentName) + '</td>' +
+          '<td class="govuk-table__cell cell-establishmenttype">' + escapeHtml(item.establishmentType) + '</td>' +
+          '<td class="govuk-table__cell cell-predecessorurn">' + predecessorLink + '</td>' +
+          '<td class="govuk-table__cell cell-predecessorname">' + escapeHtml(item.predecessorName) + '</td>' +
+          '<td class="govuk-table__cell cell-edit"><a class="govuk-link" href="' + editLink + '">Edit</a></td>' +
+          '</tr>';
+      })
+      .join('');
+
+    $tbody.html(rows);
+  }
+  function renderPagination(total, startIndex, endIndex) {
+    var paginationText = formatPaginationInfo(startIndex, endIndex, total);
+    var hasPrevious = state.currentPage > 0;
+    var hasNext = endIndex < total;
+    var paginationHtml = '<nav role="navigation" aria-label="Pagination" class="pagination">' +
+      '<p class="pagination-info">' + paginationText + '</p>' +
+      '<ul class="pagination-links">';
+
+    if (hasPrevious) {
+      paginationHtml += '<li><a class="pagination-prev" data-page="prev" href="' + buildUrl({skip: state.skip - state.take}) + '">&lt;&lt; Previous</a></li>';
+    }
+
+    if (hasNext) {
+      paginationHtml += '<li><a class="pagination-next" data-page="next" href="' + buildUrl({skip: state.skip + state.take}) + '">Next &gt;&gt;</a></li>';
+    }
+
+    paginationHtml += '</ul></nav>';
+
+    $paginationContainers.each(function () {
+      $(this).html(paginationHtml);
+    });
+  }
+
+function updateSortLinks() {
+  $table.find('thead th').each(function () {
+    var $th = $(this);
+    var $link = $th.find('a[data-sort-column]');
+    if (!$link.length) {
+      $th.removeAttr('aria-sort');
+      return;
+    }
+
+      var column = $link.data('sortColumn');
+      var isSortedColumn = column === state.sortField;
+      var nextDir = isSortedColumn && state.sortDir === 'asc' ? 'desc' : 'asc';
+      var linkText = $.trim($link.text());
+      var ariaLabel = linkText;
+
+      if (isSortedColumn) {
+        ariaLabel += state.sortDir === 'asc' ? 'sorted ascending' : 'sorted descending';
+      }
+
+      $link
+        .attr('href', buildUrl({ sortBy: column + '-' + nextDir, skip: 0 }))
+        .attr('aria-label', ariaLabel)
+        .toggleClass('selected-sort', isSortedColumn)
+        .toggleClass('sorted-asc', isSortedColumn && state.sortDir === 'asc')
+        .toggleClass('sorted-desc', isSortedColumn && state.sortDir === 'desc');
+
+      if (isSortedColumn) {
+        $th.attr('aria-sort', state.sortDir === 'asc' ? 'ascending' : 'descending');
+      } else {
+        $th.removeAttr('aria-sort');
+      }
+    });
+  }
+
+  function updateHiddenFields() {
+    $form.find('input[name="sortBy"]').val(state.sortField + '-' + state.sortDir);
+    $form.find('input[name="establishmentTypeId"]').val(state.establishmentTypeId);
+    $monthSelect.val(state.month || '');
+  }
+
+  function updateHistory() {
+    if (!window.history || !window.history.replaceState) {
+      return;
+    }
+
+    var url = buildUrl({ skip: state.skip });
+    window.history.replaceState(null, document.title, url);
+  }
+
+  function bindSortEvents() {
+    $table.find('a[data-sort-column]').off('click').on('click', function (event) {
+      event.preventDefault();
+      var column = $(this).data('sortColumn');
+      if (!column) {
         return;
       }
 
-      const datePages = this.openingAcademies.filter(function (opening) {
-        const oDateParts = opening.openingDate.split('-');
-        const oDateMonth = parseInt(oDateParts[1], 10) - 1;
-        const oDateYear = parseInt(oDateParts[0], 10);
-
-        return oDateMonth === month && oDateYear === year;
-
-      });
-
-      this.buildPages(datePages, this.pageSize);
-      this.currentCount = datePages.length;
-      this.currentPage = 0;
-    },
-    openingDetail: function () {
-      const urn = parseInt(this.searchUrn, 10);
-      if (isNaN(urn)) {
-        return false;
-      }
-      const academy = this.openingAcademies.filter(function (estab) {
-        return parseInt(estab.urn, 10) === urn;
-      });
-      const openDate = academy[0].openingDate.split('-');
-
-      this.updateName = academy[0].name;
-      this.updateDateDay = openDate[2].replace('T00:00:00', '');
-      this.updateDateMonth = openDate[1];
-      this.updateDateYear = openDate[0];
-
-      this.selectedOpeningDetails = academy[0];
-      return this.selectedOpeningDetails;
-    },
-    cancelEditClick: function () {
-      this.recordUpdateErrors = [];
-      if (this.userHasEdited) {
-        window.setTimeout(function () {
-          $('#button-ok').focus();
-
-        }, 0);
-        return this.presentExitWarning = true;
-      }
-      this.editRecord = false;
-      this.searchUrn = '';
-      this.presentDetail = false;
-    },
-    isUserEditing: function () {
-      return this.userHasEdited;
-    },
-    exitWarningOkClick: function () {
-      this.clearErrors();
-      $(window).off('beforeunload');
-      if (this.anchorTarget === '') {
-        this.presentExitWarning = false;
-        this.userHasEdited = false;
-        this.editRecord = false;
-        this.searchUrn = '';
-        this.presentDetail = false;
+      if (state.sortField === column) {
+        state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
       } else {
-        window.location.href = this.anchorTarget;
+        state.sortField = column;
+        state.sortDir = 'asc';
       }
-    },
-    errorFocus: function () {
-      window.setTimeout(function () {
-        window.document.title = "Error: Manage academy openings - GOV.UK";
-        $('.error-summary').focus();
-      }, 0);
-    },
-    clearErrors: function () {
-      window.document.title = "Manage academy openings - GOV.UK";
-      this.searchError = false;
-      this.updateNameError = false;
-      this.openDateError = false;
-      this.errors = [];
-    },
-    attachUnload: function () {
-      this.userHasEdited = true;
-      $(window).on('beforeunload', function (e) {
-        return 'Any unsaved changes will be lost';
-      });
-    },
-
-  },
-
-  computed: {
-    paginationDescription: function () {
-      const starting = this.currentPage * this.pageSize + 1;
-      let ending = this.currentPage * this.pageSize + this.pageSize;
-
-      ending = ending > this.currentCount ? this.currentCount : ending;
-
-      return starting + " - " + ending;
-    },
-    page: function () {
-      return this.pages[this.currentPage];
-    }
+      state.currentPage = 0;
+      render();
+    });
   }
 
-});
+  function bindPaginationEvents() {
+    $content.find('.pagination-links a').off('click').on('click', function (event) {
+      event.preventDefault();
+      var action = $(this).data('page');
 
+      if (action === 'prev' && state.currentPage > 0) {
+        state.currentPage -= 1;
+      } else if (action === 'next' && (state.skip + state.take) < state.total) {
+        state.currentPage += 1;
+      } else {
+        return;
+      }
+      render();
+    });
+  }
 
-$(window).on('tabChange', function () {
-  academyOpenings.clearErrors();
-});
-$('#main-content').find('.gias-tabs-wrapper').giasTabs();
-$('#main-content').find('.gias-tabs__tab').eq(0).click();
+  function bindMonthEvents() {
+    $form.on('submit', function (event) {
+      event.preventDefault();
+    });
 
-function blockExits() {
-  $('a').on('click', function (e) {
-    if (academyOpenings.isUserEditing()) {
-      e.preventDefault();
-      academyOpenings.presentExitWarning = true;
-      academyOpenings.anchorTarget = $(this).attr('href');
-      window.setTimeout(function () {
-        $('#button-ok').focus();
-      }, 0);
+    $monthSelect.on('change', function (event) {
+      event.preventDefault();
+      state.month = $(this).val();
+      state.currentPage = 0;
+      render();
+    });
+  }
+
+  function render() {
+    var filtered = filterItemsByMonth();
+    var sorted = sortItems(filtered);
+
+    state.total = sorted.length;
+
+    if (state.take <= 0) {
+      state.take = 50;
     }
-  });
-}
+
+    var pageCount = state.take > 0 ? Math.ceil(sorted.length / state.take) : 1;
+    if (pageCount < 1) {
+      pageCount = 1;
+    }
+
+    if (state.currentPage >= pageCount) {
+      state.currentPage = pageCount - 1;
+    }
+
+    if (state.currentPage < 0) {
+      state.currentPage = 0;
+    }
+
+    state.skip = state.currentPage * state.take;
+
+    var endIndex = Math.min(state.skip + state.take, sorted.length);
+    var pageItems = sorted.slice(state.skip, endIndex);
+
+    renderTable(pageItems);
+    renderPagination(sorted.length, state.skip, endIndex);
+    updateSortLinks();
+    updateHiddenFields();
+    updateHistory();
+    bindPaginationEvents();
+    bindSortEvents();
+  }
+
+  bindMonthEvents();
+  render();
+});

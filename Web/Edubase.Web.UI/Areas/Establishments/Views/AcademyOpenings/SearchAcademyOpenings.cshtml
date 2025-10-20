@@ -1,39 +1,68 @@
 @model EditAcademyOpeningViewModel
+
+@{
+    ViewBag.bodyClasses = "manage-academy-openings";
+    ViewBag.SiteSection = "tools";
+    var establishmentTypeId = (ViewBag.EstablishmentTypeId as string) ?? Request.QueryString["establishmentTypeId"] ?? string.Empty;
+    var manageRouteName = (ViewBag.ManageRouteName as string) ??
+                          (string.Equals(establishmentTypeId, "46", StringComparison.OrdinalIgnoreCase)
+                              ? "ManageSecureAcademy16To19Openings"
+                              : "ManageAcademyOpenings");
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
-        <h1 class="govuk-heading-xl">Manage academy openings</h1>
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
     </div>
     <div class="govuk-grid-column-full">
         <div class="tab-wrap" id="academy-opening-tab-wrap">
             <ul class="gias-tabs">
                 <li class="gias-tabs__list-item">
-                    @Html.ActionLink("Opening calendar",
-                        "ManageAcademyOpenings",
-                        "AcademyOpenings",
-                        new {area = "Establishments"},
+                    @Html.RouteLink("Opening calendar",
+                        manageRouteName,
+                        new { establishmentTypeId},
                         new {@class = "gias-tabs__tab"})
                 </li>
                 <li class="gias-tabs__list-item gias-tabs__list-item--selected">
-                    <a href="#academy-search" class="gias-tabs__tab">Academy search</a>
+                    <a href="#" class="gias-tabs__tab">Academy search</a>
                 </li>
             </ul>
         </div>
     </div>
 </div>
-@using (Html.BeginForm("SearchAcademyOpenings", "AcademyOpenings", new {area = ""}, FormMethod.Get))
+@using (Html.BeginForm("SearchAcademyOpenings", "AcademyOpenings", new {area = "Establishments", establishmentTypeId}, FormMethod.Get))
 {
     <div class="govuk-grid-row" id="academy-search">
         <div class="govuk-grid-column-three-quarters">
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Urn)">
                 @Html.ValidationMessageFor(x => x.Urn, null, new {@class = "govuk-error-message"})
-                @Html.LabelFor(x => x.Urn, "Unique Reference Number (URN)", new {@class = "govuk-label"})
+                @Html.LabelFor(x => x.Urn, "Enter establishment URN", new {@class = "govuk-label"})
                 @Html.TextBoxFor(x => x.Urn, new {@class = "govuk-input govuk-input--width-20", Value = Model.Urn == 0 ? string.Empty : Model.Urn.ToString()})
                 <input type="submit" value="Search URN" class="govuk-button inline-button">
             </div>
         </div>
     </div>
-    @Html.HiddenFor(x => x.IsSearching, new {Value = "true"})
+    <input type="hidden" name="establishmentTypeId" value="@establishmentTypeId" />
+    @Html.Hidden("isSearching", "true")
 }
 
 @if (Model.EstablishmentName != null)
@@ -86,7 +115,7 @@
                     @Html.ActionLink("Edit opening details",
                         "EditAcademyOpening",
                         "AcademyOpenings",
-                        new {urn = Model.Urn, area = "Establishments"},
+                        new {urn = Model.Urn, area = "Establishments", establishmentTypeId = establishmentTypeId, returnTo = manageRouteName},
                         new {@class = "govuk-button"})
                 </div>
             </div>
