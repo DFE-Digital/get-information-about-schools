@@ -1,67 +1,56 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+using Azure;
+using Azure.Data.Tables;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using System;
 using System.IO;
+using System.Runtime.Serialization;
 
-namespace Edubase.Data.Entity
+namespace Edubase.Data.Entity;
+
+public class LocalAuthoritySet : ITableEntity
 {
-    public class LocalAuthoritySet : TableEntity
+    public string PartitionKey { get; set; } = string.Empty;
+    public string RowKey { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public DateTimeOffset? Timestamp { get; set; }
+    public ETag ETag { get; set; }
+
+    public string Title { get; set; }
+    public byte[] IdData { get; set; }
+
+    [IgnoreDataMember]
+    public int[] Ids
     {
-        public string Title { get; set; }
-        
-        public byte[] IdData { get; set; }
-
-        /// <summary>
-        /// The Get never returns null; always an empty array if anything.
-        /// </summary>
-        [IgnoreProperty]
-        public int[] Ids
+        get
         {
-            get
+            if (IdData != null)
             {
-                if (IdData != null)
+                using MemoryStream ms = new(IdData);
+                using BsonDataReader reader = new(ms)
                 {
-                    using (var ms = new MemoryStream(IdData))
-                    {
-                        using (var reader = new BsonDataReader(ms))
-                        {
-                            reader.ReadRootValueAsArray = true; // very important
-                            var serializer = new JsonSerializer();
-                            return serializer.Deserialize<int[]>(reader);
-                        }
-                    }
-                }
-                else return new int[0];
+                    ReadRootValueAsArray = true
+                };
+                JsonSerializer serializer = new();
+                return serializer.Deserialize<int[]>(reader);
             }
-            set
-            {
-                if (value == null || value.Length == 0)
-                {
-                    IdData = null;
-                }
-                else
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        using (var writer = new BsonDataWriter(ms))
-                        {
-                            var serializer = new JsonSerializer();
-                            serializer.Serialize(writer, value);
-                            ms.Seek(0, SeekOrigin.Begin);
-                            IdData = ms.ToArray();
-                        }
-                    }
-                }
-            }
+
+            return [];
         }
-
-              
-
-        public LocalAuthoritySet()
+        set
         {
-            PartitionKey = string.Empty;
-            RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
+            if (value == null || value.Length == 0)
+            {
+                IdData = null;
+            }
+            else
+            {
+                using MemoryStream ms = new();
+                using BsonDataWriter writer = new(ms);
+                JsonSerializer serializer = new();
+                serializer.Serialize(writer, value);
+                ms.Seek(0, SeekOrigin.Begin);
+                IdData = ms.ToArray();
+            }
         }
     }
 }

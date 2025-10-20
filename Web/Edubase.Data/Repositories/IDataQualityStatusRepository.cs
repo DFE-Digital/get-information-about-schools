@@ -1,14 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Edubase.Data.Entity;
 
-namespace Edubase.Data.Repositories
+namespace Edubase.Data.Repositories;
+
+public interface IDataQualityStatusRepository
 {
-    public interface IDataQualityStatusRepository
-    {
-        Task<List<DataQualityStatus>> GetAllAsync();
-        Task UpdateDataQualityAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated);
-        Task UpdateDataQualityDataOwnerDetailsAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, string dataOwnerName, string dataOwnerEmail);
-    }
+    Task<IEnumerable<DataQualityStatus>> GetAllAsync();
+    Task UpdateDataQualityAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated);
+    Task UpdateDataQualityDataOwnerDetailsAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, string dataOwnerName, string dataOwnerEmail);
 }

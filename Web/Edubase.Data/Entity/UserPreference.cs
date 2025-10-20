@@ -1,23 +1,33 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+using Azure;
+using Azure.Data.Tables;
+using System;
+using System.Runtime.Serialization;
 
-namespace Edubase.Data.Entity
+namespace Edubase.Data.Entity;
+
+public class UserPreference : ITableEntity
 {
-    public class UserPreference : TableEntity
+    public string PartitionKey { get; set; }
+    public string RowKey { get; set; }
+    public DateTimeOffset? Timestamp { get; set; }
+    public ETag ETag { get; set; }
+
+    public string SavedSearchToken { get; set; }
+
+    [IgnoreDataMember]
+    public string UserId
     {
-        public UserPreference()
-        {
-            
-        }
+        get => RowKey;
+        set => RowKey = value;
+    }
 
-        public UserPreference(string userId)
-        {
-            PartitionKey = string.Empty;
-            UserId = userId;
-        }
-
-        [IgnoreProperty]
-        public string UserId { get => RowKey; set => RowKey = value; }
-
-        public string SavedSearchToken { get; set; }
+    public UserPreference() : this(string.Empty)
+    {
+        
+    }
+    public UserPreference(string userId)
+    {
+        PartitionKey = string.Empty;
+        UserId = userId;
     }
 }
