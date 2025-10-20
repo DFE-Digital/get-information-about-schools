@@ -1,8 +1,5 @@
-﻿using Edubase.Services.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Edubase.Services.Exceptions;
 
 namespace Edubase.Web.UI.Exceptions
 {

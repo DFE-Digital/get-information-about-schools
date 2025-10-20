@@ -1,13 +1,14 @@
+using System.Threading.Tasks;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
-using Edubase.Services.Security;
-using Edubase.Web.UI.Helpers;
-using System.Net;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
+    [ApiController]
+    [Route("api/amalgamate-merge")]
+    [Authorize(Roles = "AP_AOS,ROLE_BACKOFFICE,EFADO,SOU,IEBT")]
     public class AmalgamateMergeApiController : ControllerBase
     {
         private readonly IEstablishmentWriteService _establishmentWriteService;
@@ -17,12 +18,12 @@ namespace Edubase.Web.UI.Controllers.Api
             _establishmentWriteService = establishmentWriteService;
         }
 
-        [Route("api/amalgamate-merge"), HttpPost, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ProcessRequestAsync(AmalgamateMergeRequest payload)
+        [HttpPost]
+        [IgnoreAntiforgeryToken] // Use this if you're calling from a non-browser client like Postman or JS fetch
+        public async Task<IActionResult> ProcessRequestAsync([FromBody] AmalgamateMergeRequest payload)
         {
             var result = await _establishmentWriteService.AmalgamateOrMergeAsync(payload, User);
-            return !result.HasErrors ? Ok(result) : (IActionResult) Content(HttpStatusCode.BadRequest, result);
+            return result.HasErrors ? BadRequest(result) : Ok(result);
         }
     }
 }

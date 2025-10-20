@@ -17,10 +17,11 @@ using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("Search"), Route("{action=index}")]
+    [Route("governors/search")]
     public class GovernorSearchController : EduBaseController
     {
         private IGovernorDownloadService _governorDownloadService;

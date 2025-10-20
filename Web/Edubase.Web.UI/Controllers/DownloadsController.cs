@@ -1,27 +1,26 @@
 using System;
 using System.Collections.Generic;
-using Edubase.Services.Downloads;
+using System.Linq;
 using System.Threading.Tasks;
-using Edubase.Web.UI.Models;
-using Newtonsoft.Json;
+using Edubase.Common;
+using Edubase.Services;
 using Edubase.Services.Domain;
+using Edubase.Services.Downloads;
+using Edubase.Services.Downloads.Models;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Web.UI.Filters;
-using Edubase.Common;
 using Edubase.Web.UI.Helpers;
-using System.Linq;
-using System.Net.Http;
-using Edubase.Services;
-using Edubase.Services.Downloads.Models;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
-using Edubase.Web.UI.Models.Guidance;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Downloads"), Route("{action=index}")]
+    [Route("downloads")]
     public class DownloadsController : Controller
     {
         private readonly IDownloadsService _downloadsService;
@@ -128,7 +127,7 @@ namespace Edubase.Web.UI.Controllers
             return Json(JsonConvert.SerializeObject(new
             {
                 status = model.IsComplete, redirect = string.Concat("/Downloads/Generated/", id)
-            }), JsonRequestBehavior.AllowGet);
+            }), System.Web.Mvc.JsonRequestBehavior.AllowGet);
 
         }
 

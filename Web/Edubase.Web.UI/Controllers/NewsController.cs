@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
-using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.News;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("News"), Route("{action=index}")]
+    [ApiController]
+    [Route("news")]
     public class NewsController : EduBaseController
     {
         private readonly NewsArticleRepository _newsRepository;
@@ -23,8 +24,8 @@ namespace Edubase.Web.UI.Controllers
             _newsRepository = newsRepository;
         }
 
-        [Route(Name = "News")]
-        public async Task<ActionResult> Index(int? year)
+        [HttpGet("", Name = "News")]
+        public async Task<IActionResult> Index(int? year)
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, true, lookupYear);
@@ -32,8 +33,8 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        [Route("Article/{id}", Name = "Article"), HttpGet]
-        public async Task<ActionResult> Article(string id, string auditRoute)
+        [HttpGet("article/{id}", Name = "Article")]
+        public async Task<IActionResult> Article(string id, string auditRoute)
         {
             var item = await _newsRepository.GetAsync(id);
             if (item == null) return NotFound();
@@ -42,8 +43,8 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        [Route("Article/Audit/{id}", Name = "ArticleAudit"), HttpGet]
-        public async Task<ActionResult> ArticleAudit(string id, string auditRoute = nameof(AuditArticle))
+        [HttpGet("article/audit/{id}", Name = "ArticleAudit")]
+        public async Task<IActionResult> ArticleAudit(string id, string auditRoute = nameof(AuditArticle))
         {
             var item = await _newsRepository.GetAsync(id, eNewsArticlePartition.Archive);
             if (item == null) return NotFound();
@@ -52,14 +53,13 @@ namespace Edubase.Web.UI.Controllers
             return View(nameof(Article), model);
         }
 
-        [Route("Manage", Name = "ManageNews"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public ActionResult Manage()
-        {
-            return View();
-        }
+        [HttpGet("manage", Name = "ManageNews")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public IActionResult Manage() => View();
 
-        [Route("Preview"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> Preview(int? year)
+        [HttpGet("preview")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<IActionResult> Preview(int? year)
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, false, lookupYear);
@@ -67,8 +67,9 @@ namespace Edubase.Web.UI.Controllers
             return View(nameof(Index), model);
         }
 
-        [Route("Edit"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> Edit(int? year)
+        [HttpGet("edit")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<IActionResult> Edit(int? year)
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, false, lookupYear);
@@ -76,21 +77,19 @@ namespace Edubase.Web.UI.Controllers
             return View(nameof(Index), model);
         }
 
-        [Route("Article/New", Name = "CreateArticle"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public ActionResult CreateArticle()
-        {
-            return View("EditArticle", new NewsArticleViewModel());
-        }
+        [HttpGet("article/new", Name = "CreateArticle")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public IActionResult CreateArticle() => View("EditArticle", new NewsArticleViewModel());
 
+        [HttpPost("article/new", Name = "PostCreateArticle")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateArticleAsync(NewsArticleViewModel viewModel) =>
+            await ProcessEditArticle(viewModel);
 
-        [Route("Article/New", Name = "PostCreateArticle"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateArticleAsync(NewsArticleViewModel viewModel)
-        {
-            return await ProcessEditArticle(viewModel);
-        }
-
-        [Route("Article/{id}/Edit", Name = "EditArticle"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> EditArticleAsync(string id)
+        [HttpGet("article/{id}/edit", Name = "EditArticle")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<IActionResult> EditArticleAsync(string id)
         {
             var item = await _newsRepository.GetAsync(id);
             if (item == null) return NotFound();
@@ -105,8 +104,10 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Article/{id}/Edit", Name = "PostEditArticle"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditArticleAsync(NewsArticleViewModel viewModel)
+        [HttpPost("article/{id}/edit", Name = "PostEditArticle")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditArticleAsync(NewsArticleViewModel viewModel)
         {
             var item = await _newsRepository.GetAsync(viewModel.Id);
             if (item == null) return NotFound();
@@ -114,13 +115,11 @@ namespace Edubase.Web.UI.Controllers
             return await ProcessEditArticle(viewModel, item);
         }
 
-        private async Task<ActionResult> ProcessEditArticle(NewsArticleViewModel viewModel, NewsArticle originalArticle = null)
+        private async Task<IActionResult> ProcessEditArticle(NewsArticleViewModel viewModel, NewsArticle originalArticle = null)
         {
             if (viewModel.GoBack)
             {
                 viewModel.Action = (eNewsArticleAction) ((int) viewModel.Action - 1);
-
-                // if we're going back, we dont really care about any validation errors
                 foreach (var modelValue in ModelState.Values)
                 {
                     modelValue.Errors.Clear();
@@ -131,22 +130,21 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (viewModel.Action == eNewsArticleAction.Review)
                 {
+                    var item = string.IsNullOrEmpty(viewModel.Id)
+                        ? viewModel.ToArticle()
+                        : viewModel.ToArticle(originalArticle);
+
+                    item.AuditTimestamp = DateTime.Now;
+                    item.AuditUser = User.GetUserId();
+                    item.AuditEvent = string.IsNullOrEmpty(viewModel.Id)
+                        ? eNewsArticleEvent.Create.ToString()
+                        : eNewsArticleEvent.Update.ToString();
+
                     if (string.IsNullOrEmpty(viewModel.Id))
-                    {
-                        var item = viewModel.ToArticle();
-                        item.AuditTimestamp = DateTime.Now;
-                        item.AuditUser = User.GetUserId();
-                        item.AuditEvent = eNewsArticleEvent.Create.ToString();
                         await _newsRepository.CreateAsync(item);
-                    }
                     else
-                    {
-                        var item = viewModel.ToArticle(originalArticle);
-                        item.AuditTimestamp = DateTime.Now;
-                        item.AuditUser = User.GetUserId();
-                        item.AuditEvent = eNewsArticleEvent.Update.ToString();
                         await _newsRepository.UpdateAsync(item);
-                    }
+
                     TempData["ShowSaved"] = true;
                     return RedirectToAction(nameof(Edit));
                 }
@@ -161,56 +159,51 @@ namespace Edubase.Web.UI.Controllers
             return View("EditArticle", viewModel);
         }
 
-
-        [Route("Article/{id}/Delete", Name = "DeleteArticle"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> DeleteArticleAsync(NewsArticleViewModel viewModel)
+        [HttpGet("article/{id}/delete", Name = "DeleteArticle")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<IActionResult> DeleteArticleAsync(NewsArticleViewModel viewModel)
         {
             var item = await _newsRepository.GetAsync(viewModel.Id);
             if (item == null) return NotFound();
             return View("ConfirmDeleteArticle", viewModel.Set(item));
         }
 
-        [Route("Article/{id}/Delete/Confirm", Name = "DeleteArticleConfirmed"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> DeleteArticleConfirmedAsync(NewsArticleViewModel viewModel)
+        [HttpGet("article/{id}/delete/confirm", Name = "DeleteArticleConfirmed")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<IActionResult> DeleteArticleConfirmedAsync(NewsArticleViewModel viewModel)
         {
             var item = await _newsRepository.GetAsync(viewModel.Id);
-            if (item == null)
-            {
-                return NotFound();
-            }
+            if (item == null) return NotFound();
 
             await _newsRepository.DeleteAsync(viewModel.Id, User.GetUserId());
             TempData["ShowSaved"] = true;
             return RedirectToAction(nameof(Manage));
         }
 
-        [Route("Audit"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> AuditArticles(string sortBy)
+        [HttpGet("audit")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<IActionResult> AuditArticles(string sortBy)
         {
             var result = await _newsRepository.GetAllAsync(1000, false);
-            var audit = await _newsRepository.GetAllAsync(1000, false,null,null, eNewsArticlePartition.Archive);
-            var items = result.Items.ToList();
-            items.AddRange(audit.Items);
+            var audit = await _newsRepository.GetAllAsync(1000, false, null, null, eNewsArticlePartition.Archive);
+            var items = result.Items.Concat(audit.Items).ToList();
 
             var distinct = items.GroupBy(x => x.Tracker)
-                .Select(grp => new { tracker = grp.Key, banners = grp.OrderByDescending(x => x.Version) })
-                .Select(x => x.banners.First());
+                .Select(grp => grp.OrderByDescending(x => x.Version).First());
 
             var model = new NewsArticlesAuditViewModel(distinct, sortBy);
             return View(model);
         }
 
-        [Route("Audit/{id}"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> AuditArticle(string id, string sortBy)
+        [HttpGet("audit/{id}")]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<IActionResult> AuditArticle(string id, string sortBy)
         {
             var result = await _newsRepository.GetAllAsync(1000, false);
             var audit = await _newsRepository.GetAllAsync(1000, false, null, null, eNewsArticlePartition.Archive);
-            var items = result.Items.ToList();
-            items.AddRange(audit.Items);
+            var items = result.Items.Concat(audit.Items).Where(x => x.Tracker == id);
 
-            var distinct = items.Where(x => x.Tracker == id);
-
-            var model = new NewsArticleAuditViewModel(distinct, sortBy);
+            var model = new NewsArticleAuditViewModel(items, sortBy);
             return View(model);
         }
     }

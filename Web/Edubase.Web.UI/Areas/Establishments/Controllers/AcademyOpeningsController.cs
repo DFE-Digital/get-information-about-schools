@@ -14,13 +14,15 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Filters;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using M = EstablishmentSearchResultModel;
 
-    [RouteArea("Establishments"), RoutePrefix("manage"), Route("{action=index}"),
-     MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecureAcademy16To19Openings)]
+    [ApiController]
+    [Route("establishments/manage")]
+    [Authorize(Roles = $"{AuthorizedRoles.CanManageAcademyOpenings}, {AuthorizedRoles.CanManageSecureAcademy16To19Openings}")]
     public class AcademyOpeningsController : Controller
     {
         private readonly IEstablishmentReadService _establishmentReadService;

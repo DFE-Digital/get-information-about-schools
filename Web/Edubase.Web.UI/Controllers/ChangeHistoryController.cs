@@ -4,7 +4,6 @@ using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
-using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Groups;
@@ -12,21 +11,24 @@ using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Web.UI.Models.Search;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Controllers
 {
-    using Filters;
+    using System;
+    using System.Threading.Tasks;
+    using Edubase.Web.UI.Filters;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models;
     using Services.Domain;
     using Services.Lookup;
     using Services.Texuna.ChangeHistory;
     using Services.Texuna.ChangeHistory.Models;
-    using System;
-    using System.Threading.Tasks;
 
-    [RoutePrefix("ChangeHistory"), Route("{action=index}"), EdubaseAuthorize]
+    [ApiController]
+    [EdubaseAuthorize]
+    [Route("changehistory")]
     public class ChangeHistoryController : Controller
     {
         private readonly IChangeHistoryService _svc;
@@ -44,7 +46,7 @@ namespace Edubase.Web.UI.Controllers
             _groupDownloadService = groupDownloadService;
         }
 
-        [HttpGet, Route(Name = "ChangeHistoryCriteria")]
+        [HttpGet("criteria", Name = "ChangeHistoryCriteria")]
         public ActionResult Index(ChangeHistoryViewModel viewModel)
         {
             return View("Index", viewModel);
@@ -396,7 +398,7 @@ namespace Edubase.Web.UI.Controllers
                     {
                         status = progress.IsComplete,
                         redirect = "/ChangeHistory/Search/Download/"
-                    }), JsonRequestBehavior.AllowGet);
+                    }), System.Web.Mvc.JsonRequestBehavior.AllowGet);
             }
 
             return Json(
@@ -404,7 +406,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     status = progress.IsComplete,
                     redirect = string.Concat("/ChangeHistory/Download/", id)
-                }), JsonRequestBehavior.AllowGet);
+                }), System.Web.Mvc.JsonRequestBehavior.AllowGet);
 
         }
 

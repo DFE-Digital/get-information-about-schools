@@ -1,13 +1,9 @@
-using System.Dynamic;
-using System.Linq;
-using Edubase.Services.Domain;
-using Edubase.Services.Establishments;
-using Edubase.Services.Establishments.Models;
 using System.Threading.Tasks;
+using Edubase.Services.Establishments;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Filters;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {

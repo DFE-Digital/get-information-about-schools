@@ -1,5 +1,7 @@
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace Edubase.Web.UI.Filters
 {
     public abstract class ModelStateTransfer : ActionFilterAttribute
@@ -9,41 +11,41 @@ namespace Edubase.Web.UI.Filters
 
     public class ExportModelStateAttribute : ModelStateTransfer
     {
-        public override void OnActionExecuted(ActionExecutedContext filterContext)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
-            //Only export when ModelState is not valid
-            if (!filterContext.Controller.ViewData.ModelState.IsValid)
+            var controller = context.Controller as Controller;
+            if (controller == null) return;
+
+            if (!controller.ViewData.ModelState.IsValid &&
+                (context.Result is RedirectResult || context.Result is RedirectToRouteResult))
             {
-                //Export if we are redirecting
-                if ((filterContext.Result is RedirectResult) || (filterContext.Result is RedirectToRouteResult))
-                {
-                    filterContext.Controller.TempData[Key] = filterContext.Controller.ViewData.ModelState;
-                }
+                controller.TempData[Key] = controller.ViewData.ModelState;
             }
 
-            base.OnActionExecuted(filterContext);
+            base.OnActionExecuted(context);
         }
     }
 
     public class ImportModelStateAttribute : ModelStateTransfer
     {
-        public override void OnActionExecuted(ActionExecutedContext filterContext)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
-            if (filterContext.Controller.TempData[Key] is ModelStateDictionary modelState)
+            var controller = context.Controller as Controller;
+            if (controller == null) return;
+
+            if (controller.TempData.TryGetValue(Key, out var value) && value is ModelStateDictionary modelState)
             {
-                //Only Import if we are viewing
-                if (filterContext.Result is ViewResult)
+                if (context.Result is ViewResult)
                 {
-                    filterContext.Controller.ViewData.ModelState.Merge(modelState);
+                    controller.ViewData.ModelState.Merge(modelState);
                 }
                 else
                 {
-                    //Otherwise remove it.
-                    filterContext.Controller.TempData.Remove(Key);
+                    controller.TempData.Remove(Key);
                 }
             }
 
-            base.OnActionExecuted(filterContext);
+            base.OnActionExecuted(context);
         }
     }
 }

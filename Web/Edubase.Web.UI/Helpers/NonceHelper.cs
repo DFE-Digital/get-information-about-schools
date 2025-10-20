@@ -1,15 +1,14 @@
-using System.Web;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Helpers
 {
     public static class NonceHelper
     {
-        public static IHtmlString ScriptNonce(this IHtmlHelper helper)
+        public static IHtmlContent ScriptNonce(this IHtmlHelper helper)
         {
-            var owinContext = helper.ViewContext.HttpContext.GetOwinContext();
-            return new HtmlString(owinContext.Get<string>("ScriptNonce"));
+            var nonce = helper.ViewContext.HttpContext.Items["ScriptNonce"] as string;
+            return string.IsNullOrEmpty(nonce) ? HtmlString.Empty : new HtmlString(nonce);
         }
     }
 }

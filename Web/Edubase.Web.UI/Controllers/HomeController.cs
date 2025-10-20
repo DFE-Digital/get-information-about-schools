@@ -1,27 +1,19 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Edubase.Common.Cache;
+using Edubase.Data.Repositories;
 using Edubase.Services;
 using Edubase.Services.Lookup;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Xml.Linq;
-using Edubase.Data.Repositories;
-using Edubase.Services.Establishments;
-using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Home"), Route("{action=index}")]
+    [ApiController]
+    [Route("")]
     public class HomeController : EduBaseController
     {
         private const string UserPrefsCookieName = "analytics_preferences";
@@ -31,7 +23,11 @@ namespace Edubase.Web.UI.Controllers
         private readonly ICacheAccessor _cacheAccessor;
         private readonly NewsArticleRepository _newsRepository;
 
-        public HomeController(ILookupService lookup, IBlobService blobService, ICacheAccessor cacheAccessor, NewsArticleRepository newsRepository)
+        public HomeController(
+            ILookupService lookup,
+            IBlobService blobService,
+            ICacheAccessor cacheAccessor,
+            NewsArticleRepository newsRepository)
         {
             _lookup = lookup;
             _blobService = blobService;
@@ -39,39 +35,34 @@ namespace Edubase.Web.UI.Controllers
             _newsRepository = newsRepository;
         }
 
-        [Route("~/")]
-        public async Task<ActionResult> Index()
+        [HttpGet("")]
+        public async Task<IActionResult> Index()
         {
             var results = await _newsRepository.GetAllAsync(1000);
             var items = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
             return View(new HomepageViewModel(items));
         }
 
-        [Route("~/about")]
-        public ActionResult About() => View();
+        [HttpGet("about")]
+        public IActionResult About() => View();
 
+        [HttpGet("accessibility")]
+        public IActionResult Accessibility() => View();
 
-        [Route("~/accessibility")]
-        public ActionResult Accessibility() => View();
+        [HttpGet("accessibility/report")]
+        public IActionResult AccessibilityReport() => View();
 
+        [HttpGet("content")]
+        [Authorize]
+        public async Task<IActionResult> Container(string file) =>
+            await GetFileFromContainer("content", file);
 
-        [Route("~/accessibility/report")]
-        public ActionResult AccessibilityReport() => View();
+        [HttpGet("content/guidance")]
+        [Authorize]
+        public async Task<IActionResult> Guidance(string file) =>
+            await GetFileFromContainer("guidance", file);
 
-
-        [Route("~/content"), Filters.EdubaseAuthorize]
-        public async Task<ActionResult> Container(string file)
-        {
-            return await GetFileFromContainer("content", file);
-        }
-
-        [Route("~/content/guidance"), Filters.EdubaseAuthorize]
-        public async Task<ActionResult> Guidance(string file)
-        {
-            return await GetFileFromContainer("guidance", file);
-        }
-
-        private async Task<ActionResult> GetFileFromContainer(string container, string file)
+        private async Task<IActionResult> GetFileFromContainer(string container, string file)
         {
             var blob = _blobService.GetBlobReference(container, file);
             if (await blob.ExistsAsync())
@@ -82,72 +73,73 @@ namespace Edubase.Web.UI.Controllers
                     FileDownloadName = blob.Name
                 };
             }
-            throw new Exception("File not available");
+
+            return NotFound("File not available");
         }
 
-        [Route("~/cookies")]
-        public ActionResult Cookies() => View();
+        [HttpGet("cookies")]
+        public IActionResult Cookies() => View();
 
-        [HttpPost, Route("~/CookieChoices"), ValidateAntiForgeryToken]
-        public ActionResult CookieChoices(bool acceptAnalyticsCookies = false)
+        [HttpPost("cookie-choices")]
+        [ValidateAntiForgeryToken]
+        public IActionResult CookieChoices(bool acceptAnalyticsCookies = false)
         {
-            var urlHelper = new UrlHelper(Request.RequestContext);
-            var cookieDomain = urlHelper.CookieDomain();
             var returnTo = Request.Form["OriginatingPage"];
-            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain });
+            Response.Cookies.Append(UserPrefsCookieName, acceptAnalyticsCookies.ToString(), new CookieOptions
+            {
+                Expires = DateTimeOffset.Now.AddDays(28),
+                SameSite = SameSiteMode.Lax,
+                Secure = true
+            });
+
             TempData["CookiesPrefsSaved"] = acceptAnalyticsCookies;
 
             if (string.IsNullOrWhiteSpace(returnTo))
-            {
-                return RedirectToAction("cookies");
-            }
+                return RedirectToAction("Cookies");
 
             returnTo = Uri.UnescapeDataString(returnTo);
 
-            if (Uri.IsWellFormedUriString(returnTo, UriKind.RelativeOrAbsolute) && !returnTo.Contains("\n") &&
-                !returnTo.Contains("\r"))
+            if (Uri.IsWellFormedUriString(returnTo, UriKind.RelativeOrAbsolute) &&
+                !returnTo.Contains("\n") && !returnTo.Contains("\r"))
             {
                 return Redirect(returnTo);
             }
-            return RedirectToAction("cookies");
+
+            return RedirectToAction("Cookies");
         }
 
-        [HttpPost, Route("~/CookieChoicesAjax")]
-        public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies = false)
+        [HttpPost("cookie-choices-ajax")]
+        public IActionResult CookieChoicesAjax(bool acceptAnalyticsCookies = false)
         {
-            var urlHelper = new UrlHelper(Request.RequestContext);
-            var cookieDomain = urlHelper.CookieDomain();
-            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain});
-            return Json(new { success = true , analyticsPref = acceptAnalyticsCookies}, JsonRequestBehavior.AllowGet);
+            Response.Cookies.Append(UserPrefsCookieName, acceptAnalyticsCookies.ToString(), new CookieOptions
+            {
+                Expires = DateTimeOffset.Now.AddDays(28),
+                SameSite = SameSiteMode.Lax,
+                Secure = true
+            });
+
+            return Json(new { success = true, analyticsPref = acceptAnalyticsCookies });
         }
 
-        [Route("~/responsibilities")]
-        public ActionResult Responsibilities() => View();
+        [HttpGet("responsibilities")]
+        public IActionResult Responsibilities() => View();
 
-        [Route("~/privacy")]
-        public ActionResult Privacy() => View();
+        [HttpGet("privacy")]
+        public IActionResult Privacy() => View();
 
-        [Route("~/help")]
-        public ActionResult Help() => View();
+        [HttpGet("help")]
+        public IActionResult Help() => View();
 
-        //Appears that this was used to test the error handling.  It can only be accessed if you are signed in so no problem keeping it here for now.
-        [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
-        public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
+        [HttpGet("8bg594ghfdgh5t90-throwex")]
+        [Authorize]
+        public IActionResult ThrowException() => throw new Exception("Test exception - to test exception reporting");
 
-        [Route("~/service-wsdl"), Route("~/service.wsdl")]
-        public ActionResult ServiceWSDL()
-        {
-            //using (var client = new HttpClient())
-            //{
-            //    var result = (await client.GetAsync("http://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl")).EnsureSuccessStatusCode();
-            //    return Content(await result.Content.ReadAsStringAsync(), "text/xml");
-            //}
+        [HttpGet("service-wsdl")]
+        [HttpGet("service.wsdl")]
+        public IActionResult ServiceWSDL() =>
+            Redirect("https://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl");
 
-            //Commented out the above and replaced this with a redirect as this is not a good way to create the HttpClient and could cause socket exhaustion
-            return Redirect("https://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl");
-        }
-
-        [Route("~/Contact")]
-        public ActionResult Contact() => View();
+        [HttpGet("contact")]
+        public IActionResult Contact() => View();
     }
 }

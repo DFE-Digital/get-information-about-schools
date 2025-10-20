@@ -1,20 +1,11 @@
-using Edubase.Common;
-using Edubase.Services.Governors.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Web.Mvc;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -27,29 +18,33 @@ namespace Edubase.Web.UI.Helpers
             var expressionText = ExpressionHelper.GetExpressionText(expression);
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
-            return state == null
+            return state == null || state.Errors.Count == 0
                 ? HtmlString.Empty
-                : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-form-group--error");
+                : new HtmlString("govuk-form-group--error");
         }
 
         public static HtmlString ValidationCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-error-message");
+            return state == null || state.Errors.Count == 0
+                ? HtmlString.Empty
+                : new HtmlString("govuk-error-message");
         }
 
         public static HtmlString ValidationGroupCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            return state == null
+            return state == null || state.Errors.Count == 0
                 ? HtmlString.Empty
-                : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-form-group--error");
+                : new HtmlString("govuk-form-group--error");
         }
 
         public static HtmlString ValidationSelectCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-select--error");
+            return state == null || state.Errors.Count == 0
+                ? HtmlString.Empty
+                : new HtmlString("govuk-select--error");
         }
 
         public static HtmlString TextBoxValidationClass<TModel, TProperty>(
@@ -59,7 +54,9 @@ namespace Edubase.Web.UI.Helpers
             var expressionText = ExpressionHelper.GetExpressionText(expression);
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
-            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-input--error");
+            return state == null || state.Errors.Count == 0
+                ? HtmlString.Empty
+                : new HtmlString("govuk-input--error");
         }
 
         public static HtmlString ValidationMessageNested(this IHtmlHelper htmlHelper, string modelName)
@@ -67,15 +64,14 @@ namespace Edubase.Web.UI.Helpers
             var fullFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(modelName);
             if (!htmlHelper.ViewData.ModelState.ContainsKey(fullFieldName))
             {
-                if (htmlHelper.ViewData.ModelState.ContainsKey(htmlHelper.ViewData.ModelMetadata.PropertyName))
+                var metadata = htmlHelper.ViewData.ModelMetadata;
+                if (metadata != null && !string.IsNullOrEmpty(metadata.PropertyName) &&
+                    htmlHelper.ViewData.ModelState.ContainsKey(metadata.PropertyName))
                 {
                     var modelState = htmlHelper.ViewData.ModelState[modelName];
-
-                    // add the errors from the modelName to the parent FullHtmlFieldName
-                    // added a check for a null modelstate as this was causing a null reference
                     if (modelState != null && modelState.Errors.Any())
                     {
-                        foreach (var error in htmlHelper.ViewData.ModelState[modelName].Errors)
+                        foreach (var error in modelState.Errors)
                         {
                             var splitName = SplitNameAndCapitaliseFirstLetter(error);
                             htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, splitName);
@@ -84,8 +80,22 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return htmlHelper.ValidationMessage(modelName, (string) null, new { @class = "govuk-error-message" });
+            return htmlHelper.ValidationMessage(modelName, null, new { @class = "govuk-error-message" });
         }
+
+        private static string SplitNameAndCapitaliseFirstLetter(ModelError error)
+        {
+            var message = error.ErrorMessage ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(message)) return string.Empty;
+
+            var words = message.Split(' ');
+            if (words.Length == 0) return message;
+
+            words[0] = char.ToUpper(words[0][0]) + words[0].Substring(1);
+            return string.Join(" ", words);
+        }
+    
+
 
         /// <summary>
         /// Splits the combined words in an error message where an uppercase letter follows a lowercase

@@ -1,7 +1,6 @@
-﻿using System;
 using System.Linq;
 using System.Web;
-using Microsoft.AspNetCore.Html;
+using HtmlString = System.Web.HtmlString;
 
 namespace Edubase.Web.UI.Helpers
 {

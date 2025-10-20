@@ -5,83 +5,74 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
     using M = EstablishmentSearchResultModel;
 
-    [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecureAcademy16To19Openings)]
+    [ApiController]
+    [Route("api/academy-openings")]
+    [Authorize(Roles = "CanManageAcademyOpenings,CanManageSecureAcademy16To19Openings")]
     public class AcademyOpeningsApiController : ControllerBase
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IEstablishmentWriteService _establishmentWriteService;
         private readonly ICachedLookupService _lookupService;
 
-        public AcademyOpeningsApiController(IEstablishmentReadService establishmentReadService,
+        public AcademyOpeningsApiController(
+            IEstablishmentReadService establishmentReadService,
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService lookupService)
         {
             _establishmentReadService = establishmentReadService;
-            _lookupService = lookupService;
             _establishmentWriteService = establishmentWriteService;
+            _lookupService = lookupService;
         }
 
         /// <summary>
-        /// Treating myself in this one to a really nice URL. I deserve it. And so does Jon.
+        /// GET api/academy-openings/list/{from}/{to}/{skip}/{take}/{establishmentTypeId?}
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="skip"></param>
-        /// <param name="take"></param>
-        /// <param name="establishmentTypeId"></param>
-        /// <returns></returns>
-        [Route(
-             "api/academy-openings/list/{from:datetime}/{to:datetime}" +
-             "/{skip:int}/{take:int}/{establishmentTypeId?}"),
-         HttpGet]
-        public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take,
-            string establishmentTypeId = null)
+        [HttpGet("list/{from:datetime}/{to:datetime}/{skip:int}/{take:int}/{establishmentTypeId?}")]
+        public async Task<IActionResult> GetListAsync(DateTime from, DateTime to, int skip, int take, string establishmentTypeId = null)
         {
             if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
-                throw AcademyUtility.GetPermissionDeniedException();
+                return Forbid();
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
             estabTypes = AcademyUtility.FilterEstablishmentsIfSecureAcademy16To19(estabTypes, establishmentTypeId);
 
-            var apiResult = await _establishmentReadService.SearchAsync(
-                new EstablishmentSearchPayload
+            var apiResult = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload
+            {
+                Skip = skip,
+                Take = take,
+                SortBy = eSortBy.NameAlphabeticalAZ,
+                Filters = AcademyUtility.GetEstablishmentSearchFilters(from, to, establishmentTypeId),
+                Select = new List<string>
                 {
-                    Skip = skip,
-                    Take = take,
-                    SortBy = eSortBy.NameAlphabeticalAZ,
-                    Filters = AcademyUtility.GetEstablishmentSearchFilters(from, to, establishmentTypeId),
-                    Select = new List<string>
-                    {
-                        nameof(M.Name),
-                        nameof(M.Urn),
-                        nameof(M.TypeId),
-                        nameof(M.OpenDate),
-                        nameof(M.PredecessorName),
-                        nameof(M.PredecessorUrn)
-                    }
-                }, User);
+                    nameof(M.Name),
+                    nameof(M.Urn),
+                    nameof(M.TypeId),
+                    nameof(M.OpenDate),
+                    nameof(M.PredecessorName),
+                    nameof(M.PredecessorUrn)
+                }
+            }, User);
 
-
-            return new
+            var result = new
             {
                 Items = apiResult.Items.Select(x => new
                 {
                     x.Urn,
                     x.Name,
-                    EstablishmentType =
-                        x.TypeId.HasValue ? estabTypes.FirstOrDefault(t => t.Id == x.TypeId)?.Name : null,
+                    EstablishmentType = x.TypeId.HasValue
+                        ? estabTypes.FirstOrDefault(t => t.Id == x.TypeId)?.Name
+                        : null,
                     OpeningDate = x.OpenDate,
                     DisplayDate = x.OpenDate?.ToString("d MMMM yyyy"),
                     x.PredecessorName,
@@ -89,40 +80,39 @@ namespace Edubase.Web.UI.Controllers.Api
                 }).OrderBy(x => x.OpeningDate),
                 apiResult.Count
             };
+
+            return Ok(result);
         }
 
         /// <summary>
         /// POST api/academy/{urn}
-        /// Takes a payload with openDate and Name properties.
         /// </summary>
-        /// <param name="urn"></param>
-        /// <param name="payload"></param>
-        /// <returns></returns>
-        [Route("api/academy/{urn:int}"), HttpPost]
-        public async Task<HttpResponseMessage> SaveAsync(int urn, [FromBody] dynamic payload)
+        [HttpPost("/api/academy/{urn:int}")]
+        public async Task<IActionResult> SaveAsync(int urn, [FromBody] dynamic payload)
         {
             DateTime openingDate = payload.openDate;
+            string name = payload.name;
+
             var links = await _establishmentReadService.GetLinkedEstablishmentsAsync(urn, User);
-            var link = links.FirstOrDefault(e =>
-                e.LinkTypeId == (int) eLookupEstablishmentLinkType.ParentOrPredecessor);
+            var link = links.FirstOrDefault(e => e.LinkTypeId == (int) eLookupEstablishmentLinkType.ParentOrPredecessor);
 
             ApiResponse response;
+
             if (link != null)
             {
                 response = await _establishmentWriteService.PartialUpdateAsync(
                     new EstablishmentModel { CloseDate = openingDate.AddDays(-1), Urn = link.Urn },
                     new EstablishmentFieldList { CloseDate = true }, User);
 
-                if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
+                if (response.HasErrors)
+                    return BadRequest(response);
             }
 
             response = await _establishmentWriteService.PartialUpdateAsync(
-                new EstablishmentModel { OpenDate = openingDate, Name = payload.name, Urn = urn },
+                new EstablishmentModel { OpenDate = openingDate, Name = name, Urn = urn },
                 new EstablishmentFieldList { OpenDate = true, Name = true }, User);
 
-            if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
-
-            else return Request.CreateResponse(HttpStatusCode.OK, response);
+            return response.HasErrors ? BadRequest(response) : Ok(response);
         }
     }
 }

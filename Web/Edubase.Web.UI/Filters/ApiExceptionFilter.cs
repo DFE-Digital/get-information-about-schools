@@ -1,19 +1,15 @@
-﻿using Edubase.Data.Entity;
-using Edubase.Services.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Autofac;
 using AzureTableLogger.LogMessages;
+using Edubase.Services.Exceptions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Edubase.Web.UI.Filters
 {
-    public class ApiExceptionFilter: ExceptionFilterAttribute
+    public class ApiExceptionFilter : IAsyncExceptionFilter
     {
         public class SystemErrorMessage
         {
@@ -22,39 +18,33 @@ namespace Edubase.Web.UI.Filters
             public string TechnicalDetails { get; set; }
         }
 
-        public override Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        public async Task OnExceptionAsync(ExceptionContext context)
         {
-            OnException(actionExecutedContext);
-            return Task.CompletedTask;
-        }
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
-        public override void OnException(HttpActionExecutedContext actionExecutedContext)
-        {
-            if (actionExecutedContext.Exception is TexunaApiNotFoundException) actionExecutedContext.Response = CreateNotFoundMessage();
-            else actionExecutedContext.Response = GetResponseMessage(actionExecutedContext);
-        }
-
-        private static HttpResponseMessage CreateNotFoundMessage()
-        {
-            return new HttpResponseMessage(HttpStatusCode.NotFound)
+            if (context.Exception is TexunaApiNotFoundException)
             {
-                Content = new StringContent("Entity was not found"),
-                ReasonPhrase = "Not Found"
-            };
-        }
+                context.Result = new NotFoundObjectResult("Entity was not found");
+                context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                return;
+            }
 
-        private HttpResponseMessage GetResponseMessage(HttpActionExecutedContext actionExecutedContext)
-        {
-            if (actionExecutedContext == null) throw new ArgumentNullException(nameof(actionExecutedContext));
-            WebLogMessage msg = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>().Log(actionExecutedContext.Request.Properties["MS_HttpContext"] as HttpContextWrapper, actionExecutedContext.Exception);
+            var httpContext = context.HttpContext;
+            var exceptionHandler = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>();
+            WebLogMessage msg = exceptionHandler.Log(httpContext, context.Exception);
+
             var error = new SystemErrorMessage
             {
                 ErrorCode = msg.Id,
-                TechnicalDetails = ExceptionHandler.EnableFriendlyErrorPage ? null : actionExecutedContext.Exception.ToString()
+                TechnicalDetails = ExceptionHandler.EnableFriendlyErrorPage ? null : context.Exception.ToString()
             };
-            return actionExecutedContext.Request.CreateResponse(HttpStatusCode.InternalServerError, error);
-        } 
 
-        
+            context.Result = new ObjectResult(error)
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+
+            await Task.CompletedTask;
+        }
     }
 }

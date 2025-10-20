@@ -11,12 +11,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using R = Services.Security.EdubaseRoles;
 
-    [RouteArea("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateFreeSchools)]
+    [Route("establishments/[controller]")]
+    [Authorize(Roles = $"{AuthorizedRoles.CanBulkCreateFreeSchools}")]
     public class BulkCreateFreeSchoolsController : EduBaseController
     {
         const string ViewName = "BulkCreateFreeSchools";

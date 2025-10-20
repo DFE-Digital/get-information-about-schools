@@ -1,10 +1,6 @@
-﻿using Edubase.Data.Entity;
-using Edubase.Services.Domain;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using AzureTableLogger.LogMessages;
+using Edubase.Services.Domain;
 
 namespace Edubase.Web.UI.Models.Admin
 {

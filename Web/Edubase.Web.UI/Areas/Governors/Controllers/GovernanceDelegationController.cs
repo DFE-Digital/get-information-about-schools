@@ -9,8 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
-    [RoutePrefix("GovernanceDelegation")]
+    [Route("governors/governance-delegation")]
     public class GovernanceDelegationController : Controller
     {
         private const string GROUP_EDIT_DELEGATION = "~/Groups/Group/Edit/{groupUId:int}/Governance/Delegation";

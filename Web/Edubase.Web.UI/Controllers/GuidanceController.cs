@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Guidance"), Route("{action=index}")]
+    [ApiController]
+    [Route("guidance")]
     public class GuidanceController : EduBaseController
     {
         private readonly IBlobService _blobService;
@@ -26,54 +27,63 @@ namespace Edubase.Web.UI.Controllers
             _blobService = blobService;
         }
 
-        [Route(Name = "Guidance")]
-        public ActionResult Index() => View();
-        public ActionResult General() => View();
-        public ActionResult EstablishmentBulkUpdate() => View();
-        public ActionResult ChildrensCentre() => View();
-        public ActionResult Federation() => View();
-        public ActionResult Governance() => View();
+        [HttpGet("", Name = "Guidance")]
+        public IActionResult Index() => View();
 
-        public async Task<ActionResult> LaNameCodes()
+        [HttpGet("general")]
+        public IActionResult General() => View();
+
+        [HttpGet("establishment-bulk-update")]
+        public IActionResult EstablishmentBulkUpdate() => View();
+
+        [HttpGet("childrens-centre")]
+        public IActionResult ChildrensCentre() => View();
+
+        [HttpGet("federation")]
+        public IActionResult Federation() => View();
+
+        [HttpGet("governance")]
+        public IActionResult Governance() => View();
+
+        [HttpGet("la-name-codes")]
+        public async Task<IActionResult> LaNameCodes()
         {
-            return View(new GuidanceLaNameCodeViewModel()
+            var model = new GuidanceLaNameCodeViewModel
             {
                 EnglishLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, ENGLISH_LA_NAME_CODES),
                 WelshLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, WELSH_LA_NAME_CODES),
                 OtherLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, OTHER_LA_NAME_CODES),
-            });
+            };
+            return View(model);
         }
 
-        [Route("LaNameCodes/DataTables", Name = "LaNameCodesSelectData")]
-        public ActionResult LaNameCodesSelectData(GuidanceLaNameCodeViewModel viewModel)
+        [HttpGet("la-name-codes/data-tables", Name = "LaNameCodesSelectData")]
+        public IActionResult LaNameCodesSelectData(GuidanceLaNameCodeViewModel viewModel)
         {
             return View("SelectData", viewModel);
         }
 
-        [Route("LaNameCodes/DataTables/SelectFormat", Name = "LaNameCodesSelectFormat")]
-        public ActionResult LaNameCodesSelectFormat(GuidanceLaNameCodeViewModel viewModel)
+        [HttpGet("la-name-codes/data-tables/select-format", Name = "LaNameCodesSelectFormat")]
+        public IActionResult LaNameCodesSelectFormat(GuidanceLaNameCodeViewModel viewModel)
         {
             return View("SelectFormat", viewModel);
         }
 
-        [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload", Name = "LaNameCodesGenerateDownload"), ValidateAntiForgeryToken]
-        public async Task<ActionResult> LaNameCodesGenerateDownload(GuidanceLaNameCodeViewModel viewModel)
+        [HttpPost("la-name-codes/data-tables/select-format/generate-download", Name = "LaNameCodesGenerateDownload")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LaNameCodesGenerateDownload(GuidanceLaNameCodeViewModel viewModel)
         {
-            var blobName = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();
-
+            var blobName = $"{viewModel.DownloadName}.{viewModel.FileFormat.ToString().ToLower()}";
             var memoryStream = new MemoryStream();
 
             try
             {
                 var blob = _blobService.GetBlobReference(GUIDANCE_CONTAINER, blobName);
-
-                blob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
+                await blob.DownloadToStreamAsync(memoryStream);
                 memoryStream.Position = 0;
 
                 TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(memoryStream, blobName);
-
                 return View("ReadyToDownload");
-
             }
             catch (Exception)
             {
@@ -81,15 +91,17 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload/Download", Name = "LaNameCodesDownload")]
-        public ActionResult LaNameCodesDownload()
+        [HttpGet("la-name-codes/data-tables/select-format/generate-download/download", Name = "LaNameCodesDownload")]
+        public IActionResult LaNameCodesDownload()
         {
-            return new FileStreamResult((MemoryStream) TempData["ArchivedBlob"], "application/octet-stream")
+            var stream = TempData["ArchivedBlob"] as MemoryStream;
+            if (stream == null) return View("Error");
+
+            return new FileStreamResult(stream, "application/octet-stream")
             {
                 FileDownloadName = "Results.zip"
             };
         }
-
 
         private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
         {
@@ -100,20 +112,14 @@ namespace Edubase.Web.UI.Controllers
                 HasHeaderRecord = false,
             };
 
-            using (var memoryStream = new MemoryStream())
-            {
-                await blob.DownloadToStreamAsync(memoryStream);
-                memoryStream.Position = 0;
-                using (var reader = new StreamReader(memoryStream))
-                using (var csv = new CsvReader(reader, config))
-                {
-                    csv.Read();
-                    var records = csv.GetRecords<LaNameCodes>().ToList();
+            using var memoryStream = new MemoryStream();
+            await blob.DownloadToStreamAsync(memoryStream);
+            memoryStream.Position = 0;
 
-                    return records;
-                }
-            }
+            using var reader = new StreamReader(memoryStream);
+            using var csv = new CsvReader(reader, config);
+            csv.Read();
+            return csv.GetRecords<LaNameCodes>().ToList();
         }
     }
 }
-

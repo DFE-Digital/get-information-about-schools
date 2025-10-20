@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using Microsoft.AspNetCore.Routing;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -18,6 +16,7 @@ namespace Edubase.Web.UI.Helpers
             Label = label;
         }
 
-        public static RouteDto[] Create(params RouteDto[] dtos) => dtos.Where(x => x != null).ToArray();
+        public static RouteDto[] Create(params RouteDto[] dtos) =>
+            dtos.Where(x => x != null).ToArray();
     }
 }

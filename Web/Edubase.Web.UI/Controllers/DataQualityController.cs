@@ -11,6 +11,7 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.DataQuality;
 using Edubase.Web.UI.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -80,7 +81,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route("DataQuality/Edit")]
-        [EdubaseAuthorize(Roles = AuthorisationRoles)]
+        [Authorize(Roles = AuthorisationRoles)]
         public async Task<ActionResult> EditStatus()
         {
             var datasets = (await _dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityStatusItem
@@ -114,7 +115,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, Route("DataQuality/Edit"), ValidateAntiForgeryToken]
-        [EdubaseAuthorize(Roles = AuthorisationRoles)]
+        [Authorize(Roles = AuthorisationRoles)]
         public async Task<ActionResult> EditStatus(EditDataQualityStatusViewModel model)
         {
             if (ModelState.IsValid)
@@ -140,7 +141,7 @@ namespace Edubase.Web.UI.Controllers
 
 
         [HttpGet, Route("DataQuality/EditDataOwnerDetails")]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditDataOwnerDetails()
         {
             var data = new EditDataQualityDataOwnerViewModel
@@ -164,7 +165,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, Route("DataQuality/EditDataOwnerDetails"), ValidateAntiForgeryToken]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Authorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditDataOwnerDetails(EditDataQualityDataOwnerViewModel model)
         {
             if (!ModelState.IsValid)
@@ -237,15 +238,6 @@ namespace Edubase.Web.UI.Controllers
                 // Administrators (e.g., backoffice users) may edit all data owner details
                 return true;
             }
-
-            /* NOTE: Commented out as only allow admins permitted to edit data owner details */
-            // // All other users may only edit data owner details if their user group is mapped to the given establishment type (note, might be multiple establishment types per user group
-            // var entry = _roleToDataSetMappings.SingleOrDefault(x => x.Value == establishmentType);
-            // var roleWhichMayEditThisEstablishmentType = entry.Key;
-            // if(User.InRole(roleWhichMayEditThisEstablishmentType))
-            // {
-            //     return true;
-            // }
 
             return false;
         }

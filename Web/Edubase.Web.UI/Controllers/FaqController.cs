@@ -1,17 +1,18 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Web.UI.Filters;
-using Edubase.Web.UI.Models;
-using System.Threading.Tasks;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Faq;
-using Glimpse.AspNet.Tab;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Faq"), Route("{action=index}")]
+    [ApiController]
+    [Route("faq")]
     public class FaqController : Controller
     {
         private readonly FaqItemRepository _FaqItemRepository;
@@ -23,7 +24,7 @@ namespace Edubase.Web.UI.Controllers
             _FaqGroupRepository = FaqGroupRepository;
         }
 
-        [Route(Name = "Faq")]
+        [HttpGet("faq", Name = "Faq")]
         public async Task<ActionResult> Index()
         {
             var faqs = await _FaqItemRepository.GetAllAsync(1000);
@@ -31,20 +32,20 @@ namespace Edubase.Web.UI.Controllers
             return View(new FaqViewModel(faqs.Items, groups.Items) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
         }
 
-        [Route("Create", Name = "CreateItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Create", Name = "CreateItem"), HttpGet, Authorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> Create()
         {
             var groups = await _FaqGroupRepository.GetAllAsync(1000);
             return View("CreateEdit", new FaqItemViewModel(groups.Items));
         }
 
-        [Route("Create", Name = "PostCreateItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [Route("Create", Name = "PostCreateItem"), HttpPost, Authorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync(FaqItemViewModel viewModel)
         {
             return await ProcessEditItem(viewModel);
         }
 
-        [Route("Edit/{id}", Name = "EditItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Edit/{id}", Name = "EditItem"), HttpGet, Authorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditAsync(string id)
         {
             var item = await _FaqItemRepository.GetAsync(id);
@@ -60,7 +61,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Edit/{id}", Name = "PostEditItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [Route("Edit/{id}", Name = "PostEditItem"), HttpPost, Authorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(FaqItemViewModel viewModel)
         {
             var item = await _FaqItemRepository.GetAsync(viewModel.Id);
@@ -76,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
             return await ProcessEditItem(viewModel, item);
         }
 
-        [Route("Edit/{id}/{order}", Name = "EditItemOrder"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Edit/{id}/{order}", Name = "EditItemOrder"), HttpGet, Authorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditItemOrderAsync(string id, string order)
         {
             var item = await _FaqItemRepository.GetAsync(id);
@@ -175,17 +176,17 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [Route("Groups/New", Name = "CreateGroup"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Groups/New", Name = "CreateGroup"), HttpGet, Authorize(Roles = AuthorizedRoles.IsAdmin)]
         public ActionResult CreateGroup() => View("EditGroup", new FaqGroupViewModel());
 
 
-        [Route("Groups/New", Name = "PostCreateGroup"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [Route("Groups/New", Name = "PostCreateGroup"), HttpPost, Authorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateGroupAsync(FaqGroupViewModel viewModel)
         {
             return await ProcessEditGroup(viewModel);
         }
 
-        [Route("Group/{id}", Name = "EditGroup"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Group/{id}", Name = "EditGroup"), HttpGet, Authorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditGroupAsync(string id)
         {
             var item = await _FaqGroupRepository.GetAsync(id);
@@ -201,7 +202,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Group/{id}", Name = "PostEditGroup"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [Route("Group/{id}", Name = "PostEditGroup"), HttpPost, Authorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditGroupAsync(FaqGroupViewModel viewModel)
         {
             var item = await _FaqGroupRepository.GetAsync(viewModel.Id);
@@ -220,7 +221,7 @@ namespace Edubase.Web.UI.Controllers
             return await ProcessEditGroup(viewModel, item);
         }
 
-        [Route("Group/{id}/{order}", Name = "EditGroupOrder"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Group/{id}/{order}", Name = "EditGroupOrder"), HttpGet, Authorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditGroupOrderAsync(string id, string order)
         {
             var item = await _FaqGroupRepository.GetAsync(id);

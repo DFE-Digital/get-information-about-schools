@@ -1,7 +1,6 @@
-using System;
 using Edubase.Services.Domain;
-using Edubase.Web.UI.Models.Search;
 using Edubase.Services.Enums;
+using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {

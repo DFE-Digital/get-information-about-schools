@@ -23,10 +23,11 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("Governor")]
+    [Route("governors/governor")]
     public class GovernorController : Controller
     {
         private const string GROUP_EDIT_GOVERNANCE = "~/Groups/Group/Edit/{groupUId:int}/Governance";
@@ -221,21 +222,24 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
          Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"),
          Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
          HttpGet, EdubaseAuthorize]
-        public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn,
-            eLookupGovernorRole? role, int? gid)
+        [HttpGet]
+        [Route("governors/add-edit-or-replace")]
+        public async Task<IActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn, eLookupGovernorRole? role, int? gid)
         {
+            var query = HttpContext.Request.Query;
+
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.Query["gid2"].ToInteger(),
-                AppointmentEndDateDay = Request.Query["d"].ToInteger(),
-                AppointmentEndDateMonth = Request.Query["m"].ToInteger(),
-                AppointmentEndDateYear = Request.Query["y"].ToInteger(),
-                Reinstate = Request.Query["rag"] == "true"
+                ReplacementGovernorId = query.TryGetValue("gid2", out var gid2) ? gid2.ToString().ToInteger() : null,
+                AppointmentEndDateDay = query.TryGetValue("d", out var d) ? d.ToString().ToInteger() : null,
+                AppointmentEndDateMonth = query.TryGetValue("m", out var m) ? m.ToString().ToInteger() : null,
+                AppointmentEndDateYear = query.TryGetValue("y", out var y) ? y.ToString().ToInteger() : null,
+                Reinstate = query.TryGetValue("rag", out var rag) && rag == "true"
             };
 
-            var replaceMode =
-                ((Route) ControllerContext.RouteData.Route).Url.IndexOf("/Replace/",
-                    StringComparison.OrdinalIgnoreCase) > -1;
+            var path = HttpContext.Request.Path.Value;
+            var replaceMode = path.Contains("/replace", StringComparison.OrdinalIgnoreCase);
+
             if (role == null && gid == null)
             {
                 throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
@@ -271,32 +275,27 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 if (replaceMode)
                 {
                     viewModel.Mode = CreateEditGovernorViewModel.EditMode.Replace;
-                    viewModel.ReplaceGovernorViewModel.AppointmentEndDate =
-                        new DateTimeViewModel(model.AppointmentEndDate);
+                    viewModel.ReplaceGovernorViewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
                     viewModel.ReplaceGovernorViewModel.GID = gid;
                     viewModel.ReplaceGovernorViewModel.Name = model.GetFullName();
 
-                    if (establishmentUrn.HasValue && role.OneOfThese(eLookupGovernorRole.ChairOfTrustees,
-                            eLookupGovernorRole.ChairOfGovernors))
+                    if (establishmentUrn.HasValue && role.OneOfThese(eLookupGovernorRole.ChairOfTrustees, eLookupGovernorRole.ChairOfGovernors))
                     {
-                        var models =
-                            await _governorsReadService.GetGovernorListAsync(establishmentUrn, principal: User);
+                        var models = await _governorsReadService.GetGovernorListAsync(establishmentUrn, principal: User);
                         var governorsOrTrustees = models.CurrentGovernors
-                            .Where(x => x.RoleId == (int) eLookupGovernorRole.Governor ||
-                                        x.RoleId == (int) eLookupGovernorRole.Trustee).OrderBy(x => x.Person_LastName)
+                            .Where(x => x.RoleId == (int) eLookupGovernorRole.Governor || x.RoleId == (int) eLookupGovernorRole.Trustee)
+                            .OrderBy(x => x.Person_LastName)
                             .ToArray();
 
                         if (replaceGovernorState.ReplacementGovernorId.HasValue)
                         {
-                            viewModel.SelectedGovernor =
-                                governorsOrTrustees.FirstOrDefault(x =>
-                                    x.Id == replaceGovernorState.ReplacementGovernorId);
+                            viewModel.SelectedGovernor = governorsOrTrustees.FirstOrDefault(x => x.Id == replaceGovernorState.ReplacementGovernorId);
                             PrepopulateFields(viewModel.SelectedGovernor, viewModel);
                         }
 
                         viewModel.ExistingGovernors = governorsOrTrustees.Select(x => new SelectListItem
                         {
-                            Text = x.Person_FirstName + " " + x.Person_LastName,
+                            Text = $"{x.Person_FirstName} {x.Person_LastName}",
                             Value = x.Id.ToString(),
                             Selected = replaceGovernorState.ReplacementGovernorId.HasValue &&
                                        replaceGovernorState.ReplacementGovernorId.Value == x.Id
@@ -343,8 +342,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.GovernorRoleNameMidSentence = GovernorRoleNameFactory.Create(role.Value, isMidSentence: true, removeGroupEstablishmentSuffix: true);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
-            viewModel.DisplayPolicy =
-                await _governorsReadService.GetEditorDisplayPolicyAsync(role.Value, groupUId.HasValue, User);
+            viewModel.DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync(role.Value, groupUId.HasValue, User);
 
             if (viewModel.GroupTypeId != 11)
             {
@@ -358,14 +356,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 viewModel.ReinstateAsGovernor = replaceGovernorState.Reinstate;
                 viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Day = replaceGovernorState.AppointmentEndDateDay;
-                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Month =
-                    replaceGovernorState.AppointmentEndDateMonth;
-                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Year =
-                    replaceGovernorState.AppointmentEndDateYear;
+                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Month = replaceGovernorState.AppointmentEndDateMonth;
+                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Year = replaceGovernorState.AppointmentEndDateYear;
             }
 
             return View(viewModel);
         }
+
 
         /// <summary>
         /// When replacing an existing chair of governor with data from an existing governor, this method prepopulates the fields from the governor record.
@@ -659,16 +656,18 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await _governorsWriteService.SaveAsync(model, User);
         }
 
-        [HttpGet, Route(ESTAB_REPLACE_CHAIR, Name = "EstabReplaceChair"), EdubaseAuthorize]
-        public async Task<ActionResult> ReplaceChair(int establishmentUrn, int gid)
+        [HttpGet("establishment/replace-chair")]
+        public async Task<IActionResult> ReplaceChair(int establishmentUrn, int gid)
         {
+            var query = HttpContext.Request.Query;
+
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.Query["rgid"].ToInteger(),
-                DateTermEndsDay = Request.Query["d"].ToInteger(),
-                DateTermEndsMonth = Request.Query["m"].ToInteger(),
-                DateTermEndsYear = Request.Query["y"].ToInteger(),
-                Reinstate = Request.Query["ri"] == "true"
+                ReplacementGovernorId = query.TryGetValue("rgid", out var rgid) ? rgid.ToString().ToInteger() : null,
+                DateTermEndsDay = query.TryGetValue("d", out var d) ? d.ToString().ToInteger() : null,
+                DateTermEndsMonth = query.TryGetValue("m", out var m) ? m.ToString().ToInteger() : null,
+                DateTermEndsYear = query.TryGetValue("y", out var y) ? y.ToString().ToInteger() : null,
+                Reinstate = query.TryGetValue("ri", out var ri) && ri == "true"
             };
 
             var governor = await _governorsReadService.GetGovernorAsync(gid, User);
@@ -676,9 +675,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value))
             {
-                var localEquivalent =
-                    RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId);
-                if (localEquivalent != null)
+                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId);
+                if (localEquivalent.HasValue)
                 {
                     roles.Add(localEquivalent.Value);
                 }
@@ -689,44 +687,42 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             }
 
             var governors = (await _governorsReadService.GetSharedGovernorsAsync(establishmentUrn, User))
-                .Where(g => roles.Contains((eLookupGovernorRole) g.RoleId) && g.Id != gid).ToList();
+                .Where(g => roles.Contains((eLookupGovernorRole) g.RoleId) && g.Id != gid)
+                .ToList();
 
             var model = new ReplaceChairViewModel
             {
                 ExistingGovernorId = gid,
                 GovernorFullName = governor.GetFullName(),
                 DateTermEnds = new DateTimeViewModel(governor.AppointmentEndDate),
-                NewLocalGovernor =
-                    new GovernorViewModel
-                    {
-                        DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync(
-                            RoleEquivalence.GetLocalEquivalentToSharedRole(
-                                (eLookupGovernorRole) governor.RoleId.Value) ??
-                            (eLookupGovernorRole) governor.RoleId.Value, false, User)
-                    },
-                SharedGovernors =
-                    (await Task.WhenAll(governors.Select(async g =>
-                        await SharedGovernorViewModel.MapFromGovernor(g, establishmentUrn, _cachedLookupService))))
-                    .ToList(),
+                NewLocalGovernor = new GovernorViewModel
+                {
+                    DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync(
+                        RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value)
+                        ?? (eLookupGovernorRole) governor.RoleId.Value, false, User)
+                },
+                SharedGovernors = (await Task.WhenAll(governors.Select(g =>
+                    SharedGovernorViewModel.MapFromGovernor(g, establishmentUrn, _cachedLookupService)))).ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
                 Role = (eLookupGovernorRole) governor.RoleId,
                 RoleName = GovernorRoleNameFactory.Create((eLookupGovernorRole) governor.RoleId, isMidSentence: true)
             };
 
             var models = await _governorsReadService.GetGovernorListAsync(establishmentUrn, principal: User);
-            var localGovernors = models.CurrentGovernors.Where(x => x.RoleId == (int) eLookupGovernorRole.LocalGovernor)
-                .OrderBy(x => x.Person_LastName).ToArray();
+            var localGovernors = models.CurrentGovernors
+                .Where(x => x.RoleId == (int) eLookupGovernorRole.LocalGovernor)
+                .OrderBy(x => x.Person_LastName)
+                .ToArray();
 
             if (replaceGovernorState.ReplacementGovernorId.HasValue)
             {
-                model.SelectedNonChair =
-                    localGovernors.FirstOrDefault(x => x.Id == replaceGovernorState.ReplacementGovernorId);
+                model.SelectedNonChair = localGovernors.FirstOrDefault(x => x.Id == replaceGovernorState.ReplacementGovernorId);
                 PrepopulateFields(model.SelectedNonChair, model);
             }
 
             model.ExistingNonChairs = localGovernors.Select(x => new SelectListItem
             {
-                Text = x.Person_FirstName + " " + x.Person_LastName,
+                Text = $"{x.Person_FirstName} {x.Person_LastName}",
                 Value = x.Id.ToString(),
                 Selected = replaceGovernorState.ReplacementGovernorId.HasValue &&
                            replaceGovernorState.ReplacementGovernorId.Value == x.Id
@@ -745,6 +741,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             return View(model);
         }
+
 
         [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)

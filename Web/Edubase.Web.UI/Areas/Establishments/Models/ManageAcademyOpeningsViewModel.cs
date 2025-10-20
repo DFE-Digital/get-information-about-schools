@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Edubase.Services.Core;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models

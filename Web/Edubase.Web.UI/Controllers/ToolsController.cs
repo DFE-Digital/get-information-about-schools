@@ -1,15 +1,19 @@
 using Edubase.Services.Domain;
-using Microsoft.Ajax.Utilities;
-using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 using Microsoft.AspNetCore.Mvc;
+using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Common;
     using Data.Entity;
     using Data.Repositories;
     using Filters;
     using Helpers;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models;
     using Models.Tools;
     using Newtonsoft.Json;
@@ -23,14 +27,11 @@ namespace Edubase.Web.UI.Controllers
     using Services.Establishments.Search;
     using Services.Lookup;
     using Services.Security;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
-    using R = EdubaseRoles;
 
-    [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
+    [ApiController]
+    [Route("tools")]
+    [EdubaseAuthorize]
     public class ToolsController : Controller
     {
         private readonly ISecurityService _securityService;
@@ -55,7 +56,7 @@ namespace Edubase.Web.UI.Controllers
             _establishmentDownloadService = establishmentDownloadService;
         }
 
-        [Route(Name = "Tools")]
+        [HttpGet("", Name = "Tools")]
         public async Task<ActionResult> Index()
         {
             var createGroupPermission = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -490,7 +491,7 @@ namespace Edubase.Web.UI.Controllers
                 JsonConvert.SerializeObject(new
                 {
                     status = model.IsComplete, redirect = string.Concat("/independent-schools/download/", id)
-                }), JsonRequestBehavior.AllowGet);
+                }), System.Web.Mvc.JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),

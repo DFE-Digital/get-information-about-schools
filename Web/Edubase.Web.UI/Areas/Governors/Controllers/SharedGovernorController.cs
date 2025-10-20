@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("SharedGovernor")]
+    [Route("governors/sharedgovernor")]
     public class SharedGovernorController : Controller
     {
         private const string EstabSelectSharedGovernor = "~/Establishment/Edit/{establishmentUrn:int}/Governance/SelectSharedGovernor";

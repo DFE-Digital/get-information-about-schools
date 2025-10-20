@@ -1,21 +1,18 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Edubase.Common;
 using Edubase.Services;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Groups;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
-    [RoutePrefix("Governance")]
+    [Route("Governance/[controller]")]
     public class GovernanceController : Controller
     {
         private const string EstabEditGovernanceMode = "~/Establishment/Edit/{establishmentUrn:int}/GovernanceMode";

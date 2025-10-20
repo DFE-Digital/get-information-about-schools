@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using System.Web.UI;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
@@ -11,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
+    [ApiController]
+    [Route("governors/search")]
     public class GroupCorporateContactController : Controller
     {
         private const string GroupEditCorporateContactRoute = "~/Groups/Group/Edit/{groupUId:int}/CorporateContact";

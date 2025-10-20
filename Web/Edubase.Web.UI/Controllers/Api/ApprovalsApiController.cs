@@ -1,12 +1,12 @@
+using System.Threading.Tasks;
 using Edubase.Services.Approvals;
 using Edubase.Services.Approvals.Models;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
+    [ApiController]
+    [Route("api/approvals")]
     public class ApprovalsApiController : ControllerBase
     {
         private readonly IApprovalService _approvalService;
@@ -16,18 +16,27 @@ namespace Edubase.Web.UI.Controllers.Api
             _approvalService = approvalService;
         }
 
-        [Route("api/approvals/change-requests"), HttpGet]
-        public async Task<PendingApprovalsResult> GetAsync(int skip, int take, string sortBy)
-            => await _approvalService.GetAsync(skip, take, sortBy, User);
+        /// <summary>
+        /// GET api/approvals/change-requests?skip=0&take=10&sortBy=name
+        /// </summary>
+        [HttpGet("change-requests")]
+        public async Task<ActionResult<PendingApprovalsResult>> GetAsync([FromQuery] int skip, [FromQuery] int take, [FromQuery] string sortBy)
+        {
+            var result = await _approvalService.GetAsync(skip, take, sortBy, User);
+            return Ok(result);
+        }
 
-        [Route("api/approvals/change-request"), HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ActionAsync(PendingChangeRequestAction model)
+        /// <summary>
+        /// POST api/approvals/change-request
+        /// </summary>
+        [HttpPost("change-request")]
+        [IgnoreAntiforgeryToken] // Use this for API endpoints unless you're posting from a browser form
+        public async Task<IActionResult> ActionAsync([FromBody] PendingChangeRequestAction model)
         {
             var result = await _approvalService.ActionAsync(model, User);
             return result.Success
-                ? ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent))
-                : (IActionResult) Content(HttpStatusCode.BadRequest, result.Errors);
+                ? NoContent()
+                : BadRequest(result.Errors);
         }
     }
 }

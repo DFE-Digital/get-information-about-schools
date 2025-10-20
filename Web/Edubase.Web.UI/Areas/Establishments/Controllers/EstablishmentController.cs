@@ -15,7 +15,6 @@ using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.DisplayPolicies;
-using Edubase.Services.Establishments.EditPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.ExternalLookup;
@@ -27,22 +26,22 @@ using Edubase.Services.Texuna.Lookup;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models.Validators;
-using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
-using MoreLinq;
-using ET = Edubase.Services.Enums.eLookupEstablishmentType;
-using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
-using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
+using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
+using ET = Edubase.Services.Enums.eLookupEstablishmentType;
+using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [RouteArea("Establishments"), RoutePrefix("Establishment")]
+    [ApiController]
+    [Route("establishments/establishment")]
     public class EstablishmentController : EduBaseController
     {
         private readonly ICachedLookupService _cachedLookupService;
@@ -54,29 +53,32 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IExternalLookupService _externalLookupService;
         private readonly IUserDependentLookupService _lookupService;
         private readonly IGovernorsGridViewModelFactory _governorsGridViewModelFactory;
-
         private readonly ISecurityService _securityService;
-        private readonly Lazy<string[]> _formKeys;
-        private readonly Dictionary<string, string> validationFieldMapping = new Dictionary<string, string>
+
+        // ⚠️ Avoid accessing Request.Form in constructor — move this logic to an action method
+        private readonly Lazy<string[]> _formKeys = new(() => Array.Empty<string>(), LazyThreadSafetyMode.PublicationOnly);
+
+        private readonly Dictionary<string, string> validationFieldMapping = new()
         {
-            {"address_Line1", "Address.Line1"},
-            {"address_CityOrTown", "Address.CityOrTown" },
-            {"address_CountyId", "Address.County" },
-            {"address_PostCode", "Address.PostCode" },
-            {"headFirstName", "ManagerFirstName" },
-            {"headLastName", "ManagerLastName" },
-            {"contact_EmailAddress", "CentreEmail" },
-            {"contact_TelephoneNumber", "Telephone" },
-            {"ccOperationalHoursId", "OperationalHoursId" },
-            {"ccUnder5YearsOfAgeCount", "NumberOfUnderFives" },
-            {"ccGovernanceId", "GovernanceId" },
-            {"ccGovernanceDetail", "GovernanceDetail" },
-            {"ccDisadvantagedAreaId", "DisadvantagedAreaId" },
-            {"ccDirectProvisionOfEarlyYearsId", "DirectProvisionOfEarlyYears" },
-            {"statusId", "EstablishmentStatusId" }
+            { "address_Line1", "Address.Line1" },
+            { "address_CityOrTown", "Address.CityOrTown" },
+            { "address_CountyId", "Address.County" },
+            { "address_PostCode", "Address.PostCode" },
+            { "headFirstName", "ManagerFirstName" },
+            { "headLastName", "ManagerLastName" },
+            { "contact_EmailAddress", "CentreEmail" },
+            { "contact_TelephoneNumber", "Telephone" },
+            { "ccOperationalHoursId", "OperationalHoursId" },
+            { "ccUnder5YearsOfAgeCount", "NumberOfUnderFives" },
+            { "ccGovernanceId", "GovernanceId" },
+            { "ccGovernanceDetail", "GovernanceDetail" },
+            { "ccDisadvantagedAreaId", "DisadvantagedAreaId" },
+            { "ccDirectProvisionOfEarlyYearsId", "DirectProvisionOfEarlyYears" },
+            { "statusId", "EstablishmentStatusId" }
         };
 
-        public EstablishmentController(IEstablishmentReadService establishmentReadService,
+        public EstablishmentController(
+            IEstablishmentReadService establishmentReadService,
             IGroupReadService groupReadService,
             IMapper mapper,
             IEstablishmentWriteService establishmentWriteService,
@@ -97,10 +99,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _externalLookupService = externalLookupService;
             _lookupService = lookupService;
             _governorsGridViewModelFactory = governorsGridViewModelFactory;
-
-            _formKeys = new Lazy<string[]>(
-                () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
-                LazyThreadSafetyMode.PublicationOnly);
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Link/{linkid?}", Name = "EditEstabLink"),
@@ -211,19 +209,22 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
-        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool JsDisabled = false)
+        [HttpPost("create")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateChildrensCentreViewModel viewModel, bool jsDisabled = false)
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             var routeComplete = viewModel.ActionStep == CreateSteps.Completed;
 
             await PopulateCCSelectLists(viewModel);
+
             if (viewModel.EstablishmentTypeId != null)
             {
-                //Bugfix - ensures repopulation of available phases on step 2
                 var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId.Value];
-                viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
+                viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync())
+                    .Where(x => phaseMap.Contains(x.Id))
+                    .ToSelectList(viewModel.EducationPhaseId);
             }
 
             ModelState.Remove(nameof(viewModel.PreviousStep));
@@ -232,18 +233,28 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.ActionStep < viewModel.CurrentStep)
             {
-                viewModel.ActionStep = viewModel.CurrentStep == CreateSteps.CreateEntry ? CreateSteps.PhaseOfEducation : viewModel.CurrentStep;
+                viewModel.ActionStep = viewModel.CurrentStep == CreateSteps.CreateEntry
+                    ? CreateSteps.PhaseOfEducation
+                    : viewModel.CurrentStep;
+
                 viewModel.CurrentStep = viewModel.PreviousStep;
-                viewModel.PreviousStep = viewModel.PreviousStep - 1;
+                viewModel.PreviousStep -= 1;
+
                 return View(viewModel);
             }
 
-            var isNameEntryOk = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != null;
-            var isPhaseOfEducationOk = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
+            var isNameEntryOk = viewModel.LocalAuthorityId != null &&
+                                viewModel.Name != null &&
+                                viewModel.EstablishmentTypeId != null;
+
+            var isPhaseOfEducationOk = viewModel.EducationPhaseId != null &&
+                                       viewModel.GenerateEstabNumber != null;
 
             if (viewModel.EstablishmentTypeId == 41 && routeComplete && isNameEntryOk)
             {
-                return ModelState.IsValid ? await CreateChildrensCentre(viewModel) : View(viewModel);
+                return ModelState.IsValid
+                    ? await CreateChildrensCentre(viewModel)
+                    : View(viewModel);
             }
 
             if (ModelState.IsValid && !routeComplete)
@@ -252,32 +263,38 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.CurrentStep = viewModel.ActionStep;
             }
 
-            if (ModelState.IsValid && viewModel.EstablishmentTypeId == 41 && viewModel.ActionStep == CreateSteps.PhaseOfEducation && !routeComplete && isNameEntryOk)
+            if (ModelState.IsValid &&
+                viewModel.EstablishmentTypeId == 41 &&
+                viewModel.ActionStep == CreateSteps.PhaseOfEducation &&
+                !routeComplete &&
+                isNameEntryOk)
             {
                 viewModel.CurrentStep = CreateSteps.CreateEntry;
                 viewModel.ActionStep = CreateSteps.Completed;
-                //need to escape here to redraw the screen and collect additional data
                 return View(viewModel);
             }
 
-            if (ModelState.IsValid && viewModel.ActionStep == CreateSteps.EstabNumber && isPhaseOfEducationOk)
+            if (ModelState.IsValid &&
+                viewModel.ActionStep == CreateSteps.EstabNumber &&
+                isPhaseOfEducationOk)
             {
                 viewModel.CurrentStep = CreateSteps.EstabNumber;
                 viewModel.ActionStep = CreateSteps.Completed;
                 return View(viewModel);
             }
 
-            if (ModelState.IsValid && viewModel.ActionStep != CreateSteps.EstabNumber && !routeComplete)
+            if (ModelState.IsValid &&
+                viewModel.ActionStep != CreateSteps.EstabNumber &&
+                !routeComplete &&
+                viewModel.ActionStep == CreateSteps.PhaseOfEducation &&
+                isNameEntryOk)
             {
-                if (viewModel.ActionStep == CreateSteps.PhaseOfEducation && isNameEntryOk)
-                {
-                    viewModel.ActionStep = viewModel.EstablishmentTypeId != 41
-                        ? CreateSteps.EstabNumber
-                        : CreateSteps.Completed;
-                }
+                viewModel.ActionStep = viewModel.EstablishmentTypeId != 41
+                    ? CreateSteps.EstabNumber
+                    : CreateSteps.Completed;
             }
 
-            if (ModelState.IsValid && routeComplete)  //attempt to prevent end of route processing until final control is posted
+            if (ModelState.IsValid && routeComplete)
             {
                 var apiModel = new EstablishmentModel
                 {
@@ -291,7 +308,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     StatusId = (int) eLookupEstablishmentStatus.ProposedToOpen
                 };
 
-                if (viewModel.EstablishmentTypeId == (int) ET.SixthFormCentres) // story: 25821
+                if (viewModel.EstablishmentTypeId == (int) ET.SixthFormCentres)
                 {
                     apiModel.StatutoryLowAge = 0;
                     apiModel.StatutoryHighAge = 0;
@@ -307,7 +324,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 else
                 {
-                    // go back to estab number
                     viewModel.ActionStep = CreateSteps.Completed;
                     viewModel.CurrentStep = CreateSteps.EstabNumber;
                     viewModel.PreviousStep = CreateSteps.PhaseOfEducation;
@@ -315,22 +331,26 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
                 {
-                    var response = await _establishmentWriteService.CreateNewAsync(apiModel, viewModel.GenerateEstabNumber.GetValueOrDefault(), User);
+                    var response = await _establishmentWriteService.CreateNewAsync(
+                        apiModel,
+                        viewModel.GenerateEstabNumber.GetValueOrDefault(),
+                        User);
+
                     if (response.Success)
                     {
                         return RedirectToAction(nameof(Details), new { id = response.Response });
                     }
-                    else
+
+                    foreach (var error in response.Errors)
                     {
-                        foreach (var error in response.Errors)
-                        {
-                            ModelState.AddModelError(error.Fields, error.GetMessage());
-                        }
+                        ModelState.AddModelError(error.Fields, error.GetMessage());
                     }
                 }
             }
+
             return View(viewModel);
         }
+
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments,
