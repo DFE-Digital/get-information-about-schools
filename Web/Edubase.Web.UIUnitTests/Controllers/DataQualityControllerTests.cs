@@ -5,7 +5,6 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 using Edubase.Data.Entity;
 using Edubase.Services.DataQuality;
 using Edubase.Web.UI.Controllers;
@@ -14,6 +13,7 @@ using Edubase.Web.UI.Models.DataQuality;
 using Moq;
 using Xunit;
 using static Edubase.Data.Entity.DataQualityStatus;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UIUnitTests.Controllers
 {

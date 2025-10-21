@@ -22,17 +22,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F2669A17-B808-472E-ADE7-0BE8E61BDAE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.CommonUnitTests", "Edubase.CommonUnitTests\Edubase.CommonUnitTests.csproj", "{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.CommonUnitTests", "Edubase.CommonUnitTests\Edubase.CommonUnitTests.csproj", "{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.DataUnitTests", "Edubase.DataUnitTests\Edubase.DataUnitTests.csproj", "{51BF61CC-040F-4CA4-8571-0B10D56B56B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.DataUnitTests", "Edubase.DataUnitTests\Edubase.DataUnitTests.csproj", "{51BF61CC-040F-4CA4-8571-0B10D56B56B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.ServicesUnitTests", "Edubase.ServicesUnitTests\Edubase.ServicesUnitTests.csproj", "{9708EF96-6579-4C74-A044-7916972BFB07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.ServicesUnitTests", "Edubase.ServicesUnitTests\Edubase.ServicesUnitTests.csproj", "{9708EF96-6579-4C74-A044-7916972BFB07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.ResourcesUnitTests", "Edubase.Web.ResourcesUnitTests\Edubase.Web.ResourcesUnitTests.csproj", "{97624040-4B3F-41E0-9F37-E3F166C38931}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.UIUnitTests", "Edubase.Web.UIUnitTests\Edubase.Web.UIUnitTests.csproj", "{041CB9C1-ABF4-4FF0-9260-AC63F700704E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services.TexunaUnitTests", "Edubase.Services.TexunaUnitTests\Edubase.Services.TexunaUnitTests.csproj", "{F1905AE0-B4EC-4F4A-8241-E8EB12249F3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Services.TexunaUnitTests", "Edubase.Services.TexunaUnitTests\Edubase.Services.TexunaUnitTests.csproj", "{F1905AE0-B4EC-4F4A-8241-E8EB12249F3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

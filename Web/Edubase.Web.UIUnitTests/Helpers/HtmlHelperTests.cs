@@ -1,6 +1,6 @@
 using System;
-using System.Web.Mvc;
 using Xunit;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Edubase.Web.UI.Helpers.Tests
 {

@@ -5,8 +5,6 @@ using System.Reflection;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Services.Domain;
@@ -24,6 +22,7 @@ using Moq;
 using Xunit;
 using static Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
 using GR = Edubase.Services.Enums.eLookupGovernorRole;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 {
@@ -38,7 +37,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
 
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
@@ -95,7 +94,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
 
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
@@ -154,7 +153,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
 
             mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
@@ -212,7 +211,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
 
             mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
@@ -262,7 +261,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
 
             mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Establishments/Search");
             mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
@@ -324,7 +323,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
             var principal = new Mock<IPrincipal>();
 
             mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
@@ -357,7 +356,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
             var principal = new Mock<IPrincipal>();
 
             mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
@@ -390,7 +389,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
             var principal = new Mock<IPrincipal>();
 
             eds.Setup(x => x.GetSearchDownloadCustomFields(It.IsAny<IPrincipal>()))
@@ -426,7 +425,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
             var principal = new Mock<IPrincipal>();
 
             eds.Setup(x => x.GetSearchDownloadCustomFields(It.IsAny<IPrincipal>()))

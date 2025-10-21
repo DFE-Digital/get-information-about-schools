@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
@@ -13,6 +11,7 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 {
