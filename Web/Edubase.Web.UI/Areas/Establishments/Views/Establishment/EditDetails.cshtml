@@ -330,17 +330,12 @@
 
             @if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
             {
-                var editable = Model.EditPolicy.IEBTDetail.RegistrationSuspended;
-                var currentStatus = Model.RegistrationSuspended?.EnumDisplayNameFor() ?? "Not recorded";
-
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RegistrationSuspended)">
                     @Html.LabelFor(x => x.RegistrationSuspended, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message"})
 
-                    @if (editable)
-                    {
-                        @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(
-                            x => x.RegistrationSuspended,
+                    @Html.DropDownListFor(
+                        x => x.RegistrationSuspended,
                             new SelectList(
                                 Enum.GetValues(typeof(Edubase.Services.Enums.RegistrationSuspendedStatus))
                                     .Cast<Edubase.Services.Enums.RegistrationSuspendedStatus>()
@@ -354,12 +349,8 @@
                                 "Text",
                                 Model.RegistrationSuspended.HasValue ? ((int)Model.RegistrationSuspended).ToString() : null
                             ),
-                            new { @class = "govuk-select" }
+                            new { @class = "govuk-select", disabled = Model.EditPolicy.IEBTDetail.RegistrationSuspended ? null : "disabled" }
                         )
-                    }
-                    else
-                    {
-                        <p class="govuk-body">@currentStatus</p>
                     }
                 </div>
             }
