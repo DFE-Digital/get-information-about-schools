@@ -1,18 +1,16 @@
-﻿using Edubase.Common;
-using Microsoft.WindowsAzure.Storage.Table;
+using Azure;
+using Azure.Data.Tables;
 using System;
 
-namespace Edubase.Data.Entity
-{
-    public class GlossaryItem : TableEntity
-    {
-        public string Title { get; set; }
-        public string Content { get; set; }
+namespace Edubase.Data.Entity;
 
-        public GlossaryItem()
-        {
-            PartitionKey = string.Empty;
-            RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
-        }
-    }
+public class GlossaryItem : ITableEntity
+{
+    public string PartitionKey { get; set; } = string.Empty;
+    public string RowKey { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public DateTimeOffset? Timestamp { get; set; }
+    public ETag ETag { get; set; }
+
+    public string Title { get; set; }
+    public string Content { get; set; }
 }
