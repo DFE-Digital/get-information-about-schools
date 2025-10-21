@@ -1,22 +1,21 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Edubase.Common.IO;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Controllers;
-using Edubase.Web.UI.Helpers;
-using MoreLinq;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    using R = Services.Security.EdubaseRoles;
-
-    [RouteArea("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateFreeSchools)]
+    [Area("Establishments")]
+    [Authorize(Policy = "CanBulkCreateFreeSchools")]
     public class BulkCreateFreeSchoolsController : EduBaseController
     {
         const string ViewName = "BulkCreateFreeSchools";

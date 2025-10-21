@@ -1,32 +1,34 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Edubase.Common;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Helpers;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Edubase.Web.UI.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [RouteArea("Establishments"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateEstablishments)]
+    [Area("Establishments")]
+    [Route("Establishments/BulkUpdate")]
+    [Authorize(Policy = "CanBulkUpdateEstablishments")]
     public class BulkUpdateController : Controller
     {
-        readonly IEstablishmentWriteService _establishmentWriteService;
+        private readonly IEstablishmentWriteService _establishmentWriteService;
 
         public BulkUpdateController(IEstablishmentWriteService establishmentWriteService)
         {
             _establishmentWriteService = establishmentWriteService;
         }
 
-        [HttpGet, Route(Name = "EstabBulkUpdate")]
+        [HttpGet, Route("", Name = "EstabBulkUpdate")]
         public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(AuthorizedRoles.IsAdmin)));
 
 
-        [HttpPost, Route(Name = "ProcessBulkUpdate"), ValidateAntiForgeryToken]
+        [HttpPost, Route("", Name = "ProcessBulkUpdate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkUpdate(BulkUpdateViewModel viewModel)
         {
             viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
@@ -76,28 +78,29 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             else
             {
                 var dto = UriHelper.DeserializeUrlToken<BulkUpdateDto>(state);
-                var vm = new BulkUpdateViewModel
+
+                BulkUpdateViewModel vm = new()
                 {
                     BulkUpdateType = dto.BulkFileType,
                     EffectiveDate = new UI.Models.DateTimeViewModel(dto.EffectiveDate),
-                    Result = model
+                    Result = model,
+                    CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin),
+                    OverrideCRProcess = dto.OverrideCRProcess
                 };
-                vm.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
-                vm.OverrideCRProcess = dto.OverrideCRProcess;
                 return View("Index", vm);
             }
         }
 
-        [HttpGet, Route("resultAjax/{id}/{state}")]
-        public async Task<ActionResult> ResultAjax(Guid id, string state)
+        [HttpGet("resultAjax/{id}/{state}")]
+        public async Task<IActionResult> ResultAjax(Guid id, string state)
         {
             var model = await _establishmentWriteService.BulkUpdateAsync_GetProgressAsync(id, User);
-            return Json(JsonConvert.SerializeObject(new
+
+            return Json(new
             {
                 status = model.IsCompleted(),
-                redirect = string.Concat("/Establishments/BulkUpdate/result/", id,"/", state)
-            }), JsonRequestBehavior.AllowGet);
-
+                redirect = $"/Establishments/BulkUpdate/result/{id}/{state}"
+            });
         }
     }
 }

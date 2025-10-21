@@ -2,25 +2,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Edubase.Services.Establishments;
-using Edubase.Web.UI.Helpers;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
+using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models;
-using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Helpers;
 using Microsoft.Ajax.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using M = EstablishmentSearchResultModel;
 
-    [RouteArea("Establishments"), RoutePrefix("manage"), Route("{action=index}"),
-     MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecureAcademy16To19Openings)]
+    [Area("Establishments")]
+    [Route("Establishments/manage")]
+    [Authorize(Policy = "CanManageAcademyOpeningsOrSecureAcademy16To19")]
     public class AcademyOpeningsController : Controller
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -94,8 +96,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var academyOpeningsAll = new List<EditAcademyOpeningViewModel>();
             foreach (var x in result.Items)
             {
-                int preUrn = 0;
-                int.TryParse(x.PredecessorUrn, out preUrn);
+                int.TryParse(x.PredecessorUrn, out var preUrn);
 
                 academyOpeningsAll.Add(new EditAcademyOpeningViewModel()
                 {
@@ -195,7 +196,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var paged = academyOpenings.Skip(skip).Take(take).ToList();
 
-            var vm = new ManageAcademyOpeningsViewModel
+            ManageAcademyOpeningsViewModel vm = new()
             {
                 AcademyOpenings =
                     new PaginatedResult<EditAcademyOpeningViewModel>(skip, take, academyOpenings.Count, paged),
@@ -205,11 +206,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 SelectedMonth = month,
                 AllAcademyOpenings = academyOpeningsAll,
                 EstablishmentTypeId = establishmentTypeId ?? string.Empty,
-                CurrentRouteName = currentRouteName
+                CurrentRouteName = currentRouteName,
+                Count = academyOpenings.Count,
+                Skip = skip,
+                Take = take
             };
-            vm.Count = academyOpenings.Count;
-            vm.Skip = skip;
-            vm.Take = take;
             return vm;
         }
 
@@ -249,8 +250,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize,
-         Route("edit-academy-opening/{urn}", Name = "SaveAcademyOpening")]
+        [HttpPost("edit-academy-opening/{urn}", Name = "SaveAcademyOpening")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> SaveAcademyOpening(EditAcademyOpeningViewModel viewModel)
         {
             if (viewModel.EstablishmentName.IsNullOrWhiteSpace())

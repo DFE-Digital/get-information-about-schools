@@ -1,22 +1,21 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Edubase.Common.IO;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Controllers;
-using Edubase.Web.UI.Helpers;
-using MoreLinq;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    using R = Services.Security.EdubaseRoles;
-
-    [RouteArea("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkAssociateEstabs2Groups)]
+    [Area("Establishments")]
+    [Authorize(Policy = "CanBulkAssociateEstabs2Groups")]
     public class BulkAssociateEstabs2GroupsController : EduBaseController
     {
         private const string ViewName = "BulkAssociateEstabs2Groups";
@@ -25,7 +24,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private const string ErrorLinkFile = "BulkFile";
         private const string ErrorLinkLog = "error-log";
 
-        public BulkAssociateEstabs2GroupsController(IEstablishmentWriteService establishmentWriteService) => _establishmentWriteService = establishmentWriteService;
+        public BulkAssociateEstabs2GroupsController(
+            IEstablishmentWriteService establishmentWriteService) => _establishmentWriteService = establishmentWriteService;
 
         [Route(BaseUri, Name = "BulkAssociateEstabs2Groups"), HttpGet]
         public ActionResult Index() => View(ViewName);

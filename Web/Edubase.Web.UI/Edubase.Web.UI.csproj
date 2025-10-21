@@ -38,7 +38,6 @@
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="FluentValidation.Mvc5" Version="8.6.1" />
     <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.6.1" />
     <PackageReference Include="Glimpse" Version="1.8.6" />
     <PackageReference Include="Glimpse.AspNet" Version="1.9.2" />

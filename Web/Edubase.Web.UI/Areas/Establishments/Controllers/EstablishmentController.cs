@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Security.Principal;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Edubase.Common;
@@ -15,7 +14,6 @@ using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.DisplayPolicies;
-using Edubase.Services.Establishments.EditPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.ExternalLookup;
@@ -27,23 +25,24 @@ using Edubase.Services.Texuna.Lookup;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models.Validators;
-using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Controllers;
-using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MoreLinq;
-using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
 using EnumExtensions = Edubase.Services.Establishments.EnumExtensions;
+using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [RouteArea("Establishments"), RoutePrefix("Establishment")]
+    [Area("Establishments")]
+    [Route("Establishments/Establishment")]
     public class EstablishmentController : EduBaseController
     {
         private readonly ICachedLookupService _cachedLookupService;
@@ -55,10 +54,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IExternalLookupService _externalLookupService;
         private readonly IUserDependentLookupService _lookupService;
         private readonly IGovernorsGridViewModelFactory _governorsGridViewModelFactory;
-
         private readonly ISecurityService _securityService;
-        private readonly Lazy<string[]> _formKeys;
-        private readonly Dictionary<string, string> validationFieldMapping = new Dictionary<string, string>
+        private readonly Dictionary<string, string> validationFieldMapping = new()
         {
             {"address_Line1", "Address.Line1"},
             {"address_CityOrTown", "Address.CityOrTown" },
@@ -98,14 +95,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _externalLookupService = externalLookupService;
             _lookupService = lookupService;
             _governorsGridViewModelFactory = governorsGridViewModelFactory;
-
-            _formKeys = new Lazy<string[]>(
-                () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
-                LazyThreadSafetyMode.PublicationOnly);
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Link/{linkid?}", Name = "EditEstabLink"),
-            Route("Edit/{urn:int}/Link/Create/{urnToLink:int}", Name = "CreateEstabLink")]
+        private string[] FormKeys =>
+            Request?.HasFormContentType == true
+                ? [.. Request.Form.Keys
+                    .Select(k => k.GetPart("."))
+                    .Distinct()]
+                : [];
+
+
+        [HttpGet("Edit/{urn:int}/Link/{linkid?}", Name = "EditEstabLink")]
+        [HttpGet("Edit/{urn:int}/Link/Create/{urnToLink:int}", Name = "CreateEstabLink")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> AddEditLinkAsync(int urn, int? linkId, int? urnToLink)
         {
             var viewModel = new EditEstablishmentLinksViewModel();
@@ -134,8 +136,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("AddEditLink", viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Link/{linkid?}", Name = "SaveEstabLink"),
-            Route("Edit/{urn:int}/Link/Create/{urnToLink:int}"), ValidateAntiForgeryToken]
+        [HttpPost("Edit/{urn:int}/Link/{linkid?}", Name = "SaveEstabLink")]
+        [HttpPost("Edit/{urn:int}/Link/Create/{urnToLink:int}")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddEditLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
             if (deltaViewModel.Act == "delete")
@@ -193,7 +197,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
+        [HttpGet("Create", Name = "CreateEstablishment")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> Create()
         {
             var permission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
@@ -212,7 +217,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
+        [HttpPost("Create")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool JsDisabled = false)
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
@@ -333,7 +340,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
+        [HttpGet("Details/{id:int}", Name = "EstabDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments,
             int approved = 0, int pending = 0, int skip = 0, string sortBy = null, bool saved = false, string confirmed = null)
         {
@@ -387,7 +394,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, Route("Details/{id:int}/Governance/Changes", Name = "EstabDetailGovChangeHistory"), EdubaseAuthorize]
+        [HttpGet("Details/{id:int}/Governance/Changes", Name = "EstabDetailGovChangeHistory")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> GovernanceChangeHistoryAsync(int id, int skip = 0, string sortBy = null)
         {
             var result = await _establishmentReadService.GetAsync(id, User);
@@ -424,7 +432,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return result.ReturnValue == null ? NotFound() : new StatusCodeResult((int) 200);
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}", Name = "EditEstablishmentDetail")]
+        [HttpGet("Edit/{id:int}", Name = "EditEstablishmentDetail")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditDetails(int? id, string addrtok)
         {
             if (!id.HasValue)
@@ -443,10 +452,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
+        [HttpPost("Edit/{id:int}")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditDetails(ViewModel model) => await SaveEstablishment(model);
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Helpdesk")]
+        [HttpGet("Edit/{id:int}/Helpdesk")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditHelpdesk(int? id)
         {
             if (!id.HasValue)
@@ -464,10 +476,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Helpdesk")]
+        [HttpPost("Edit/{id:int}/Helpdesk")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditHelpdesk(ViewModel model) => await SaveEstablishment(model);
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
+        [HttpGet("Edit/{id:int}/IEBT")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditIEBT(int? id)
         {
             if (id.HasValue)
@@ -485,7 +500,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return NotFound();
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Proprietor/Add/{urn:int}/{counter:int}")]
+        [HttpGet("Proprietor/Add/{urn:int}/{counter:int}")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<PartialViewResult> ProprietorAdd(int urn, int? counter)
         {
             var emptyProprietor = new ProprietorViewModel
@@ -500,10 +516,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return PartialView("Partials/_EditProprietors", emptyProprietor);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
+        [HttpPost("Edit/{id:int}/IEBT")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditIEBT(ViewModel model) => await SaveEstablishment(model);
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links", Name = "EditEstabLinks")]
+        [HttpGet("Edit/{id:int}/Links", Name = "EditEstabLinks")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditLinks(int? id, bool saved = false)
         {
             ViewBag.ShowSaved = saved;
@@ -521,7 +540,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("EditLinks", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Location/{locationField?}")]
+        [HttpGet("Edit/{id:int}/Location/{locationField?}")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditLocation(int? id, string locationField = null)
         {
             if (!id.HasValue)
@@ -540,7 +560,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location/")]
+        [HttpPost("Edit/{id:int}/Location/")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditLocation(ViewModel model)
         {
             var targetViewModel = await CreateEditViewModel(model.Urn);
@@ -571,14 +593,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return await SaveEstablishment(targetViewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate"), ValidateAntiForgeryToken]
+        [HttpPost("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn, bool showBanner = false)
         {
             await _establishmentWriteService.ConfirmAsync(urn, User);
             return RedirectToRoute("EstabDetails", new { id = urn, saved = showBanner, confirmed = "Details" });
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddress")]
+        [HttpGet("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddress")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> AddOrReplaceEstablishmentAddressAsync(int urn, string target)
         {
             var viewModel = new AddOrReplaceAddressViewModel((await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(Constants.COUNTRY_ID_UK),
@@ -587,7 +612,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("AddOrReplaceAddress", viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddressPost"), ValidateAntiForgeryToken]
+        [HttpPost("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddressPost")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddOrReplaceEstablishmentAddressPostAsync(int urn, string target, AddOrReplaceAddressViewModel viewModel)
         {
             ModelState.Clear();
@@ -635,7 +662,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("AddOrReplaceAddress", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links/Search", Name = "EditEstabLinks_SearchForEstablishment")]
+        [HttpGet("Edit/{id:int}/Links/Search", Name = "EditEstabLinks_SearchForEstablishment")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> SearchForEstablishment(int? id, SearchForEstablishmentViewModel viewModel)
         {
             viewModel = viewModel ?? new SearchForEstablishmentViewModel();
@@ -871,7 +899,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             // to correct that, we loop through each of the fields returned, and pluck those from the mappedModel into the more populated, historic, domainModel
 
-            var keys = _formKeys.Value;
+            var keys =FormKeys;
             var properties = ReflectionHelper.GetProperties(domainModel, writeableOnly: true);
             properties = properties.Where(x => keys.Contains(x)).ToList();
 
@@ -899,7 +927,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             // to correct that, we loop through each of the fields returned, and pluck those from the mappedModel into the more populated, historic, domainModel
 
-            var keys = _formKeys.Value;
+            var keys = FormKeys;
             var properties = ReflectionHelper.GetProperties(domainModel.IEBTModel, writeableOnly: true);
             properties = properties.Where(x => keys.Contains(x)).ToList();
 
@@ -915,7 +943,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 domainModel.IEBTModel.RegistrationSuspendedId = ((int)viewModel.RegistrationSuspended).ToString();
             }
-            else if (_formKeys.Value.Contains(nameof(viewModel.RegistrationSuspended)))
+            else if (FormKeys.Contains(nameof(viewModel.RegistrationSuspended)))
             {
                 domainModel.IEBTModel.RegistrationSuspendedId = null;
             }
@@ -1178,13 +1206,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             MapToDomainModel(viewModel, domainModel);
             MapToDomainModelIEBT(viewModel, domainModel);
 
-            if (_formKeys.Value.Contains(nameof(viewModel.MSOAName)) && _formKeys.Value.Contains(nameof(viewModel.MSOAId)))
+            if (FormKeys.Contains(nameof(viewModel.MSOAName)) && FormKeys.Contains(nameof(viewModel.MSOAId)))
             {
                 // in case js is disabled and the ID field is empty, we still want to try to find the id from the lookup if possible.
                 domainModel.MSOAId = viewModel.MSOAId ?? (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Name.Equals(viewModel.MSOAName, StringComparison.InvariantCultureIgnoreCase))?.Id;
             }
 
-            if (_formKeys.Value.Contains(nameof(viewModel.LSOAName)) && _formKeys.Value.Contains(nameof(viewModel.LSOAId)))
+            if (FormKeys.Contains(nameof(viewModel.LSOAName)) && FormKeys.Contains(nameof(viewModel.LSOAId)))
             {
                 // in case js is disabled and the ID field is empty, we still want to try to find the id from the lookup if possible.
                 domainModel.LSOAId = viewModel.LSOAId ?? (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Name.Equals(viewModel.LSOAName, StringComparison.InvariantCultureIgnoreCase))?.Id;
@@ -1237,6 +1265,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 viewModel.IsDirty = true;
             }
+        }
+
+        private bool IsValidField(string key)
+        {
+            // Returns true if the field exists in ModelState and has no errors
+            return ModelState.TryGetValue(key, out var entry) && (entry == null || entry.Errors.Count == 0);
         }
 
         private async Task<ActionResult> SaveEstablishment(ViewModel viewModel)
@@ -1304,19 +1338,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     viewModel.HasEmptyEmailFields = true;
 
-                    if ((viewModel.HeadEmailAddress == null || !ViewData.ModelState.IsValidField("HeadEmailAddress"))
+                    if ((viewModel.HeadEmailAddress == null || !IsValidField("HeadEmailAddress"))
                         && viewModel.EditPolicy.HeadEmailAddress)
                     {
                         viewModel.EmptyEmailFields.Add("HeadEmailAddress");
                     }
 
-                    if ((viewModel.Contact_EmailAddress == null || !ViewData.ModelState.IsValidField("Contact_EmailAddress"))
+                    if ((viewModel.Contact_EmailAddress == null || !IsValidField("Contact_EmailAddress"))
                         && viewModel.EditPolicy.Contact_EmailAddress)
                     {
                         viewModel.EmptyEmailFields.Add("Contact_EmailAddress");
                     }
 
-                    if ((viewModel.ContactAlt_EmailAddress == null || !ViewData.ModelState.IsValidField("ContactAlt_EmailAddress"))
+                    if ((viewModel.ContactAlt_EmailAddress == null || !IsValidField("ContactAlt_EmailAddress"))
                         && viewModel.EditPolicy.ContactAlt_EmailAddress)
                     {
                         viewModel.EmptyEmailFields.Add("ContactAlt_EmailAddress");
@@ -1397,7 +1431,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASRemoveAddress)
             {
-                RemoveAdditionalAddress(viewModel);
+                viewModel.AdditionalAddresses.RemoveAt(int.Parse(viewModel.ActionSpecifierParam) - 1);
+                viewModel.IsDirty = true;
             }
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASCancel)
             {

@@ -1,36 +1,44 @@
-using Edubase.Web.UI.MvcResult;
-using System;
-using System.Net;
-using Edubase.Web.UI.Helpers;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Edubase.Web.UI.Filters
+/// <summary>
+/// Custom authorization handler for the EdubasePolicy.
+/// Determines how to respond when a user does or does not meet the authorization requirement.
+/// </summary>
+public class EdubaseAuthorizationHandler : AuthorizationHandler<EdubaseRequirement>
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public class EdubaseAuthorizeAttribute : AuthorizeAttribute
+    /// <summary>
+    /// Handles the authorization logic for the EdubaseRequirement.
+    /// </summary>
+    /// <param name="context">Provides information about the current authorization attempt, including the user and resource.</param>
+    /// <param name="requirement">The specific requirement being evaluated.</param>
+    /// <returns>A completed task indicating the result of the authorization check.</returns>
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, EdubaseRequirement requirement)
     {
-        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        // Check if the user is authenticated
+        if (context.User.Identity?.IsAuthenticated == true)
         {
-            if (filterContext.HttpContext.Request.IsAuthenticated)
-            {
-                filterContext.Result = new StatusCodeResult((int)HttpStatusCode.Forbidden);
-            }
-            else
-            {
-                var urlHelper = new UrlHelper(filterContext.RequestContext);
-                var redirectUrl = urlHelper.Action("ExternalLoginCallback", "Account", new
-                {
-                    // Making this "forwarded-header-aware" is not strictly required,
-                    // but it's easier and safer to be consistent and just do it everywhere.
-                    // - The `returnUrl` is currently ignored by the `AccountController.ExternalLoginCallback` method.
-                    // - `PathAndQuery` is absolute, but relative to the host/domain part
-                    //   (e.g., `new Uri("http://example.com/./abc/123/../567").PathAndQuery` returns /abc/567).
-                    ReturnUrl = urlHelper.GetForwardedHeaderAwareUrl().PathAndQuery
-                });
-
-                filterContext.Result = new ChallengeResult("Saml2", redirectUrl);
-            }
+            // User is authenticated but does not meet the requirement
+            // Authorization fails and results in a 403 Forbidden response
+            context.Fail();
         }
+        else
+        {
+            // User is not authenticated
+            // Authorization fails and triggers an authentication challenge (401 Unauthorized)
+            context.Fail();
+        }
+
+        // Return a completed task since no asynchronous operations are needed
+        return Task.CompletedTask;
     }
+}
+
+/// <summary>
+/// Represents a custom authorization requirement for Edubase.
+/// This class can be extended to include additional logic or parameters.
+/// </summary>
+public class EdubaseRequirement : IAuthorizationRequirement
+{
+    // Currently empty — can be extended with custom properties or logic if needed
 }
