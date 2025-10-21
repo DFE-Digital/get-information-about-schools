@@ -71,7 +71,7 @@ public class NotificationBanner : ITableEntity
     {
         get
         {
-            if(Start <= DateTime.Now && End > DateTime.Now)
+            if (Start <= DateTime.Now && End > DateTime.Now)
             {
                 return eNotificationBannerStatus.Live;
             }
@@ -82,6 +82,7 @@ public class NotificationBanner : ITableEntity
 
             return eNotificationBannerStatus.Expired;
         }
+    }
 
         [Display(Name = "First link")]
         public string LinkUrl1 { get; set; }
@@ -91,5 +92,4 @@ public class NotificationBanner : ITableEntity
         public string LinkUrl2 { get; set; }
         [Display(Name = "Textbox for link 2")]
         public string LinkText2 { get; set; }
-    }
 }
