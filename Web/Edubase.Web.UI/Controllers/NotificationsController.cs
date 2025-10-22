@@ -6,17 +6,15 @@ using Edubase.Common;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
-using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
-using Edubase.Web.UI.Helpers.ValueProviders;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Notifications;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Notifications")]
-    [Route("{action=index}")]
+    [Route("Notifications")]
     public class NotificationsController : EduBaseController
     {
         private readonly NotificationBannerRepository _BannerRepository;
@@ -30,7 +28,7 @@ namespace Edubase.Web.UI.Controllers
             _BannerRepository = BannerRepository;
         }
 
-        [Route(Name = "Notifications")]
+        [HttpGet("notifications", Name = "Notifications")]
         [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public ActionResult Index()
         {
@@ -41,8 +39,8 @@ namespace Edubase.Web.UI.Controllers
         [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> Banners()
         {
-            var result = await _BannerRepository.GetAllAsync(2, null, true);
-            var model = new NotificationsBannersViewModel(result.Items);
+            var result = await _BannerRepository.GetAllAsync(2);
+            var model = new NotificationsBannersViewModel(result);
 
             if (TempData["ShowSaved"] != null)
             {
@@ -58,9 +56,9 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> AuditBanners(string sortBy)
         {
             var result = await _BannerRepository.GetAllAsync(1000);
-            var audit = await _BannerRepository.GetAllAsync(1000, null, false, eNotificationBannerPartition.Archive);
-            var items = result.Items.ToList();
-            items.AddRange(audit.Items);
+            var audit = await _BannerRepository.GetAllAsync(1000, false, eNotificationBannerPartition.Archive);
+            var items = result.ToList();
+            items.AddRange(audit);
 
             var distinct = items.GroupBy(x => x.Tracker)
                 .Select(grp => new { tracker = grp.Key, banners = grp.OrderByDescending(x => x.Version) })
@@ -75,9 +73,9 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> AuditBanner(string id, string sortBy)
         {
             var result = await _BannerRepository.GetAllAsync(1000);
-            var audit = await _BannerRepository.GetAllAsync(1000, null, false, eNotificationBannerPartition.Archive);
-            var items = result.Items.ToList();
-            items.AddRange(audit.Items);
+            var audit = await _BannerRepository.GetAllAsync(1000, false, eNotificationBannerPartition.Archive);
+            var items = result.ToList();
+            items.AddRange(audit);
 
             var distinct = items.Where(x => x.Tracker == id);
 
@@ -90,12 +88,12 @@ namespace Edubase.Web.UI.Controllers
         [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> CreateBanner()
         {
-            var banners = await _BannerRepository.GetAllAsync(1000, null, true);
+            var banners = await _BannerRepository.GetAllAsync(1000, true);
             var newBanner = new NotificationsBannerViewModel
             {
-                TotalBanners = banners.Items.Count(),
-                TotalLiveBanners = banners.Items.Count(x => x.Visible),
-                Counter = banners.Items.Count() + 1
+                TotalBanners = banners.Count(),
+                TotalLiveBanners = banners.Count(x => x.Visible),
+                Counter = banners.Count() + 1
             };
             return View("EditBanner", newBanner);
         }
@@ -119,7 +117,7 @@ namespace Edubase.Web.UI.Controllers
                 return NotFound();
             }
 
-            var banners = await _BannerRepository.GetAllAsync(1000, null, true);
+            var banners = await _BannerRepository.GetAllAsync(1000, true);
 
             if (TempData["ShowSaved"] != null)
             {
@@ -138,8 +136,8 @@ namespace Edubase.Web.UI.Controllers
 
             // Content is already set in set() - Do not change or the user will see raw HTML
             //   model.Content = item.Content;
-            model.TotalBanners = banners.Items.Count();
-            model.TotalLiveBanners = banners.Items.Count(x => x.Visible);
+            model.TotalBanners = banners.Count();
+            model.TotalLiveBanners = banners.Count(x => x.Visible);
 
             return View("EditBanner", model);
         }
@@ -177,7 +175,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     // populate the templates, we need to do this the usual route through, and also if they have clicked the back button
                     var result = await _TemplateRepository.GetAllAsync(1000);
-                    viewModel.Templates = result.Items;
+                    viewModel.Templates = result;
                 }
 
                 if (viewModel.Action == eNotificationBannerAction.TypeChoice)
@@ -226,10 +224,10 @@ namespace Edubase.Web.UI.Controllers
 
             if (!ModelState.IsValid)
             {
-                ModelState.SetModelValue(nameof(viewModel.LinkUrl1), new ValueProviderResult(viewModel.LinkUrl1, viewModel.LinkUrl1, CultureInfo.CurrentCulture));
-                ModelState.SetModelValue(nameof(viewModel.LinkText1), new ValueProviderResult(viewModel.LinkText1, viewModel.LinkText1, CultureInfo.CurrentCulture));
-                ModelState.SetModelValue(nameof(viewModel.LinkUrl2), new ValueProviderResult(viewModel.LinkUrl2, viewModel.LinkUrl2, CultureInfo.CurrentCulture));
-                ModelState.SetModelValue(nameof(viewModel.LinkText2), new ValueProviderResult(viewModel.LinkText2, viewModel.LinkText2, CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkUrl1), new ValueProviderResult(viewModel.LinkUrl1, CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkText1), new ValueProviderResult(viewModel.LinkText1, CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkUrl2), new ValueProviderResult(viewModel.LinkUrl2, CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkText2), new ValueProviderResult(viewModel.LinkText2, CultureInfo.CurrentCulture));
             }
 
             return View("EditBanner", viewModel);
@@ -273,7 +271,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var result = await _TemplateRepository.GetAllAsync(1000);
 
-            var model = new NotificationsTemplatesViewModel(result.Items);
+            var model = new NotificationsTemplatesViewModel(result);
 
             if (TempData["ShowSaved"] != null)
             {

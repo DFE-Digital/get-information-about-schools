@@ -1,27 +1,22 @@
-using Edubase.Common.Cache;
-using Edubase.Services;
-using Edubase.Services.Lookup;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Mime;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Xml.Linq;
+using Edubase.Common.Cache;
 using Edubase.Data.Repositories;
-using Edubase.Services.Establishments;
+using Edubase.Services;
+using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Home"), Route("{action=index}")]
+    [Route("Home")]
     public class HomeController : EduBaseController
     {
         private const string UserPrefsCookieName = "analytics_preferences";
@@ -43,7 +38,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Index()
         {
             var results = await _newsRepository.GetAllAsync(1000);
-            var items = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
+            var items = results.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
             return View(new HomepageViewModel(items));
         }
 
@@ -59,13 +54,15 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult AccessibilityReport() => View();
 
 
-        [Route("~/content"), Filters.EdubaseAuthorize]
+        [Route("~/content")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> Container(string file)
         {
             return await GetFileFromContainer("content", file);
         }
 
-        [Route("~/content/guidance"), Filters.EdubaseAuthorize]
+        [Route("~/content/guidance")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> Guidance(string file)
         {
             return await GetFileFromContainer("guidance", file);
@@ -91,10 +88,15 @@ namespace Edubase.Web.UI.Controllers
         [HttpPost, Route("~/CookieChoices"), ValidateAntiForgeryToken]
         public ActionResult CookieChoices(bool acceptAnalyticsCookies = false)
         {
-            var urlHelper = new UrlHelper(Request.RequestContext);
-            var cookieDomain = urlHelper.CookieDomain();
+            var cookieDomain = Url.CookieDomain();
             var returnTo = Request.Form["OriginatingPage"];
-            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain });
+            Response.Cookies.Append(UserPrefsCookieName, acceptAnalyticsCookies.ToString(), new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddDays(28),
+                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax,
+                Domain = cookieDomain
+            });
+
             TempData["CookiesPrefsSaved"] = acceptAnalyticsCookies;
 
             if (string.IsNullOrWhiteSpace(returnTo))
@@ -105,21 +107,33 @@ namespace Edubase.Web.UI.Controllers
             returnTo = Uri.UnescapeDataString(returnTo);
 
             if (Uri.IsWellFormedUriString(returnTo, UriKind.RelativeOrAbsolute) && !returnTo.Contains("\n") &&
-                !returnTo.Contains("\r") && urlHelper.IsLocalUrl(returnTo))
+                !returnTo.Contains("\r") && Url.IsLocalUrl(returnTo))
             {
                 return Redirect(returnTo);
             }
             return RedirectToAction("cookies");
         }
 
-        [HttpPost, Route("~/CookieChoicesAjax")]
-        public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies = false)
+        [HttpPost("CookieChoicesAjax")]
+        [IgnoreAntiforgeryToken] // Optional: use if you're not validating tokens for AJAX
+        public IActionResult CookieChoicesAjax([FromForm] bool acceptAnalyticsCookies = false)
         {
-            var urlHelper = new UrlHelper(Request.RequestContext);
-            var cookieDomain = urlHelper.CookieDomain();
-            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain});
-            return Json(new { success = true , analyticsPref = acceptAnalyticsCookies}, JsonRequestBehavior.AllowGet);
+            var cookieDomain = Url.CookieDomain(); // Replace with your own logic or extension method
+
+            Response.Cookies.Append(UserPrefsCookieName, acceptAnalyticsCookies.ToString(), new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddDays(28),
+                SameSite = SameSiteMode.Lax,
+                Domain = cookieDomain
+            });
+
+            return Json(new
+            {
+                success = true,
+                analyticsPref = acceptAnalyticsCookies
+            });
         }
+
 
         [Route("~/responsibilities")]
         public ActionResult Responsibilities() => View();
@@ -131,7 +145,8 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult Help() => View();
 
         //Appears that this was used to test the error handling.  It can only be accessed if you are signed in so no problem keeping it here for now.
-        [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
+        [Route("~/8bg594ghfdgh5t90-throwex")]
+        [Authorize(Policy = "EdubasePolicy")]
         public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
 
         [Route("~/service-wsdl"), Route("~/service.wsdl")]

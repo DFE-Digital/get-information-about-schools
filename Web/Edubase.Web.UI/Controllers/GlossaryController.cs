@@ -1,19 +1,13 @@
+using System.Threading.Tasks;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
-using Edubase.Services.Security;
-using Edubase.Web.UI.Filters;
-using Edubase.Web.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("glossary"), Route("{action=index}")]
+    [Route("glossary")]
     public class GlossaryController : Controller
     {
         private readonly GlossaryRepository _glossaryRepository;
@@ -23,11 +17,11 @@ namespace Edubase.Web.UI.Controllers
             _glossaryRepository = glossaryRepository;
         }
 
-        [Route(Name = "Glossary")]
+        [HttpGet("glossary", Name = "Glossary")]
         public async Task<ActionResult> Index()
         {
             var result = await _glossaryRepository.GetAllAsync(1000);
-            return View(new GlossaryViewModel(result.Items) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
+            return View(new GlossaryViewModel(result) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
         }
 
         [Route("Create", Name = "CreateGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]

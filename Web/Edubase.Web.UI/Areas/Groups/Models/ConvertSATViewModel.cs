@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using Edubase.Services.Groups.Models;
 using Edubase.Common;
+using Edubase.Services.Groups.Models;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
 {

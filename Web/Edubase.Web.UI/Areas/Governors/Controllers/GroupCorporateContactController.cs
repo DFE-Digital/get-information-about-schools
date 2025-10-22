@@ -1,27 +1,24 @@
 using System.Threading.Tasks;
-using System.Web.UI;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
-using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
+    [Route("Governors/GroupCorporateContact")]
     public class GroupCorporateContactController : Controller
     {
-        private const string GroupEditCorporateContactRoute = "~/Groups/Group/Edit/{groupUId:int}/CorporateContact";
-
         private readonly IGroupReadService _groupReadService;
         private readonly IGroupsWriteService _groupWriteService;
         private readonly LayoutHelper _layoutHelper;
 
         public GroupCorporateContactController(
-            IGroupReadService groupReadService, 
+            IGroupReadService groupReadService,
             IGroupsWriteService groupWriteService,
             LayoutHelper layoutHelper)
         {
@@ -30,9 +27,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _layoutHelper = layoutHelper;
         }
 
-        [HttpGet, EdubaseAuthorize]
-        [Route(GroupEditCorporateContactRoute, Name = "GroupEditCorporateContact")]
-        public async Task<ActionResult> GroupEditCorporateContact(int groupUId)
+        [HttpGet("Groups/Group/Edit/{groupUId:int}/CorporateContact", Name = "GroupEditCorporateContact")]
+        [Authorize(Policy = "EdubasePolicy")]
+        public async Task<IActionResult> GroupEditCorporateContact(int groupUId)
         {
             var group = await _groupReadService.GetAsync(groupUId, User);
             if (group.Success)
@@ -43,15 +40,16 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 };
 
                 await _layoutHelper.PopulateLayoutProperties(model, null, groupUId, User);
-
                 return View(model);
             }
+
             return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
         }
 
-        [HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
-        [Route(GroupEditCorporateContactRoute, Name = "GroupEditCorporateContactPost")]
-        public async Task<ActionResult> GroupEditCorporateContact(EditGroupCorporateContactViewModel model)
+        [HttpPost("Groups/Group/Edit/{groupUId:int}/CorporateContact", Name = "GroupEditCorporateContactPost")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GroupEditCorporateContact(EditGroupCorporateContactViewModel model)
         {
             var result = await new EditGroupCorporateContactViewModelValidator().ValidateAsync(model);
 
@@ -64,11 +62,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     group.CorporateContact = model.CorporateContact;
                     var updatedGroup = new SaveGroupDto(group);
                     var validation = await _groupWriteService.SaveAsync(updatedGroup, User);
+
                     if (!validation.HasErrors)
                     {
                         var url = Url.RouteUrl("GroupDetails", new { id = model.GroupUId, saved = true });
                         return Redirect($"{url}#governance");
                     }
+
                     validation.ApplyToModelState(ControllerContext);
                 }
             }
@@ -76,7 +76,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 result.EduBaseAddToModelState(ModelState, null);
             }
-            
+
             await _layoutHelper.PopulateLayoutProperties(model, null, model.GroupUId, User);
             return View(model);
         }

@@ -15,10 +15,11 @@ using System.Threading.Tasks;
 using Edubase.Web.UI.Models.Search;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
-    [RouteArea("Groups"), RoutePrefix("Search"), Route("{action=index}")]
+    [Route("Groups/Search")]
     public class GroupSearchController : EduBaseController
     {
         IGroupReadService _groupReadService;
@@ -196,7 +197,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         private ActionResult RedirectToDetailPage(int id)
-            => new RedirectToRouteResult(null, new RouteValueDictionary { { "action", "Details" }, { "controller", "Group" }, { "id", id }, { "area", "Groups" } });
+            => new RedirectToRouteResult(null,
+                new RouteValueDictionary { { "action", "Details" }, { "controller", "Group" }, { "id", id }, { "area", "Groups" } });
 
         private GroupSearchPayload CreateSearchPayload(GroupSearchViewModel model) => new GroupSearchPayload(model.StartIndex, model.PageSize)
         {

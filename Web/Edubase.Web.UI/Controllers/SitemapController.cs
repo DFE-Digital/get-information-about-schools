@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Edubase.Common;
@@ -82,37 +83,64 @@ namespace Edubase.Web.UI.Controllers
             return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
 
-        [Route("~/sitemap_est{estType}.xml")]
-        public async Task<ActionResult> SitemapEstablishmentByType(int estType)
+        [HttpGet("sitemap_est{estType}.xml")]
+        public async Task<IActionResult> SitemapEstablishmentByType(int estType)
         {
-            Server.ScriptTimeout = 300;
             var cacheName = $"{CacheTag}_est_{estType}";
-            var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
+            var timeout = TimeSpan.FromSeconds(300); // 5 minutes
 
-            if (responseCopy.IsNullOrEmpty())
+            using var cts = new CancellationTokenSource(timeout);
+
+            try
             {
-                responseCopy = await GenerateEstablishmentDocument(estType);
-                await _cacheAccessor.SetAsync(cacheName, responseCopy, TimeSpan.FromDays(_cacheDays));
-            }
+                var responseCopy = await Task.Run(async () =>
+                {
+                    var cached = await _cacheAccessor.GetAsync<string>(cacheName);
+                    if (!string.IsNullOrEmpty(cached))
+                        return cached;
 
-            return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+                    var generated = await GenerateEstablishmentDocument(estType);
+                    await _cacheAccessor.SetAsync(cacheName, generated, TimeSpan.FromDays(_cacheDays));
+                    return generated;
+                }, cts.Token);
+
+                return Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+            }
+            catch (OperationCanceledException)
+            {
+                return StatusCode(504, "Request timed out while generating sitemap.");
+            }
         }
 
-        [Route("~/sitemap_group{groupType}.xml")]
-        public async Task<ActionResult> SitemapGroupByType(int groupType)
+        [HttpGet("sitemap_group{groupType}.xml")]
+        public async Task<IActionResult> SitemapGroupByType(int groupType)
         {
-            Server.ScriptTimeout = 300;
             var cacheName = $"{CacheTag}_group_{groupType}";
-            var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
+            var timeout = TimeSpan.FromSeconds(300); // 5-minute timeout
 
-            if (responseCopy.IsNullOrEmpty())
+            using var cts = new CancellationTokenSource(timeout);
+
+            try
             {
-                responseCopy = await GenerateGroupDocument(groupType);
-                await _cacheAccessor.SetAsync(cacheName, responseCopy, TimeSpan.FromDays(_cacheDays));
-            }
+                var responseCopy = await Task.Run(async () =>
+                {
+                    var cached = await _cacheAccessor.GetAsync<string>(cacheName);
+                    if (!string.IsNullOrEmpty(cached))
+                        return cached;
 
-            return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+                    var generated = await GenerateGroupDocument(groupType);
+                    await _cacheAccessor.SetAsync(cacheName, generated, TimeSpan.FromDays(_cacheDays));
+                    return generated;
+                }, cts.Token);
+
+                return Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+            }
+            catch (OperationCanceledException)
+            {
+                return StatusCode(504, "Request timed out while generating group sitemap.");
+            }
         }
+
 
         private async Task<string> GetSitemapIndex()
         {

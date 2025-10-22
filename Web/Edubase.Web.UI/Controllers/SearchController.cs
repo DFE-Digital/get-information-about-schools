@@ -19,7 +19,7 @@ namespace Edubase.Web.UI.Controllers
     using Edubase.Services.Geo;
     using eStatus = Services.Enums.eLookupEstablishmentStatus;
 
-    [RoutePrefix("Search"), Route("{action=index}")]
+    [Route("Search")]
     public class SearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -40,7 +40,7 @@ namespace Edubase.Web.UI.Controllers
             _groupReadService = groupReadService;
         }
 
-        [HttpGet, Route(Name = "Search")]
+        [HttpGet("search", Name = "Search")]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
             if (!viewModel.NoResults)
@@ -238,9 +238,29 @@ namespace Edubase.Web.UI.Controllers
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
                         {
                             var url = Url.Action(ConstIndex, "EstablishmentsSearch", new { area = "Establishments" });
-                            url = viewModel.OpenOnly
-                                ? $"{url}?{Request.Query.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose)}"
-                                : $"{url}?{Request.Query.AddIfNonExistent("OpenOnly", "false")}";
+                            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(Request.QueryString.Value);
+                            var uriBuilder = new UriBuilder(url);
+                            var queryParams = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+
+                            if (viewModel.OpenOnly)
+                            {
+                                if (!query.ContainsKey(SearchViewModel.BIND_ALIAS_STATUSIDS))
+                                {
+                                    queryParams.Add(SearchViewModel.BIND_ALIAS_STATUSIDS, ((int) eStatus.Open).ToString());
+                                    queryParams.Add(SearchViewModel.BIND_ALIAS_STATUSIDS, ((int) eStatus.OpenButProposedToClose).ToString());
+                                }
+                            }
+                            else
+                            {
+                                if (!query.ContainsKey("OpenOnly"))
+                                {
+                                    queryParams.Add("OpenOnly", "false");
+                                }
+                            }
+
+                            uriBuilder.Query = queryParams.ToString();
+                            url = uriBuilder.ToString();
+
 
                             return Redirect(url);
                         }

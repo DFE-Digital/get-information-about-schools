@@ -1,4 +1,3 @@
-﻿using Edubase.Services.Exceptions;
 using System;
 
 namespace Edubase.Web.UI.Exceptions

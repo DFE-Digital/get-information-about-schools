@@ -1,28 +1,32 @@
-﻿using Edubase.Common;
-using Edubase.Data.Repositories;
 using System.Globalization;
-using System.Web;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using Edubase.Common;
+using Edubase.Data.Repositories;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Edubase.Web.UI.Helpers.ValueProviders
 {
-    public class TokenValueProviderFactory : ValueProviderFactory
+    public class TokenValueProviderFactory : IValueProviderFactory
     {
-        public override IValueProvider GetValueProvider(ControllerContext controllerContext)
+        public async Task CreateValueProviderAsync(ValueProviderFactoryContext context)
         {
-            var tokenId = controllerContext.RequestContext.HttpContext.Request.QueryString["tok"];
-            if (tokenId.Clean() != null)
+            var tokenId = context.ActionContext.HttpContext.Request.Query["tok"].ToString().Clean();
+            if (!string.IsNullOrEmpty(tokenId))
             {
-                var repo = DependencyResolver.Current.GetService<ITokenRepository>();
-                var token = repo.Get(tokenId);
+                var repo = context.ActionContext.HttpContext.RequestServices.GetService<ITokenRepository>();
+                var token = await repo.GetAsync(tokenId); // Assuming async method in .NET 8
+
                 if (token != null)
                 {
-                    var nvp = HttpUtility.ParseQueryString(token.Data);
-                    return new NameValueCollectionValueProvider(nvp, CultureInfo.CurrentCulture);
+                    var nvp = System.Web.HttpUtility.ParseQueryString(token.Data);
+                    var dictionary = nvp.AllKeys.ToDictionary(k => k, k => (string) nvp[k]);
+                    var valueProvider = new DictionaryValueProvider<string>(dictionary, CultureInfo.CurrentCulture);
+                    context.ValueProviders.Add((Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider) valueProvider);
                 }
             }
-
-            return null;
         }
     }
 }

@@ -1,13 +1,12 @@
-﻿using Edubase.Common;
+using System;
+using System.Collections.Generic;
+using Edubase.Common;
 using Edubase.Common.Spatial;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {

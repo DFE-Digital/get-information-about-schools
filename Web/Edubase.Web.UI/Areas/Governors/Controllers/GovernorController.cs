@@ -17,17 +17,18 @@ using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
-using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using GR = Edubase.Services.Enums.eLookupGovernorRole;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("Governor")]
+    [Route("Governors/Governor")]
     public class GovernorController : Controller
     {
         private const string GROUP_EDIT_GOVERNANCE = "~/Groups/Group/Edit/{groupUId:int}/Governance";
@@ -72,9 +73,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <param name="establishmentUrn"></param>
         /// <param name="editMode"></param>
         /// <returns></returns>
-        [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupEditGovernance"),
-         Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabEditGovernance"),
-         HttpGet, EdubaseAuthorize]
+        [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupEditGovernance")]
+        [Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabEditGovernance")]
+        [HttpGet]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> Edit(int? groupUId, int? establishmentUrn, int? removalGid,
             int? duplicateGovernorId, bool roleAlreadyExists = false, eLookupGovernorRole? selectedRole = null)
         {
@@ -145,7 +147,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupDeleteOrRetireGovernor")]
         [Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabDeleteOrRetireGovernor")]
         [HttpPost]
-        [EdubaseAuthorize]
+        [Authorize(Policy = "EdubasePolicy")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteOrRetireGovernor(GovernorsGridViewModel viewModel)
         {
@@ -223,26 +225,27 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <param name="role"></param>
         /// <param name="gid"></param>
         /// <returns></returns>
-        [Route(GROUP_ADD_GOVERNOR, Name = "GroupAddGovernor"), Route(ESTAB_ADD_GOVERNOR, Name = "EstabAddGovernor"),
-         Route(GROUP_EDIT_GOVERNOR, Name = "GroupEditGovernor"), Route(ESTAB_EDIT_GOVERNOR, Name = "EstabEditGovernor"),
-         Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"),
-         Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
-         HttpGet, EdubaseAuthorize]
+        [Authorize(Policy = "EdubasePolicy")]
+        [Route("Group/AddGovernor")]
+        [Route("Estab/AddGovernor")]
+        [Route("Group/EditGovernor")]
+        [Route("Estab/EditGovernor")]
+        [Route("Group/ReplaceGovernor")]
+        [Route("Estab/ReplaceGovernor")]
         public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn,
             eLookupGovernorRole? role, int? gid)
         {
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.Query["gid2"].ToInteger(),
-                AppointmentEndDateDay = Request.Query["d"].ToInteger(),
-                AppointmentEndDateMonth = Request.Query["m"].ToInteger(),
-                AppointmentEndDateYear = Request.Query["y"].ToInteger(),
+                ReplacementGovernorId = int.TryParse(Request.Query["gid2"], out var gid2) ? gid2 : 0,
+                AppointmentEndDateDay = int.TryParse(Request.Query["d"], out var day) ? day : 0,
+                AppointmentEndDateMonth = int.TryParse(Request.Query["m"], out var month) ? month : 0,
+                AppointmentEndDateYear = int.TryParse(Request.Query["y"], out var year) ? year : 0,
                 Reinstate = Request.Query["rag"] == "true"
             };
 
-            var replaceMode =
-                ((Route) ControllerContext.RouteData.Route).Url.IndexOf("/Replace/",
-                    StringComparison.OrdinalIgnoreCase) > -1;
+            var replaceMode = HttpContext.Request.Path.Value?.Contains("/Replace/", StringComparison.OrdinalIgnoreCase) == true;
+
 
             if (replaceMode && !role.HasValue && gid.HasValue)
             {
@@ -316,21 +319,19 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                                         x.RoleId == (int) eLookupGovernorRole.Trustee).OrderBy(x => x.Person_LastName)
                             .ToArray();
 
-                        if (replaceGovernorState.ReplacementGovernorId.HasValue)
+                        if (replaceGovernorState.ReplacementGovernorId is int selectedId)
                         {
-                            viewModel.SelectedGovernor =
-                                governorsOrTrustees.FirstOrDefault(x =>
-                                    x.Id == replaceGovernorState.ReplacementGovernorId);
+                            viewModel.SelectedGovernor = governorsOrTrustees.FirstOrDefault(x => x.Id == selectedId);
                             PrepopulateFields(viewModel.SelectedGovernor, viewModel);
                         }
 
                         viewModel.ExistingGovernors = governorsOrTrustees.Select(x => new SelectListItem
                         {
-                            Text = x.Person_FirstName + " " + x.Person_LastName,
+                            Text = $"{x.Person_FirstName} {x.Person_LastName}",
                             Value = x.Id.ToString(),
-                            Selected = replaceGovernorState.ReplacementGovernorId.HasValue &&
-                                       replaceGovernorState.ReplacementGovernorId.Value == x.Id
-                        });
+                            Selected = replaceGovernorState.ReplacementGovernorId == x.Id
+                        }).ToList();
+
                     }
                 }
                 else
@@ -384,15 +385,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             ModelState.Clear();
 
-            if (replaceGovernorState.AppointmentEndDateDay.HasValue)
+            if (replaceGovernorState.AppointmentEndDateDay is int appointmentDay)
             {
                 viewModel.ReinstateAsGovernor = replaceGovernorState.Reinstate;
-                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Day = replaceGovernorState.AppointmentEndDateDay;
-                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Month =
-                    replaceGovernorState.AppointmentEndDateMonth;
-                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Year =
-                    replaceGovernorState.AppointmentEndDateYear;
+                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Day = day;
+                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Month = replaceGovernorState.AppointmentEndDateMonth;
+                viewModel.ReplaceGovernorViewModel.AppointmentEndDate.Year = replaceGovernorState.AppointmentEndDateYear;
             }
+
 
             return View(viewModel);
         }
@@ -530,10 +530,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return isGovernanceProfessionalDuplicate;
         }
 
-        [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR),
-         Route(GROUP_EDIT_GOVERNOR), Route(ESTAB_EDIT_GOVERNOR),
-         Route(GROUP_REPLACE_GOVERNOR), Route(ESTAB_REPLACE_GOVERNOR),
-         HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
+        [HttpPost(GROUP_ADD_GOVERNOR)]
+        [HttpPost(ESTAB_ADD_GOVERNOR)]
+        [HttpPost(GROUP_EDIT_GOVERNOR)]
+        [HttpPost(ESTAB_EDIT_GOVERNOR)]
+        [HttpPost(GROUP_REPLACE_GOVERNOR)]
+        [HttpPost(ESTAB_REPLACE_GOVERNOR)]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddEditOrReplace(CreateEditGovernorViewModel viewModel)
         {
             await PopulateSelectLists(viewModel);
@@ -690,16 +694,19 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await _governorsWriteService.SaveAsync(model, User);
         }
 
-        [HttpGet, Route(ESTAB_REPLACE_CHAIR, Name = "EstabReplaceChair"), EdubaseAuthorize]
+        [HttpGet("Establishment/Edit/{establishmentUrn:int}/Governance/ReplaceChair", Name = "EstabReplaceChair")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> ReplaceChair(int establishmentUrn, int gid)
         {
+            var query = HttpContext.Request.Query;
+
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.Query["rgid"].ToInteger(),
-                DateTermEndsDay = Request.Query["d"].ToInteger(),
-                DateTermEndsMonth = Request.Query["m"].ToInteger(),
-                DateTermEndsYear = Request.Query["y"].ToInteger(),
-                Reinstate = Request.Query["ri"] == "true"
+                ReplacementGovernorId = int.TryParse(query["rgid"], out var rgid) ? rgid : (int?) null,
+                DateTermEndsDay = int.TryParse(query["d"], out var day) ? day : (int?) null,
+                DateTermEndsMonth = int.TryParse(query["m"], out var month) ? month : (int?) null,
+                DateTermEndsYear = int.TryParse(query["y"], out var year) ? year : (int?) null,
+                Reinstate = query["ri"] == "true"
             };
 
             var governor = await _governorsReadService.GetGovernorAsync(gid, User);
@@ -777,7 +784,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize, ValidateAntiForgeryToken]
+        [HttpPost("Establishment/Edit/{establishmentUrn:int}/Governance/ReplaceChair", Name = "EstabReplaceChair")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
             var preRetirementModel = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);

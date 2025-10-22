@@ -1,7 +1,5 @@
-using Edubase.Web.UI.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Edubase.Web.UI.Models;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {

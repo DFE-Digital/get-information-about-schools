@@ -1,13 +1,11 @@
-using Edubase.Common;
-using Edubase.Services.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using Edubase.Common;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
-    using Services.Groups.Models;
     using GT = eLookupGroupType;
 
     public class GroupEditorViewModelBase : IGroupPageViewModel

@@ -1,10 +1,13 @@
+using System.IO;
+using System.Threading.Tasks;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
+    [ApiController]
+    [Route("api/tokenize")]
     public class SearchApiController : ControllerBase
     {
         private readonly ITokenRepository _tokenRepository;
@@ -14,14 +17,14 @@ namespace Edubase.Web.UI.Controllers.Api
             _tokenRepository = tokenRepository;
         }
 
-        [Route("api/tokenize"), HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<dynamic> Tokenize()
+        public async Task<IActionResult> Tokenize()
         {
-            var formstate = await Request.Content.ReadAsStringAsync();
+            var formstate = await new StreamReader(Request.Body).ReadToEndAsync();
             var token = new Token(formstate);
             await _tokenRepository.CreateAsync(token);
-            return new { token = token.Id };
+            return Ok(new { token = token.Id });
         }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Guidance"), Route("{action=index}")]
+    [Route("Guidance")]
     public class GuidanceController : EduBaseController
     {
         private readonly IBlobService _blobService;
@@ -26,7 +26,7 @@ namespace Edubase.Web.UI.Controllers
             _blobService = blobService;
         }
 
-        [Route(Name = "Guidance")]
+        [HttpGet("guidance", Name = "Guidance")]
         public ActionResult Index() => View();
         public ActionResult General() => View();
         public ActionResult EstablishmentBulkUpdate() => View();

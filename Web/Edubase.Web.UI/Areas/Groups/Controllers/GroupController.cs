@@ -10,7 +10,6 @@ using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Helpers;
-using FluentValidation.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
@@ -18,7 +17,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Common;
     using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
     using Exceptions;
-    using Filters;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.IdentityModel.Tokens;
     using Models.CreateEdit;
     using Models.Validators;
@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using GS = Services.Enums.eLookupGroupStatus;
     using GT = Services.Enums.eLookupGroupType;
 
-    [RouteArea("Groups"), RoutePrefix(Group)]
+    [Route("Groups/Group")]
     public class GroupController : Controller
     {
         private readonly ICompaniesHouseService _companiesHouseService;
@@ -74,10 +74,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
 
-        [HttpGet, EdubaseAuthorize, Route("Convert", Name = "GroupConvertSAT2MAT"), MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
+        [HttpGet("Convert", Name = "GroupConvertSAT2MAT")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
         public ActionResult Convert() => View(new ConvertSATViewModel());
 
-        [HttpPost, EdubaseAuthorize, Route("Convert", Name = "PostGroupConvertSAT2MAT"), MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts), ValidateAntiForgeryToken]
+        [HttpPost("Convert", Name = "PostGroupConvertSAT2MAT")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Convert(ConvertSATViewModel viewModel)
         {
             if (viewModel.ActionName == "find" && ModelState.IsValid)
@@ -121,7 +126,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route("Create/{type}"), EdubaseAuthorize, ValidateAntiForgeryToken]
+        [HttpPost("Create/{type}")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type, bool? jsDisabled = false)
         {
             await PopulateSelectLists(viewModel);
@@ -195,7 +202,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 : View("Create", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}")]
+        [HttpGet("CreateAcademyTrust/{companiesHouseNumber}/{academyTrustRoute}")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -241,7 +249,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(vm);
         }
 
-        [HttpGet, Route("Create/{type}"), EdubaseAuthorize]
+        [HttpGet("Create/{type}")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> CreateNewGroup(string type)
         {
             var groupTypeMode = StringUtil.ToEnum<eGroupTypeMode>(type);
@@ -353,7 +362,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, Route("Details/{id:int}/Governance/Changes", Name = "GroupDetailGovChangeHistory"), EdubaseAuthorize]
+        [HttpGet("Details/{id:int}/Governance/Changes", Name = "GroupDetailGovChangeHistory")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> GovernanceChangeHistoryAsync(int id, int skip = 0, string sortBy = null)
         {
             var result = await _groupReadService.GetAsync(id, User);
@@ -381,7 +391,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("GovernanceChangeHistory", viewModel);
         }
 
-        [HttpGet, Route("Edit/{id:int}/Details"), EdubaseAuthorize]
+        [HttpGet, Route("Edit/{id:int}/Details")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditDetails(int id)
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
@@ -423,7 +434,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("EditDetails", viewModel);
         }
 
-        [HttpPost, Route("Edit/{id:int}/Details"), EdubaseAuthorize, ValidateAntiForgeryToken]
+        [HttpPost, Route("Edit/{id:int}/Details")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditDetails(GroupEditorViewModel viewModel)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -487,7 +499,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public static string GetTempDataKeyForCompaniesHouseNumberWithGroupUId(int? groupUId)=> $"companiesHouseNumber_{groupUId}";
 
 
-        [HttpGet, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
+        [HttpGet, Route("Edit/{id:int}/Links")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditLinks(int id, bool saved = false)
         {
             ViewBag.ShowSaved = saved;
@@ -514,7 +527,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route("Edit/{id:int}/Links"), EdubaseAuthorize, ValidateAntiForgeryToken]
+        [HttpPost, Route("Edit/{id:int}/Links")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
         {
             if (viewModel.Action == ActionLinkedEstablishmentStartSearch)
@@ -541,7 +555,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}"), ValidateAntiForgeryToken]
+        [HttpPost("CreateAcademyTrust/{companiesHouseNumber}/{academyTrustRoute}")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -596,7 +612,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("CreateAcademyTrust", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse) + "/{academyTrustRoute}")]
+        [HttpGet("SearchCompaniesHouse/{academyTrustRoute}")]
+        [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -637,7 +654,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        private static void PopulateStatusSelectList(GroupEditorViewModel viewModel) => viewModel.Statuses = new[] { new SelectListItem { Value = ((int) GS.Open).ToString(), Text = "Open" }, new SelectListItem { Value = ((int) GS.Closed).ToString(), Text = "Closed" } };
+        private static void PopulateStatusSelectList(GroupEditorViewModel viewModel) => viewModel.Statuses =
+            new[] { new SelectListItem { Value = ((int) GS.Open).ToString(), Text = "Open" },
+            new SelectListItem { Value = ((int) GS.Closed).ToString(), Text = "Closed" } };
 
         private async Task AddLinkedEstablishment(GroupEditorViewModel viewModel)
         {

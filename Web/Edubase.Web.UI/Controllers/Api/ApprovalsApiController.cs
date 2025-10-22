@@ -1,13 +1,13 @@
 using Edubase.Services.Approvals;
 using Edubase.Services.Approvals.Models;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Edubase.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
+    [ApiController]
+    [Route("api/approvals")]
     public class ApprovalsApiController : ControllerBase
     {
         private readonly IApprovalService _approvalService;
@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _approvalService = approvalService;
         }
 
-        [Route("api/approvals/change-requests"), HttpGet]
+        [HttpGet("change-requests")]
         public async Task<IActionResult> GetAsync(int skip, int take, string sortBy)
         {
             try
@@ -27,18 +27,18 @@ namespace Edubase.Web.UI.Controllers.Api
             }
             catch (PermissionDeniedException)
             {
-                return StatusCode(HttpStatusCode.Forbidden);
+                return StatusCode(403); // Forbidden
             }
         }
 
-        [Route("api/approvals/change-request"), HttpPost]
+        [HttpPost("change-request")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ActionAsync(PendingChangeRequestAction model)
         {
             var result = await _approvalService.ActionAsync(model, User);
             return result.Success
-                ? ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent))
-                : (IActionResult) Content(HttpStatusCode.BadRequest, result.Errors);
+                ? NoContent()
+                : BadRequest(result.Errors);
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Texuna.Lookup;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models

@@ -29,7 +29,9 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("CanBulkCreateFreeSchools", policy =>
         policy.RequireRole(AuthorizedRoles.CanBulkCreateFreeSchools))
     .AddPolicy("EdubasePolicy", policy =>
-        policy.Requirements.Add(new EdubaseRequirement()));
+        policy.Requirements.Add(new EdubaseRequirement()))
+    .AddPolicy("EdubasePolicy", policy =>
+        policy.Requirements.Add(new EdubaseRequirement("Admin")));
 
 
 builder.Services.AddAuthentication("Saml2")

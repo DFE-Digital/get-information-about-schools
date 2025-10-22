@@ -3,24 +3,21 @@ using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
-using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
-    [RoutePrefix("GovernanceDelegation")]
+    [Route("Governors/GovernanceDelegation")]
     public class GovernanceDelegationController : Controller
     {
-        private const string GROUP_EDIT_DELEGATION = "~/Groups/Group/Edit/{groupUId:int}/Governance/Delegation";
-
         private readonly IGroupReadService _groupReadService;
         private readonly IGroupsWriteService _groupWriteService;
         private readonly LayoutHelper _layoutHelper;
 
         public GovernanceDelegationController(
-            IGroupReadService groupReadService, 
+            IGroupReadService groupReadService,
             IGroupsWriteService groupWriteService,
             LayoutHelper layoutHelper)
         {
@@ -29,9 +26,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _layoutHelper = layoutHelper;
         }
 
-        [HttpGet, EdubaseAuthorize]
-        [Route(GROUP_EDIT_DELEGATION, Name = "GroupEditDelegation")]
-        public async Task<ActionResult> GroupEditDelegation(int groupUId)
+        [HttpGet("Groups/Group/Edit/{groupUId:int}/Governance/Delegation", Name = "GroupEditDelegation")]
+        [Authorize(Policy = "EdubasePolicy")]
+        public async Task<IActionResult> GroupEditDelegation(int groupUId)
         {
             var group = await _groupReadService.GetAsync(groupUId, User);
             if (group.Success)
@@ -45,12 +42,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                 return View(model);
             }
+
             return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
         }
 
-        [HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
-        [Route(GROUP_EDIT_DELEGATION)]
-        public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformationViewModel model)
+        [HttpPost("Groups/Group/Edit/{groupUId:int}/Governance/Delegation")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GroupEditDelegation(EditGroupDelegationInformationViewModel model)
         {
             var result = await new EditGroupDelegationInformationViewModelValidator().ValidateAsync(model);
 
@@ -64,7 +63,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     var updatedGroup = new SaveGroupDto(group);
                     await _groupWriteService.SaveAsync(updatedGroup, User);
                 }
-
 
                 var url = Url.RouteUrl("GroupDetails", new { id = model.GroupUId, saved = true });
                 return Redirect($"{url}#governance");

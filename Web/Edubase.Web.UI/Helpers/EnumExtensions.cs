@@ -1,9 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Web;
 
 namespace Edubase.Web.UI.Helpers
 {

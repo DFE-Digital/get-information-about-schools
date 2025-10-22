@@ -1,7 +1,7 @@
-using FluentValidation.Results;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -13,7 +13,7 @@ namespace Edubase.Web.UI.Helpers
             {
                 return;
             }
-
+                
             foreach (var error in result.Errors)
             {
                 var key = string.IsNullOrEmpty(prefix) ? error.PropertyName : prefix + "." + error.PropertyName;
@@ -23,7 +23,7 @@ namespace Edubase.Web.UI.Helpers
                     !modelState[key].Errors.Any())
                 {
                     modelState.AddModelError(key, error.CustomState?.ToString() ?? error.ErrorMessage);
-                    modelState.SetModelValue(key, new ValueProviderResult(error.AttemptedValue ?? "", (error.AttemptedValue ?? "").ToString(), CultureInfo.CurrentCulture));
+                    modelState.SetModelValue(key, new ValueProviderResult(error.AttemptedValue?.ToString() ?? string.Empty, CultureInfo.CurrentCulture));
                 }
             }
         }

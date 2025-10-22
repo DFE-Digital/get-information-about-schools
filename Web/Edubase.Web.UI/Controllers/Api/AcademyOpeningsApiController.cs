@@ -95,13 +95,10 @@ namespace Edubase.Web.UI.Controllers.Api
         /// POST api/academy/{urn}
         /// Takes a payload with openDate and Name properties.
         /// </summary>
-        /// <param name="urn"></param>
-        /// <param name="payload"></param>
-        /// <returns></returns>
-        [Route("api/academy/{urn:int}"), HttpPost]
-        public async Task<HttpResponseMessage> SaveAsync(int urn, [FromBody] dynamic payload)
+        [HttpPost("api/academy/{urn:int}")]
+        public async Task<IActionResult> SaveAsync(int urn, [FromBody] dynamic payload)
         {
-            DateTime openingDate = payload.openDate;
+            DateTime openingDate = payload.OpenDate;
             var links = await _establishmentReadService.GetLinkedEstablishmentsAsync(urn, User);
             var link = links.FirstOrDefault(e =>
                 e.LinkTypeId == (int) eLookupEstablishmentLinkType.ParentOrPredecessor);
@@ -113,16 +110,14 @@ namespace Edubase.Web.UI.Controllers.Api
                     new EstablishmentModel { CloseDate = openingDate.AddDays(-1), Urn = link.Urn },
                     new EstablishmentFieldList { CloseDate = true }, User);
 
-                if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
+                if (response.HasErrors) return BadRequest(response);
             }
 
             response = await _establishmentWriteService.PartialUpdateAsync(
-                new EstablishmentModel { OpenDate = openingDate, Name = payload.name, Urn = urn },
+                new EstablishmentModel { OpenDate = openingDate, Name = payload.Name, Urn = urn },
                 new EstablishmentFieldList { OpenDate = true, Name = true }, User);
 
-            if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
-
-            else return Request.CreateResponse(HttpStatusCode.OK, response);
+            return response.HasErrors ? BadRequest(response) : Ok(response);
         }
     }
 }

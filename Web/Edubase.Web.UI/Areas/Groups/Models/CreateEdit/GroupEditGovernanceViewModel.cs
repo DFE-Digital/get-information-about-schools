@@ -1,9 +1,4 @@
-﻿using Edubase.Services.Enums;
-using Edubase.Web.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {

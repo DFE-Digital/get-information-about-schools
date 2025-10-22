@@ -4,7 +4,6 @@ using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
-using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Groups;
@@ -12,21 +11,23 @@ using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Web.UI.Models.Search;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Controllers
 {
-    using Filters;
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models;
     using Services.Domain;
     using Services.Lookup;
     using Services.Texuna.ChangeHistory;
     using Services.Texuna.ChangeHistory.Models;
-    using System;
-    using System.Threading.Tasks;
 
-    [RoutePrefix("ChangeHistory"), Route("{action=index}"), EdubaseAuthorize]
+    [Route("ChangeHistory")]
+    [Authorize(Policy = "EdubasePolicy")]
     public class ChangeHistoryController : Controller
     {
         private readonly IChangeHistoryService _svc;
@@ -44,7 +45,7 @@ namespace Edubase.Web.UI.Controllers
             _groupDownloadService = groupDownloadService;
         }
 
-        [HttpGet, Route(Name = "ChangeHistoryCriteria")]
+        [HttpGet("ChangeHistoryCriteria", Name = "ChangeHistoryCriteria")]
         public ActionResult Index(ChangeHistoryViewModel viewModel)
         {
             return View("Index", viewModel);
@@ -386,27 +387,22 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route("DownloadAjax/{id}", Name = "ChangeHistoryDownloadAjax")]
-        public async Task<ActionResult> SearchChangeHistoryDownloadAjax(Guid id, ChangeHistoryViewModel vm)
+        [HttpPost("ChangeHistory/Search/DownloadAjax")]
+        public async Task<IActionResult> SearchChangeHistoryDownloadAjax(Guid id, [FromBody] ChangeHistoryViewModel vm)
         {
             var progress = await _svc.GetDownloadGenerationProgressAsync(id, User);
-            if (vm.SingleEstablishment || vm.SingleGroup)
+
+            var result = new
             {
-                return Json(
-                    JsonConvert.SerializeObject(new
-                    {
-                        status = progress.IsComplete,
-                        redirect = "/ChangeHistory/Search/Download/"
-                    }), JsonRequestBehavior.AllowGet);
-            }
+                status = progress.IsComplete,
+                redirect = (vm.SingleEstablishment || vm.SingleGroup)
+                    ? "/ChangeHistory/Search/Download/"
+                    : $"/ChangeHistory/Download/{id}"
+            };
 
-            return Json(
-                JsonConvert.SerializeObject(new
-                {
-                    status = progress.IsComplete,
-                    redirect = string.Concat("/ChangeHistory/Download/", id)
-                }), JsonRequestBehavior.AllowGet);
-
+            return Json(result);
         }
+
 
         private T PopulatePayload<T>(ChangeHistoryViewModel vm, T payload) where T : SearchChangeHistoryPayload
         {

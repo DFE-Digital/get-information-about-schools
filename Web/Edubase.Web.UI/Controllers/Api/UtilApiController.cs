@@ -1,10 +1,12 @@
+using System.Threading.Tasks;
 using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
+    [ApiController]
+    [Route("api/save-search-token")]
     public class UtilApiController : ControllerBase
     {
         private readonly IUserPreferenceRepository _userPreferenceRepository;
@@ -14,21 +16,25 @@ namespace Edubase.Web.UI.Controllers.Api
             _userPreferenceRepository = userPreferenceRepository;
         }
 
-        [Route("api/save-search-token"), HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveSearchTokenAsync(dynamic payload)
+        public async Task<IActionResult> SaveSearchTokenAsync([FromBody] SaveSearchTokenRequest payload)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
             {
-                var prefs = _userPreferenceRepository.Get(User.GetUserId()) ?? new Data.Entity.UserPreference(User.GetUserId());
-                prefs.SavedSearchToken = (string) payload.token;
+                var userId = User.GetUserId();
+                var prefs = _userPreferenceRepository.Get(userId) ?? new Data.Entity.UserPreference(userId);
+                prefs.SavedSearchToken = payload.Token;
                 await _userPreferenceRepository.UpsertAsync(prefs);
-                return StatusCode(System.Net.HttpStatusCode.NoContent);
+                return NoContent();
             }
-            else
-            {
-                return BadRequest("User not authenticated");
-            }
+
+            return BadRequest("User not authenticated");
         }
+    }
+
+    public class SaveSearchTokenRequest
+    {
+        public string Token { get; set; }
     }
 }

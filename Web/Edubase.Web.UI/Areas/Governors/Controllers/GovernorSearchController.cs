@@ -1,4 +1,9 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using Edubase.Common;
+using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Governors;
@@ -10,17 +15,19 @@ using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Models;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Newtonsoft.Json;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("Search"), Route("{action=index}")]
+    [RouteArea("Governors")]
+    [RoutePrefix("Search")]
+    [Microsoft.AspNetCore.Components.Route("{action=index}")]
     public class GovernorSearchController : EduBaseController
     {
         private IGovernorDownloadService _governorDownloadService;
@@ -43,32 +50,48 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<ActionResult> Index(GovernorSearchViewModel model) => await SearchGovernors(model);
+        [HttpGet("")]
+        public async Task<IActionResult> Index(GovernorSearchViewModel model)
+        {
+            return await SearchGovernors(model);
+        }
 
-        [HttpGet, Route("results-js")]
-        public async Task<ActionResult> ResultsPartial(GovernorSearchViewModel model)
+        [HttpGet("results-js")]
+        public async Task<IActionResult> ResultsPartial(GovernorSearchViewModel model)
         {
             var result = await SearchGovernors(model);
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
             return PartialView("Partials/_GovernorSearchResults", model);
         }
 
-        [HttpGet, Route("PrepareDownload")]
-        public async Task<ActionResult> PrepareDownload(GovernorSearchDownloadViewModel viewModel)
+        [HttpGet("PrepareDownload")]
+        public async Task<IActionResult> PrepareDownload(GovernorSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Governors;
-            if (viewModel.SearchQueryString == null) viewModel.SearchQueryString = Request.Query.ToString();
 
-            var allowNonPublicDataDownload = User.InRole(EdubaseRoles.EDUBASE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.EFADO, EdubaseRoles.edubase_ddce, EdubaseRoles.SFC);
+            if (string.IsNullOrEmpty(viewModel.SearchQueryString))
+            {
+                viewModel.SearchQueryString = Request.QueryString.ToString();
+            }
+
+            var allowNonPublicDataDownload = User.IsInRole(EdubaseRoles.EDUBASE) ||
+                                             User.IsInRole(EdubaseRoles.EDUBASE_CMT) ||
+                                             User.IsInRole(EdubaseRoles.EFADO) ||
+                                             User.IsInRole(EdubaseRoles.edubase_ddce) ||
+                                             User.IsInRole(EdubaseRoles.SFC);
+
             viewModel.TotalSteps = allowNonPublicDataDownload ? 4 : 3;
             viewModel.Step++;
 
             if (allowNonPublicDataDownload && !viewModel.IncludeNonPublicData.HasValue)
+            {
                 return View("Downloads/SelectDataset", viewModel);
+            }
 
             if (!viewModel.FileFormat.HasValue)
+            {
                 return View("Downloads/SelectFormat", viewModel);
+            }
 
             var progressId = await _governorDownloadService.SearchWithDownloadGenerationAsync(
                 new GovernorSearchDownloadPayload
@@ -78,11 +101,21 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     IncludeNonPublicData = allowNonPublicDataDownload && viewModel.IncludeNonPublicData.GetValueOrDefault()
                 }, User);
 
-            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, step = viewModel.Step, viewModel.TotalSteps, viewModel.SearchQueryString, viewModel.SearchSource });
+            return RedirectToAction(nameof(Download), new
+            {
+                id = progressId,
+                fileFormat = viewModel.FileFormat.Value,
+                step = viewModel.Step,
+                viewModel.TotalSteps,
+                viewModel.SearchQueryString,
+                viewModel.SearchSource
+            });
         }
 
-        [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, int step, int totalSteps, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+
+        [HttpGet]
+        [Route("Download")]
+        public async Task<IActionResult> Download(Guid id, eFileFormat fileFormat, int step, int totalSteps, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
             var model = new ProgressDto();
             try
@@ -124,8 +157,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View("Downloads/ReadyToDownload", viewModel);
         }
 
-        [HttpGet, Route("GovernorsDownloadAjax")]
-        public async Task<ActionResult> GovernorsDownloadAjax(Guid id, eFileFormat fileFormat, int step, int totalSteps, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        [HttpGet]
+        [Route("GovernorsDownloadAjax")]
+        public async Task<IActionResult> GovernorsDownloadAjax(Guid id, eFileFormat fileFormat, int step, int totalSteps, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
             var model = new ProgressDto();
             try
@@ -153,9 +187,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     redirect = "/Governors/Search/Download"
                 }));
             }
-            // return View("Downloads/DownloadError", new DownloadErrorViewModel { SearchQueryString = searchQueryString, SearchSource = searchSource, NeedsRegenerating = true });
-
-            //viewModel.Step++;
 
             return Json(JsonConvert.SerializeObject(new
             {
@@ -164,7 +195,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             }));
         }
 
-        private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)
+        private async Task<IActionResult> SearchGovernors(GovernorSearchViewModel model)
         {
             // before processing any of the model, make sure something has been searched for if not 'All'
             if ((model.SearchType == eSearchType.Governor &&
@@ -199,7 +230,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View("Index", model);
         }
 
-        private ActionResult RedirectToSearchPage(GovernorSearchViewModel model)
+        private IActionResult RedirectToSearchPage(GovernorSearchViewModel model)
         {
             var routeDictionary = new RouteValueDictionary
             {

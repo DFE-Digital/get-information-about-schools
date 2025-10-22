@@ -1,10 +1,6 @@
-using Edubase.Services.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Edubase.Web.UI.Models;
 using System.Security.Principal;
+using Edubase.Services.Security;
+using Edubase.Web.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api

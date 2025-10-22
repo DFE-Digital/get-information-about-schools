@@ -1,15 +1,19 @@
 using Edubase.Services.Domain;
-using Microsoft.Ajax.Utilities;
-using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 using Microsoft.AspNetCore.Mvc;
+using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Common;
     using Data.Entity;
     using Data.Repositories;
-    using Filters;
     using Helpers;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models;
     using Models.Tools;
     using Newtonsoft.Json;
@@ -23,14 +27,10 @@ namespace Edubase.Web.UI.Controllers
     using Services.Establishments.Search;
     using Services.Lookup;
     using Services.Security;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
-    using R = EdubaseRoles;
 
-    [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
+    [Route("Tools")]
+    [Authorize(Policy = "EdubasePolicy")]
     public class ToolsController : Controller
     {
         private readonly ISecurityService _securityService;
@@ -55,7 +55,7 @@ namespace Edubase.Web.UI.Controllers
             _establishmentDownloadService = establishmentDownloadService;
         }
 
-        [Route(Name = "Tools")]
+        [HttpGet("tools", Name = "Tools")]
         public async Task<ActionResult> Index()
         {
             var createGroupPermission = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -420,7 +420,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync()).Items
+            viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync())
                 .OrderBy(x => x.Title)
                 .Select(x => new IndSchoolsSearchViewModel.LASetViewModel(x));
 
@@ -485,12 +485,11 @@ namespace Edubase.Web.UI.Controllers
                 }));
             }
 
-
-            return Json(
-                JsonConvert.SerializeObject(new
-                {
-                    status = model.IsComplete, redirect = string.Concat("/independent-schools/download/", id)
-                }), JsonRequestBehavior.AllowGet);
+            return Json(new
+            {
+                status = model.IsComplete,
+                redirect = $"/independent-schools/download/{id}"
+            });
         }
 
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
@@ -542,7 +541,7 @@ namespace Edubase.Web.UI.Controllers
             if (ModelState.IsValid)
             {
                 var sets = await _localAuthoritySetRepository.GetAllAsync();
-                var duplicate = sets.Items
+                var duplicate = sets
                     .Where(x => x.Title == viewModel.Title && (viewModel.IsNewEntity || viewModel.Id != x.RowKey))
                     .Select(x => x.RowKey).FirstOrDefault();
 

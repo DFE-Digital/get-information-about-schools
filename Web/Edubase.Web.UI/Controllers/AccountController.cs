@@ -1,27 +1,18 @@
-using Edubase.Common;
-using Edubase.Services.Security;
-using Edubase.Services.Security.ClaimsIdentityConverters;
-using Edubase.Web.UI.MvcResult;
-using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
-using System;
-using Edubase.Services.Enums;
-using Edubase.Web.UI.Areas.Establishments.Models.Search;
-using Edubase.Services.Exceptions;
 using Edubase.Data.Repositories;
+using Edubase.Services.Exceptions;
+using Edubase.Services.Security;
 using Edubase.Services.Texuna;
-using Edubase.Web.UI.Models.Search;
-using Microsoft.Ajax.Utilities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    using ET = eLookupEstablishmentType;
-    using ES = eLookupEstablishmentStatus;
-    [RoutePrefix("Account")]
+    [ApiController]
+    [Route("Account")]
     public class AccountController : Controller
     {
         private readonly ISecurityService _securityService;
@@ -35,49 +26,45 @@ namespace Edubase.Web.UI.Controllers
             _tokenRepository = tokenRepository;
         }
 
-        //
-        // GET: /Account/Login
-        [Route(nameof(Login)), AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        [HttpGet("Login")]
+        [AllowAnonymous]
+        public IActionResult Login(string returnUrl)
         {
-            return new ChallengeResult(AuthenticationManager.GetExternalAuthenticationTypes()
-                .First().AuthenticationType,
-                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl.Clean() ?? "/" }));
+            // Replace with ASP.NET Core external login challenge
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
+            var provider = "SecureAccess"; // Replace with actual provider name
+            return Challenge(new AuthenticationProperties { RedirectUri = redirectUrl }, provider);
         }
 
-        [Route(nameof(ExternalLoginCallback)), AllowAnonymous]
-        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        [HttpGet("ExternalLoginCallback")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
         {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
-            if (loginInfo == null)
+            var loginInfo = await HttpContext.AuthenticateAsync(); // Replace with actual external login retrieval
+            if (loginInfo?.Principal == null)
             {
                 throw new EdubaseException("No external login information was obtainable.");
             }
 
-            var id = loginInfo.ExternalIdentity;
+            var identity = loginInfo.Principal.Identity as ClaimsIdentity;
+            var principal = new ClaimsPrincipal(identity);
 
-            id = ConfigurationManager.AppSettings["owin:appStartup"] == "SASimulatorConfiguration"
-                ? new StubClaimsIdConverter().Convert(id)
-                : new SecureAccessClaimsIdConverter().Convert(id);
-
-            var principal = new ClaimsPrincipal(id);
             var roles = await _securityService.GetRolesAsync(principal);
-            id.AddClaims(roles.Select(x => new Claim(ClaimTypes.Role, x)));
+            identity.AddClaims(roles.Select(x => new Claim(ClaimTypes.Role, x)));
 
-            AuthenticationManager.SignIn(id);
+            await HttpContext.SignInAsync(principal);
 
             return await GetLandingPage(principal);
         }
 
-        private async Task<ActionResult> GetLandingPage(ClaimsPrincipal principal)
+        private async Task<IActionResult> GetLandingPage(ClaimsPrincipal principal)
         {
-            // Redirect to the user's last saved search token if there is one.
             var searchToken = (await _userPreferenceRepository.GetAsync(principal.GetUserId()))?.SavedSearchToken;
             if (searchToken != null && (await _tokenRepository.GetAsync(searchToken)) != null)
             {
                 TempData["SavedToken"] = searchToken;
                 TempData["UserId"] = principal.GetUserId();
-                return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?tok=", searchToken));
+                return Redirect($"{Url.RouteUrl("EstabSearch")}?tok={searchToken}");
             }
 
             if (principal.IsInRole(EdubaseRoles.ESTABLISHMENT))
@@ -90,8 +77,6 @@ namespace Edubase.Web.UI.Controllers
             }
             else if (principal.IsInRole(EdubaseRoles.EDUBASE_GROUP_MAT) || principal.IsInRole(EdubaseRoles.SSAT))
             {
-                //The group of SSAT works in a similar way to EDUBASE_GROUP_MAT where the landing page is the establishment group assigned to the user
-                //it was not possible to use EDUBASE_GROUP_MAT because the permissions\field visibility on fields etc are different
                 var uid = await _securityService.GetMyMATUId(principal);
                 if (uid.HasValue)
                 {
@@ -102,14 +87,11 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Route(nameof(LogOff)), HttpGet]
-        public ActionResult LogOff(string returnUrl)
+        [HttpGet("LogOff")]
+        public async Task<IActionResult> LogOff()
         {
-            AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = "/" });
+            await HttpContext.SignOutAsync();
             return Redirect("/");
         }
-
-        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
-
     }
 }

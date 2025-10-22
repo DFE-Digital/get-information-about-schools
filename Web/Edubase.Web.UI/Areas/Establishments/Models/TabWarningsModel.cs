@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Edubase.Services.Enums;
-using Edubase.Web.UI.Models;
-using Glimpse.Mvc.Model;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models
 {

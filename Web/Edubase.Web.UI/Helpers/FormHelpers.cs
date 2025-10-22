@@ -1,28 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using System.Linq.Expressions;
-using System.Web;
+using System.Web.Mvc;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using HtmlHelper = Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlHelper;
 
 namespace Edubase.Web.UI.Helpers
 {
     public static class FormHelpers
     {
-        /// <summary>
-        ///  Radio button helper with model
-        /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="TProperty"></typeparam>
-        /// <param name="helper"></param>
-        /// <param name="expression"></param>
-        /// <param name="value"></param>
-        /// <param name="labelText"></param>
-        /// <param name="additionalLabelClasses"></param>
-        /// <param name="htmlAttributes"></param>
-        /// <returns></returns>
         public static HtmlString GiasRadioFor<TModel, TProperty>(
             this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, TProperty>> expression,
@@ -33,32 +21,35 @@ namespace Edubase.Web.UI.Helpers
         {
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             var name = ExpressionHelper.GetExpressionText(expression);
-            var id = helper.ViewData.TemplateInfo.GetFullHtmlFieldId(name + "_" + value).ToLower();
+            var id = helper.ViewData.TemplateInfo.GetFullHtmlFieldId($"{name}_{value}").ToLower();
 
             if (attributes.ContainsKey("id"))
-            { // radio button has a defined ID - be sure to use for the label for attr
-                id = attributes["id"].ToString();
-            }
-            var viewData = new ViewDataDictionary() { { "id", id} };
-
-            if (htmlAttributes != null)
             {
-                var viewDataDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-                foreach (var keyValue in viewDataDictionary)
-                {
-                    viewData[keyValue.Key] = keyValue.Value;
-                }
+                id = attributes["id"]?.ToString();
+            }
+
+            var viewData = new ViewDataDictionary<TModel>(
+                metadataProvider: new EmptyModelMetadataProvider(),
+                modelState: helper.ViewData.ModelState)
+            {
+                { "id", id }
+            };
+
+            foreach (var kvp in attributes)
+            {
+                viewData[kvp.Key] = kvp.Value;
             }
 
             var radioButton = helper.RadioButtonFor(expression, value, viewData);
 
             var tagBuilder = new TagBuilder("label");
-            tagBuilder.MergeAttribute("for", id);
-            tagBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-radios__label", additionalLabelClasses));
-            tagBuilder.InnerHtml = labelText;
+            tagBuilder.Attributes["for"] = id;
+            tagBuilder.AddCssClass("govuk-label govuk-radios__label" + additionalLabelClasses);
+            tagBuilder.InnerHtml.AppendHtml(labelText);
 
-            return new HtmlString(radioButton.ToHtmlString() + tagBuilder);
+            return new HtmlString(radioButton.ToString() + tagBuilder.ToString());
         }
+    }
 
 
         /// <summary>

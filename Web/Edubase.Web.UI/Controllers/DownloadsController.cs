@@ -1,29 +1,26 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Objects;
-using Edubase.Services.Downloads;
+using System.Linq;
 using System.Threading.Tasks;
-using Edubase.Web.UI.Models;
-using Newtonsoft.Json;
+using Edubase.Common;
+using Edubase.Services;
 using Edubase.Services.Domain;
+using Edubase.Services.Downloads;
+using Edubase.Services.Downloads.Models;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Groups.Downloads;
-using Edubase.Web.UI.Filters;
-using Edubase.Common;
 using Edubase.Web.UI.Helpers;
-using System.Linq;
-using System.Net.Http;
-using Edubase.Services;
-using Edubase.Services.Downloads.Models;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
-using Edubase.Web.UI.Models.Guidance;
-using Glimpse.Core.Configuration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Downloads"), Route("{action=index}")]
+    [Route("Downloads")]
     public class DownloadsController : Controller
     {
         private readonly IDownloadsService _downloadsService;
@@ -141,17 +138,20 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [Route("GenerateAjax/{id}", Name = "GenerateAjax")]
-        public async Task<ActionResult> GenerateAjax(Guid id)
+        [HttpGet("GenerateAjax/{id}", Name = "GenerateAjax")]
+        public async Task<IActionResult> GenerateAjax(Guid id)
         {
             var model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
-            return Json(
-                JsonConvert.SerializeObject(new
-                {
-                    status = model.IsComplete, redirect = string.Concat("/Downloads/Generated/", id)
-                }), JsonRequestBehavior.AllowGet);
 
+            var result = new
+            {
+                status = model.IsComplete,
+                redirect = $"/Downloads/Generated/{id}"
+            };
+
+            return Json(result);
         }
+
 
         [Route("Generated/{id}", Name = "DownloadGenerated")]
         public async Task<ActionResult> DownloadGenerated(string id, bool isExtract = false)
@@ -303,7 +303,8 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet]
+        [Authorize(Policy = "EdubasePolicy")]
         [Route("Download/ChangeHistory/{downloadType}")]
         public async Task<ActionResult> DownloadChangeHistory(int? groupId, int? establishmentUrn, DownloadType downloadType)
         {
@@ -320,12 +321,14 @@ namespace Edubase.Web.UI.Controllers
             return null;
         }
 
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet]
+        [Authorize(Policy = "EdubasePolicy")]
         [Route("Download/Establishment/{id}/{downloadType}", Name = "DownloadEstablishmentGovernanceChangeHistory")]
         public async Task<ActionResult> DownloadGovernanceChangeHistoryAsync(int id, DownloadType downloadType)
             => Redirect((await _establishmentReadService.GetGovernanceChangeHistoryDownloadAsync(id, downloadType, User)).Url);
 
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet]
+        [Authorize(Policy = "EdubasePolicy")]
         [Route("Download/Group/{id}/Governance/{downloadType}", Name = "DownloadGroupGovernanceChangeHistory")]
         public async Task<ActionResult> DownloadGroupGovernanceChangeHistoryAsync(int id, DownloadType downloadType)
             => Redirect((await _groupDownloadService.GetGovernanceChangeHistoryDownloadAsync(id, downloadType, User)).Url);
@@ -373,7 +376,8 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpGet, EdubaseAuthorize, MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
+        [Authorize(Policy = "EdubasePolicy")]
         [Route("Download/MATClosureReport", Name = "DownloadMATClosureReport")]
         public async Task<ActionResult> DownloadMATClosureReportAsync(string filename)
         {

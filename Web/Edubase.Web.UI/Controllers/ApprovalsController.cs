@@ -1,17 +1,17 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Edubase.Web.UI.Filters;
 using Edubase.Services.Approvals;
 using Edubase.Services.Approvals.Models;
 using Edubase.Services.Core;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Tools;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Approvals"), Route("{action=index}"), MvcAuthorizeRoles(AuthorizedRoles.CanApprove)]
+    [ApiController]
+    [Route("Approvals")]
+    [MvcAuthorizeRoles(AuthorizedRoles.CanApprove)]
     public class ApprovalsController : Controller
     {
         private readonly IApprovalService _approvalService;
@@ -22,27 +22,28 @@ namespace Edubase.Web.UI.Controllers
             _approvalService = approvalService;
         }
 
-        [HttpGet, EdubaseAuthorize, Route(Name = "PendingApprovals")]
-        public async Task<ActionResult> Index(string sortBy, int skip = 0)
+        [HttpGet("")]
+        [Authorize(Policy = "EdubasePolicy")]
+        public async Task<IActionResult> Index(string sortBy, int skip = 0)
         {
             var vm = await PopulateChangesModel(sortBy, skip);
-
             return View("Index", vm);
         }
 
-        [HttpPost, EdubaseAuthorize, Route(Name = "PendingApprovalsPost"), ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(PendingChangeRequestAction viewModel)
+        [HttpPost("")]
+        [Authorize(Policy = "EdubasePolicy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(PendingChangeRequestAction viewModel)
         {
             if (viewModel.Ids == null)
             {
-                ModelState.AddModelError("changes-table-no-js", string.Concat("Select some changes to ", viewModel.Action.ToString().ToLower(), "."));
+                ModelState.AddModelError("changes-table-no-js", $"Select some changes to {viewModel.Action.ToString().ToLower()}.");
                 var vm = await PopulateChangesModel(DefaultSort);
                 return View("Index", vm);
             }
 
             if (viewModel.Action == ePendingChangeRequestAction.Reject)
             {
-
                 if (string.IsNullOrEmpty(viewModel.RejectionReason))
                 {
                     if (viewModel.ActionSpecifier == "setRejection")
@@ -53,7 +54,6 @@ namespace Edubase.Web.UI.Controllers
                 }
 
                 viewModel.ActionSpecifier = "reject";
-
                 var result = await _approvalService.ActionAsync(viewModel, User);
 
                 if (result.HasErrors)
@@ -62,7 +62,6 @@ namespace Edubase.Web.UI.Controllers
                     {
                         ModelState.AddModelError("RejectionReason", error.Message);
                     }
-
                     return View("ExplainRejections", viewModel);
                 }
 
@@ -73,6 +72,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 viewModel.ActionSpecifier = "approve";
                 var result = await _approvalService.ActionAsync(viewModel, User);
+
                 if (result.HasErrors)
                 {
                     foreach (var error in result.Errors)
@@ -84,24 +84,27 @@ namespace Edubase.Web.UI.Controllers
                 {
                     TempData["ShowSuccess"] = "Items approved. The editor has been notified by email";
                 }
+
                 var vm = await PopulateChangesModel(DefaultSort);
                 return View("Index", vm);
             }
         }
 
-
         private async Task<ApprovalsViewModel> PopulateChangesModel(string sortBy, int skip = 0)
         {
-            if (string.IsNullOrEmpty(sortBy))
+            sortBy ??= DefaultSort;
+            var res = await _approvalService.GetAsync(skip, 100, sortBy, User);
+
+            var viewModel = new ApprovalsViewModel
             {
-                sortBy = DefaultSort;
-            }
-            var res =  await _approvalService.GetAsync(skip, 100, sortBy, User);
-            var viewModel = new ApprovalsViewModel()
-            {
-                Skip = skip, SortBy = sortBy, Items = res.Items, Count = res.Count, SortedAscending = sortBy.Contains("-asc")
+                Skip = skip,
+                SortBy = sortBy,
+                Items = res.Items,
+                Count = res.Count,
+                SortedAscending = sortBy.Contains("-asc"),
+                ApprovalItems = new PaginatedResult<PendingApprovalItem>(skip, 100, res.Count, res.Items)
             };
-            viewModel.ApprovalItems = new PaginatedResult<PendingApprovalItem>(viewModel.Skip, viewModel.Take, res.Count, res.Items);
+
             return viewModel;
         }
     }
