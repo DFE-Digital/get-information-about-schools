@@ -9,24 +9,20 @@ namespace Edubase.Web.UI.Validation
     {
         private static string BuildFieldName(string errorFields, ControllerContext controllerContext)
         {
-            // correct the naming convention by upper casing the first letter
-            var fieldName = errorFields;
-            if (fieldName.Length > 0)
-            {
-                fieldName = string.Concat(errorFields.Substring(0, 1).ToUpper(),
-                    errorFields.Substring(1, errorFields.Length - 1));
-            }
+            if (string.IsNullOrWhiteSpace(errorFields))
+                return errorFields;
 
-            // as we're adding this - we want to use the same casing as the other properties follow. Because of that
-            // - look to see if there are any others which extend the original name
-            if (controllerContext.Controller.ViewData.ModelState.Keys.Any(x =>
-                    x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase)))
+            // Capitalize first letter
+            var fieldName = char.ToUpper(errorFields[0]) + errorFields.Substring(1);
+
+            var modelState = controllerContext.ModelState;
+
+            // Match casing with existing keys in ModelState
+            if (modelState.Keys.Any(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase)))
             {
-                fieldName = controllerContext.Controller.ViewData.ModelState.ContainsKey(fieldName)
-                    ? controllerContext.Controller.ViewData.ModelState.Keys.First(x =>
-                        x.Equals(fieldName, StringComparison.InvariantCultureIgnoreCase))
-                    : controllerContext.Controller.ViewData.ModelState.Keys
-                        .First(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase))
+                fieldName = modelState.ContainsKey(fieldName)
+                    ? modelState.Keys.First(x => x.Equals(fieldName, StringComparison.InvariantCultureIgnoreCase))
+                    : modelState.Keys.First(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase))
                         .Substring(0, fieldName.Length);
             }
 
@@ -36,14 +32,16 @@ namespace Edubase.Web.UI.Validation
         public static void ApplyToModelState(this ValidationEnvelopeDto validationEnvelope,
             ControllerContext controllerContext, bool avoidDuplicates = false)
         {
+            var modelState = controllerContext.ModelState;
+
             foreach (var error in validationEnvelope.Errors)
             {
                 if (!avoidDuplicates ||
-                    !controllerContext.Controller.ViewData.ModelState.ContainsKey(error.Fields) ||
-                    !controllerContext.Controller.ViewData.ModelState[error.Fields].Errors.Any())
+                    !modelState.ContainsKey(error.Fields) ||
+                    !modelState[error.Fields].Errors.Any())
                 {
                     var fieldName = BuildFieldName(error.Fields, controllerContext);
-                    controllerContext.Controller.ViewData.ModelState.AddModelError(fieldName, error.GetMessage());
+                    modelState.AddModelError(fieldName, error.GetMessage());
                 }
             }
         }
@@ -51,15 +49,18 @@ namespace Edubase.Web.UI.Validation
         public static void ApplyToModelState(this ValidationEnvelopeDto validationEnvelope,
             ControllerContext controllerContext, string baseProperty, bool avoidDuplicates = false)
         {
+            var modelState = controllerContext.ModelState;
+
             foreach (var error in validationEnvelope.Errors)
             {
+                var fullKey = $"{baseProperty}.{error.Fields}";
+
                 if (!avoidDuplicates ||
-                    !controllerContext.Controller.ViewData.ModelState.ContainsKey($"{baseProperty}.{error.Fields}") ||
-                    !controllerContext.Controller.ViewData.ModelState[$"{baseProperty}.{error.Fields}"].Errors.Any())
+                    !modelState.ContainsKey(fullKey) ||
+                    !modelState[fullKey].Errors.Any())
                 {
                     var fieldName = BuildFieldName(error.Fields, controllerContext);
-                    controllerContext.Controller.ViewData.ModelState.AddModelError($"{baseProperty}.{fieldName}",
-                        error.GetMessage());
+                    modelState.AddModelError($"{baseProperty}.{fieldName}", error.GetMessage());
                 }
             }
         }
@@ -68,12 +69,12 @@ namespace Edubase.Web.UI.Validation
         {
             if (apiResponse.HasErrors && apiResponse.Errors != null)
             {
+                var modelState = controllerContext.ModelState;
+
                 foreach (var error in apiResponse.Errors)
                 {
                     var fieldName = BuildFieldName(error.Fields, controllerContext);
-                    controllerContext.Controller.ViewData.ModelState.AddModelError(fieldName,
-                        error.GetMessage() ??
-                        "Error processing data"); //Generic message provided to prevent system crashing on no error message
+                    modelState.AddModelError(fieldName, error.GetMessage() ?? "Error processing data");
                 }
             }
         }

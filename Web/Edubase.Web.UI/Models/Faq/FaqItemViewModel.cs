@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Edubase.Data.Entity;
-using Edubase.Web.UI.Models.Faq;
 
 namespace Edubase.Web.UI.Models
 {

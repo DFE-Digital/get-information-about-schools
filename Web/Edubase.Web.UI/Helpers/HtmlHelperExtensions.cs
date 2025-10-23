@@ -1,81 +1,89 @@
-using Edubase.Common;
-using Edubase.Services.Governors.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Edubase.Common;
+using Edubase.Services.Governors.Models;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
 
 namespace Edubase.Web.UI.Helpers
 {
     public static class HtmlHelperExtensions
     {
         public static HtmlString ValidationCssClassFor<TModel, TProperty>(
-            this IHtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression)
+        this IHtmlHelper<TModel> htmlHelper,
+        Expression<Func<TModel, TProperty>> expression)
         {
-            var expressionText = ExpressionHelper.GetExpressionText(expression);
-            var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
+            var fullHtmlFieldName = htmlHelper.NameFor(expression).ToString();
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
-            return state == null
+            return state == null || state.Errors.Count == 0
                 ? HtmlString.Empty
-                : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-form-group--error");
+                : new HtmlString("govuk-form-group--error");
         }
 
         public static HtmlString ValidationCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-error-message");
+            return state == null || state.Errors.Count == 0
+                ? HtmlString.Empty
+                : new HtmlString("govuk-error-message");
         }
 
         public static HtmlString ValidationGroupCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            return state == null
+            return state == null || state.Errors.Count == 0
                 ? HtmlString.Empty
-                : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-form-group--error");
+                : new HtmlString("govuk-form-group--error");
         }
 
         public static HtmlString ValidationSelectCssClass(this IHtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-select--error");
+            return state == null || state.Errors.Count == 0
+                ? HtmlString.Empty
+                : new HtmlString("govuk-select--error");
         }
 
         public static HtmlString TextBoxValidationClass<TModel, TProperty>(
             this IHtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> expression)
         {
-            var expressionText = ExpressionHelper.GetExpressionText(expression);
-            var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
+            var fullHtmlFieldName = htmlHelper.NameFor(expression).ToString();
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
-            return state == null ? HtmlString.Empty : state.Errors.Count == 0 ? HtmlString.Empty : new HtmlString("govuk-input--error");
+            return state == null || state.Errors.Count == 0
+                ? HtmlString.Empty
+                : new HtmlString("govuk-input--error");
         }
 
         public static HtmlString ValidationMessageNested(this IHtmlHelper htmlHelper, string modelName)
         {
-            var fullFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(modelName);
+            var fullFieldName = htmlHelper.Name(modelName).ToString();
+
             if (!htmlHelper.ViewData.ModelState.ContainsKey(fullFieldName))
             {
-                if (htmlHelper.ViewData.ModelState.ContainsKey(htmlHelper.ViewData.ModelMetadata.PropertyName))
+                var parentProperty = htmlHelper.ViewData.ModelMetadata?.PropertyName;
+
+                if (!string.IsNullOrEmpty(parentProperty) &&
+                    htmlHelper.ViewData.ModelState.ContainsKey(parentProperty))
                 {
                     var modelState = htmlHelper.ViewData.ModelState[modelName];
 
-                    // add the errors from the modelName to the parent FullHtmlFieldName
-                    // added a check for a null modelstate as this was causing a null reference
                     if (modelState != null && modelState.Errors.Any())
                     {
-                        foreach (var error in htmlHelper.ViewData.ModelState[modelName].Errors)
+                        foreach (var error in modelState.Errors)
                         {
                             var splitName = SplitNameAndCapitaliseFirstLetter(error);
                             htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, splitName);
@@ -84,30 +92,28 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return htmlHelper.ValidationMessage(modelName, (string) null, new { @class = "govuk-error-message" });
+            return (HtmlString) htmlHelper.ValidationMessage(modelName, null, new { @class = "govuk-error-message" });
         }
 
         /// <summary>
-        /// Splits the combined words in an error message where an uppercase letter follows a lowercase
-        /// then capitalises the first letter of the string, and converts the rest to lower
+        /// Splits combined words in an error message where an uppercase letter follows a lowercase,
+        /// then capitalizes the first letter and converts the rest to lowercase.
         /// </summary>
         /// <param name="error">Error message (ModelError)</param>
-        /// <returns>String with first letter capitalized and the subsequent letters in lowercase</returns>
+        /// <returns>Formatted string</returns>
         public static string SplitNameAndCapitaliseFirstLetter(ModelError error)
         {
-            if (string.IsNullOrEmpty(error.ErrorMessage))
+            var message = error?.ErrorMessage;
+            if (string.IsNullOrWhiteSpace(message))
                 return string.Empty;
 
-            var matchTimeout = TimeSpan.FromMilliseconds(100);
-            var regex = new Regex("([a-z])([A-Z])", RegexOptions.Compiled, matchTimeout);
-            var splitName = regex.Replace(error.ErrorMessage, "$1 $2");
+            var regex = new Regex("([a-z])([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
+            var split = regex.Replace(message, "$1 $2");
 
-            if (string.IsNullOrEmpty(splitName))
-                return string.Empty;
-
-            splitName = char.ToUpper(splitName[0]) + splitName.Substring(1).ToLower();
-
-            return splitName;
+            return string.Concat(
+                char.ToUpper(split[0]),
+                split.Substring(1).ToLower()
+            );
         }
 
         public static HtmlString DuplicateCssClassFor(this IHtmlHelper htmlHelper, int? governorId)
@@ -124,74 +130,57 @@ namespace Edubase.Web.UI.Helpers
             return HtmlString.Empty;
         }
 
+        public static HtmlString Json<TModel>(this IHtmlHelper<TModel> htmlHelper, object data)
+        {
+            var json = JsonConvert.SerializeObject(data, Formatting.None,
+                new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
-        public static IHtmlString Json<TModel>(this IHtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None,
-            new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+            return (HtmlString) htmlHelper.Raw(json);
+        }
 
-        public static IHtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, string text)
-            => condition ? htmlHelper.Raw(text) : HtmlString.Empty;
+        public static HtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, string text)
+        {
+            return (HtmlString) (condition ? htmlHelper.Raw(text) : new HtmlString(string.Empty));
+        }
 
-        public static IHtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, IHtmlString html)
-            => condition ? html : HtmlString.Empty;
+        public static HtmlString Conditional<TModel>(this IHtmlHelper<TModel> htmlHelper, bool condition, HtmlString html)
+        {
+            return condition ? html : new HtmlString(string.Empty);
+        }
 
-        public static IHtmlString HiddenFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
-         => condition ? htmlHelper.HiddenFor(expression) : HtmlString.Empty;
+        public static HtmlString HiddenFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
+        {
+            return (HtmlString) (condition ? htmlHelper.HiddenFor(expression) : new HtmlString(string.Empty));
+        }
 
-        /// <summary>
-        /// Puts all the stuff that's current in the querystring into hidden form fields.
-        /// </summary>
-        /// <param name="html"></param>
-        /// <returns></returns>
-        public static IHtmlString HiddenFieldsFromQueryString(this IHtmlHelper html, string[] keysToExclude = null)
+        public static HtmlString HiddenFieldsFromQueryString(this IHtmlHelper html, string[] keysToExclude = null)
         {
             var sb = new StringBuilder();
             var query = html.ViewContext.HttpContext.Request.Query;
-            var keys = query.AllKeys;
 
-            if (keysToExclude != null)
+            foreach (var key in query.Keys)
             {
-                keys = keys.Where(k => !keysToExclude.Contains(k)).ToArray();
-            }
+                if (keysToExclude != null && keysToExclude.Contains(key))
+                    continue;
 
-            foreach (var item in keys)
-            {
-                var vals = query.GetValues(item);
-                foreach (var item2 in vals)
+                foreach (var value in query[key])
                 {
-                    sb.AppendLine("\r\n\t\t\t\t\t\t\t\t\t" + $@"<input type=""hidden"" name=""{HttpUtility.HtmlEncode(item)}"" value=""{HttpUtility.HtmlEncode(item2)}"" />");
+                    sb.AppendLine($@"<input type=""hidden"" name=""{WebUtility.HtmlEncode(key)}"" value=""{WebUtility.HtmlEncode(value)}"" />");
                 }
             }
+
             return new HtmlString(sb.ToString());
-
         }
 
-        public static IHtmlHelper<TModel> For<TModel>(this IHtmlHelper helper) where TModel : class, new()
-        {
-            return For<TModel>(helper.ViewContext, helper.ViewDataContainer.ViewData, helper.RouteCollection);
-        }
-
-        public static IHtmlHelper<TModel> For<TModel>(this IHtmlHelper helper, TModel model)
-        {
-            return For<TModel>(helper.ViewContext, helper.ViewDataContainer.ViewData, helper.RouteCollection, model);
-        }
-
-        public static IHtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection) where TModel : class, new()
+        public static Task<IHtmlContent> For<TModel>(this IHtmlHelper htmlHelper, string partialViewName) where TModel : class, new()
         {
             var model = new TModel();
-            return For<TModel>(viewContext, viewData, routeCollection, model);
+            return htmlHelper.PartialAsync(partialViewName, model);
         }
 
-        public static IHtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection, TModel model)
+        public static Task<IHtmlContent> For<TModel>(this IHtmlHelper htmlHelper, string partialViewName, TModel model)
         {
-            var newViewData = new ViewDataDictionary(viewData) { Model = model };
-            var newViewContext = new ViewContext(
-                viewContext.Controller.ControllerContext,
-                viewContext.View,
-                newViewData,
-                viewContext.TempData,
-                viewContext.Writer);
-            var viewDataContainer = new ViewDataContainer(newViewContext.ViewData);
-            return new HtmlHelper<TModel>(newViewContext, viewDataContainer, routeCollection);
+            return htmlHelper.PartialAsync(partialViewName, model);
         }
 
         private class ViewDataContainer : System.Web.Mvc.IViewDataContainer
@@ -205,25 +194,22 @@ namespace Edubase.Web.UI.Helpers
         }
 
         /// <summary>
-        /// Outputs the supplied file size in megabytes and appends 'MB', or if the supplied bytes value is null, a zero length string is returned.
+        /// Outputs the supplied file size in megabytes and appends 'MB', or returns an empty string if null.
         /// </summary>
-        /// <param name="html"></param>
-        /// <param name="fileSizeInBytes"></param>
-        /// <param name="decimalPlaces"></param>
-        /// <param name="minimumValue"></param>
-        /// <returns></returns>
-        public static IHtmlString FileSizeInMegabytes(this IHtmlHelper html, long? fileSizeInBytes, int decimalPlaces = 2, double minimumValue = 0)
+        /// <param name="html">The HTML helper instance.</param>
+        /// <param name="fileSizeInBytes">File size in bytes.</param>
+        /// <param name="decimalPlaces">Number of decimal places to round to.</param>
+        /// <param name="minimumValue">Minimum MB value to display.</param>
+        /// <returns>Formatted file size string as HtmlString.</returns>
+        public static HtmlString FileSizeInMegabytes(this IHtmlHelper html, long? fileSizeInBytes, int decimalPlaces = 2, double minimumValue = 0)
         {
-            if (fileSizeInBytes.HasValue)
-            {
-                var mb = Math.Round((double) fileSizeInBytes.Value / 1024 / 1024, decimalPlaces);
-                var result = mb > minimumValue ? mb : minimumValue;
-                return new HtmlString(result.ToString() + " MB");
-            }
-            else
-            {
+            if (!fileSizeInBytes.HasValue)
                 return new HtmlString(string.Empty);
-            }
+
+            var mb = Math.Round(fileSizeInBytes.Value / 1024d / 1024d, decimalPlaces);
+            var result = mb > minimumValue ? mb : minimumValue;
+
+            return new HtmlString($"{result} MB");
         }
 
         /// <summary>

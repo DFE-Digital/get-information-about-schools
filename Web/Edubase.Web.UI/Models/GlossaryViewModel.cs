@@ -1,9 +1,6 @@
-﻿using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Models
 {

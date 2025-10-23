@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Edubase.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace Edubase.Web.UI.Models.Search
 {

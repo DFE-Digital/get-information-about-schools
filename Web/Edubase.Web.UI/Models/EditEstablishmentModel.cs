@@ -1,20 +1,18 @@
-using Edubase.Common;
-using Edubase.Services.Establishments.DisplayPolicies;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Edubase.Common;
 using Edubase.Services.Enums;
+using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Web.UI.Areas.Establishments.Models;
-using Edubase.Web.UI.Models.Search;
-using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Models
 {
-    using Edubase.Services.Establishments.Models;
-    using Edubase.Services.Groups.Models;
-    using Services.Domain;
     using System.ComponentModel;
     using System.Linq;
+    using Edubase.Services.Establishments.Models;
+    using Edubase.Services.Groups.Models;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Services.Domain;
     using ET = Services.Enums.eLookupEstablishmentType;
 
     public class EditEstablishmentModel : IEstablishmentPageViewModel

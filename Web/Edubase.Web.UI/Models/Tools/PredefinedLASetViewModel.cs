@@ -1,8 +1,7 @@
-﻿using Edubase.Services.Domain;
-using Edubase.Web.UI.Helpers;
-using Edubase.Web.UI.Helpers.ModelBinding;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Helpers.ModelBinding;
 
 namespace Edubase.Web.UI.Models.Tools
 {

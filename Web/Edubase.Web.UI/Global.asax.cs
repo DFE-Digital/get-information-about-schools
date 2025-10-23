@@ -1,8 +1,3 @@
-using Autofac;
-using Edubase.Common.Cache;
-using Edubase.Web.UI.Filters;
-using Edubase.Web.UI.Validation;
-using FluentValidation.Mvc;
 using System;
 using System.Configuration;
 using System.IO;
@@ -11,13 +6,18 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Http;
 using System.Xml;
+using Autofac;
 using AzureTableLogger;
+using Edubase.Common.Cache;
 using Edubase.Services.ExternalLookup;
-using Newtonsoft.Json.Serialization;
+using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ValueProviders;
+using Edubase.Web.UI.Validation;
 using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json.Serialization;
 using Sustainsys.Saml2.Exceptions;
 
 namespace Edubase.Web.UI
@@ -129,26 +129,6 @@ namespace Edubase.Web.UI
             }
         }
 
-        /// <summary>
-        /// <p>
-        ///     This is used to (optionally) add a known-good self-signed certificate to the allow list.
-        /// </p><p>
-        ///     An allow-list specified within local configuration is preferable to alternatives
-        ///     such as disabling SSL verification entirely, or adding the certificate to the
-        ///     trusted root store.
-        /// </p><p>
-        ///     Strongly discouraged for any environment other than local development.
-        ///     (currently enforced, where <c>Environment</c> must be <c>localdev</c>)
-        /// </p><p>
-        ///     <list type="bullet">
-        ///         <item>The SHA1 thumbprint of the certificate to add to the allow list.</item>
-        ///         <item>Non-alphanumeric characters are removed (<c>[^A-Za-z0-9_]</c>) and case is normalised.</item>
-        ///         <item>This can be obtained from the web browser.</item>
-        ///     </list>
-        /// </p><p>
-        ///     Adapted from: https://stackoverflow.com/a/44140506
-        /// </p>
-        /// </summary>
         private static void AddTrustedCertificatesFromConfiguration()
         {
             System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate(

@@ -1,14 +1,11 @@
-using Edubase.Services.Core;
-using Edubase.Services.Downloads.Models;
-using Edubase.Web.Resources;
-using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
-using Edubase.Services.Enums;
-using Edubase.Web.UI.Models.Search;
+using Edubase.Services.Core;
+using Edubase.Services.Downloads.Models;
+using Edubase.Web.Resources;
+using MoreLinq;
 
 namespace Edubase.Web.UI.Models
 {
