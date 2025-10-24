@@ -1,0 +1,29 @@
+@using Edubase.Services.Enums
+@using Edubase.Services.Geo
+@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Models.Search
+@model PlaceDto
+
+@{
+    const string key = "LocationSearchModel.AutoSuggestValue";
+    var query = ViewContext.HttpContext.Request.Query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
+
+    query.Remove("placeId");
+    query.Remove(key);
+
+    if (!query.ContainsKey(key))
+    {
+        query[key] = $"{Model.Coords.Latitude},{Model.Coords.Longitude}";
+    }
+
+    if (query.TryGetValue("OpenOnly", out var openOnly) && openOnly == "true")
+    {
+        query.Remove("OpenOnly");
+        query[SearchViewModel.BIND_ALIAS_STATUSIDS] = $"{(int)eLookupEstablishmentStatus.Open},{(int)eLookupEstablishmentStatus.OpenButProposedToClose}";
+    }
+
+    var queryString = string.Join("&", query.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+    var url = Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" }) + "?" + queryString;
+}
+
+<a href="@url">@Model.Name</a>

@@ -1,11 +1,8 @@
-using Edubase.Services.Domain;
-using Edubase.Web.UI.Areas.Governors.Models.Validators;
-using FluentValidation.Attributes;
 using System.Web;
+using Edubase.Services.Domain;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
-    [Validator(typeof(GovernorsBulkUpdateViewModelValidator))]
     public class GovernorsBulkUpdateViewModel
     {
         public HttpPostedFileBase BulkFile { get; set; }

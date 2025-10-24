@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Helpers
 @*
 
     HELLO THERE JON
@@ -38,7 +39,11 @@
             @if (Model.CurrentPageIndex > 1)
             {
                 <li>
-                    <a href="@Url.Current(new {skip = (Model.Skip - Model.Take), Count = Model.Count})" class="pagination-prev" aria-label="Previous page"><< Previous</a>
+                    <a href="@Url.Action("Index", new { skip = Model.Skip - Model.Take, count = Model.Count })"
+                       class="pagination-prev"
+                       aria-label="Previous page">
+                        &lt;&lt; Previous
+                    </a>
                 </li>
             }
 
@@ -52,8 +57,11 @@
                 {
                     var tabletClass = (i >= Model.CurrentPageIndex - 2 && i <= Model.CurrentPageIndex + 2) ? "tablet-pagination" : "";
                     <li>
-                        <a href="@Url.Current(new {skip = ((i - 1) * Model.Take), Count = Model.Count})"
-                           class="numeric-pagination @tabletClass" aria-label="Page @i">@i</a>
+                        <a href="@Url.Action("Index", new { skip = (i - 1) * Model.Take, count = Model.Count })"
+                           class="numeric-pagination @tabletClass"
+                           aria-label="Page @i">
+                            @i
+                        </a>
                     </li>
 
                 }
@@ -62,7 +70,12 @@
             @if (Model.CurrentPageIndex < Model.PageCount)
             {
                 <li>
-                    <a href="@Url.Current(new {skip = (Model.Skip + Model.Take), Count = Model.Count})" class="pagination-next" aria-label="Next page">Next >></a>
+                    <a href="@Url.Action("Index", new { skip = Model.Skip + Model.Take, count = Model.Count })"
+                       class="pagination-next"
+                       aria-label="Next page">
+                        Next &gt;&gt;
+                    </a>
+
                 </li>
             }
 

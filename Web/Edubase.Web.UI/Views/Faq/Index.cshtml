@@ -1,4 +1,6 @@
 @using Edubase.Data.Entity
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
 @model FaqViewModel
 @{
     ViewBag.Title = "Get Information about Schools: Frequently asked questions";
@@ -141,9 +143,9 @@
     </div>
 </div>
 
-
-
-<p class="no-js-show-block">@helpers.BackToTopLink()</p>
+<p class="no-js-show-block">
+    <back-to-top-link />
+</p>
 
 <noscript>
     <style>

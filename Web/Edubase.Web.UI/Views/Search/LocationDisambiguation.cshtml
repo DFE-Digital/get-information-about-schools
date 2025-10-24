@@ -1,6 +1,7 @@
 @using Edubase.Services.Enums;
 @using Edubase.Services.Geo;
 @using Edubase.Web.UI;
+@using Edubase.Web.UI.Models.Search
 @using VM = Edubase.Web.UI.Models.Search.LocationDisambiguationViewModel;
 @model VM
 @{
@@ -8,7 +9,6 @@
     ViewBag.hideLogo = true;
     ViewBag.siteSection = "search";
 }
-
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -23,7 +23,7 @@
             <ul class="govuk-list">
                 @foreach (var item in Model.MatchingLocations)
                 {
-                    <li>@LocationLink(item)</li>
+                    <li>@await Html.PartialAsync("_LocationLink", item)</li>
                 }
             </ul>
 
@@ -32,7 +32,7 @@
         }
         else if (Model.MatchingLocations.Count == 1)
         {
-            <p>Did you mean @LocationLink(Model.MatchingLocations[0])?</p>
+            <p>Did you mean @await Html.PartialAsync("_LocationLink", Model.MatchingLocations[0])?</p>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments, SearchType = eSearchType.Location})" class="govuk-button govuk-button--secondary">Back to search</a>
         }
         else
@@ -42,19 +42,6 @@
         }
     </div>
 </div>
-
-@helper LocationLink(PlaceDto place)
-{
-    const string key = "LocationSearchModel.AutoSuggestValue";
-    var queryString = Request.QueryString.RemoveKeys("placeId", key).AddIfNonExistent(key, $"{place.Coords.Latitude},{place.Coords.Longitude}");
-    if (queryString["OpenOnly"] == "true")
-    {
-        queryString = queryString.RemoveKey("OpenOnly").AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eLookupEstablishmentStatus.Open, (int)eLookupEstablishmentStatus.OpenButProposedToClose);
-    }
-
-    <a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@queryString">@place.Name</a>
-
-}
 
 @section BreadCrumbs
 {

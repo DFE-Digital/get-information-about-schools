@@ -2,6 +2,7 @@
 @using System.Web.Mvc.Html
 @using Edubase.Data.Entity
 @using Edubase.Web.UI.Controllers
+@using Edubase.Web.UI.Helpers
 @using MoreLinq
 @model Edubase.Web.UI.Models.News.NewsArticleAuditViewModel
 @{
@@ -146,7 +147,7 @@
                 }
             </tbody>
         </table>
-        @helpers.BackToTopLink()
+        <back-to-top-link />
     }
 </div>
 }

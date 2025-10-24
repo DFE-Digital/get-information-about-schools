@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.WebUtilities
 @model dynamic
 @{
     var startResult = @Model.StartIndex + 1;
@@ -44,8 +45,18 @@
 
             @if (currentPage > 0)
             {
+                {
+                    var previousUrl = QueryHelpers.AddQueryString(
+                        Context.Request.Path,
+                        new Dictionary<string, string>
+                        {
+                            { "startIndex", ((currentPage - 1) * Model.PageSize).ToString() },
+                            { "Count", Model.Count.ToString() }
+                        }
+                    );
+                }
                 <li>
-                    <a href="@Url.Current(new {startIndex = ((currentPage - 1) * Model.PageSize), Count = Model.Count})" class="pagination-prev" aria-label="Previous page"><< Previous</a>
+                    <a href="previousUrl" class="pagination-prev" aria-label="Previous page">&lt;&lt; Previous</a>
                 </li>
             }
 
@@ -58,19 +69,39 @@
                 }
                 else
                 {
+                    {
+                        var pageUrl = QueryHelpers.AddQueryString(
+                            Context.Request.Path,
+                            new Dictionary<string, string>
+                            {
+                                { "startIndex", (i * Model.PageSize).ToString() },
+                                { "Count", Model.Count.ToString() }
+                            }
+                        );
+                    }
+
                     <li>
-                        <a href="@Url.Current(new {startIndex = (i * Model.PageSize), Count = Model.Count})" class="numeric-pagination" aria-label="Page @displayPage">@displayPage</a>
+                        <a href="pageUrl" class="numeric-pagination" aria-label="Page @displayPage">@displayPage</a>
                     </li>
                 }
             }
 
             @if (currentPage < Model.PageCount - 1)
             {
+                {
+                    var nextUrl = QueryHelpers.AddQueryString(
+                        Context.Request.Path,
+                        new Dictionary<string, string>
+                        {
+                            { "startIndex", ((currentPage + 1) * Model.PageSize).ToString() },
+                            { "Count", Model.Count.ToString() }
+                        }
+                    );
+                }
                 <li>
-                    <a href="@Url.Current(new {startIndex = ((currentPage + 1) * Model.PageSize), Count = Model.Count})" class="pagination-next" aria-label="Next page" >Next >></a>
+                    <a href="nextUrl" class="pagination-next" aria-label="Next page">Next >></a>
                 </li>
             }
-
         </ul>
     }
 </nav>

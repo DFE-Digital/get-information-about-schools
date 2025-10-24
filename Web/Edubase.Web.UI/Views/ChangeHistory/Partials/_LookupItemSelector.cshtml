@@ -1,0 +1,52 @@
+@using Edubase.Web.UI.Models
+@model (string Label, string Name, IEnumerable<LookupItemViewModel> Items, List<int> SelectedItems, string AdditionalClassName)
+
+<div class="govuk-option-select js-collapsible @Model.AdditionalClassName"
+     data-closed-on-load="false"
+     id="option-select-@Model.Label.ToLower().Replace(" ", "-").Replace("/", "-")"
+     data-bind-alias="@Model.Name"
+     role="search">
+    <div class="container-head js-container-head">
+        <div class="option-select-label">@Model.Label</div>
+        <div class="js-selected-counter">
+            <span class="js-selected-counter-text"></span>
+        </div>
+    </div>
+
+    <div class="options-container">
+        <div class="suggestion-target"></div>
+        <div class="js-auto-height-inner">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-visually-hidden">
+                    Select an option below to filter the results — changing the selection will refresh the results
+                </legend>
+                <div class="govuk-checkboxes gias-filter-checkboxes">
+                    <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
+                        <input id="@(Model.Name)_all" class="select-all govuk-checkboxes__input" type="checkbox" />
+                        <label for="@(Model.Name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
+                            All
+                        </label>
+                    </div>
+                </div>
+                <div class="govuk-checkboxes gias-filter-checkboxes">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="govuk-checkboxes__item">
+                            <input name="@Model.Name"
+                                   value="@item.Id"
+                                   id="@(Model.Name)_@item.Id"
+                                   class="js-filter-input trigger-result-update govuk-checkboxes__input"
+                                   type="checkbox"
+                                   @(Model.SelectedItems.Contains(item.Id) ? "checked" : "") />
+                            <label for="@(Model.Name)_@item.Id"
+                                   class="js-filter-label govuk-label govuk-checkboxes__label">
+                                @item
+                            </label>
+                        </div>
+                    }
+                </div>
+            </fieldset>
+        </div>
+        <filter-skip-link />
+    </div>
+</div>

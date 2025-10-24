@@ -1,4 +1,6 @@
-﻿@using Edubase.Services.Domain
+@using Edubase.Services.Domain
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Tools
 @model IndSchoolsSearchViewModel
 
 
@@ -44,7 +46,7 @@
             <div class="lower-pagination push--bottom">
                 @Html.Partial("_GenericPaginationV2", Model.Results)
             </div>
-            @helpers.BackToTopLink()
+            <back-to-top-link />
         }
         else
         {

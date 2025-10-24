@@ -1,5 +1,8 @@
 @using Edubase.Common;
+@using Edubase.Web.UI.Areas.Governors.Models
+@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models.Search
+@using System.Web.WebPages
 @model GovernorSearchViewModel
 @{
     ViewBag.Title = string.Format("Governor search results");
@@ -36,7 +39,7 @@
         </div>
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">
-                @helpers.FilterIcon()
+                <filter-icon />
             </span>
             <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
         </div>
@@ -120,7 +123,7 @@
                                     <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
                                 </select>
                             </div>
-                            @helpers.FilterSkipLink()
+                            <filter-skip-link />
                         </div>
 
                         <div class="govuk-option-select js-collapsible" id="option-select-role-type" role="search">
@@ -155,7 +158,7 @@
                                         </div>
                                     </fieldset>
                                 </div>
-                                @helpers.FilterSkipLink()
+                                <filter-skip-link />
                             </div>
                         </div>
 
@@ -190,7 +193,7 @@
                                             }
                                         </div>
                                     </fieldset>
-                                    @helpers.FilterSkipLink()
+                                    <filter-skip-link />
                                 </div>
                             </div>
 
@@ -288,7 +291,7 @@
                     </div>
                 </fieldset>
             </div>
-            @helpers.FilterSkipLink()
+            <filter-skip-link />
         </div>
     </div>
 }

@@ -1,4 +1,6 @@
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @model IDownloadGenerationProgressModel
 @{ ViewBag.bodyClasses = "schools-search-page search-page";
@@ -88,7 +90,7 @@
     <div class="govuk-grid-column-full">
         <div aria-live="polite" class="gias-wait-mask gias-wait-mask--inline">
             <p class="govuk-visually-hidden">Please wait</p>
-            @helpers.CssSpinner()
+            <css-spinner />
         </div>
     </div>
 </div>

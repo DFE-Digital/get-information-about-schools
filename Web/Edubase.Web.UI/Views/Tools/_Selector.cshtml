@@ -1,0 +1,42 @@
+@using Edubase.Services.Domain
+@model (string Label, string Name, IEnumerable<LookupDto> Items, List<int> SelectedItems, string AdditionalClassName, bool IsExtraFilter)
+
+<div class="govuk-option-select js-collapsible @Model.AdditionalClassName"
+     data-closed-on-load="false"
+     id="option-select-@Model.Label.ToLower().Replace(" ", "-").Replace("/", "-")"
+     data-bind-alias="@Model.Name">
+    <div class="container-head js-container-head">
+        <div class="option-select-label">@Model.Label</div>
+        <div class="js-selected-counter">
+            <span class="js-selected-counter-text"></span>
+        </div>
+    </div>
+    <a href="#" class="clear-selections filter-clear" role="button">Clear</a>
+    <div class="options-container">
+        <div class="js-auto-height-inner">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-visually-hidden">
+                    Select an option below to filter the results — changing the selection will refresh the results
+                </legend>
+                <div class="govuk-checkboxes gias-filter-checkboxes">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="govuk-checkboxes__item">
+                            <input name="@Model.Name"
+                                   value="@item.Id"
+                                   id="@(Model.Name)_@item.Id"
+                                   class="trigger-result-update govuk-checkboxes__input"
+                                   type="checkbox"
+                                   @(Model.SelectedItems.Contains(item.Id) ? "checked" : "") />
+                            <label for="@(Model.Name)_@item.Id"
+                                   class="js-filter-label govuk-label govuk-checkboxes__label">
+                                @item
+                            </label>
+                        </div>
+                    }
+                </div>
+            </fieldset>
+        </div>
+        <filter-skip-link />
+    </div>
+</div>

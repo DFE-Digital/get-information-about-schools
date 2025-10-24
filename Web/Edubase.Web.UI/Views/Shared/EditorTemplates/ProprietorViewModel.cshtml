@@ -1,6 +1,9 @@
 @using System.Linq.Expressions
 @using Edubase.Common.Text
 @using Edubase.Services.Establishments.DisplayPolicies
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Views.Shared.EditorTemplates.Model
 @model ProprietorViewModel
 
 @{
@@ -30,29 +33,43 @@
 
 @if (displayPolicy.Name)
 {
-    @RenderTextBox(x => x.Name, nameof(ProprietorViewModel.Name))
+    @await Html.PartialAsync("_RenderTextBox", new ProprietorTextBoxModel {
+        FieldExpression = (Expression<Func<ProprietorViewModel, string>>)(model => model.Name),
+        FieldName = nameof(ProprietorViewModel.Name)
+    })
 }
 
 @if (displayPolicy.Street)
 {
-    @RenderTextBox(x => x.Street, nameof(ProprietorViewModel.Street))
+    @await Html.PartialAsync("_RenderTextBox", new ProprietorTextBoxModel {
+        FieldExpression = (Expression<Func<ProprietorViewModel, string>>)(model => model.Street),
+        FieldName = nameof(ProprietorViewModel.Street)
+    })
 }
 
 @if (displayPolicy.Locality)
 {
-    @RenderTextBox(x => x.Locality, nameof(ProprietorViewModel.Locality))
+    @await Html.PartialAsync("_RenderTextBox", new ProprietorTextBoxModel {
+        FieldExpression = (Expression<Func<ProprietorViewModel, string>>)(model => model.Locality),
+        FieldName = nameof(ProprietorViewModel.Locality)
+    })
 }
 
 @if (displayPolicy.Address3)
 {
-    @RenderTextBox(x => x.Address3, nameof(ProprietorViewModel.Address3))
+    @await Html.PartialAsync("_RenderTextBox", new ProprietorTextBoxModel {
+        FieldExpression = (Expression<Func<ProprietorViewModel, string>>)(model => model.Address3),
+        FieldName = nameof(ProprietorViewModel.Address3)
+    })
 }
 
 @if (displayPolicy.Town)
 {
-    @RenderTextBox(x => x.Town, nameof(ProprietorViewModel.Town))
+    @await Html.PartialAsync("_RenderTextBox", new ProprietorTextBoxModel {
+        FieldExpression = (Expression<Func<ProprietorViewModel, string>>)(model => model.Town),
+        FieldName = nameof(ProprietorViewModel.Town)
+    })
 }
-
 
 @if (displayPolicy.CountyId)
 {
@@ -73,35 +90,29 @@
 
 @if (displayPolicy.Postcode)
 {
-    @RenderTextBox(x => x.Postcode, nameof(ProprietorViewModel.Postcode), "govuk-input--width-10")
+    @await Html.PartialAsync("_RenderTextBox", new ProprietorTextBoxModel {
+        FieldExpression = (Expression<Func<ProprietorViewModel, string>>)(model => model.Postcode),
+        FieldName = nameof(ProprietorViewModel.Postcode),
+        FieldClasses = "govuk-input--width-10"
+})
+
 }
 
 @if (displayPolicy.TelephoneNumber)
 {
-    @RenderTextBox(x => x.TelephoneNumber, nameof(ProprietorViewModel.TelephoneNumber))
+    @await Html.PartialAsync("_RenderTextBox", new ProprietorTextBoxModel {
+        FieldExpression = (Expression<Func<ProprietorViewModel, string>>)(model => model.TelephoneNumber),
+        FieldName = nameof(ProprietorViewModel.TelephoneNumber)
+    })
+
 }
 
 @if (displayPolicy.Email)
 {
-    @RenderTextBox(x => x.Email, nameof(ProprietorViewModel.Email))
-}
-
-@helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldName, string fieldClasses = "")
-{
-    var classes = "govuk-input " + fieldClasses;
-    var validationCounter = ViewBag.ShowCounter != null ? $"[{ViewBag.ShowCounter - 1}]" : "";
-    var validationId = $"iebtDetail.{ViewBag.ProprietorType}{validationCounter}.{fieldName.ToLowerFirstLetter()}";
-    var validationLink = validationId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
-
-    <div class="govuk-form-group @Html.ValidationCssClassFor(fnc) @ProprietorsValidationCssClass(validationId)">
-        @Html.LabelFor(fnc, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(fnc, null, new { @class = "govuk-error-message" })
-        @if (ProprietorsValidationCssClass(validationId) == "govuk-form-group--error")
-        {
-            <span class="govuk-error-message">@Html.ViewData.ModelState[validationId].Errors.First().ErrorMessage</span>
-        }
-        @Html.TextBoxFor(fnc, new { @class = classes, id = validationLink })
-    </div>
+    @await Html.PartialAsync("_RenderTextBox", new ProprietorTextBoxModel {
+        FieldExpression = (Expression<Func<ProprietorViewModel, string>>)(x => x.Email),
+        FieldName = nameof(ProprietorViewModel.Email)
+    })
 }
 
 @functions {

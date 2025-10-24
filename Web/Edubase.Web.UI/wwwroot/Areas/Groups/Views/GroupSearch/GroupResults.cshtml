@@ -1,6 +1,9 @@
 @using Edubase.Common;
 @using Edubase.Services.Groups.Search;
+@using Edubase.Web.UI.Areas.Groups.Models
+@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models.Search
+@using System.Web.WebPages
 @model GroupSearchViewModel
 @{
     ViewBag.Title = $"Search results for '{Model.GroupSearchModel.Text}'";
@@ -42,7 +45,7 @@
     <div class="govuk-grid-column-full">
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">
-                @helpers.FilterIcon()
+                <filter-icon />
             </span>
             <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
         </div>
@@ -73,7 +76,7 @@
                                     <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
                                     <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
                                 </select>
-                                @helpers.FilterSkipLink()
+                                <filter-skip-link />
                             </div>
                         </div>
 
@@ -109,7 +112,7 @@
                                         </div>
                                     </fieldset>
                                 </div>
-                                @helpers.FilterSkipLink()
+                                <filter-skip-link />
                             </div>
                         </div>
 
@@ -148,7 +151,7 @@
                                             </div>
                                         </fieldset>
                                     </div>
-                                    @helpers.FilterSkipLink()
+                                    <filter-skip-link />
                                 </div>
                             </div>
                         }

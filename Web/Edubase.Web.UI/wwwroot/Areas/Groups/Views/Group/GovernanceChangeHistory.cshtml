@@ -1,6 +1,8 @@
 @using Edubase.Common
 @using Edubase.Services.Domain
 @using System.Text.RegularExpressions
+@using Edubase.Web.UI.Areas.Groups.Models
+@using Edubase.Web.UI.Helpers
 
 @model GroupDetailViewModel
 @{
@@ -171,7 +173,7 @@
                                 <div class="lower-pagination push--bottom">
                                     @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
                                 </div>
-                                @helpers.BackToTopLink()
+                                <back-to-top-link />
                             }
 
                         }

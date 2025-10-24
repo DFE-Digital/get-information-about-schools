@@ -1,4 +1,6 @@
 @using Edubase.Services.Domain
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Tools
 @model IndSchoolsSearchViewModel
 @{
     ViewBag.Title = "View independent schools' significant dates";
@@ -48,7 +50,7 @@
         </div>
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">
-                @helpers.FilterIcon()
+                <filter-icon />
             </span>
             <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
         </div>
@@ -71,7 +73,16 @@
 
                     @Html.HiddenFor(m => Model.ActionName)
 
-                    @Selector("Local authority", "d", Model.LocalAuthorities.OrderBy(x => x.Name).ToList(), Model.SelectedLocalAuthorityIds, "has-save-set")
+                    @await Html.PartialAsync(
+                        "_Selector", (
+                            "Local authority",
+                            "d",
+                            Model.LocalAuthorities.OrderBy(x => x.Name).ToList(),
+                            Model.SelectedLocalAuthorityIds,
+                            "has-save-set",
+                            false
+                         )
+                    )
 
                     <p class="govuk-!-padding-top-4">
                         <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-2" href="#" id="set-saver">Save as set</a>
@@ -94,7 +105,7 @@
                                     <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
                                 </div>
                             </div>
-                            @helpers.FilterSkipLink()
+                            <filter-skip-link />
                         </div>
                     </div>
                     <div id="filter-additional-controls" class="filter-additional-controls">
@@ -116,43 +127,6 @@
         @{Html.RenderPartial("_IndSchSearchResults");}
     </div>
 </div>
-
-
-@helper Selector(string label, string name, IEnumerable<LookupDto> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
-{
-
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text"></span>
-
-            </div>
-        </div>
-        <a href="#" class="clear-selections filter-clear" role="button">Clear</a>
-        <div class="options-container" id="">
-            <div class="js-auto-height-inner">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        @foreach (var item in items)
-                        {
-                            <div class="govuk-checkboxes__item">
-                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                                <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                    @item
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </fieldset>
-            </div>
-            @helpers.FilterSkipLink()
-        </div>
-    </div>
-}
-
 
 @section ViewScripts
 {

@@ -2,6 +2,7 @@
 @using System.Web.Mvc.Html
 @using Edubase.Common
 @using Edubase.Data.Entity
+@using Edubase.Web.UI.Helpers
 @model Edubase.Web.UI.Models.Notifications.NotificationsBannersAuditViewModel
 @{ ViewBag.Title = "Get Information about Schools";
     ViewBag.SiteSection = "tools"; }
@@ -156,7 +157,7 @@
                 }
                 </tbody>
             </table>
-            @helpers.BackToTopLink()
+            <back-to-top-link />
         }
     </div>
 }

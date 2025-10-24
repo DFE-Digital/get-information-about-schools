@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Helpers
 @{
     ViewBag.SiteSection = "tools";
 }
@@ -37,7 +38,7 @@
         <div class="govuk-grid-column-full">
             <div aria-live="polite" class="gias-wait-mask gias-wait-mask--inline">
                 <p class="govuk-visually-hidden">Please wait</p>
-                @helpers.CssSpinner()
+                <css-spinner />
             </div>
         </div>
     </div>

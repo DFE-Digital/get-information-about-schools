@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Models
 @using Edubase.Web.UI.ValueConverters;
 @using Edubase.Web.UI.Areas.Establishments.Models.Search;
 @using Edubase.Common;
@@ -65,7 +66,7 @@
             Age range
             <a href="#help-text-age-range" class="help-icon modal-link">
                 <span class="govuk-visually-hidden">Help with age range field</span>
-                @helpers.DialogHiddenPrompt()
+                <dialog-hidden-prompt />
             </a>
         </dt>
         <dd class="govuk-summary-list__value">

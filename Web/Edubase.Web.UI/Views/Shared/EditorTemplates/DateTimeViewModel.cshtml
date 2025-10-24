@@ -1,3 +1,6 @@
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+@using System.Web.Mvc
 @model DateTimeViewModel
 @{
     var cssClassPrefix = "";
@@ -267,17 +270,27 @@
     </fieldset>
 </div>
 
-
-@functions
-{
-    static object GetAttributes(bool? readOnly, string cssClasses, int maxlength, string vueModel)
+@functions {
+    public static Dictionary<string, object> GetAttributes(bool? readOnly, string cssClasses, int maxlength, string vueModel)
     {
-        if (readOnly.HasValue && readOnly.Value)
-            return new { @class = cssClasses, disabled = "disabled", maxlength, inputmode = "numeric" };
+        var attributes = new Dictionary<string, object>
+        {
+            { "class", cssClasses },
+            { "maxlength", maxlength },
+            { "inputmode", "numeric" }
+        };
 
-        if (vueModel != null)
-            return new { @class = cssClasses, maxlength, v_model = vueModel, inputmode = "numeric" };
+        if (readOnly.GetValueOrDefault())
+        {
+            attributes["disabled"] = "disabled";
+        }
 
-        return new { @class = cssClasses, maxlength, inputmode = "numeric" };
+        if (!string.IsNullOrEmpty(vueModel))
+        {
+            attributes["v-model"] = vueModel;
+        }
+
+        return attributes;
     }
 }
+

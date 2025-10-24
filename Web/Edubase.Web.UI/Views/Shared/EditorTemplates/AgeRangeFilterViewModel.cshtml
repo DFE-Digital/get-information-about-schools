@@ -1,4 +1,6 @@
-﻿@model AgeRangeFilterViewModel
+@using Edubase.Web.UI.Models
+
+@model AgeRangeFilterViewModel
 
 <div class="govuk-option-select age-filter js-collapsible no-scroll additional-search-critera hidden" data-closed-on-load="false" id="@($"option-select-{ViewData.ModelMetadata.PropertyName}")" data-bind-alias="@(ViewData["bindalias"])">
     <div class="container-head js-container-head">
@@ -26,7 +28,7 @@
             <div class="govuk-form-group">
                 <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
             </div>
-            @helpers.FilterSkipLink()
+            <filter-skip-link />
         </div>
     </div>
 </div>

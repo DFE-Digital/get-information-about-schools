@@ -1,3 +1,5 @@
+@using Edubase.Web.UI.Areas.Groups.Models.CreateEdit
+@using Edubase.Web.UI.Helpers
 @model SearchCompaniesHouseModel
 @{
     ViewBag.bodyClasses = "create-edit-school create-academy-trust";
@@ -117,7 +119,7 @@
                             {"maxPages", 5 }
                         })
                     </div>
-                    @helpers.BackToTopLink()
+                    <back-to-top-link />
                 </div>
             </div>
         }

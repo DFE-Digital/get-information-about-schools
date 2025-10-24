@@ -1,0 +1,29 @@
+@using Edubase.Web.UI.Areas.Establishments.Models.Search
+@using Edubase.Web.UI.Helpers.Edubase.Web.UI.Helpers
+@model EstablishmentSearchDownloadViewModel
+
+<div class="govuk-form-group">
+    <div class="govuk-checkboxes">
+        @if (Model.AllowIncludeEmailAddresses)
+        {
+            @FormHelpers.GiasCheckbox("true", "IncludeEmailAddresses", "Email addresses", null, new { id = "IncludeEmailAddresses", @class = "govuk-checkboxes__input" })
+        }
+
+        @if (Model.AllowIncludeIEBTFields)
+        {
+            @FormHelpers.GiasCheckbox("true", "IncludeIEBTFields", "IEBT fields", null, new { id = "IncludeIEBTFields", @class = "govuk-checkboxes__input" })
+        }
+
+        @if (Model.AllowIncludeBringUpFields)
+        {
+            @FormHelpers.GiasCheckbox("true", "IncludeBringUpFields", "Bring up fields", null, new { id = "IncludeBringUpFields", @class = "govuk-checkboxes__input" })
+        }
+
+        @if (Model.AllowIncludeChildrensCentreFields)
+        {
+            @FormHelpers.GiasCheckbox("true", "IncludeChildrensCentreFields", "Children's centre fields", null, new { id = "IncludeChildrensCentreFields", @class = "govuk-checkboxes__input" })
+        }
+
+        @FormHelpers.GiasCheckbox("true", "IncludeLinks", "Links", null, new { id = "IncludeLinks", @class = "govuk-checkboxes__input" })
+    </div>
+</div>

@@ -1,3 +1,5 @@
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Tools
 @model PredefinedLASetsViewModel
 @{
     ViewBag.Title = "Predefined local authority sets";
@@ -97,7 +99,7 @@
         <div class="lower-pagination push--bottom">
             @Html.Partial("_GenericPaginationV2", Model.Results)
         </div>
-        @helpers.BackToTopLink()
+        <back-to-top-link />
     }
 }
 else

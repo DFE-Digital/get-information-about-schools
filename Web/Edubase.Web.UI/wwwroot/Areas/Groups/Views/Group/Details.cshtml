@@ -1,6 +1,8 @@
 @using Edubase.Common
 @using Edubase.Services.Domain
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Areas.Groups.Models
+@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @using System.Text.RegularExpressions
@@ -310,7 +312,7 @@
                                     </div>
                                 }
 
-                                @helpers.BackToTopLink()
+                            <back-to-top-link />
                             </div>
                         }
 
@@ -441,7 +443,7 @@
                                                 <div class="lower-pagination push--bottom">
                                                     @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
                                                 </div>
-                                                @helpers.BackToTopLink()
+                                                <back-to-top-link />
                                             }
                                         }
                             </div>

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -25,9 +24,7 @@ using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
-    [RoutePrefix("Search")]
-    [Microsoft.AspNetCore.Components.Route("{action=index}")]
+    [Route("Governors/Search")]
     public class GovernorSearchController : EduBaseController
     {
         private IGovernorDownloadService _governorDownloadService;

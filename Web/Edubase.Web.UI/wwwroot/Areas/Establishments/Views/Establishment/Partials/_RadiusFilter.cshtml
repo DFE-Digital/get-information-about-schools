@@ -1,0 +1,79 @@
+@using Edubase.Web.UI.Areas.Establishments.Models.Search
+@using M = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
+
+<div class="govuk-option-select radius-filter js-collapsible no-scroll"
+     data-closed-on-load="false"
+     id="option-select-radius"
+     data-bind-alias="@Model.b"
+     role="search">
+
+    <div class="container-head js-container-head">
+        <div class="option-select-label">Within radius of</div>
+        <div class="js-selected-counter"></div>
+    </div>
+
+    <div class="options-container">
+        <div class="js-auto-height-inner">
+            <fieldset class="govuk-fieldset range-group">
+                <div class="govuk-form-group">
+                    <legend class="govuk-visually-hidden">Enter the radius in miles</legend>
+                    <span class="govuk-error-message hidden">Please check the radius you have entered</span>
+                    <span class="inline-form-control">
+                        <label for="RadiusInMiles" class="govuk-visually-hidden">Radius in miles</label>
+                        <input type="text"
+                               id="RadiusInMiles"
+                               name="@M.BIND_ALIAS_RADIUS"
+                               value="@Model.GetRadiusOption()"
+                               class="govuk-input govuk-input--width-5"
+                               maxlength="5" />
+                        &nbsp;miles
+                        <a href="#"
+                           class="govuk-button govuk-button--secondary filter-button"
+                           data-module="govuk-button">Apply</a>
+                    </span>
+                </div>
+            </fieldset>
+        </div>
+
+        <filter-skip-link />
+    </div>
+</div>
+odel
+
+<div class="govuk-option-select radius-filter js-collapsible no-scroll"
+     data-closed-on-load="false"
+     id="option-select-radius"
+     data-bind-alias="@M.BIND_ALIAS_RADIUS"
+     role="search">
+
+    <div class="container-head js-container-head">
+        <div class="option-select-label">Within radius of</div>
+        <div class="js-selected-counter"></div>
+    </div>
+
+    <div class="options-container">
+        <div class="js-auto-height-inner">
+            <fieldset class="govuk-fieldset range-group">
+                <div class="govuk-form-group">
+                    <legend class="govuk-visually-hidden">Enter the radius in miles</legend>
+                    <span class="govuk-error-message hidden">Please check the radius you have entered</span>
+                    <span class="inline-form-control">
+                        <label for="RadiusInMiles" class="govuk-visually-hidden">Radius in miles</label>
+                        <input type="text"
+                               id="RadiusInMiles"
+                               name="@M.BIND_ALIAS_RADIUS"
+                               value="@Model.GetRadiusOption()"
+                               class="govuk-input govuk-input--width-5"
+                               maxlength="5" />
+                        &nbsp;miles
+                        <a href="#"
+                           class="govuk-button govuk-button--secondary filter-button"
+                           data-module="govuk-button">Apply</a>
+                    </span>
+                </div>
+            </fieldset>
+        </div>
+
+        <filter-skip-link />
+    </div>
+</div>

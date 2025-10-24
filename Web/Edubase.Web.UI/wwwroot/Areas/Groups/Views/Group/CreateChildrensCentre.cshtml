@@ -1,4 +1,6 @@
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Areas.Groups.Models.CreateEdit
+@using Edubase.Web.UI.Helpers
 @model GroupEditorViewModel
 @{
     ViewBag.hideLogo = true;
@@ -77,7 +79,13 @@
                 <gias-wait-spinner :is-processing="isProcessing" />
             </div>
 
-            @using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post, new { @id = "create-childrens-centres" }))
+            @using (Html.BeginForm(
+                    actionName: "Create",
+                    controllerName: "Group",
+                    routeValues: new { area = "Groups" },
+                    method: FormMethod.Post,
+                    antiforgery: true,
+                    htmlAttributes: new { id = "create-childrens-centres" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(x => x.GroupUId)
@@ -556,10 +564,11 @@
                                                         <div class="govuk-radios">
                                                             <div class="govuk-radios__item gias-radios__item-table">
                                                                 @{
-                                                                    object htmlAttribute = new { };
+                                                                    var htmlAttribute = new Dictionary<string, object>();
+
                                                                     if (item.CCIsLeadCentre)
                                                                     {
-                                                                        htmlAttribute = new { @checked = true };
+                                                                        htmlAttribute["checked"] = "checked";
                                                                     }
                                                                 }
                                                                 @Html.RadioButtonFor(x => x.CCLeadCentreUrn, item.Urn, htmlAttribute)
@@ -569,10 +578,10 @@
                                                 }
 
                                                 <td class="govuk-table__cell highlight">
-                                                    @item.Urn
+                                                    item.Urn
                                                 </td>
 
-                                                <td class="govuk-table__cell highlight">@item.Name</td>
+                                                <td class="govuk-table__cell highlight">item.Name</td>
                                                 <td class="govuk-table__cell highlight">
                                                     @if (item.JoinedDate != null)
                                                     {

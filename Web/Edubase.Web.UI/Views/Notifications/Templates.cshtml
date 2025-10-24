@@ -73,27 +73,8 @@
         <dl class="govuk-summary-list gias-summary-top-border">
             @foreach (var template in Model.Templates)
             {
-                @RenderTemplate(template)
+                @await Html.PartialAsync("_NotificationTemplateRow", template)
             }
         </dl>
     </div>
 </div>
-
-
-
-@helper RenderTemplate(NotificationTemplate template)
-{
-    <div class="govuk-summary-list__row">
-        <dd class="govuk-summary-list__value">
-            <div class="govuk-grid-column-three-quarters">
-                <p>@template.Content</p>
-            </div>
-            <div class="govuk-grid-column-one-quarter">
-                @Html.RouteLink("Edit", "EditTemplate", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
-                @Html.RouteLink("Delete", "DeleteTemplate", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
-            </div>
-        </dd>
-    </div>
-}
-
-

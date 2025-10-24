@@ -1,21 +1,16 @@
-using Edubase.Web.UI.Helpers;
-using FluentValidation;
-using FluentValidation.Results;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Edubase.Web.UI.Validation
+public abstract class EdubaseAbstractValidator<T> : AbstractValidator<T>, IValidatorInterceptor
 {
-    public abstract class EdubaseAbstractValidator<T> : AbstractValidator<T>, IValidatorInterceptor
+    public ValidationResult AfterMvcValidation(ActionContext actionContext, ValidationContext<T> validationContext, ValidationResult result)
     {
-        public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext<T> validationContext, ValidationResult result)
-        {
-            result.EduBaseAddToModelState(controllerContext.ModelState, null);
-            return result;
-        }
+        result.EduBaseAddToModelState(actionContext.ModelState, prefix: null);
+        return result;
+    }
 
-        public ValidationContext<T> BeforeMvcValidation(ControllerContext controllerContext, ValidationContext<T> validationContext)
-        {
-            return validationContext;
-        }
+    public ValidationContext<T> BeforeMvcValidation(ActionContext actionContext, ValidationContext<T> validationContext)
+    {
+        return validationContext;
     }
 }

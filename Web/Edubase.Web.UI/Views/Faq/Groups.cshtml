@@ -71,31 +71,10 @@
 
     <div class="govuk-grid-column-full">
         <dl class="govuk-summary-list gias-summary-top-border">
-            @foreach (var template in Model.Groups)
+            @foreach (var group in Model.Groups)
             {
-                @RenderTemplate(template)
+                @await Html.PartialAsync("_FaqGroupRow", group)
             }
         </dl>
     </div>
 </div>
-
-
-
-@helper RenderTemplate(FaqGroup template)
-{
-    <div class="govuk-summary-list__row">
-        <dd class="govuk-summary-list__value">
-            <div class="govuk-grid-column-three-quarters">
-                <p>@template.RowKey</p>
-                <p>@template.GroupName</p>
-                <p>@template.DisplayOrder</p>
-            </div>
-            <div class="govuk-grid-column-one-quarter">
-                @Html.RouteLink("Edit", "EditGroup", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
-                @*@Html.RouteLink("Delete", "DeleteGroup", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--secondary" })*@
-            </div>
-        </dd>
-    </div>
-}
-
-

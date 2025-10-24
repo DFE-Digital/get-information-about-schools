@@ -1,4 +1,7 @@
 @using Edubase.Services.Enums;
+@using Edubase.Web.UI.Areas.Groups.Models.CreateEdit
+@using Edubase.Web.UI.Helpers
+@using System.Web
 @model CreateAcademyTrustViewModel
 @{
     ViewBag.bodyClasses = "create-edit create-academy-trust";
@@ -165,23 +168,24 @@
    <script src="@Html.Raw(Html.GetWebpackScriptUrl("bulk-academies.*.js"))"></script>
 }
 
-@functions
-{
-    object GetAttributes(string cssClasses, bool? readOnly = null, int? maxlength = null)
+@functions {
+    public Dictionary<string, object> GetAttributes(string cssClasses, bool? readOnly = null, int? maxlength = null)
     {
+        var attributes = new Dictionary<string, object>
+        {
+            { "class", cssClasses }
+        };
+
+        if (readOnly.GetValueOrDefault())
+        {
+            attributes["disabled"] = "disabled";
+        }
+
         if (maxlength.HasValue)
         {
-            if (readOnly.HasValue && readOnly.Value)
-                return new { @class = cssClasses, @disabled = "disabled", maxlength = maxlength };
-
-            return new { @class = cssClasses, maxlength = maxlength };
+            attributes["maxlength"] = maxlength.Value;
         }
-        else
-        {
-            if (readOnly.HasValue && readOnly.Value)
-                return new { @class = cssClasses, @disabled = "disabled"};
 
-            return new { @class = cssClasses};
-        }
+        return attributes;
     }
 }

@@ -4,7 +4,6 @@
 @using Edubase.Web.UI
 @using Edubase.Web.UI.Areas.Establishments.Controllers
 @using Edubase.Web.UI.Areas.Establishments.Models.Search
-@using Glimpse.Core.Configuration
 @using VM = Edubase.Web.UI.Models.Search.LocalAuthorityDisambiguationViewModel;
 @model VM
 @{
@@ -27,7 +26,8 @@
             <ul class="govuk-list">
                 @foreach (var item in Model.MatchingLocalAuthorities)
                 {
-                    <li>@LocalAuthorityLink(item)</li>
+                    <li>@await Html.PartialAsync("_LocalAuthorityLink", (item, Model.OpenOnly, Model.SelectedLocalAuthorityIds))</li>
+
                 }
             </ul>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
@@ -38,8 +38,14 @@
         {
             <p>
                 Did you mean
-                @LocalAuthorityLink(@Model.MatchingLocalAuthorities[0])?
+                @await Html.PartialAsync("_LocalAuthorityLink", (
+                    Model.MatchingLocalAuthorities[0],
+                    Model.OpenOnly,
+                    Model.SelectedLocalAuthorityIds
+                    )
+                )?
             </p>
+
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments"})" class="govuk-button govuk-button--secondary no-js-show-inline">Back to search</a>
         }
@@ -51,17 +57,6 @@
         }
     </div>
 </div>
-
-@helper LocalAuthorityLink(LookupDto item)
-{
-    var cleanQueryString = HttpUtility.ParseQueryString(string.Empty);
-
-    cleanQueryString.Add(nameof(EstablishmentSearchViewModel.SearchType), eSearchType.ByLocalAuthority.ToString());
-    cleanQueryString.Add(nameof(Model.OpenOnly), Model.OpenOnly.ToString());
-
-    var queryString = $"{cleanQueryString.ToString()}&{QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())}#la";
-    <a href="@Url.Action("Index", "Search", new { area = "" })?@queryString">@item.Name</a>
-}
 
 @section BreadCrumbs
 {

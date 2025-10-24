@@ -1,4 +1,5 @@
 @using Edubase.Common
+@using Edubase.Web.UI.Models.Search
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
 @model VM
@@ -30,7 +31,7 @@
                         Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
                         <a href="#name-reference-help" class="help-icon modal-link">
                             <span class="govuk-visually-hidden">Help with reference numbers</span>
-                            @helpers.DialogHiddenPrompt()
+                            <dialog-hidden-prompt />
                         </a>
                     </label>
 

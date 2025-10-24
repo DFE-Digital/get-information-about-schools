@@ -1,4 +1,6 @@
 @using System.Globalization
+@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Models.Search
 @model HomepageViewModel
 @{
     ViewBag.Title = "Get Information about Schools";
@@ -263,6 +265,6 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        @helpers.BackToTopLink()
+        <back-to-top-link />
     </div>
 </div>

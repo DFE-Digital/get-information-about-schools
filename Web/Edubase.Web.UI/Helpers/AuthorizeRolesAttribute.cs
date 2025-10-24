@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
+
 namespace Edubase.Web.UI.Helpers
 {
-    public class MvcAuthorizeRolesAttribute : System.Web.Mvc.AuthorizeAttribute
+    public class MvcAuthorizeRolesAttribute : AuthorizeAttribute
     {
         public MvcAuthorizeRolesAttribute(params string[] roles) : base()
         {
@@ -13,7 +15,7 @@ namespace Edubase.Web.UI.Helpers
         }
     }
 
-    public class HttpAuthorizeRolesAttribute : System.Web.Http.AuthorizeAttribute
+    public class HttpAuthorizeRolesAttribute : AuthorizeAttribute
     {
         public HttpAuthorizeRolesAttribute(params string[] roles) : base()
         {

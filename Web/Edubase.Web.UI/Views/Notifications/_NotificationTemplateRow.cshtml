@@ -1,0 +1,14 @@
+@using Edubase.Data.Entity
+@model NotificationTemplate
+
+<div class="govuk-summary-list__row">
+    <dd class="govuk-summary-list__value">
+        <div class="govuk-grid-column-three-quarters">
+            <p>@Model.Content</p>
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+            @Html.RouteLink("Edit", "EditTemplate", new { id = Model.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
+            @Html.RouteLink("Delete", "DeleteTemplate", new { id = Model.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
+        </div>
+    </dd>
+</div>

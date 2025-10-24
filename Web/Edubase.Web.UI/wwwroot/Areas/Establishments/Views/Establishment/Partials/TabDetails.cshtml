@@ -1,6 +1,8 @@
 @using Edubase.Common;
 @using Edubase.Services.Enums
 @using Edubase.Services.Security
+@using Edubase.Web.UI.Models
+@using System.Web.WebPages
 @model EstablishmentDetailViewModel
 
 <div id="school-dashboard" class="tab-content">
@@ -133,7 +135,7 @@
                         School capacity
                         <a href="#help-text-school-capacity" class="help-icon modal-link">
                             <span class="govuk-visually-hidden">Help with school capacity field</span>
-                            @helpers.DialogHiddenPrompt()
+                            <dialog-hidden-prompt />
                         </a>
                     </dt>
                     <dd class="govuk-summary-list__value">@Model.Establishment.Capacity</dd>
@@ -329,7 +331,7 @@
                         Number of pupils eligible for free school meals
                         <a href="#help-text-fsm" class="help-icon modal-link">
                             <span class="govuk-visually-hidden">Help with number of pupils eligible for free school meals field</span>
-                            @helpers.DialogHiddenPrompt()
+                            <dialog-hidden-prompt />
                         </a>
                     </dt>
                     <dd class="govuk-summary-list__value">@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</dd>
@@ -343,7 +345,7 @@
                         Percentage of children eligible for free school meals
                         <a href="#help-text-fsm-percentage" class="help-icon modal-link">
                             <span class="govuk-visually-hidden">Help with percentage of children eligible for free school meals field</span>
-                            @helpers.DialogHiddenPrompt()
+                            <dialog-hidden-prompt />
                         </a>
                     </dt>
                     <dd class="govuk-summary-list__value">@(Model.Establishment.FreeSchoolMealsPercentage?.ToString().Append("%") ?? "Not recorded")</dd>
@@ -586,6 +588,6 @@
         </div>
     }
 
-    @helpers.BackToTopLink()
+    <back-to-top-link />
 </div>
 

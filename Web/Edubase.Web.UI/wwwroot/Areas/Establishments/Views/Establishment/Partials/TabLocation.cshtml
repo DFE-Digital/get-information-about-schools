@@ -1,3 +1,5 @@
+@using Edubase.Web.UI.Models
+@using System.Web.WebPages
 @model EstablishmentDetailViewModel
 
 <div id="school-location" class="tab-content">
@@ -61,7 +63,7 @@
                     Middle super output area (MSOA)
                     <a href="#help-text-msoa" class="help-icon modal-link">
                         <span class="govuk-visually-hidden">Help with middle super output area</span>
-                        @helpers.DialogHiddenPrompt()
+                        <dialog-hidden-prompt />
                     </a>
                 </dt>
                 <dd id="msoa-value" class="govuk-summary-list__value">@Model.MSOAName</dd>
@@ -71,7 +73,7 @@
                     Lower super output area (LSOA)
                     <a href="#help-text-lsoa" class="help-icon modal-link">
                         <span class="govuk-visually-hidden">Help with lower super output area</span>
-                        @helpers.DialogHiddenPrompt()
+                        <dialog-hidden-prompt />
                     </a>
                 </dt>
                 <dd id="lsoa-value" class="govuk-summary-list__value">@Model.LSOAName</dd>
@@ -107,5 +109,5 @@
         </div>
     }
 
-    @helpers.BackToTopLink()
+    <back-to-top-link />
 </div>

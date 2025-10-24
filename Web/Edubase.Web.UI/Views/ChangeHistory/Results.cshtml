@@ -1,5 +1,8 @@
 @using System.Linq.Expressions
 @using Edubase.Common
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Models.Search
 @model ChangeHistoryViewModel
 @{
     ViewBag.Title = "";
@@ -57,8 +60,13 @@
             }
         }
         <h1 class="govuk-heading-xl gias-search-results--heading">@heading</h1>
+        @using Microsoft.AspNetCore.Http.Extensions
+
         <p class="govuk-body-s establishment-data-download">
-            <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="@($"{Url.RouteUrl("DownloadChangeHistory")}?{Request.QueryString}")">Download change history</a>
+            <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")"
+               href="@($"{Url.RouteUrl("DownloadChangeHistory")}?{ViewContext.HttpContext.Request.QueryString.Value}")">
+                Download change history
+            </a>
         </p>
         <span id='list-count' class="hidden">@Model.Count</span>
     </div>
@@ -82,7 +90,7 @@
         </div>
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">
-                @helpers.FilterIcon()
+                <filter-icon />
             </span>
             <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
         </div>
@@ -135,7 +143,7 @@
                                             </div>
                                         </fieldset>
                                     </div>
-                                    @helpers.FilterSkipLink()
+                                    <filter-skip-link />
                                 </div>
                             </div>
                         </div>
@@ -144,11 +152,26 @@
                             if (!Model.SingleEstablishment)
                             {
                                 <div class="govuk-grid-column-one-third">
-                                    @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds, null)
+                                    @await Html.PartialAsync("_StringLookupItemSelector", (
+                                        "Establishment type",
+                                        ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS,
+                                        Model.EstablishmentTypes,
+                                        Model.SelectedEstablishmentTypeIds,
+                                        ""
+                                        )
+                                    )
                                 </div>
                             }
+
                             <div class="govuk-grid-column-one-third">
-                                @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields, null)
+                                @await Html.PartialAsync("_Selector", (
+                                    "Updated fields",
+                                    ChangeHistoryViewModel.BIND_ALIAS_FIELDS,
+                                    Model.EstablishmentFields,
+                                    Model.SelectedEstablishmentFields,
+                                    ""
+                                    )
+                                )
                             </div>
                         }
                         else
@@ -156,7 +179,15 @@
                             if (!Model.SingleGroup)
                             {
                                 <div class="govuk-grid-column-one-third">
-                                    @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null)
+
+                                    @await Html.PartialAsync("_LookupItemSelector", (
+                                        "Group type",
+                                        ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS,
+                                        Model.GroupTypes,
+                                        Model.SelectedGroupTypeIds,
+                                        ""
+                                        )
+                                    )
                                 </div>
                             }
                         }
@@ -195,114 +226,6 @@
     </div>
 
 </div>
-
-@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "")
-{
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/", "-")" data-bind-alias="@name"
-         role="search">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text"></span>
-            </div>
-        </div>
-
-        <div class="options-container" id="">
-            <div class="suggestion-target"></div>
-            <div class="js-auto-height-inner">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
-                            <label for="@(name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                All
-                            </label>
-                        </div>
-                    </div>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        @foreach (var item in items)
-                        {
-                            <div class="govuk-checkboxes__item">
-                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
-                                <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                    @item
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </fieldset>
-            </div>
-            @helpers.FilterSkipLink()
-        </div>
-    </div>
-}
-
-
-@helper Selector(string label, string name, IEnumerable<StringLookupItemViewModel> items, List<string> selectedItems, string additionalClassName = "")
-{
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/", "-")" data-bind-alias="@name" role="search">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text"></span>
-
-            </div>
-        </div>
-        <div class="options-container" id="">
-            <div class="suggestion-target"></div>
-            <div class="js-auto-height-inner">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
-                            <label for="@(name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                All
-                            </label>
-                        </div>
-                    </div>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        @foreach (var item in items)
-                        {
-                            <div class="govuk-checkboxes__item">
-                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
-                                <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                    @item
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </fieldset>
-            </div>
-            @helpers.FilterSkipLink()
-        </div>
-    </div>
-}
-
-@helper DropdownSelector(string label, string name, IEnumerable<SelectListItem> items, Expression<Func<ChangeHistoryViewModel, string>> expression, string additionalClassName = "")
-{
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/", "-")" data-bind-alias="@name">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text"></span>
-
-            </div>
-        </div>
-        <div class="options-container" id="">
-            <div class="js-auto-height-inner">
-                <fieldset>
-                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    @Html.DropDownListFor(expression, items, "Please select", new {@class = "form-control in-filters trigger-result-update"})
-                </fieldset>
-            </div>
-        </div>
-        @helpers.FilterSkipLink()
-    </div>
-}
-
 
 @section ViewScripts {
     <script nonce="@Html.ScriptNonce()">

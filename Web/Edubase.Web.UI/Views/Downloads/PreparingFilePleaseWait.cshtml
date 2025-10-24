@@ -1,4 +1,5 @@
 @using Edubase.Common.Text
+@using Edubase.Web.UI.Helpers
 @model Edubase.Services.Domain.ProgressDto
 @{
     ViewBag.hideLogo = true;
@@ -42,7 +43,7 @@
 
             <div aria-live="polite" class="gias-wait-mask gias-wait-mask--inline">
                 <p class="govuk-visually-hidden">Please wait</p>
-                @helpers.CssSpinner()
+                <css-spinner />
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ namespace Edubase.Web.UI.Models
     using System.Collections.Generic;
 
     using Common;
+    using Edubase.Web.UI.Views.TagHelpers.Models;
     using Helpers.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Search;
@@ -121,5 +122,7 @@ namespace Edubase.Web.UI.Models
             EstablishmentName,
             UKPRN
         }
+
+        public SelectorViewModel SelectorItems { get; set; }
     }
 }

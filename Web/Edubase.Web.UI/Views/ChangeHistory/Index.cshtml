@@ -1,3 +1,7 @@
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Models.Search
+
 @model ChangeHistoryViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Search change history");
@@ -73,7 +77,7 @@
                                 Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
                                 <a href="#name-reference-help" class="help-icon modal-link">
                                     <span class="govuk-visually-hidden">Help with reference numbers</span>
-                                    @helpers.DialogHiddenPrompt()
+                                    <dialog-hidden-prompt/>
                                 </a>
                             </label>
                             <div class="govuk-form-group">
@@ -199,7 +203,7 @@
                                         Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr>, ID or UKPRN
                                         <a href="#group-reference" class="help-icon modal-link">
                                             <span class="govuk-visually-hidden">Help with reference numbers</span>
-                                            @helpers.DialogHiddenPrompt()
+                                            <dialog-hidden-prompt />
                                         </a>
                                     </label>
                                     <div class="govuk-form-group">

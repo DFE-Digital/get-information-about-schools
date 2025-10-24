@@ -1,3 +1,5 @@
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
 @model DateTimeViewModel
 @{
     var cssClassPrefix = "";
@@ -160,9 +162,9 @@
         }
 
         @{
-            var errContent = new List<MvcHtmlString>
+            var errContent = new List<IHtmlContent>
             {
-                Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
+                Html.ValidationMessage("CCLeadCentreUrn", null, new { @class = "govuk-error-message" }),
                 Html.ValidationMessageFor(x => x, null, new { @class = "govuk-error-message" }),
                 Html.ValidationMessageFor(x => x.Day, null, new { @class = "govuk-error-message" }),
                 Html.ValidationMessageFor(x => x.Month, null, new { @class = "govuk-error-message" }),
@@ -171,9 +173,13 @@
                 Html.ValidationMessageFor(x => x.Minute, null, new { @class = "govuk-error-message" })
             };
 
-            foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
+            @foreach (var htmlContent in errContent.Distinct())
             {
-                @Html.Raw(mvcHtmlString)
+                using (var writer = new System.IO.StringWriter())
+                {
+                    htmlContent?.WriteTo(writer, System.Text.Encodings.Web.HtmlEncoder.Default);
+                    @Html.Raw(writer.ToString())
+                }
             }
         }
 
@@ -246,16 +252,25 @@
     </fieldset>
 </div>
 
-@functions
-{
-    static object GetCheckboxAttributes(bool? readOnly, string cssClasses, int maxlength, string vueModel)
+@functions {
+    public static Dictionary<string, object> GetCheckboxAttributes(bool? readOnly, string cssClasses, int maxlength, string vueModel)
     {
-        if (readOnly.HasValue && readOnly.Value)
-            return new { @class = cssClasses, disabled = "disabled", maxlength };
+        var attributes = new Dictionary<string, object>
+        {
+            { "class", cssClasses },
+            { "maxlength", maxlength }
+        };
 
-        if (vueModel != null)
-            return new { @class = cssClasses, maxlength, v_model = vueModel };
+        if (readOnly.GetValueOrDefault())
+        {
+            attributes["disabled"] = "disabled";
+        }
 
-        return new { @class = cssClasses, maxlength };
+        if (!string.IsNullOrEmpty(vueModel))
+        {
+            attributes["v-model"] = vueModel;
+        }
+
+        return attributes;
     }
 }

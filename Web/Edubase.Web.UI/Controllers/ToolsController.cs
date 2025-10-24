@@ -497,7 +497,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
         {
             viewModel.LocalAuthorities = await _lookup.LocalAuthorityGetAllAsync();
-            var items = (await _localAuthoritySetRepository.GetAllAsync()).Items.OrderBy(x => x.Title);
+            var items = (await _localAuthoritySetRepository.GetAllAsync()).OrderBy(x => x.Title);
             viewModel.Results = new PaginatedResult<LocalAuthoritySet>(viewModel.Skip, 100, items.Count(),
                 items.Skip(viewModel.Skip).Take(100).ToList());
             return View(viewModel);

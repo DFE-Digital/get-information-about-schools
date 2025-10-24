@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Autofac;
 using AzureTableLogger.Services;
 using Edubase.Common.Cache;
 using Edubase.Data.Entity;
@@ -20,8 +19,12 @@ namespace Edubase.Web.UI.Controllers
     {
         private readonly WebLogItemRepository _webLogItemRepository;
         private readonly ILoggingService _loggingService;
+        private readonly ICacheAccessor _cacheAccessor;
 
-        public AdminController(ILoggingService loggingService, WebLogItemRepository webLogItemRepository)
+        public AdminController(
+            ILoggingService loggingService,
+            WebLogItemRepository webLogItemRepository,
+            ICacheAccessor cacheAccessor)
         {
             _loggingService = loggingService;
             _webLogItemRepository = webLogItemRepository;
@@ -42,7 +45,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet("ClearCache")]
         public async Task<IActionResult> ClearCache()
         {
-            await IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().ClearAsync();
+            await _cacheAccessor.ClearAsync();
             return Content("Redis cache and MemoryCache cleared successfully.", "text/plain");
         }
 

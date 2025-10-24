@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Helpers
 @model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
 @{
     if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out var disableStartDate))
@@ -6,12 +7,19 @@
     }
 }
 
-
 @if (Model.MultiSelect)
 {
     <div class="govuk-checkboxes__item">
-        @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "govuk-checkboxes__input gias-checkboxes__conditional--input", Html.NameFor(x => x.Selected), "expand-" + Model.Id))
-        <label class="govuk-checkboxes__label govuk-body" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
+        @Html.CheckBoxFor(
+            model => model.Selected,
+            GetCheckboxAttributes(
+            Model.PreExisting,
+            "govuk-checkboxes__input gias-checkboxes__conditional--input",
+            "expand-" + Model.Id)
+        )
+        <label class="govuk-checkboxes__label govuk-body" for="@Html.IdFor(model => model.Selected)">
+            @Model.FullName
+        </label>
     </div>
 }
 else
@@ -25,8 +33,6 @@ else
         </div>
     </div>
 }
-
-
 
 @Html.HiddenFor(x => x.Id)
 @Html.HiddenFor(x => x.PostCode)
@@ -102,13 +108,26 @@ else
 
 </div>
 
-@functions
-{
-    object GetCheckboxAttributes(bool readOnly, string cssClasses, HtmlString elemId, string toggleTarget = "")
+@functions {
+    public static Dictionary<string, object> GetCheckboxAttributes(bool readOnly, string cssClasses, string toggleTarget = "")
     {
-        if (readOnly)
-            return new { @class = cssClasses, disabled = "disabled", id = elemId, data_aria_controls = toggleTarget };
+        var attributes = new Dictionary<string, object>
+        {
+            { "class", cssClasses }
+        };
 
-        return new { @class = cssClasses, id = elemId, data_aria_controls = toggleTarget };
+        if (readOnly)
+        {
+            attributes["disabled"] = "disabled";
+        }
+
+        if (!string.IsNullOrEmpty(toggleTarget))
+        {
+            attributes["data-aria-controls"] = toggleTarget;
+        }
+
+        return attributes;
     }
 }
+
+

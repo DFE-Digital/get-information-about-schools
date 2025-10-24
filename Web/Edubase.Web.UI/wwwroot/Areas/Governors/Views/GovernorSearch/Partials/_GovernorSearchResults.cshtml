@@ -1,5 +1,6 @@
 @using Edubase.Common;
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Areas.Governors.Models
 @using Edubase.Web.UI.Models.Search
 @model GovernorSearchViewModel
 @{
@@ -64,7 +65,7 @@ else if (Model.Count > 0)
             {"maxPages", 5 }
         })
     </div>
-    @helpers.BackToTopLink()
+    <back-to-top-link />
 }
 else
 {

@@ -1,5 +1,7 @@
 @using Edubase.Services.Downloads.Models;
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
 @model DownloadsViewModel
 @{
     ViewBag.Title = "Downloads";
@@ -183,8 +185,7 @@
             </div>
         </div>
     }
-
-    @helpers.BackToTopLink()
+    <back-to-top-link />
 </div>
 </div>
 

@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Models.Tools
 @model ApprovalsViewModel
 
 @{
@@ -15,35 +16,6 @@
     };
 }
 
-
-@helper SortHeader(Dictionary<string, string> headerDictionary)
-{
-    <text>
-        @foreach (var hd in headerDictionary)
-        {
-            var sortKey = hd.Key;
-            var sortLabel = hd.Value;
-            var isAscending = Model.SortedAscending;
-            var sortModifier = isAscending ? "-desc" : "-asc";
-            var isSelectedSort = Model.SortBy.Contains(sortKey);
-            var sortDescription = isAscending ? "ascending" : "descending";
-
-            var url = string.Concat("/Approvals?skip=0&sortBy=", sortKey, sortModifier);
-            var className = isSelectedSort ? "selected-sort" : string.Empty;
-            className = isAscending ? string.Concat(className, " sorted-asc") : string.Concat(className, " sorted-desc");
-
-            var label = string.Concat("Sort the data by ", sortLabel);
-            if (isSelectedSort)
-            {
-                label = string.Concat(sortLabel, " is sorted in a ", sortDescription, " order. Use this link to change the order. All other columns are sortable");
-            }
-            <th class="govuk-table__header cell-@sortKey">
-                <a href="@url" class="@className" aria-label="@label">@sortLabel</a>
-            </th>
-        }
-    </text>
-}
-
 <table class="govuk-table gias-table approval-changes sortable-table" id="changes-table-nojs">
     <caption class="govuk-visually-hidden">Manage change requests</caption>
     <thead class="govuk-table__head">
@@ -51,7 +23,7 @@
         <th class="cell-checkbox govuk-table__header">
             <span class="govuk-visually-hidden">Checkbox</span>
         </th>
-        @SortHeader(sortTypes)
+            @await Html.PartialAsync("_SortHeader", sortTypes)
     </tr>
     </thead>
 

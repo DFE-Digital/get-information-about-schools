@@ -1,0 +1,27 @@
+@using Edubase.Common.Text
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Views.Shared.EditorTemplates.Model
+@using Edubase.Web.UI.Views.Shared.EditorTemplates.Extensions
+@model ProprietorTextBoxModel
+
+@{
+    var classes = "govuk-input " + Model.FieldClasses;
+    var validationCounter = ViewBag.ShowCounter != null ? $"[{(int)ViewBag.ShowCounter - 1}]" : "";
+    var validationId = $"iebtDetail.{ViewBag.ProprietorType}{validationCounter}.{Model.FieldName.ToLowerFirstLetter()}";
+    var validationLink = validationId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+
+    var hasError = @Html.ProprietorsValidationCssClass(validationId) == "govuk-form-group--error";
+    var errorMessage = Html.ViewData.ModelState.ContainsKey(validationId)
+        ? Html.ViewData.ModelState[validationId].Errors.FirstOrDefault()?.ErrorMessage
+        : null;
+}
+
+<div class="govuk-form-group @Html.ValidationCssClassFor(Model.FieldExpression) @Html.ProprietorsValidationCssClass(validationId)">
+    @Html.ProprietorLabelFor(Model.FieldExpression, new { @class = "govuk-label" })
+    @Html.ProprietorValidationMessageFor(Model.FieldExpression, null, new { @class = "govuk-error-message" })
+    @if (hasError && !string.IsNullOrEmpty(errorMessage))
+    {
+        <span class="govuk-error-message">@errorMessage</span>
+    }
+    @Html.ProprietorTextBoxFor(Model.FieldExpression, new { @class = classes, id = validationLink })
+</div>

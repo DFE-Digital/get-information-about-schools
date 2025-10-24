@@ -1,5 +1,7 @@
 @using Edubase.Common;
 @using Edubase.Web.UI.Controllers
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Tools
 @model BulkAcademiesViewModel
 
 @{
@@ -240,7 +242,7 @@
 }
 
 <div class="gias-wait-mask hidden" id="gias-content-mask">
-    @helpers.CssSpinner()
+    <css-spinner />
     <span class="govuk-visually-hidden">Please wait.</span>
 </div>
 @section ViewScripts

@@ -1,5 +1,8 @@
 @using Edubase.Services.Domain
 @using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
+@using Edubase.Web.UI.Areas.Establishments.Models
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Helpers.Edubase.Web.UI.Helpers
 
 @model CreateChildrensCentreViewModel
 @{
@@ -22,25 +25,7 @@
         </div>
     </div>
 }
-@helper BackLink()
-{
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
 
-            @if (Model.CurrentStep == CreateSteps.NameEntry)
-            {
-                @Html.ActionLink("Back", "Index", "Tools", new { area = "" }, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel", data_module = "govuk-button" })
-            }
-            else
-            {
-                <button type="submit" id="edit-back-button" class="govuk-back-link gias-back-link--button cancel" name="@(nameof(Model.ActionStep))" value="@(Model.PreviousStep)">
-                    Back
-                </button>
-            }
-
-        </div>
-    </div>
-}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
@@ -61,15 +46,8 @@
             @Html.HiddenFor(x => x.CurrentStep)
             @Html.HiddenFor(x => x.jsDisabled, true)
 
-            //Disabled - fix for mobile devices.
-            //                <div class="govuk-grid-column-full gias-hidden__from-tablet">
-            //                    <div class="button-row govuk-!-margin-bottom-4">
-            //                        <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
-            //                       @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-            //                    </div>
-            //                </div>
+            @await Html.PartialAsync("_BackLink", Model)
 
-            @BackLink()
 
         <div class="govuk-grid-column-one-half">
 

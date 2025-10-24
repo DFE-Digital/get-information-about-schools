@@ -5,18 +5,23 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Governors.Models;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using HtmlHelper = Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlHelper;
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+using ModelError = Microsoft.AspNetCore.Mvc.ModelBinding.ModelError;
+using SelectListItem = Microsoft.AspNetCore.Mvc.Rendering.SelectListItem;
+using TagBuilder = Microsoft.AspNetCore.Mvc.Rendering.TagBuilder;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -183,11 +188,11 @@ namespace Edubase.Web.UI.Helpers
             return htmlHelper.PartialAsync(partialViewName, model);
         }
 
-        private class ViewDataContainer : System.Web.Mvc.IViewDataContainer
+        private class ViewDataContainer : IViewDataContainer
         {
-            public System.Web.Mvc.ViewDataDictionary ViewData { get; set; }
+            public ViewDataDictionary ViewData { get; set; }
 
-            public ViewDataContainer(System.Web.Mvc.ViewDataDictionary viewData)
+            public ViewDataContainer(ViewDataDictionary viewData)
             {
                 ViewData = viewData;
             }
@@ -280,37 +285,44 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="htmlAttributes">Containing additonal attributes for the element, expected class usually</param>
         /// <returns></returns>
         public static HtmlString DropDownListWithIds<TModel, TProperty>(
-            this IHtmlHelper<TModel> htmlHelper,
-           Expression<Func<TModel, TProperty>> expression,
-           IEnumerable<SelectListItem> selectListItem,
-           object htmlAttributes)
+        this IHtmlHelper<TModel> htmlHelper,
+        Expression<Func<TModel, TProperty>> expression,
+        IEnumerable<SelectListItem> selectListItems,
+        object htmlAttributes)
         {
-            var expressionText = ExpressionHelper.GetExpressionText(expression);
+            var expressionText = htmlHelper.NameFor(expression);
 
             var dropdown = new TagBuilder("select");
-
-            dropdown.Attributes.Add("name", expressionText);
-            dropdown.Attributes.Add("id", expressionText);
-
-            var options = new StringBuilder();
-
-            foreach (var item in selectListItem)
-            {
-                options = options.Append(
-                    "<option " +
-                    " value='" + item.Value + "'" +
-                    " id='" + expressionText + "-option-" + item.Text + "'" +
-                    (item.Selected ? " selected='selected'" : "") +
-                    ">" +
-                    item.Text +
-                    "</option>"
-                );
-            }
-
-            dropdown.InnerHtml = options.ToString();
+            dropdown.Attributes["name"] = expressionText;
+            dropdown.Attributes["id"] = expressionText;
             dropdown.MergeAttributes(new RouteValueDictionary(htmlAttributes));
 
-            return HtmlString.Create(dropdown.ToString(TagRenderMode.Normal));
+            foreach (var item in selectListItems)
+            {
+                var option = new TagBuilder("option");
+                option.Attributes["value"] = item.Value;
+                option.Attributes["id"] = $"{expressionText}-option-{item.Text}";
+                if (item.Selected)
+                {
+                    option.Attributes["selected"] = "selected";
+                }
+                option.InnerHtml.Append(item.Text);
+                dropdown.InnerHtml.AppendHtml(option);
+            }
+
+            return dropdown.Render();
+        }
+
+        private static string NameFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        {
+            return ExpressionHelper.GetExpressionText(expression);
+        }
+
+        private static HtmlString Render(this TagBuilder tagBuilder)
+        {
+            var writer = new System.IO.StringWriter();
+            tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+            return new HtmlString(writer.ToString());
         }
 
         /// <summary>

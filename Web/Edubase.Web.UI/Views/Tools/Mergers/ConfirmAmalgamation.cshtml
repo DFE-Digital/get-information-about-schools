@@ -1,3 +1,7 @@
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Tools
+@using System.Web
+@using Edubase.Web.UI.Views.Shared.EditorTemplates.Model
 @model AmalgamateEstablishmentsModel
 @{
     ViewBag.Title = "Amalgamations and mergers tool";
@@ -49,19 +53,35 @@
             <ol class="govuk-list govuk-list--number linked-establishments">
                 @if (!string.IsNullOrEmpty(Model.Establishment0Name))
                 {
-                    @MergingEstablishment(Model.Establishment0Urn.GetValueOrDefault(), Model.Establishment0Name)
+                    @await Html.PartialAsync("_MergingEstablishment", (
+                        Model.Establishment0Urn.GetValueOrDefault(),
+                        Model.Establishment0Name
+                        )
+                    )
                 }
                 @if (!string.IsNullOrEmpty(Model.Establishment1Name))
                 {
-                    @MergingEstablishment(Model.Establishment1Urn.GetValueOrDefault(), Model.Establishment1Name)
+                    @await Html.PartialAsync("_MergingEstablishment", (
+                        Model.Establishment1Urn.GetValueOrDefault(),
+                        Model.Establishment1Name
+                        )
+                    )
                 }
                 @if (!string.IsNullOrEmpty(Model.Establishment2Name))
                 {
-                    @MergingEstablishment(Model.Establishment2Urn.GetValueOrDefault(), Model.Establishment2Name)
+                    @await Html.PartialAsync("_MergingEstablishment", (
+                        Model.Establishment2Urn.GetValueOrDefault(),
+                        Model.Establishment2Name
+                        )
+                    )
                 }
                 @if (!string.IsNullOrEmpty(Model.Establishment3Name))
                 {
-                    @MergingEstablishment(Model.Establishment3Urn.GetValueOrDefault(), Model.Establishment3Name)
+                    @await Html.PartialAsync("_MergingEstablishment", (
+                        Model.Establishment3Urn.GetValueOrDefault(),
+                        Model.Establishment3Name
+                        )
+                    )
                 }
             </ol>
 
@@ -101,9 +121,4 @@
             </div>
         </div>
     </div>
-}
-
-@helper MergingEstablishment(int urn, string name)
-{
-    <li><span>@urn - @name</span></li>
 }

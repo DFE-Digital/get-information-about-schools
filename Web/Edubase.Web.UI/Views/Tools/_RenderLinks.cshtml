@@ -1,0 +1,37 @@
+@using Edubase.Web.UI.Models
+@model (string Label, List<ToolsViewModel.LinkAction> List, bool SectionBreak)
+
+@if (Model.List.Any())
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @if (Model.SectionBreak)
+            {
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0">
+            }
+            <h2 class="govuk-heading-m">@Model.Label</h2>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        @{
+            var gridClass = Model.List.Count == 1 ? "govuk-grid-column-one-half" : "govuk-grid-column-full";
+        }
+        <div class="@gridClass">
+            <ul class="govuk-list @(Model.List.Count > 1 ? "gias-columns-2" : "")">
+                @for (int itemCounter = 0; itemCounter < Model.List.Count; itemCounter++)
+                {
+                    <li>
+                        <h3 class="govuk-heading-s">
+                            <span id="tool-link-@Model.Label.ToLower()-@itemCounter">
+                                @Html.Raw(System.Net.WebUtility.HtmlDecode(Model.List[itemCounter].Link.ToString()))
+                            </span>
+                        </h3>
+                        <p class="@(Model.List.Count == 1 ? "govuk-!-padding-right-6" : "")">
+                            @Html.Raw(Model.List[itemCounter].Description)
+                        </p>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

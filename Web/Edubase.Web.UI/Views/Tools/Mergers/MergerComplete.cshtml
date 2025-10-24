@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Models.Tools
 @model MergeEstablishmentsModel
 
 @{
@@ -37,15 +38,27 @@
             <ol class="govuk-list govuk-list--number linked-establishments">
                 @if (!string.IsNullOrEmpty(Model.Establishment1Name))
                 {
-                    @MergingEstablishment(Model.Establishment1Urn.GetValueOrDefault(), Model.Establishment1Name)
+                    @await Html.PartialAsync("_MergingEstablishment", (
+                        Model.Establishment1Urn.GetValueOrDefault(),
+                        Model.Establishment1Name
+                        )
+                    )
                 }
                 @if (!string.IsNullOrEmpty(Model.Establishment2Name))
                 {
-                    @MergingEstablishment(Model.Establishment2Urn.GetValueOrDefault(), Model.Establishment2Name)
+                    @await Html.PartialAsync("_MergingEstablishment", (
+                        Model.Establishment2Urn.GetValueOrDefault(),
+                        Model.Establishment2Name
+                        )
+                    )
                 }
                 @if (!string.IsNullOrEmpty(Model.Establishment3Name))
                 {
-                    @MergingEstablishment(Model.Establishment3Urn.GetValueOrDefault(), Model.Establishment3Name)
+                    @await Html.PartialAsync("_MergingEstablishment", (
+                        Model.Establishment3Urn.GetValueOrDefault(),
+                        Model.Establishment3Name
+                        )
+                    )
                 }
             </ol>
             <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
@@ -76,9 +89,3 @@
         </p>
     </div>
 </div>
-
-
-@helper MergingEstablishment(int urn, string name)
-{
-    <li><span>@urn - @name</span></li>
-}

@@ -1,9 +1,11 @@
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Tools
+
 @model PredefinedLASetViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, Model.PageTitle);
     ViewBag.bodyClasses = "independent-sigdates-edit";
 }
-
 
 @section BreadCrumbs
 {
@@ -35,9 +37,12 @@
 </div>
 <div class="govuk-grid-row">
 
+    @{
+        var routeName = Model.IsNewEntity ? "CreatePredefinedLASetPost" : "EditPredefinedLASetPost";
+    }
 
-        @using (Html.BeginRouteForm((Model.IsNewEntity ? "CreatePredefinedLASetPost" : "EditPredefinedLASetPost"), new { Model.Id }, FormMethod.Post, new { @class = "has-typeahead" }))
-        {
+    <form asp-route="@routeName" asp-route-id="@Model.Id" method="post" class="has-typeahead">
+        <!-- form content here -->
             @Html.AntiForgeryToken()
             <div class="govuk-grid-column-two-thirds">
                 @Html.HiddenFor(x => x.Id)
@@ -94,9 +99,6 @@
                 </div>
             </div>
         }
-
-
-
 </div>
 
 @section ViewScripts{
@@ -131,3 +133,5 @@
     </script>
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("independent-schools-sig-search.*.js"))"></script>
 }
+
+</form>

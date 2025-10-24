@@ -1,3 +1,6 @@
+@using Edubase.Web.UI.Helpers
+@using System.Web
+@using Edubase.Web.UI.Models
 @model ToolsViewModel
 @{
     ViewBag.Title = "Get Information about Schools";
@@ -29,53 +32,13 @@
     </div>
 </div>
 
-@RenderLinks("Create", creationActions)
-@RenderLinks("Update", updateActions, creationActions.Any())
-@RenderLinks("Administration", adminActions, creationActions.Any() || updateActions.Any())
-@RenderLinks("Support", supportActions, creationActions.Any() || updateActions.Any() || adminActions.Any())
-
-@helper RenderLinks(string label, List<ToolsViewModel.LinkAction> list, bool sectionBreak = false)
-{
-    if (list.Any())
-    {
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                @if (sectionBreak)
-                {
-                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0">
-                }
-                <h2 class="govuk-heading-m">@label</h2>
-            </div>
-        </div>
-        <div class="govuk-grid-row">
-            @{
-                var gridClass = list.Count == 1 ? "govuk-grid-column-one-half" : "govuk-grid-column-full";
-
-            }
-            <div class="@gridClass">
-                <ul class="govuk-list @Html.Conditional(list.Count > 1, "gias-columns-2")">
-                    @for (int itemCounter = 0; itemCounter < list.Count; itemCounter++)
-                    {
-                        <li>
-                            <h3 class="govuk-heading-s">
-                                <span id="tool-link-@label.ToLower()-@itemCounter">
-                                    @Html.Raw(HttpUtility.HtmlDecode(list[itemCounter].Link.ToHtmlString()))
-                                </span>
-                            </h3>
-                            <p class="@Html.Conditional(list.Count == 1, "govuk-!-padding-right-6")">
-                                @Html.Raw(list[itemCounter].Description)
-                            </p>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-
-    }
-}
+@await Html.PartialAsync("_RenderLinks", ("Create", creationActions, false))
+@await Html.PartialAsync("_RenderLinks", ("Update", updateActions, creationActions.Any()))
+@await Html.PartialAsync("_RenderLinks", ("Administration", adminActions, creationActions.Any() || updateActions.Any()))
+@await Html.PartialAsync("_RenderLinks", ("Support", supportActions, creationActions.Any() || updateActions.Any() || adminActions.Any()))
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        @helpers.BackToTopLink()
+            <back-to-top-link />
     </div>
 </div>

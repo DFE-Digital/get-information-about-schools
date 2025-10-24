@@ -45,7 +45,7 @@
                                 Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr>, ID or UKPRN
                                 <a href="#group-reference" class="help-icon modal-link">
                                     <span class="govuk-visually-hidden">Help with reference numbers</span>
-                                    @helpers.DialogHiddenPrompt()
+                                    <dialog-hidden-prompt />
                                 </a>
                             </label>
                                 @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "govuk-input govuk-input--width-20", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200", aria_describedby = "group-reference"})

@@ -3,6 +3,7 @@
 @using Edubase.Common
 @using Edubase.Services.Enums
 @using M = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
+@using System.Web.WebPages
 @model M
 @{
     ViewBag.Title = $"Search results for '{Model.TextSearchModel.Text}'";
@@ -59,15 +60,22 @@
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl gias-search-results--heading" id="search-results-establishments">Search results for establishments</h1>
 
+        @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
         @if (Model.Count > 0)
         {
+            var query = HttpContextAccessor.HttpContext.Request.QueryString.Value;
             <div class="search-results-download-link-container">
-                <a id="establishment-search-results-download-link" class="search-results-download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
+                <a id="establishment-search-results-download-link"
+                   class="search-results-download-link"
+                   href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new { area = "Establishments" })@query"
+                   rel="nofollow">Download these search results</a>
             </div>
         }
+
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">
-                @helpers.FilterIcon()
+                <filter-icon />
             </span>
             <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
         </div>
@@ -156,13 +164,13 @@
                                     <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
                                     <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
                                 </select>
-                                @helpers.FilterSkipLink()
+                                <filter-skip-link />
                             </div>
                         </div>
 
                         @if (Model.SearchType == eSearchType.Location)
                         {
-                            @RadiusFilter()
+                            @await Html.PartialAsync("_RadiusFilter", Model)
                         }
 
                         @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
@@ -278,16 +286,14 @@
     </form>
 </div>
 
-@helper SearchWithin(string label)
-{
-    <div class="search-field-wrap">
-        <label class="filter-searchwithin-label">
-            <span class="govuk-visually-hidden">Search within @label filter</span>
-            <input type="text" class="filter-search govuk-input" />
-            <button class="field-clear hidden"><span class="govuk-visually-hidden">Clear</span></button>
-        </label>
-    </div>
-}
+<div class="search-field-wrap">
+    <label class="filter-searchwithin-label">
+        <span class="govuk-visually-hidden">Search within @Model filter</span>
+        <input type="text" class="filter-search govuk-input" />
+        <button class="field-clear hidden"><span class="govuk-visually-hidden">Clear</span></button>
+    </label>
+</div>
+
 
 @helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false)
 {
@@ -340,7 +346,7 @@
                 </fieldset>
             </div>
         </div>
-        @helpers.FilterSkipLink()
+        <filter-skip-link />
     </div>
 }
 
@@ -413,7 +419,7 @@
                     }
                 </fieldset>
             </div>
-            @helpers.FilterSkipLink()
+            <filter-skip-link />
         </div>
     </div>
 }
@@ -438,7 +444,7 @@
                     <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
                 </div>
             </div>
-            @helpers.FilterSkipLink()
+            <filter-skip-link />
         </div>
     </div>
 }
@@ -464,7 +470,7 @@
                     <a href="#" class="govuk-button govuk-button--secondary filter-button">Apply</a>
                 </div>
             </div>
-            @helpers.FilterSkipLink()
+            <filter-skip-link />
         </div>
     </div>
 }
@@ -486,36 +492,6 @@
                 <option value="@value" @Html.Conditional(Model.GetRadiusOption() == value, "selected")>@value mile@(Html.Conditional(value != 1, "s"))</option>
             }
         </select>
-    </div>
-
-}
-
-@helper RadiusFilter()
-{
-    <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS"
-         role="search">
-
-        <div class="container-head js-container-head">
-            <div class="option-select-label">Within radius of</div>
-            <div class="js-selected-counter"></div>
-        </div>
-        <div class="options-container">
-            <div class="js-auto-height-inner">
-                <fieldset class="govuk-fieldset range-group">
-                    <div class="govuk-form-group">
-                        <legend class="govuk-visually-hidden">Enter the radius in miles</legend>
-                        <span class="govuk-error-message hidden">Please check the radius you have entered</span>
-                        <span class="inline-form-control">
-                            <label for="RadiusInMiles" class="govuk-visually-hidden">Radius in miles</label>
-                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="govuk-input govuk-input--width-5" maxlength="5" />
-                            &nbsp;miles
-                            <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
-                        </span>
-                    </div>
-                </fieldset>
-            </div>
-            @helpers.FilterSkipLink()
-        </div>
     </div>
 
 }

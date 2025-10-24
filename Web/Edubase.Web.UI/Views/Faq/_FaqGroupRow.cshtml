@@ -1,0 +1,16 @@
+@using Edubase.Data.Entity
+@model FaqGroup
+
+<div class="govuk-summary-list__row">
+    <dd class="govuk-summary-list__value">
+        <div class="govuk-grid-column-three-quarters">
+            <p>@Model.RowKey</p>
+            <p>@Model.GroupName</p>
+            <p>@Model.DisplayOrder</p>
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+            @Html.RouteLink("Edit", "EditGroup", new { id = Model.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
+            @*@Html.RouteLink("Delete", "DeleteGroup", new { id = Model.RowKey }, new { @class = "govuk-button govuk-button--secondary" })*@
+        </div>
+    </dd>
+</div>

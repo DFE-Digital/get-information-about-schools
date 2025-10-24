@@ -1,5 +1,6 @@
 @using Edubase.Common
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Helpers
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
 
 @if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
@@ -36,7 +37,7 @@ else
                 Governance role identifier (GID)
                 <a id="GidTooltipLink" href="#help-text-gid" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with the governance role identifier field</span>
-                    @helpers.DialogHiddenPrompt()
+                    <dialog-hidden-prompt />
                 </a>
             </label>
             <div class="govuk-grid-column-full helptext-container">
@@ -64,7 +65,7 @@ else
                 Name
                 <a id="FullNameTooltipLink" href="#help-text-full-name" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with the name field</span>
-                    @helpers.DialogHiddenPrompt()
+                    <dialog-hidden-prompt />
                 </a>
             </label>
             <div class="govuk-grid-column-full helptext-container">

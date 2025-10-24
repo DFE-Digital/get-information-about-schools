@@ -1,4 +1,3 @@
-using System;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Helpers
@@ -164,3 +163,4 @@ namespace Edubase.Web.UI.Helpers
             }
         }
     }
+}

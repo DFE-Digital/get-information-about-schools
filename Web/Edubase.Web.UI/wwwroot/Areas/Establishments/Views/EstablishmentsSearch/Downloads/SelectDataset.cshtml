@@ -1,5 +1,10 @@
+@using Edubase.Web.UI.Areas.Establishments.Models.Search
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Helpers.Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
+@using System.Web
+
 @model EstablishmentSearchDownloadViewModel
 @{
     ViewBag.bodyClasses = " search-page";
@@ -44,7 +49,6 @@
         </div>
     }
 }
-
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -119,16 +123,26 @@
                         <legend class="govuk-visually-hidden">Select a data set</legend>
                         <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
                             <div class="govuk-radios__item">
-                                @Html.GiasRadioFor(m => m.Dataset, "core", "Core set of data", null, new { @checked = "checked", @class = "govuk-radios__input core-full", data_aria_controls = "core-additional" })
+                                <div class="govuk-radios__item">
+                                    <input asp-for="Dataset"
+                                           type="radio"
+                                           value="core"
+                                           checked="checked"
+                                           class="govuk-radios__input core-full"
+                                           data-aria-controls="core-additional" />
+
+                                    <label for="Dataset" class="govuk-label">Core set of data</label>
+                                </div>
+
                             </div>
                             <div class="govuk-radios__conditional" id="core-additional">
-                                @DataOptions()
+                                @await Html.PartialAsync("_DataOptions", Model)
                             </div>
                             <div class="govuk-radios__item">
                                 @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data", null, new { @class = "govuk-radios__input core-full", data_aria_controls = "full-additional" })
                             </div>
                             <div class="govuk-radios__conditional" id="full-additional">
-                                @DataOptions()
+                                @await Html.PartialAsync("_DataOptions", Model)
                             </div>
                             <div class="govuk-radios__item">
                                 @Html.GiasRadioFor(m => m.Dataset, "custom", "Choose a specific set of data", null, new { @class = "govuk-radios__input  custom-fields" })
@@ -143,7 +157,7 @@
             {
                 <input type="hidden" name="SelectedLocalAuthorityIds" value="@laId" />
             }
-            var statusId = Request.QueryString.GetValues("SelectedEstablishmentStatusIds") ?? new string[0];
+            var statusId = Context.Request.Query["SelectedEstablishmentStatusIds"].ToArray() ?? new string[0];
             foreach (var status in statusId)
             {
                 @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{HttpUtility.HtmlEncode(status)}\" />")
@@ -152,33 +166,3 @@
         }
     </div>
 </div>
-
-
-@helper DataOptions()
-{
-    <div class="govuk-form-group">
-        <div class="govuk-checkboxes">
-            @if (Model.AllowIncludeEmailAddresses)
-            {
-                @FormHelpers.GiasCheckbox("true", "IncludeEmailAddresses", "Email addresses", null, new { id = "IncludeEmailAddresses", @class = "govuk-checkboxes__input" })
-            }
-
-            @if (Model.AllowIncludeIEBTFields)
-            {
-                @FormHelpers.GiasCheckbox("true", "IncludeIEBTFields", "IEBT fields", null, new { id = "IncludeIEBTFields", @class = "govuk-checkboxes__input" })
-            }
-
-            @if (Model.AllowIncludeBringUpFields)
-            {
-                @FormHelpers.GiasCheckbox("true", "IncludeBringUpFields", "Bring up fields", null, new { id = "IncludeBringUpFields", @class = "govuk-checkboxes__input" })
-            }
-
-            @if (Model.AllowIncludeChildrensCentreFields)
-            {
-                @FormHelpers.GiasCheckbox("true", "IncludeChildrensCentreFields", "Children's centre fields", null, new { id = "IncludeChildrensCentreFields", @class = "govuk-checkboxes__input" })
-            }
-
-            @FormHelpers.GiasCheckbox("true", "IncludeLinks", "Links", null, new { id = "IncludeLinks", @class = "govuk-checkboxes__input" })
-        </div>
-    </div>
-}
