@@ -1,0 +1,102 @@
+@using Edubase.Web.UI.Helpers
+
+@{
+    var closed =
+        Model.IsExtraFilter &&
+            (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(Model.Name));
+
+    var additionalClassName = Model.AdditionalClassName;
+    if (!closed)
+    {
+        additionalClassName = additionalClassName?.Replace("hidden", "");
+    }
+
+    var id = $"option-select-{Model.Label.ToLower().Replace(" ", "-").Replace("/", "-")}";
+}
+
+<div class="govuk-option-select js-collapsible nested-filter-options js-selectable @additionalClassName @Html.Conditional(Model.FilterRefine, "searchable-filters")"
+     data-closed-on-load="false"
+     id="@id"
+     data-bind-alias="@Model.Name"
+     role="search">
+
+    <div class="container-head js-container-head">
+        <div class="option-select-label">@Model.Label</div>
+        <div class="js-selected-counter">
+            <span class="js-selected-counter-text"></span>
+        </div>
+    </div>
+
+    @if (Model.FilterRefine)
+    {
+        @Html.Partial("_SearchWithin", Model.Label)
+    }
+
+    <div class="options-container">
+        <div class="suggestion-target"></div>
+        <div class="js-auto-height-inner">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-visually-hidden">
+                    Select an option below to filter the results — changing the selection will refresh the results
+                </legend>
+
+                <div class="govuk-checkboxes gias-filter-checkboxes">
+                    <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
+                        <input id="@Model.Name_all" class="select-all govuk-checkboxes__input" type="checkbox" />
+                        <label for="@Model.Name_all" class="js-filter-label govuk-label govuk-checkboxes__label">All</label>
+                    </div>
+                </div>
+
+                @foreach (var item in Model.Items)
+                {
+                    <div class="nested-items">
+                        <div class="js-when-on">
+                            <div class="govuk-checkboxes gias-filter-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input id="@Model.Name_@item.Id"
+                                           class="filter-group-title govuk-checkboxes__input"
+                                           type="checkbox"
+                                           @Html.Conditional(item.ChildItems.Any(x => Model.SelectedItems.Contains(x.Id)), "checked") />
+
+                                    <label for="@Model.Name_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
+
+                                    <button data-module="govuk-button"
+                                            class="child-option-toggle js-child-option-toggle"
+                                            aria-expanded="false">
+                                        <span class="govuk-visually-hidden">
+                                            <span class="filter-action-state"></span>
+                                            @item.ChildItems.Count sub types of @item
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <div class="govuk-checkboxes gias-filter-checkboxes">
+                                @foreach (var child in item.ChildItems)
+                                {
+                                    <div class="govuk-checkboxes__item">
+                                        <input name="@Model.Name"
+                                               value="@child.Id"
+                                               id="@Model.Name_@item.Id_@child.Id"
+                                               class="govuk-checkboxes__input js-filter-input trigger-result-update"
+                                               type="checkbox"
+                                               @Html.Conditional(Model.SelectedItems.Contains(child.Id), "checked") />
+
+                                        <label for="@Model.Name_@item.Id_@child.Id"
+                                               class="govuk-checkboxes__label govuk-body govuk-label">
+                                            @child
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </fieldset>
+        </div>
+
+        <filter-skip-link />
+    </div>
+</div>

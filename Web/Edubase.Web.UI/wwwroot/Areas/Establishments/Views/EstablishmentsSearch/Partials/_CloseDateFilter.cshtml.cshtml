@@ -1,0 +1,50 @@
+@model Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel
+
+@{
+    ViewData["CloseDateFromMetadata"] = new Dictionary<string, object>
+    {
+        ["disableHint"] = true,
+        ["labelClass"] = "govuk-label",
+        ["title"] = "From",
+        ["inFilters"] = true,
+        ["fieldsetClassName"] = "search-from-date"
+    };
+
+    ViewData["CloseDateToMetadata"] = new Dictionary<string, object>
+    {
+        ["disableHint"] = true,
+        ["labelClass"] = "govuk-label",
+        ["title"] = "To",
+        ["inFilters"] = true,
+        ["fieldsetClassName"] = "search-to-date"
+    };
+}
+
+<div class="govuk-option-select js-collapsible date-filters no-scroll additional-search-critera hidden"
+     data-closed-on-load="false"
+     id="close-date-filter"
+     data-bind-alias="@Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_CLOSE_DATE_FROM"
+     role="search">
+
+    <div class="container-head js-container-head">
+        <div class="option-select-label">Close date</div>
+        <div class="js-selected-counter">
+            <span class="js-selected-counter-text">Date applied</span>
+        </div>
+    </div>
+
+    <a href="#" class="clear-selections filter-clear">Clear</a>
+
+    <div class="options-container">
+        <div class="js-auto-height-inner">
+            @Html.EditorFor(m => m.CloseDateFrom, "DateFilter", ViewData["CloseDateFromMetadata"])
+            @Html.EditorFor(m => m.CloseDateTo, "DateFilter", ViewData["CloseDateToMetadata"])
+
+            <div class="govuk-form-group">
+                <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
+            </div>
+        </div>
+
+        <filter-skip-link />
+    </div>
+</div>

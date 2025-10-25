@@ -184,9 +184,10 @@
                         @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds, filterRefine: true)
 
                         <!-- begin opted in filters -->
-                        @OpenDateFilter()
+                        @await Html.PartialAsync("_OpenDateFilter", Model)
 
-                        @CloseDateFilter()
+                        @await Html.PartialAsync("_CloseDateFilter", Model)
+
 
                         @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM })
 
@@ -370,7 +371,7 @@
         </div>
         @if (filterRefine)
         {
-            @SearchWithin(@label)
+            @await Html.PartialAsync("_SearchWithin", @label)
         }
         <div class="options-container">
             <div class="suggestion-target"></div>
@@ -424,77 +425,6 @@
     </div>
 }
 
-@helper CloseDateFilter()
-{
-    <div class="govuk-option-select js-collapsible date-filters no-scroll additional-search-critera hidden" data-closed-on-load="false" id="close-date-filter" data-bind-alias="@M.BIND_ALIAS_CLOSE_DATE_FROM"
-         role="search">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">Close date</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text">Date applied</span>
-            </div>
-        </div>
-        <a href="#" class="clear-selections filter-clear">Clear</a>
-        <div class="options-container" id="">
-            <div class="js-auto-height-inner">
-                @Html.EditorFor(m => m.CloseDateFrom, new { disableHint = true, labelClass = "govuk-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
-                @Html.EditorFor(m => m.CloseDateTo, new { disableHint = true, labelClass = "govuk-label", title = "To", inFilters = true, fieldSetClassName = "search-to-date" })
-
-                <div class="govuk-form-group">
-                    <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
-                </div>
-            </div>
-            <filter-skip-link />
-        </div>
-    </div>
-}
-
-@helper OpenDateFilter()
-{
-    <div class="govuk-option-select js-collapsible date-filters no-scroll additional-search-critera hidden" data-closed-on-load="false" id="open-date-filter" data-bind-alias="@M.BIND_ALIAS_OPEN_DATE_FROM"
-         role="search">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">Open date</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text">Date applied</span>
-            </div>
-        </div>
-        <a href="#" class="clear-selections filter-clear">Clear</a>
-        <div class="options-container" id="">
-            <div class="js-auto-height-inner">
-
-                @Html.EditorFor(m => m.OpenDateFrom, new { disableHint = true, labelClass = "govuk-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
-                @Html.EditorFor(m => m.OpenDateTo, new { disableHint = true, labelClass = "govuk-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
-
-                <div class="govuk-form-group">
-                    <a href="#" class="govuk-button govuk-button--secondary filter-button">Apply</a>
-                </div>
-            </div>
-            <filter-skip-link />
-        </div>
-    </div>
-}
-
-
-
-@helper RadiusSelector(string label)
-{
-    <div class="govuk-option-select js-collapsible"
-         id="option-select-@label.ToLower().Replace(" ", "-")"
-         role="search">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter"></div>
-        </div>
-        <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_RADIUS">
-            @foreach (var value in Model.GetRadiusOptions())
-            {
-                <option value="@value" @Html.Conditional(Model.GetRadiusOption() == value, "selected")>@value mile@(Html.Conditional(value != 1, "s"))</option>
-            }
-        </select>
-    </div>
-
-}
 
 @section ViewScripts
 {

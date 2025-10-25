@@ -3,9 +3,9 @@
 @using Edubase.Web.UI.Models.Search
 @model EstablishmentSearchViewModel
 @{
-    var openOnly = Request.QueryString.GetValues("OpenOnly")?.FirstOrDefault() == "true";
+    var openOnly = Context.Request.QueryString.GetValues("OpenOnly")?.FirstOrDefault() == "true";
     var isAllEstablishments = Model.SearchType == eSearchType.EstablishmentAll;
-    var isOnSavedSet = !string.IsNullOrEmpty(Request.QueryString["tok"]) &&
+    var isOnSavedSet = !string.IsNullOrEmpty(Context.Request.QueryString["tok"]) &&
                        Request.QueryString.GetValues("tok")?.FirstOrDefault() == Model.SavedFilterToken;
     var checkedItem = "";
 
