@@ -1,9 +1,13 @@
 @using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Search
+
+@model SelectorNestedViewModel
 
 @{
     var closed =
         Model.IsExtraFilter &&
-            (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(Model.Name));
+            (Model.SelectedExtraSearchFilters == null ||
+				!Model.SelectedExtraSearchFilters.Contains(Model.Name));
 
     var additionalClassName = Model.AdditionalClassName;
     if (!closed)
@@ -29,7 +33,7 @@
 
     @if (Model.FilterRefine)
     {
-        @Html.Partial("_SearchWithin", Model.Label)
+		@await Html.PartialAsync("_SearchWithin", Model.Label)
     }
 
     <div class="options-container">
@@ -42,8 +46,8 @@
 
                 <div class="govuk-checkboxes gias-filter-checkboxes">
                     <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                        <input id="@Model.Name_all" class="select-all govuk-checkboxes__input" type="checkbox" />
-                        <label for="@Model.Name_all" class="js-filter-label govuk-label govuk-checkboxes__label">All</label>
+						<input id="@($"{Model.Name}_all")" class="select-all govuk-checkboxes__input" type="checkbox" />
+						<label for="@($"{Model.Name}_all")" class="js-filter-label govuk-label govuk-checkboxes__label">All</label>
                     </div>
                 </div>
 
@@ -53,12 +57,12 @@
                         <div class="js-when-on">
                             <div class="govuk-checkboxes gias-filter-checkboxes">
                                 <div class="govuk-checkboxes__item">
-                                    <input id="@Model.Name_@item.Id"
-                                           class="filter-group-title govuk-checkboxes__input"
+									<input id="@($"{Model.Name}_{item.Id}")"
+										   class="filter-group-title govuk-checkboxes__input"
                                            type="checkbox"
                                            @Html.Conditional(item.ChildItems.Any(x => Model.SelectedItems.Contains(x.Id)), "checked") />
 
-                                    <label for="@Model.Name_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
+									<label for="@($"{Model.Name}_{item.Id}")" class="govuk-label govuk-checkboxes__label">@item</label>
 
                                     <button data-module="govuk-button"
                                             class="child-option-toggle js-child-option-toggle"
@@ -79,12 +83,12 @@
                                     <div class="govuk-checkboxes__item">
                                         <input name="@Model.Name"
                                                value="@child.Id"
-                                               id="@Model.Name_@item.Id_@child.Id"
-                                               class="govuk-checkboxes__input js-filter-input trigger-result-update"
+											   id="@($"{Model.Name}_{item.Id}_{child.Id}")"
+											   class="govuk-checkboxes__input js-filter-input trigger-result-update"
                                                type="checkbox"
                                                @Html.Conditional(Model.SelectedItems.Contains(child.Id), "checked") />
 
-                                        <label for="@Model.Name_@item.Id_@child.Id"
+										<label for="@($"{Model.Name}_{item.Id}_{child.Id}")"
                                                class="govuk-checkboxes__label govuk-body govuk-label">
                                             @child
                                         </label>
@@ -96,7 +100,6 @@
                 }
             </fieldset>
         </div>
-
         <filter-skip-link />
     </div>
 </div>

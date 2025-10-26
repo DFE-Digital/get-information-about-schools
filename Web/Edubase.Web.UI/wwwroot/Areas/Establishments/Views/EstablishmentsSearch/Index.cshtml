@@ -173,7 +173,12 @@
                             @await Html.PartialAsync("_RadiusFilter", Model)
                         }
 
-                        @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
+						@await Html.PartialAsync("_SelectorNested", new SelectorNestedViewModel {
+							Label = "Establishment type",
+							Name = M.BIND_ALIAS_TYPEIDS,
+							Items = Model.EstablishmentTypes.OrderBy(e => e.Name),
+							SelectedItems = Model.SelectedEstablishmentTypeIds
+						})
 
                         @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses.OrderBy(x => x.Name), Model.SelectedEstablishmentStatusIds)
 
@@ -350,81 +355,6 @@
         <filter-skip-link />
     </div>
 }
-
-
-
-@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false)
-{
-    var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
-    if (!closed)
-    {
-        additionalClassName = additionalClassName.RemoveSubstring("hidden");
-    }
-    <div class="govuk-option-select js-collapsible nested-filter-options js-selectable @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
-         role="search">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text"></span>
-            </div>
-        </div>
-        @if (filterRefine)
-        {
-            @await Html.PartialAsync("_SearchWithin", @label)
-        }
-        <div class="options-container">
-            <div class="suggestion-target"></div>
-            <div class="js-auto-height-inner">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox" />
-                            <label for="@(name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                All
-                            </label>
-                        </div>
-                    </div>
-                    @foreach (var item in items)
-                    {
-                        <div class="nested-items">
-                            <div class="js-when-on">
-                                <div class="govuk-checkboxes gias-filter-checkboxes">
-                                    <div class="govuk-checkboxes__item">
-                                        <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked") />
-                                        <label for="@(name)_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
-                                        <button data-module="govuk-button" class="child-option-toggle js-child-option-toggle" aria-expanded="false">
-                                            <span class="govuk-visually-hidden">
-                                                <span class="filter-action-state"></span>
-                                                @item.ChildItems.Count sub types of @item
-                                            </span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="filter-group">
-                                <div class="govuk-checkboxes gias-filter-checkboxes">
-                                    @foreach (var child in item.ChildItems)
-                                    {
-                                        <div class="govuk-checkboxes__item">
-                                            <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked") />
-                                            <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-body govuk-label">
-                                                @child
-                                            </label>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </fieldset>
-            </div>
-            <filter-skip-link />
-        </div>
-    </div>
-}
-
 
 @section ViewScripts
 {

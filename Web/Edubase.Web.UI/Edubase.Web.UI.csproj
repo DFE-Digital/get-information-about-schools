@@ -19,6 +19,9 @@
     <Content Remove="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Models\Search\SelectorNestedViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
   </ItemGroup>
   <ItemGroup>
