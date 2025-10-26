@@ -179,14 +179,32 @@
 							Items = Model.EstablishmentTypes.OrderBy(e => e.Name),
 							SelectedItems = Model.SelectedEstablishmentTypeIds
 						})
-
-                        @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses.OrderBy(x => x.Name), Model.SelectedEstablishmentStatusIds)
-
-                        @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases.OrderBy(x => x.Name), Model.SelectedEducationPhaseIds)
-
-                        @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true)
-
-                        @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds, filterRefine: true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Status",
+							Name = M.BIND_ALIAS_STATUSIDS,
+							Items = Model.EstablishmentStatuses.OrderBy(model => model.Name),
+							SelectedItems = Model.SelectedEstablishmentStatusIds
+						})
+                        @await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Phase of education",
+							Name = M.BIND_ALIAS_PHASEIDS,
+							Items = Model.EducationPhases.OrderBy(model => model.Name),
+							SelectedItems = Model.SelectedEducationPhaseIds
+						})
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Local authority",
+							Name = M.BIND_ALIAS_LAIDS,
+							Items = Model.LocalAuthorities.OrderBy(model => model.Name),
+							SelectedItems = Model.SelectedLocalAuthorityIds,
+							FilterRefine = true
+						})
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Religious character",
+							Name = M.BIND_ALIAS_RELICHARIDS,
+							Items = Model.ReligiousCharacters.OrderBy(model => model.Name),
+							SelectedItems = Model.SelectedReligiousCharacterIds,
+							FilterRefine = true
+						})
 
                         <!-- begin opted in filters -->
                         @await Html.PartialAsync("_OpenDateFilter", Model)
@@ -198,39 +216,164 @@
 
                         @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM })
 
-                        @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
+                        @await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Admissions policy",
+							Name = M.BIND_ALIAS_ADMPOL,
+							Items = Model.AdmissionsPolicies.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedAdmissionsPolicyIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions.OrderBy(x => x.Name), Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Boarding provision",
+							Name = M.BIND_ALIAS_BOARDPOL,
+							Items = Model.BoardingProvisions.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedBoardingProvisionIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true, true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Diocese",
+							Name = M.BIND_ALIAS_DIOCESE,
+							Items = Model.Dioceses.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedDioceseIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true,
+							FilterRefine = true
+						})
 
-                        @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true, true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "District",
+							Name = M.BIND_ALIAS_DISTRICT,
+							Items = Model.Districts.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedDistrictIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true,
+							FilterRefine = true
+						})
 
-                        @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes.OrderBy(x => x.Name), Model.SelectedFETypeIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Further Education type",
+							Name = M.BIND_ALIAS_FETYPE,
+							Items = Model.FurtherEducationTypes.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedFETypeIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders.OrderBy(x => x.Name), Model.SelectedGenderIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Gender of entry",
+							Name = M.BIND_ALIAS_GENDER,
+							Items = Model.Genders.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedGenderIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs.OrderBy(x => x.Name), Model.SelectedGORIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Government Office Region",
+							Name = M.BIND_ALIAS_GOR,
+							Items = Model.GORs.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedGORIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions.OrderBy(x => x.Name), Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Nursery provision",
+							Name = M.BIND_ALIAS_NURSERY,
+							Items = Model.NurseryProvisions.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedNurseryProvisionIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true, true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Parliamentary constituency",
+							Name = M.BIND_ALIAS_PARLCONST,
+							Items = Model.ParliamentaryConstituencies.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedParliamentaryConstituencyIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true,
+							FilterRefine = true
+						})
 
-                        @Selector("Registration suspended", M.BIND_ALIAS_REGSUSPENDED, Model.RegistrationStatuses.OrderBy(x => x.Name), Model.SelectedRegistrationStatusIds, "additional-search-critera hidden", true, true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Registration suspended",
+							Name = M.BIND_ALIAS_REGSUSPENDED,
+							Items = Model.RegistrationStatuses.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedRegistrationStatusIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true,
+							FilterRefine = true
+						})
 
-                        @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true, true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Religious ethos",
+							Name = M.BIND_ALIAS_RELETHOS,
+							Items = Model.ReligiousEthoses.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedReligiousEthosIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true,
+							FilterRefine = true
+						})
 
-                        @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions.OrderBy(x => x.Name), Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "RSC region",
+							Name = M.BIND_ALIAS_RSCREG,
+							Items = Model.RSCRegions.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedRSCRegionIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations.OrderBy(x => x.Name), Model.SelectedSection41Ids, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Section 41 approved",
+							Name = M.BIND_ALIAS_SECT41,
+							Items = Model.Section41Designations.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedSection41Ids,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions.OrderBy(x => x.Name), Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Sixth form provision",
+							Name = M.BIND_ALIAS_SIXTHFORM,
+							Items = Model.SixthFormProvisions.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedSixthFormProvisionIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions.OrderBy(x => x.Name), Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Special classes",
+							Name = M.BIND_ALIAS_SPECLASS,
+							Items = Model.SpecialClassesProvisions.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedSpecialClassesProvisionIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions.OrderBy(x => x.Name), Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Type of SEN provision",
+							Name = M.BIND_ALIAS_TYPEOFSENPRV,
+							Items = Model.TypeOfSENProvisions.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedTypeOfSENProvisionIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
 
-                        @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
+						@await Html.PartialAsync("_Selector", new SelectorViewModel {
+							Label = "Urban/Rural description",
+							Name = M.BIND_ALIAS_URBRUR,
+							Items = Model.UrbanRuralDesignations.OrderBy(x => x.Name),
+							SelectedItems = Model.SelectedUrbanRuralIds,
+							AdditionalClassName = "additional-search-critera hidden",
+							IsExtraFilter = true
+						})
+
 
                         <div id="additional-filter-wrap">
                             <div class="govuk-option-select js-collapsible searchable-filters" data-closed-on-load="true" id="option-select-additional-filters" role="search">
@@ -241,7 +384,7 @@
                                     </div>
                                 </div>
                                 @* <a href="#" class="clear-selections filter-clear">Clear</a> *@
-                                @SearchWithin("more")
+                                @await Html.PartialAsync("_SearchWithin", "more")
                                 <div class="options-container" id="">
                                     <div class="js-auto-height-inner">
                                         <div class="suggestion-target"></div>
@@ -283,11 +426,9 @@
             <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
             <h2 class="govuk-visually-hidden">Search results listing</h2>
             <div class="govuk-grid-column-two-thirds" id="results-container">
-                @{Html.RenderPartial("Partials/_EstablishmentSearchResults");}
+				@await Html.PartialAsync("Partials/_EstablishmentSearchResults")
             </div>
-
-            @{Html.RenderPartial("Partials/_EstablishmentSearchMap");}
-
+			@await Html.PartialAsync("Partials/_EstablishmentSearchMap")
         </div>
     </form>
 </div>
@@ -299,62 +440,6 @@
         <button class="field-clear hidden"><span class="govuk-visually-hidden">Clear</span></button>
     </label>
 </div>
-
-
-@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false)
-{
-    var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
-    if (!closed)
-    {
-        additionalClassName = additionalClassName.RemoveSubstring("hidden");
-    }
-    <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
-         role="search">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text"></span>
-            </div>
-        </div>
-        @if (filterRefine)
-        {
-            @SearchWithin(@label)
-        }
-        <div class="options-container" id="">
-            <div class="suggestion-target"></div>
-            <div class="js-auto-height-inner">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox" />
-                            <label for="@(name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                All
-                            </label>
-                        </div>
-                    </div>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        @foreach (var item in items)
-                        {
-                            <div class="govuk-checkboxes__item">
-                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                                <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                    @item.Name
-                                    @if (item.Name.Equals("Primary", StringComparison.OrdinalIgnoreCase) || item.Name.Equals("Secondary", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        <span class="govuk-!-font-weight-regular">(all through included)</span>
-                                    }
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-        <filter-skip-link />
-    </div>
-}
 
 @section ViewScripts
 {

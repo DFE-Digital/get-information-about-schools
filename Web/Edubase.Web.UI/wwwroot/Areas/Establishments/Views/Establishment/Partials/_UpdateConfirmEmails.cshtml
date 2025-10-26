@@ -1,6 +1,7 @@
 @using System.Linq.Expressions
 @using Edubase.Common.Text
 @using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Establishments.Establishment
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 
@@ -23,18 +24,13 @@
     </div>
 }
 
-@helper ExitMailEditBackLink()
-{
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.ActionSpecifier)"
-                    value="@ViewModel.GetActionSpecifier(ViewModel.ASEmailBack, "details")">Back</button>
-        </div>
-    </div>
-}
 @if (!Model.IsUpdatingEmailFields.GetValueOrDefault())
 {
-  @ExitMailEditBackLink()
+	@await Html.PartialAsync("Partials/_ExitMailEditBackLink", new BackLinkViewModel {
+		ActionSpecifierName = nameof(Model.ActionSpecifier),
+		ActionSpecifierValue = ViewModel.GetActionSpecifier(ViewModel.ASEmailBack, "details")
+	})
+
 
   <div class="govuk-grid-row">
         <div class="govuk-grid-column-three-quarters">
@@ -140,7 +136,11 @@
 else
 {
     @Html.HiddenFor(x => x.IsUpdatingEmailFields)
-    @ExitMailEditBackLink()
+
+	@await Html.PartialAsync("Partials/_ExitMailEditBackLink", new BackLinkViewModel {
+		ActionSpecifierName = nameof(Model.ActionSpecifier),
+		ActionSpecifierValue = ViewModel.GetActionSpecifier(ViewModel.ASEmailBack, "details")
+	})
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

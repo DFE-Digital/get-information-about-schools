@@ -1,0 +1,15 @@
+using System.Collections.Generic;
+
+namespace Edubase.Web.UI.Models.Search;
+
+public class SelectorViewModel
+{
+    public string Label { get; set; }
+    public string Name { get; set; }
+    public IEnumerable<LookupItemViewModel> Items { get; set; }
+    public List<int> SelectedItems { get; set; }
+    public string AdditionalClassName { get; set; } = "";
+    public bool IsExtraFilter { get; set; } = false;
+    public bool FilterRefine { get; set; } = false;
+}
+
