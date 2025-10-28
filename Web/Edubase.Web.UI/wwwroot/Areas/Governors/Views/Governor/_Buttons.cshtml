@@ -1,0 +1,28 @@
+@using VM = Edubase.Web.UI.Areas.Governors.Models.CreateEditGovernorViewModel;
+
+@model VM
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.SelectedTab = "EditGovernance";
+    Layout = Model.Layout;
+}
+
+<button id="save-button" type="submit" name="action" class="govuk-button" value="">
+    @if (Model.ReplaceGovernorViewModel?.GID.HasValue == true || Model.GID.HasValue)
+    {
+        <text>Save person</text>
+    }
+    else
+    {
+        <text>Add person</text>
+    }
+</button>
+
+@Html.ActionLink(
+    "Cancel",
+        "Edit",
+        "Governor",
+        new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn },
+        new { id = "cancel-button", @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" }
+)

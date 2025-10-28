@@ -1,6 +1,7 @@
 @using Edubase.Web.UI.Controllers
 @using Edubase.Web.UI.Helpers
 @using Microsoft.AspNet.Identity
+@using System.Web
 @{
     ViewBag.assetsPath = "/public/govuk-frontend";
 
@@ -10,7 +11,8 @@
 
     var envHeader = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
     var version = typeof(HomeController).Assembly.GetName().Version;
-    var acceptsAnalytics = HttpContext.Current.Request.Cookies["analytics_preferences"]?.Value.ToString();
+    var acceptsAnalytics = Context.Request.Cookies["analytics_preferences"];
+}
 
     var clarityKey = System.Configuration.ConfigurationManager.AppSettings["ClarityKey"];
 }
@@ -25,6 +27,10 @@
     <link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css">
 
     <!-- Clarity -->
+    @{
+        var clarityKey = ViewData["clarityKey"]?.ToString();
+    }
+
     @if (!string.IsNullOrEmpty(clarityKey) && acceptsAnalytics == "True")
     {
         <script type="text/javascript" nonce="@Html.ScriptNonce()">
@@ -36,6 +42,7 @@
             })(window, document, "clarity", "script", "@clarityKey");
         </script>
     }
+
     <!-- End Clarity -->
     <!-- Google Tag Manager -->
     @if (acceptsAnalytics == "True")
@@ -82,11 +89,11 @@
     @RenderSection("Head", required: false)
 
     @functions {
-        public static IHtmlString GetCsrfTokenMeta()
+        public static Microsoft.AspNetCore.Html.HtmlString GetCsrfTokenMeta()
         {
             string cookieToken, formToken;
             System.Web.Helpers.AntiForgery.GetTokens(null, out cookieToken, out formToken);
-            return new HtmlString($"<meta name=\"csrf-token\" content=\"{formToken}\" />");
+            return new Microsoft.AspNetCore.Html.HtmlString($"<meta name=\"csrf-token\" content=\"{formToken}\" />");
         }}
     @Html.AntiForgeryToken()
     @GetCsrfTokenMeta()
@@ -101,8 +108,12 @@
         </noscript>
     }
     <!-- End Google Tag Manager (noscript) -->
+    @{
+        var userAgent = Context.Request.Headers["User-Agent"].ToString();
+        var isIE8 = userAgent.Contains("MSIE 8.0");
+    }
 
-    @if (!Request.Browser.Browser.Contains("MSIE 8"))
+    @if (!isIE8)
     {
         <script type="text/javascript" nonce="@Html.ScriptNonce()">
             document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
@@ -110,6 +121,7 @@
             if (navigator.userAgent.indexOf('Mac OS X') > -1) { document.body.className += ' is-mac'; }
         </script>
     }
+
     @{
         switch (envHeader.ToLower())
         {
@@ -133,10 +145,7 @@
     }
 
     @{
-        // Not all uses of the URL on this page strictly require being forwarded header aware,
-        // but it's easier and safer to be consistent and just do it everywhere.
-        var urlHelper = new UrlHelper(Request.RequestContext);
-        var currentUrl = urlHelper.GetForwardedHeaderAwareUrl();
+        var currentUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
     }
 
     <div id="app">
@@ -262,25 +271,40 @@
                         @Html.NavigationItem((string)ViewBag.siteSection, "search", "Search", "Index", "Search", "search-link")
                         @Html.NavigationItem((string)ViewBag.siteSection, "downloads", "Downloads", "Index", "Downloads", "downloads-link")
 
-                        @if (Request.IsAuthenticated)
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
                             @Html.NavigationItem((string)ViewBag.siteSection, "tools", "Tools", "Index", "Tools", "tools-link")
                         }
+
 
                         @Html.NavigationItem((string)ViewBag.siteSection, "about", "About", "About", "Home", "about-link")
                         @Html.NavigationItem((string)ViewBag.siteSection, "help", "Help", "Help", "Home", "help-link")
                         @Html.NavigationItem((string)ViewBag.siteSection, "news", "News", "Index", "News", "news-link")
 
-                        @if (Request.IsAuthenticated)
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="govuk-service-navigation__item" style="margin-left: auto;">
-                                @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { id = "logout-link", Class = "govuk-service-navigation__link", rel = "nofollow" })
+                                @Html.ActionLink(
+                                    "Sign out",
+                                    "LogOff",
+                                    "Account",
+                                    new { area = "", returnUrl = Context.Request.Path + Context.Request.QueryString },
+                                    new { id = "logout-link", @class = "govuk-service-navigation__link", rel = "nofollow" }
+                                )
                             </li>
                         }
                         else
                         {
+                            var returnUrl = Context.Request.Path + Context.Request.QueryString;
+
                             <li class="govuk-service-navigation__item" style="margin-left: auto;">
-                                @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { id = "login-link", Class = "govuk-service-navigation__link", rel = "nofollow" })
+                                @Html.ActionLink(
+                                    "Sign in",
+                                    "LogIn",
+                                    "Account",
+                                    new { area = "", returnUrl },
+                                    new { id = "login-link", @class = "govuk-service-navigation__link", rel = "nofollow" }
+                                )
                             </li>
                         }
                     </ul>
@@ -372,7 +396,7 @@
             top.location.href = document.location.href;
         }
     </script>
-    @if (Request.IsAuthenticated)
+    @if (User.Identity?.IsAuthenticated == true)
     {
         <script nonce="@Html.ScriptNonce()">
             new checkGiasDataStatus();

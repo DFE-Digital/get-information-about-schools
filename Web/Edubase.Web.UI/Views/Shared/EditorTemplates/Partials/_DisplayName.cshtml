@@ -1,0 +1,82 @@
+@using Edubase.Web.UI.Helpers
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.FullName)
+{
+    <!-- Full Name Display -->
+    <div class="govuk-form-group" id="governorFullNameDiv" style="display:none">
+        <label class="govuk-label" for="@Html.IdFor(x => x.FullName)">
+            Name
+            <a id="FullNameTooltipLink" href="#help-text-full-name" class="help-icon modal-link">
+                <span class="govuk-visually-hidden">Help with the name field</span>
+                <dialog-hidden-prompt />
+            </a>
+        </label>
+        <div class="govuk-grid-column-full helptext-container">
+            <div id="help-text-full-name">
+                <h3 class="govuk-heading-s make-modal-header">Name</h3>
+                <p class="govuk-body">
+                    <span class="govuk-visually-hidden">Help Text:</span>
+                    The full name input is not editable, because it is auto-populated by joining together name parts.
+                </p>
+            </div>
+        </div>
+        <input id="@Html.IdFor(model =>
+            model.FullName)" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName" />
+    </div>
+
+    <!-- Title Dropdown -->
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
+        @Html.LabelFor(x => x.GovernorTitleId, new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new { @class = "govuk-error-message" })
+        @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new {
+            @class = $"govuk-select {Html.TextBoxValidationClass(model => model.GovernorTitleId)}"
+        })
+    </div>
+
+    <!-- First Name -->
+    var additionalInfo = " (required to save record)";
+    var inputId = Html.IdFor(model => model.FirstName);
+    var errorsWrapperId = $"{inputId}-errors";
+    
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
+        @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label" })
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(x => x.FirstName, "First name cannot be empty", new { @class = "govuk-error-message" })
+        </span>
+        @Html.TextBoxFor(x => x.FirstName, new {
+            @class = $"govuk-input {Html.TextBoxValidationClass(x => x.FirstName)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+
+    <!-- Middle Name -->
+    inputId = Html.IdFor(x => x.MiddleName);
+    errorsWrapperId = $"{inputId}-errors";
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
+        @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
+        </span>
+        @Html.TextBoxFor(x => x.MiddleName, new {
+            @class = $"govuk-input {Html.TextBoxValidationClass(x => x.MiddleName)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+
+    <!-- Last Name -->
+    inputId = Html.IdFor(x => x.LastName);
+    errorsWrapperId = $"{inputId}-errors";
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
+        @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label" })
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(x => x.LastName, "Last name cannot be empty", new { @class = "govuk-error-message" })
+        </span>
+        @Html.TextBoxFor(x => x.LastName, new {
+            @class = $"govuk-input {Html.TextBoxValidationClass(x => x.LastName)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+}

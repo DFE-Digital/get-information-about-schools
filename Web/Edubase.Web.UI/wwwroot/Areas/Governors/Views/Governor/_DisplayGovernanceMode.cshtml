@@ -1,0 +1,39 @@
+@using Edubase.Services.Enums
+@using Edubase.Web.UI.Areas.Governors.Models
+@model GovernorsGridViewModel
+
+@if (Model.EstablishmentUrn.HasValue && Model.GovernanceMode.HasValue)
+{
+    <h2 class="govuk-heading-s">Governor sharing</h2>
+
+    <div class="governors-section">
+        <p class="govuk-body-s">
+            @switch (Model.GovernanceMode)
+            {
+                case eGovernanceMode.LocalGovernors:
+                    @:This establishment has local governors, not shared governors.
+                    break;
+                case eGovernanceMode.LocalAndSharedGovernors:
+                    @:This establishment has local governors and also shares governors with other academies in the trust.
+                    break;
+                case eGovernanceMode.NoLocalGovernors:
+                    @:This establishment is part of a multi-academy trust and does not have local governors.
+                    break;
+                case eGovernanceMode.SharesLocalGovernors:
+                    @:This establishment shares local governors with other academies in the trust.
+                    break;
+            }
+        </p>
+    </div>
+
+    @if (Model.EditMode)
+    {
+        @Html.RouteLink(
+            "Edit governor sharing",
+            "EstabEditGovernanceMode",
+            new { establishmentUrn = Model.EstablishmentUrn },
+            new { @class = "govuk-button govuk-button--secondary" }
+        )
+    }
+}
+

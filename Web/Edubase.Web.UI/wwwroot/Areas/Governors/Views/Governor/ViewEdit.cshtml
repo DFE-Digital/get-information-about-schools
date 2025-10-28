@@ -55,25 +55,25 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            @ShowLegalDuty()
+            @await Html.PartialAsync("_ShowLegalDuty", Model);
         </div>
     </div>
     if (Model.ShowDelegationAndCorpContactInformation)
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                @ShowDelegationInformation()
+                @await Html.PartialAsync("_ShowDelegationInformation", Model);
             </div>
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                @ShowCorporateContactInformation()
+                @await Html.PartialAsync("_ShowCorporateContactInformation", Model);
             </div>
         </div>
     }
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            @DisplayGovernanceMode()
+            @await Html.PartialAsync("_DisplayGovernanceMode", Model);
         </div>
     </div>
 
@@ -172,7 +172,7 @@ else
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            @ShowLegalDuty()
+            @await Html.PartialAsync("_ShowLegalDuty", Model);
         </div>
     </div>
 
@@ -180,7 +180,7 @@ else
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                @DisplayGovernanceMode()
+                @await Html.PartialAsync("_DisplayGovernanceMode", Model);
             </div>
         </div>
     }
@@ -189,19 +189,16 @@ else
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full governors-section">
-                @ShowDelegationInformation()
-
-                @ShowCorporateContactInformation()
+                @await Html.PartialAsync("_ShowDelegationInformation", Model);
+                @await Html.PartialAsync("_ShowCorporateContactInformation", Model);
             </div>
         </div>
     }
 }
 
-
-
 @if (Model.DomainModel.HasGovernors)
 {
-    @DisplayGovernors()
+    @await Html.PartialAsync("_DisplayGovernors", Model);
 }
 else
 {
@@ -210,382 +207,6 @@ else
             <p>There is no governance information for this @Model.ParentEntityName</p>
         </div>
     </div>
-}
-
-
-@helper ShowDelegationInformation()
-{
-    <h2 class="govuk-heading-s">Delegated authority of local governing body</h2>
-    <div>
-        <p class="govuk-body-s">
-            @(Model.DelegationInformation ?? "Not recorded")
-        </p>
-    </div>
-    if (Model.EditMode)
-    {
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                @Html.RouteLink("Edit delegated authority", "GroupEditDelegation", new { Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
-            </div>
-        </div>
-    }
-}
-
-@helper ShowCorporateContactInformation()
-{
-    <h2 class="govuk-heading-s">Corporate contact</h2>
-    <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">
-                More details
-            </span>
-        </summary>
-        <div class="govuk-details__text">
-            <p class="govuk-body-s">
-                This only applies to organisations (most often a diocese or higher education institution) which are a corporate member or director/trustee of an academy trust. They should provide contact details here for someone in their organisation who can provide information on which members of their organisation have acted in the capacity of corporate member or corporate director/trustee.
-            </p>
-        </div>
-    </details>
-    <p class="govuk-body-s">@(Model.CorporateContact ?? "Not recorded")</p>
-    if (Model.EditMode)
-    {
-        @Html.RouteLink("Edit corporate contact", "GroupEditCorporateContact", new { Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
-    }
-}
-
-@helper ShowLegalDuty()
-{
-    if (Model.GroupTypeId == (int) eLookupGroupType.SecureSingleAcademyTrust)
-    {
-        // viewing the governance tab for a secure single-academy trust
-        Html.RenderPartial("~/Areas/Governors/Views/Governor/_LegalDutySecureAcademyTrustStatement.cshtml");
-    }
-    else
-    {
-        Html.RenderPartial("~/Areas/Governors/Views/Governor/_LegalDutyStatement.cshtml");
-    }
-}
-
-
-@helper DisplayGovernors()
-{
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            @if (Model.DomainModel.HasFullAccess || Model.GovernorPermissions.Update || Model.GovernorPermissions.Remove)
-            {
-                // Render lists
-                foreach (var grid in Model.Grids)
-                {
-                    if (grid.Rows.Any())
-                    {
-                        <text>
-                            @ShowGovernorEditor(grid)
-                        </text>
-                    }
-                }
-                if (Model.HistoricGrids.Any(h => h.Rows.Any()))
-                {
-                    <h2 class="govuk-heading-m" id="historic-governor-heading">Historic (left within last 12 months)</h2>
-                    <details class="govuk-details  govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                <span class="gias-details-closed-text" id="historic-expand-details">More details</span>
-                                <span class="gias-details-open-text" id="historic-collapse-details">Less details</span>
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            @foreach (var grid in Model.HistoricGrids)
-                            {
-                                if (grid.Rows.Any())
-                                {
-                                    <text>
-                                        @ShowGovernorEditor(grid, true)
-                                    </text>
-                                }
-                            }
-                        </div>
-                    </details>
-                }
-            }
-            else
-            {
-                for (var index = 0; index < Model.Grids.Count; index++)
-                {
-                    @Html.DisplayFor(m => m.Grids[index])
-                }
-                if (User.Identity.IsAuthenticated)
-                {
-                    if (Model.HistoricGrids.Any(h => h.Rows.Any()))
-                    {
-                        <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
-                        <details class="govuk-details govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">
-                                    <span class="gias-details-closed-text">More details</span>
-                                    <span class="gias-details-open-text">Less details</span>
-                                </span>
-                            </summary>
-                            <div class="govuk-details__text">
-                                @for (var index = 0; index < Model.HistoricGrids.Count; index++)
-                                {
-                                    if (Model.HistoricGrids[index].Rows.Any())
-                                    {
-                                        @Html.DisplayFor(m => m.HistoricGrids[index])
-                                    }
-                                }
-                            </div>
-                        </details>
-                    }
-                }
-                else
-                {
-                    if (Model.HistoricGovernors.Any())
-                    {
-                        <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
-                        <details class="govuk-details govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">
-                                    <span class="gias-details-closed-text">More details</span>
-                                    <span class="gias-details-open-text">Less details</span>
-                                </span>
-                            </summary>
-                            <div class="govuk-details__text">
-                                <table class="govuk-table govuk-!-font-size-16 gias-table list-table sortable-table historical governors">
-                                    <caption class="govuk-visually-hidden">Historical governance</caption>
-                                    <thead class="govuk-table__head">
-                                        <tr class="govuk-table__row">
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="gid" data-sort-type="sortText" id="gid-header">Governance role identifier (GID)</a>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="from" data-sort-type="sortDate">From</a>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="to" data-sort-type="sortDate">To</a>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="govuk-table__body">
-                                        @foreach (var governor in Model.HistoricGovernors)
-                                        {
-                                            <tr class="govuk-table__row">
-                                                <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
-                                                <td data-label="GID" class="govuk-table__cell">@governor.GID</td>
-                                                <td data-label="Appointed by" class="govuk-table__cell">@governor.RoleName</td>
-                                                <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
-                                                <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </details>
-                    }
-                }
-            }
-        </div>
-    </div>
-}
-
-@helper ShowGovernorEditor(GovernorGridViewModel grid, bool historic = false)
-{
-    <div class="governor-list">
-        @if (!historic)
-        {
-            <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(grid.Title + "-heading")">@grid.Title</h2>
-        }
-        @if (grid.Rows.Any())
-        {
-            foreach (var row in grid.Rows)
-            {
-                <div id="gov-id-@row.Model.Id" class="governor-edit-panel govuk-!-margin-bottom-9 @Html.DuplicateCssClassFor(row.Model.Id)">
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@CleanName(row.Cells[0].Text)</h3>
-                    <dl class="govuk-summary-list govuk-!-margin-bottom-1">
-                        @if (historic)
-                        {
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(grid.Title + "-key")">Role</dt>
-                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(grid.Title + "-value")">@grid.RoleName</dd>
-                            </div>
-                        }
-                        @foreach (var cell in row.Cells.Skip(1))
-                        {
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(grid.Title + "-" + cell.Parent.Text + "-key")">@cell.Parent.Text</dt>
-                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(grid.Title + "-" + cell.Parent.Text + "-value")">@(cell.Text ?? "Not recorded")</dd>
-                            </div>
-                        }
-                    </dl>
-
-                    @if (Model.EditMode)
-                    {
-                        if (grid.Tag == "current")
-                        {
-                            if (Model.RemovalGid != row.Model.Id)
-                            {
-                                <div class="button-row govuk-!-margin-bottom-9">
-                                    @if (Model.GovernorPermissions.Update)
-                                    {
-                                        if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
-                                        {
-                                            @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })
-                                        }
-                                        else
-                                        {
-                                            @Html.RouteLink("Edit person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })
-                                        }
-                                    }
-
-                                    @if (Model.GovernorPermissions.Remove)
-                                    {
-                                        if (row.Model.RoleId != null
-                                            && EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value)
-                                            && !EnumSets.GovernanceProfessionalRoles.Contains(row.Model.RoleId.Value))
-                                        {
-                                            if (Model.EstablishmentUrn.HasValue && (row.Model.RoleId.Value == (int)eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody || row.Model.RoleId.Value == (int)eLookupGovernorRole.ChairOfLocalGoverningBody))
-                                            {
-                                                @Html.RouteLink("Replace person", "EstabReplaceChair", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = "replace-person" })
-                                            }
-                                            else
-                                            {
-                                                @Html.RouteLink("Replace person", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-replace-person" })
-                                            }
-                                        }
-                                        else
-                                        {
-                                            @Html.RouteLink("Remove person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", null, null, "gid-" + row.Model.Id, new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-remove-person" })
-                                        }
-                                    }
-                                </div>
-                            }
-                            else // We're in 'removal mode' for this governor.
-                            {
-                                <div class="governor-edit-panel">
-
-                                    @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post, new { id = "removal-form" }))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        @Html.HiddenFor(x => x.RemovalGid)
-                                        @Html.HiddenFor(x => x.EstablishmentUrn)
-                                        @Html.HiddenFor(x => x.GroupUId)
-                                        @Html.HiddenFor(x => x.GovernorShared)
-
-                                        if (!EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value) || Model.EstablishmentUrn.HasValue)
-                                        {
-                                            <fieldset class="govuk-fieldset">
-                                                <legend class="govuk-visually-hidden" Do you wish to retire or remove this person?></legend>
-
-                                                <div class="govuk-radios--conditional" data-module="govuk-radios">
-                                                    @FormHelpers.GiasRadio("1", "removal-mode", "This person has completed their term", null, new { data_aria_controls = "retire-governor-content", @checked = "checked", id = "retire-governor-radio" })
-                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="retire-governor-content">
-                                                        <div class="govuk-form-group">
-                                                            <p>Provide a date term ends to retire this person</p>
-                                                            @Html.EditorFor(x => x.RemovalAppointmentEndDate, new { title = "Date term ends", fieldsetClassName = "edit-date-fieldset" })
-                                                            <div class="button-row">
-                                                                <button id="confirm-retire-governor-button" type="submit" name="action" value="Save" class="govuk-button">Save date and retire person</button>
-
-                                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    @FormHelpers.GiasRadio("2", "removal-mode", "Remove person", null, new { data_aria_controls = "remove-governor-content", id = "remove-governor-radio" })
-                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="remove-governor-content">
-                                                        <div class="govuk-form-group">
-                                                            <p>Confirm you wish to remove this person</p>
-                                                            <div class="button-row">
-                                                                <input type="submit" name="action" value="Remove" class="govuk-button" id="remove-button" />
-
-                                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary", @id = "cancel-button" })
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        }
-                                        else
-                                        {
-                                            <div class="remove-governor gias-panel-indent">
-                                                <p>Confirm you wish to remove this person</p>
-                                                <div class="button-row">
-                                                    <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="govuk-button" />
-
-                                                    @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
-                                                </div>
-
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            }
-                        }
-                        else //historic governor
-                        {
-                            if (Model.GovernorPermissions.Update)
-                            {
-                                <div class="button-wrapper">
-                                    @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody))
-                                    {
-                                        @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary" })
-                                    }
-                                    else
-                                    {
-                                        @Html.RouteLink("Edit person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary" })
-                                    }
-                                </div>
-                            }
-                        }
-                    }
-                </div>
-            }
-        }
-        else
-        {
-            <p class="govuk-body-s">Not recorded</p>
-        }
-    </div>
-}
-
-@helper DisplayGovernanceMode()
-{
-    if (Model.EstablishmentUrn.HasValue && Model.GovernanceMode.HasValue)
-    {
-        <h2 class="govuk-heading-s">Governor sharing</h2>
-        if (Model.GovernanceMode == eGovernanceMode.LocalGovernors)
-        {
-            <div class="governors-section">
-                <p class="govuk-body-s">This establishment has local governors, not shared governors.</p>
-            </div>
-        }
-        else if (Model.GovernanceMode == eGovernanceMode.LocalAndSharedGovernors)
-        {
-            <div class="governors-section">
-                <p class="govuk-body-s">This establishment has local governors and also shares governors with other academies in the trust.</p>
-            </div>
-        }
-        else if (Model.GovernanceMode == eGovernanceMode.NoLocalGovernors)
-        {
-            <div class="governors-section">
-                <p class="govuk-body-s">This establishment is part of a multi-academy trust and does not have local governors.</p>
-            </div>
-        }
-        else if (Model.GovernanceMode == eGovernanceMode.SharesLocalGovernors)
-        {
-            <div class="governors-section">
-                <p class="govuk-body-s">This establishment shares local governors with other academies in the trust.</p>
-            </div>
-        }
-
-        if (Model.EditMode)
-        {
-            @Html.RouteLink("Edit governor sharing", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "govuk-button govuk-button--secondary" })
-        }
-    }
 }
 
 @section ViewScripts {

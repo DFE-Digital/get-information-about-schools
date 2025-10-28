@@ -117,31 +117,11 @@
             @Html.EditorFor(m => m, new { fieldsetClassName = "edit-date-fieldset", disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue, reactivationWarning = Model.Mode == CreateEditGovernorViewModel.EditMode.Edit && Model.AppointmentEndDate.ToDateTime().HasValue && Model.AppointmentEndDate.ToDateTime().Value < DateTime.Now.Date })
 
             <div class="button-row">
-                @Buttons()
+                @await Html.PartialAsync("_Buttons", Model)
             </div>
         }
     </div>
 </div>
-
-@helper Buttons()
-{
-    <button id="save-button" type="submit" name="action" class="govuk-button" value="">
-        @if (Model.ReplaceGovernorViewModel.GID.HasValue)
-        {
-            <text>Save person</text>
-        }
-        else if (Model.GID.HasValue)
-        {
-            <text>Save person</text>
-        }
-        else
-        {
-            <text>Add person</text>
-        }
-    </button>
-
-    @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, new { id = "cancel-button", @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
-}
 
 @section ViewScripts
 {

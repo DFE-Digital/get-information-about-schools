@@ -9,7 +9,7 @@
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 
-    var gSearch = Request.QueryString["gsearch"];
+    var gSearch = Context.Request.Query["gsearch"].ToString();
 }
 
 @section Head
@@ -35,7 +35,17 @@
     <div class="govuk-grid-column-full results-heading">
         <h1 class="govuk-heading-xl gias-search-results--heading" id="search-results-governors">Search results for governors</h1>
         <div class="search-results-download-link-container">
-            <a id="governor-search-results-download-link" class="search-results-download-link @(Model.Count > 5000 ? "prevent-download" : "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
+            @{
+                var queryString = Context.Request.QueryString.HasValue ? Context.Request.QueryString.Value : "";
+                var isPreventDownload = Model.Count > 5000 ? "prevent-download" : "";
+            }
+
+            <a id="governor-search-results-download-link"
+               class="search-results-download-link @isPreventDownload"
+               href="@Url.Action("PrepareDownload", "GovernorSearch", new { area = "Governors" })@queryString"
+               rel="nofollow">
+                Download these search results
+            </a>
         </div>
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">
@@ -199,7 +209,14 @@
 
                         </div>
 
-                        @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
+                        @await Html.PartialAsync("_Selector", new SelectorViewModel {
+                            Label = "Local authority",
+                            Name = GovernorSearchViewModel.BIND_ALIAS_LAIDS,
+                            Items = Model.LocalAuthorities.OrderBy(x => x.Name),
+                            SelectedItems = Model.SelectedLocalAuthorityIds,
+                            FilterRefine = true,
+                            IsExtraFilter = true
+                        })
 
                         <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
                         @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
@@ -218,80 +235,12 @@
     <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
     <h2 class="govuk-visually-hidden">Search results listing</h2>
     <div class="govuk-grid-column-two-thirds" id="results-container">
-
-        @{Html.RenderPartial("Partials/_GovernorSearchResults");}
-
+        @await Html.PartialAsync("Partials/_GovernorSearchResults", Model);
     </div>
 
 </div>
 
-
 @section ViewScripts
 {
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("search-results-bundle.*.js"))"></script>
-}
-
-
-@helper SearchWithin(string label)
-{
-    <div class="search-field-wrap">
-        <label class="filter-searchwithin-label">
-            <span class="govuk-visually-hidden">Search within @label filter</span>
-            <input type="text" class="filter-search govuk-input" />
-            <button class="field-clear hidden">
-                <span class="govuk-visually-hidden">Clear</span>
-            </button>
-        </label>
-    </div>
-}
-
-@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false, bool closed = false)
-{
-    if (!closed)
-    {
-        additionalClassName = additionalClassName.RemoveSubstring("hidden");
-    }
-    <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/", "-")" data-bind-alias="@name"
-         role="search">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text"></span>
-
-            </div>
-        </div>
-        @if (filterRefine)
-        {
-            @SearchWithin(@label)
-        }
-        <div class="options-container" id="">
-            <div class="suggestion-target"></div>
-            <div class="js-auto-height-inner">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                            <input id="@(name)_all" class="govuk-checkboxes__input select-all js-filter-input" type="checkbox" />
-                            <label for="@(name)_all" class="govuk-checkboxes__label govuk-body js-filter-label">
-                                All
-                            </label>
-                        </div>
-                    </div>
-                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                        @foreach (var item in items)
-                        {
-                            <div class="govuk-checkboxes__item">
-                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="govuk-checkboxes__input trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                                <label for="@(name)_@item.Id" class="govuk-checkboxes__label govuk-body js-filter-label">
-                                    @item
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </fieldset>
-            </div>
-            <filter-skip-link />
-        </div>
-    </div>
 }

@@ -1,0 +1,54 @@
+@using Edubase.Common
+@using Edubase.Services.Enums
+@using Edubase.Web.UI.Helpers
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.EmailAddress)
+{
+    var labelText = "Email address";
+
+    if (Model.GovernorRole.OneOfThese(
+        eLookupGovernorRole.ChairOfGovernors,
+        eLookupGovernorRole.ChairOfTrustees,
+        eLookupGovernorRole.AccountingOfficer,
+        eLookupGovernorRole.ChiefFinancialOfficer,
+        eLookupGovernorRole.ChairOfLocalGoverningBody
+    ) || EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+    {
+        labelText += " (required to save record)";
+    }
+
+    var inputId = Html.IdFor(model => model.EmailAddress);
+    var errorsWrapperId = $"{inputId}-errors";
+
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(model => model.EmailAddress)">
+        @Html.LabelFor(model => model.EmailAddress, labelText, new { @class = "govuk-label", @for = inputId })
+
+        <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    How this email address information is used
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>For all governance roles, excluding accounting officers (AOs), chief financial officers (CFOs), member-organisations (with respect to secure single-academy trusts (SSATs)) and governance professionals, a personal email address must be added. If the establishment or academy trust assigns individuals an email address, this can be added instead if the person agrees.</p>
+                <p>For member-organisations (applicable to SSATs only), the organisation's main email address must be added.</p>
+                <p>For all governance professional roles, a work email address must be added. If the governance professional does not have a work email address, then their work/business email address must be added.</p>
+                <p>Whatever email address is added, it must be an up-to-date, valid, and actively monitored account by the individual or organisation.</p>
+                <p>This information is not publicly displayed on the website's UI or in any data extracts; it is classed as personal data and cannot be shared publicly, e.g., through a Freedom of Information (FOI) request. Under Article 6(1)(e) of the UK-GDPR, this information can be shared with other government departments, non-departmental public bodies, arm's length bodies, local authorities, and partners for official public interest tasks. This includes use in criminal investigations and safeguarding.</p>
+                <p>This information is very important as it allows the Department for Education to share important messages with governance roles within an establishment or academy trust.</p>
+            </div>
+        </details>
+
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(model => model.EmailAddress, null, new { @class = "govuk-error-message" })
+        </span>
+
+        @Html.TextBoxFor(model => model.EmailAddress, new {
+            @class = $"govuk-input {Html.TextBoxValidationClass(x => x.EmailAddress)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+}
+

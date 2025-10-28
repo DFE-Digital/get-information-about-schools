@@ -11,5 +11,5 @@ public class SelectorViewModel
     public string AdditionalClassName { get; set; } = "";
     public bool IsExtraFilter { get; set; } = false;
     public bool FilterRefine { get; set; } = false;
+    public bool Closed { get; set; } = false;
 }
-

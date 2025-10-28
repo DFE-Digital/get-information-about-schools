@@ -1,0 +1,22 @@
+@using Edubase.Web.UI.Helpers
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.AppointingBodyId)
+{
+    var inputId = Html.IdFor(model => model.AppointingBodyId);
+    var errorsWrapperId = $"{inputId}-errors";
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(model => model.AppointingBodyId)">
+        @Html.LabelFor(model => model.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
+
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
+        </span>
+
+        @Html.DropDownListFor(model => model.AppointingBodyId, Model.AppointingBodies, "", new {
+            id = inputId,
+            @class = $"govuk-select {Html.TextBoxValidationClass(model => model.AppointingBodyId)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+}

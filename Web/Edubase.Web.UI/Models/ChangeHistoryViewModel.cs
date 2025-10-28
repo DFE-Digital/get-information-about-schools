@@ -11,6 +11,7 @@ namespace Edubase.Web.UI.Models
     using Search;
     using Services.Core;
     using Services.Texuna.ChangeHistory.Models;
+    using SelectorViewModel = Search.SelectorViewModel;
 
     public class ChangeHistoryViewModel : PaginatedResult<ChangeHistorySearchItem>
     {

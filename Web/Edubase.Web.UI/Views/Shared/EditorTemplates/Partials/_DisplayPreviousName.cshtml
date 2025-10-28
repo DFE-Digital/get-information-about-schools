@@ -1,0 +1,65 @@
+@using Edubase.Web.UI.Helpers
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.PreviousFullName)
+{
+    var inputId = Html.IdFor(model => model.PreviousTitleId);
+    var errorsWrapperId = $"{inputId}-errors";
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(model => model.PreviousTitleId)">
+        @Html.LabelFor(model => model.PreviousTitleId, new { @class = "govuk-label" })
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(model => model.PreviousTitleId, null, new { @class = "govuk-error-message" })
+        </span>
+        @Html.DropDownListFor(model => model.PreviousTitleId, Model.PreviousTitles, "", new {
+            id = inputId,
+            @class = $"govuk-select {Html.TextBoxValidationClass(x => x.PreviousTitleId)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+
+    inputId = Html.IdFor(model => model.PreviousFirstName);
+    errorsWrapperId = $"{inputId}-errors";
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(model => model.PreviousFirstName)">
+        @Html.LabelFor(model => model.PreviousFirstName, new { @class = "govuk-label" })
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(model => model.PreviousFirstName, null, new { @class = "govuk-error-message" })
+        </span>
+        @Html.TextBoxFor(model => model.PreviousFirstName, new {
+            id = inputId,
+            @class = $"govuk-input {Html.TextBoxValidationClass(x => x.PreviousFirstName)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+
+    inputId = Html.IdFor(model => model.PreviousMiddleName);
+    errorsWrapperId = $"{inputId}-errors";
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(model => model.PreviousMiddleName)">
+        @Html.LabelFor(model => model.PreviousMiddleName, new { @class = "govuk-label" })
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(model => model.PreviousMiddleName, null, new { @class = "govuk-error-message" })
+        </span>
+        @Html.TextBoxFor(model => model.PreviousMiddleName, new {
+            id = inputId,
+            @class = $"govuk-input {Html.TextBoxValidationClass(model => model.PreviousMiddleName)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+
+    inputId = Html.IdFor(model => model.PreviousLastName);
+    errorsWrapperId = $"{inputId}-errors";
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(model => model.PreviousLastName)">
+        @Html.LabelFor(model => model.PreviousLastName, new { @class = "govuk-label" })
+        <span id="@errorsWrapperId">
+            @Html.ValidationMessageFor(model => model.PreviousLastName, null, new { @class = "govuk-error-message" })
+        </span>
+        @Html.TextBoxFor(model => model.PreviousLastName, new {
+            id = inputId,
+            @class = $"govuk-input {Html.TextBoxValidationClass(model => model.PreviousLastName)}",
+            aria_describedBy = errorsWrapperId
+        })
+    </div>
+}
