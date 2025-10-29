@@ -411,6 +411,12 @@ namespace Edubase.Services
             }
             catch (TaskCanceledException ex)
             {
+                if (ex.CancellationToken.IsCancellationRequested)
+                {
+                    // dont log if user disconnected or request aborted
+                    return new HttpResponseMessage(HttpStatusCode.RequestTimeout);
+                }
+
                 // Following changes to the timeout, we notice that not all timeouts are caught by the above catch block
                 // and the development/"full error detail" error page does not have the exception details.
                 // For this reason we introduce this new catch block to catch all TaskCanceledExceptions that
