@@ -4,7 +4,15 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
+using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
+using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.DataQuality;
+using Edubase.Web.UI.Models.DataQuality.Validators;
+using Edubase.Web.UI.Models.Notifications;
+using Edubase.Web.UI.Models.Notifications.Validators;
+using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,9 +48,22 @@ builder.Services.AddAuthorizationBuilder()
 // Model validator registrations. 
 builder.Services
     .AddScoped<IValidator<GovernorsBulkUpdateViewModel>, GovernorsBulkUpdateViewModelValidator>()
-    .AddScoped<IValidator<BulkUpdateViewModel>, BulkUpdateViewModelValidator>();
-
-
+    .AddScoped<IValidator<BulkUpdateViewModel>, BulkUpdateViewModelValidator>()
+    .AddScoped<IValidator<EditEstablishmentModel>, EditEstablishmentModelValidator>()
+    .AddScoped<IValidator<GovernorsGridViewModel>, GovernorsGridViewModelValidator>()
+    .AddScoped<IValidator<ReplaceChairViewModel>, ReplaceChairViewModelValidator>()
+    .AddScoped<IValidator<EditGroupDelegationInformationViewModel>, EditGroupDelegationInformationViewModelValidator>()
+    .AddScoped<IValidator<SelectSharedGovernorViewModel>, SelectSharedGovernorViewModelValidator>()
+    .AddScoped<IValidator<BulkCreateFreeSchoolsViewModel>, BulkCreateFreeSchoolsViewModelValidator>()
+    .AddScoped<IValidator<BulkAssociateEstabs2GroupsViewModel>, BulkAssociateEstabs2GroupsViewModelValidator>()
+    .AddScoped<IValidator<GovernorsBulkUpdateViewModel>, GovernorsBulkUpdateViewModelValidator>()
+    .AddScoped<IValidator<CreateEstablishmentViewModel>, CreateEstablishmentViewModelValidator>()
+    .AddScoped<IValidator<EditEstablishmentLinksViewModel>, EditEstablishmentLinksViewModelValidator>()
+    .AddScoped<IValidator<ChangeHistoryViewModel>, ChangeHistoryViewModelValidator>()
+    .AddScoped<IValidator<DateTimeViewModel>, DateTimeViewModelValidator>()
+    .AddScoped<IValidator<DataQualityStatusItem>, DataQualityStatusItemValidator>()
+    .AddScoped<IValidator<ValidateChildrensCentreStep2>, ValidateChildrensCentreStep2Validator>()
+    .AddScoped<IValidator<NotificationsBannerViewModel>, NotificationsBannerValidator>();
 
 builder.Services.AddAuthentication("Saml2")
     .AddCookie("Saml2", options =>
@@ -55,6 +76,8 @@ builder.Services.AddAuthentication("Saml2")
             return Task.CompletedTask;
         };
     });
+
+builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();

@@ -81,7 +81,7 @@
                                 {
                                     <div class="govuk-radios__item gias-radio__item--bordered-filter">
                                         @{
-                                            var id = TagBuilder.CreateSanitizedId($"search-type-{ft}");
+                                            var id = TagBuilder.CreateSanitizedId($"search-type-{ft}", "_");
 
                                             var attrs = new Dictionary<string, object>
                                             {
@@ -94,8 +94,10 @@
                                             }
                                         }
 
-                                        @Html.RadioButtonFor(x => x.SearchType, ft, attrs)
-                                        @Html.Label(ft.EnumDisplayNameFor(), new { @for = id, @class = "govuk-radios__label govuk-body" })
+                                        @Html.RadioButtonFor(model => model.SearchType, ft, attrs)
+                                        <label for="@id" class="govuk-radios__label govuk-body">
+                                            @ft.EnumDisplayNameFor()
+                                        </label>
                                     </div>
                                 }
 

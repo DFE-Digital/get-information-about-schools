@@ -6,24 +6,26 @@
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @using System.Text.RegularExpressions
+@using Microsoft.AspNetCore.Routing
 
 @model GroupDetailViewModel
 @{
     ViewBag.Title = Model.Group.Name;
     ViewBag.PageClass = "mat-details school-details";
 
-    var request = HttpContext.Current.Request;
+    var request = ViewContext.HttpContext.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = "requestedDateUtc";
     var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
 
+    var sortBy = request.Query["sortby"].ToString();
 
-    if (request.QueryString["sortby"] != null)
+    if (!string.IsNullOrEmpty(sortBy) && sortBy.Contains("-"))
     {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+        sortField = sortBy.Substring(0, sortBy.IndexOf("-"));
+        sortDir = sortBy.Contains("asc", StringComparison.OrdinalIgnoreCase) ? "asc" : "desc";
+        sortDirText = sortBy.Contains("asc", StringComparison.OrdinalIgnoreCase) ? "an ascending order" : "a descending order";
     }
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
@@ -93,12 +95,17 @@
         <p id="uid" class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: <span id="uid-value">@Model.Group.GroupUId</span></p>
         <p id="establishment-group-type" class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
         <p id="establishment-group-data-download" class="govuk-body-s establishment-data-download">
-            @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId,
-            state = UriHelper.SerializeToUrlToken(RouteDto.Create(
-                new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Groups.ToString() }), "Search"),
-                new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name)
-            ))}, new { rel = "nofollow" })
+            <a asp-route="GroupDataDownload"
+               asp-route-uid="@Model.Group.GroupUId"
+               asp-route-state="@UriHelper.SerializeToUrlToken(RouteDto.Create(
+                          new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Groups.ToString() }), "Search"),
+                          new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name)
+                      ))"
+               rel="nofollow">
+                Download group data
+            </a>
         </p>
+
 
         @if (Model.IsClosed)
         {

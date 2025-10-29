@@ -5,10 +5,13 @@
     var version = typeof(HomeController).Assembly.GetName().Version;
 }
 
+@{
+    var isNotificationsController = ViewContext.RouteData.Values["controller"]?.ToString() == nameof(NotificationsController);
+}
 
-@if (ViewContext.Controller.GetType().Name != nameof(NotificationsController))
+@if (!isNotificationsController)
 {
-    Html.RenderAction("BannersPartial", "Notifications", new { area = "" });
+    @await Component.InvokeAsync("Banners")
 }
 
 @section Head {
@@ -24,7 +27,12 @@
 
 @section BodyEnd {
 
-    @if (!Request.Browser.Browser.Contains("MSIE 8"))
+    @{
+        var userAgent = ViewContext.HttpContext.Request.Headers["User-Agent"].ToString();
+        var isIE8 = userAgent.Contains("MSIE 8.0");
+    }
+
+    @if (!isIE8)
     {
         <script nonce="@Html.ScriptNonce()">
             var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";

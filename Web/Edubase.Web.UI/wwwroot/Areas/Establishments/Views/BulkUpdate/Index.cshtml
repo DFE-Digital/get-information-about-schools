@@ -1,6 +1,7 @@
 @using Edubase.Web.UI.Areas.Establishments.Models
 @using Edubase.Web.UI.Helpers
 @using Microsoft.Ajax.Utilities
+@using static Edubase.Services.Establishments.Models.BulkUpdateDto
 @model BulkUpdateViewModel
 
 @{
@@ -174,7 +175,21 @@
                     Select file type
                 </label>
                 @Html.ValidationMessageFor(x => x.BulkUpdateType, null, new { @class = "govuk-error-message" })
-                @Html.EnumDropDownListFor(x => x.BulkUpdateType, "Select...", new { @class = "govuk-select" })
+                @{
+                    var enumValues =
+                        Enum.GetValues(typeof(eBulkUpdateType))
+                            .Cast<eBulkUpdateType>()
+                            .Select(e => new SelectListItem
+                            {
+                                Text = e.ToString(), // Or use a display name helper
+                                Value = e.ToString()
+                            }).ToList();
+
+                    enumValues.Insert(0, new SelectListItem { Text = "Select...", Value = "" });
+                }
+
+                @Html.DropDownListFor(x => x.BulkUpdateType, enumValues, new { @class = "govuk-select" })
+
             </div>
 
             @Html.EditorFor(m => m.EffectiveDate, new { title = "Effective date (optional)", fieldsetClassName = "edit-date-fieldset", labelClass = "govuk-label" })

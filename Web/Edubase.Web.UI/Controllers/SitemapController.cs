@@ -20,9 +20,9 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models;
-using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
@@ -33,19 +33,23 @@ namespace Edubase.Web.UI.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly ICacheAccessor _cacheAccessor;
         private readonly ICachedLookupService _lookupService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public const int Take = 5000;
         public const string CacheTag = "sitemap";
         private readonly int _cacheDays = ConfigurationManager.AppSettings["SitemapCacheDays"].ToInteger() ?? 1;
 
-        public SitemapController(IEstablishmentReadService establishmentReadService,
-        IGroupReadService groupReadService,
-        ICacheAccessor cacheAccessor,
-        ICachedLookupService lookupService)
+        public SitemapController(
+            IEstablishmentReadService establishmentReadService,
+            IGroupReadService groupReadService,
+            ICacheAccessor cacheAccessor,
+            ICachedLookupService lookupService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _cacheAccessor = cacheAccessor;
             _lookupService = lookupService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [Route("~/sitemap.xml")]
@@ -416,16 +420,28 @@ namespace Edubase.Web.UI.Controllers
             return (ConfigurationManager.AppSettings["SitemapExcludeApi"].ToInteger() ?? 0) != 0;
         }
 
-        private static string AbsoluteActionUrl(
+        public static string GetForwardedAwareUrl(HttpRequest request)
+        {
+            var scheme = request.Scheme; // respects X-Forwarded-Proto if middleware is enabled
+            var host = request.Host.Value; // respects X-Forwarded-Host
+            var path = request.PathBase + request.Path + request.QueryString;
+
+            return $"{scheme}://{host}{path}";
+        }
+
+        private string AbsoluteActionUrl(
             IUrlHelper urlHelper,
             string actionName,
             string controllerName,
             object routeValues = null)
         {
-            var forwardedHeaderAwareUrl = urlHelper.GetForwardedHeaderAwareUrl();
+            var request = _httpContextAccessor.HttpContext?.Request;
+            var forwardedHeaderAwareUrl = GetForwardedAwareUrl(Request);
 
             // Note: Providing the scheme pushes `.Action` to return an absolute URL. Omitting this appears to return a relative URL.
-            var scheme = forwardedHeaderAwareUrl.Scheme;
+            var uri = new Uri(forwardedHeaderAwareUrl);
+            var scheme = uri.Scheme; // "http" or "https
+
             var absoluteActionUrl = urlHelper.Action(actionName, controllerName, routeValues, scheme);
             if (absoluteActionUrl is null)
             {
@@ -434,9 +450,13 @@ namespace Edubase.Web.UI.Controllers
 
             // Where the site is accessed via a reverse proxy, the `Host` property of the `UriBuilder` will be incorrect.
             // For this reason, we replace the `Host` property with the value of the `X-Forwarded-Host` header where present.
+            var forwardedUri = new Uri(forwardedHeaderAwareUrl);
+
             var uriBuilder = new UriBuilder(absoluteActionUrl)
             {
-                Host = forwardedHeaderAwareUrl.Host,
+                Host = forwardedUri.Host,
+                Scheme = forwardedUri.Scheme,
+                Port = forwardedUri.Port
             };
 
             var newUri = uriBuilder.Uri;

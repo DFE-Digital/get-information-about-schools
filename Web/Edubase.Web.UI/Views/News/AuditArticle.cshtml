@@ -4,6 +4,7 @@
 @using Edubase.Web.UI.Controllers
 @using Edubase.Web.UI.Helpers
 @using MoreLinq
+
 @model Edubase.Web.UI.Models.News.NewsArticleAuditViewModel
 @{
     ViewBag.Title = "Get Information about Schools";
@@ -16,10 +17,18 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("News", "Index", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Manage", "Manage", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Audit", "AuditArticles", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a asp-controller="Home" asp-action="Index" asp-area="" class="govuk-breadcrumbs__link">Home</a>
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a asp-controller="News" asp-action="Index" asp-area="" class="govuk-breadcrumbs__link">News</a>
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a asp-controller="News" asp-action="Manage" asp-area="" class="govuk-breadcrumbs__link">Manage</a>
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a asp-controller="News" asp-action="AuditArticles" asp-area="" class="govuk-breadcrumbs__link">Audit</a>
+                    </li>
                 </ol>
             </div>
         </div>
@@ -33,25 +42,23 @@
 </div>
 
 <div class="button-row govuk-!-margin-bottom-4">
-    @Html.ActionLink(
-        "Back",
-        "AuditArticles",
-        "News",
-        null,
-        null)
+    <a asp-controller="News" asp-action="AuditArticles" class="govuk-link">Back</a>
 </div>
 
+
 @{
-    var request = HttpContext.Current.Request;
+    var request = ViewContext.HttpContext.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = nameof(NewsArticle.Version);
 
-    if (request.QueryString["sortby"] != null)
+    var sortByQuery = request.Query["sortby"].ToString();
+
+    if (!string.IsNullOrEmpty(sortByQuery))
     {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+        sortField = sortByQuery.Contains("-") ? sortByQuery.Substring(0, sortByQuery.IndexOf("-")) : sortByQuery;
+        sortDir = sortByQuery.Contains("asc") ? "asc" : "desc";
+        sortDirText = sortByQuery.Contains("asc") ? "an ascending order" : "a descending order";
     }
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
@@ -82,11 +89,16 @@
             </div>
 
             @{
-                var finalEvent = (eNewsArticleEvent)Enum.Parse(typeof(eNewsArticleEvent), Model.Articles.MaxBy(x => x.Version).First().AuditEvent, true);
-                if (finalEvent != eNewsArticleEvent.Delete)
+                var latestArticle = Model.Articles
+                    .OrderByDescending(x => x.Version)
+                    .FirstOrDefault();
+
+                _ = Enum.TryParse<eNewsArticleEvent>(latestArticle?.AuditEvent, true, out var parsedEvent);
+
+                if (parsedEvent != eNewsArticleEvent.Delete)
                 {
                     <div class="govuk-grid-column-one-third gias-align-right">
-                        @Html.RouteLink("Edit", "EditArticle", new { id = @Model.Articles.Select(x => x.Tracker).First() }, new { @class = "govuk-button" })
+                        <a asp-route="EditArticle" asp-route-id="@Model.Articles.Select(x => x.Tracker).First()" class="govuk-button">Edit</a>
                     </div>
                 }
             }
@@ -119,7 +131,11 @@
                     var articleEvent = (eNewsArticleEvent)Enum.Parse(typeof(eNewsArticleEvent), article.AuditEvent, true);
 
                     <tr class="govuk-table__row">
-                        <td data-label="Time and date" class="govuk-table__cell">@(article.Timestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br /> @article.Timestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                        <td data-label="Time and date" class="govuk-table__cell">
+                            @article.Timestamp?.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()
+                            <br />
+                            @article.Timestamp?.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)
+                        </td>
                         <td data-label="Status" class="govuk-table__cell">
                             @if (articleEvent == eNewsArticleEvent.Delete)
                             {
@@ -136,12 +152,13 @@
                         <td data-label="Article date" class="govuk-table__cell">@article.ArticleDate.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <br /> @article.ArticleDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
                         <td data-label="Show date" class="govuk-table__cell">@article.ShowDate</td>
                         <td data-label="Content" class="govuk-table__cell">
-                            @Html.ActionLink(
-                                "View article content",
-                                article.PartitionKey == eNewsArticlePartition.Current.ToString() ? "Article" : "ArticleAudit",
-                                "News",
-                                new { id = article.RowKey, auditRoute = nameof(NewsController.AuditArticle)},
-                                null)
+                            <a asp-controller="News"
+                                asp-action="@(article.PartitionKey == eNewsArticlePartition.Current.ToString() ? "Article" : "ArticleAudit")"
+                                asp-route-id="@article.RowKey"
+                                asp-route-auditRoute="@nameof(NewsController.AuditArticle)"
+                                class="govuk-link">
+                                View article content
+                            </a>
                         </td>
                     </tr>
                 }

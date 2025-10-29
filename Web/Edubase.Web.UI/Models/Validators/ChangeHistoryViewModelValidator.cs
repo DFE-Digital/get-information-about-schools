@@ -1,22 +1,26 @@
-using Edubase.Web.UI.Validation;
 using FluentValidation;
 
-namespace Edubase.Web.UI.Models.Validators
+namespace Edubase.Web.UI.Models.Validators;
+
+public class ChangeHistoryViewModelValidator : AbstractValidator<ChangeHistoryViewModel>
 {
-
-    public class ChangeHistoryViewModelValidator : EdubaseAbstractValidator<ChangeHistoryViewModel>
+    public ChangeHistoryViewModelValidator()
     {
-        public ChangeHistoryViewModelValidator()
-        {
-            RuleFor(x => x.DateFilterFrom)
-                .Must((model, x) => model.DateFilterTo.ToDateTime() > x.ToDateTime())
-                .WithSummaryMessage("Please enter a From date earlier than the To date")
-                .When(x => x.DateFilterFrom != null && x.DateFilterTo != null && x.DateFilterFrom.IsValid() && x.DateFilterTo.IsValid());
+        When(x =>
+            x.DateFilterFrom != null &&
+            x.DateFilterTo != null &&
+            x.DateFilterFrom.IsValid() &&
+            x.DateFilterTo.IsValid(), () =>
+            {
+                RuleFor(x => x.DateFilterFrom)
+                    .Must((model, fromDate) => model.DateFilterTo.ToDateTime() > fromDate.ToDateTime())
+                    .WithMessage("Please enter a From date earlier than the To date")
+                    .WithSummaryMessage("Please enter a From date earlier than the To date");
 
-            RuleFor(x => x.DateFilterTo)
-                .Must((model, x) => model.DateFilterFrom.ToDateTime() < x.ToDateTime())
-                .WithSummaryMessage("Please enter a To date later than the From date")
-                .When(x => x.DateFilterFrom != null && x.DateFilterTo != null && x.DateFilterFrom.IsValid() && x.DateFilterTo.IsValid());
-        }
+                RuleFor(x => x.DateFilterTo)
+                    .Must((model, toDate) => model.DateFilterFrom.ToDateTime() < toDate.ToDateTime())
+                    .WithMessage("Please enter a To date later than the From date")
+                    .WithSummaryMessage("Please enter a To date later than the From date");
+            });
     }
 }

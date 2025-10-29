@@ -1,10 +1,10 @@
-@using System.Configuration
+@inject IConfiguration Configuration
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.SiteSection = "help";
 
-    var fscpdServiceName = ConfigurationManager.AppSettings["FscpdServiceName"];
-    var fscpdHomeUrl = ConfigurationManager.AppSettings["FscpdHomeUrl"];
+    var fscpdServiceName = Configuration["FscpdServiceName"];
+    var fscpdHomeUrl = Configuration["FscpdHomeUrl"];
 }
 
 @section BreadCrumbs

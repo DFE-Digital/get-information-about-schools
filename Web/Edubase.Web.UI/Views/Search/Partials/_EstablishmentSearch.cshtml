@@ -141,10 +141,13 @@
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
-                            @if(Request.QueryString["OpenOnly"] == null)
-                            {
-                                Model.OpenOnly = true;
-                            }
+                                @{
+                                    var openOnly = ViewContext.HttpContext.Request.Query["OpenOnly"];
+                                    if (string.IsNullOrEmpty(openOnly))
+                                    {
+                                        Model.OpenOnly = true;
+                                    }
+                                }
                             @Html.CheckBoxFor(x => x.OpenOnly, new { @class = "govuk-checkboxes__input", @id = "include-open-establishments-la" })
                             <label for="include-open-establishments-la" class="govuk-checkboxes__label govuk-body">Include open schools only</label>
                         </div>

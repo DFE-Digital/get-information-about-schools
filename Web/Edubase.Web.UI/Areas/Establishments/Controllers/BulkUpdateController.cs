@@ -37,7 +37,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 var payload = viewModel.MapToDto();
                 var fileName = payload.FileName;
-                viewModel.BulkFile.SaveAs(fileName);
+                using (var stream = new FileStream(fileName, FileMode.Create))
+                {
+                    await viewModel.BulkFile.CopyToAsync(stream);
+                }
 
                 if (new FileInfo(fileName).Length > 1000000)
                 {

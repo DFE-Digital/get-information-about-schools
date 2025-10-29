@@ -5,17 +5,18 @@
 @model EstablishmentDetailViewModel
 
 @{
-    var request = HttpContext.Current.Request;
+    var request = ViewContext.HttpContext.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = "changedDateUtc";
 
+    var sortBy = request.Query["sortby"].ToString();
 
-    if (request.QueryString["sortby"] != null)
+    if (!string.IsNullOrEmpty(sortBy) && sortBy.Contains("-"))
     {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+        sortField = sortBy.Substring(0, sortBy.IndexOf("-"));
+        sortDir = sortBy.Contains("asc", StringComparison.OrdinalIgnoreCase) ? "asc" : "desc";
+        sortDirText = sortBy.Contains("asc", StringComparison.OrdinalIgnoreCase) ? "an ascending order" : "a descending order";
     }
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";

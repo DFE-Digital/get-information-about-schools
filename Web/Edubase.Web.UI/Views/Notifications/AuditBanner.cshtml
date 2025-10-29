@@ -3,7 +3,7 @@
 @using Edubase.Common
 @using Edubase.Data.Entity
 @using Edubase.Web.UI.Helpers
-@using MoreLinq
+@using System.Linq;
 @model Edubase.Web.UI.Models.Notifications.NotificationsBannerAuditViewModel
 @{ ViewBag.Title = "Get Information about Schools";
     ViewBag.SiteSection = "tools"; }
@@ -15,13 +15,13 @@
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="govuk-breadcrumbs__link">Home</a>
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        <a asp-area="" asp-controller="Tools" asp-action="Index" class="govuk-breadcrumbs__link">Tools</a>
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        <a asp-area="" asp-controller="Notifications" asp-action="Index" class="govuk-breadcrumbs__link">Notifications</a>
                     </li>
                 </ol>
             </div>
@@ -36,25 +36,27 @@
 </div>
 
 <div class="button-row govuk-!-margin-bottom-4">
-    @Html.ActionLink(
-                "Back",
-                "AuditBanners",
-                "Notifications",
-                null,
-                new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+    <a asp-controller="Notifications"
+       asp-action="AuditBanners"
+       class="govuk-back-link gias-back-link--button"
+       data-module="govuk-button">
+        Back
+    </a>
 </div>
 
 @{
-    var request = HttpContext.Current.Request;
+    var request = ViewContext.HttpContext.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = nameof(NotificationBanner.Version);
 
-    if (request.QueryString["sortby"] != null)
+    var sortBy = request.Query["sortby"].ToString();
+
+    if (!string.IsNullOrEmpty(sortBy) && sortBy.Contains("-"))
     {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+        sortField = sortBy.Substring(0, sortBy.IndexOf("-"));
+        sortDir = sortBy.Contains("asc", StringComparison.OrdinalIgnoreCase) ? "asc" : "desc";
+        sortDirText = sortBy.Contains("asc", StringComparison.OrdinalIgnoreCase) ? "an ascending order" : "a descending order";
     }
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
@@ -85,15 +87,29 @@
                 </div>
 
                 @{
-                    var finalEvent = (eNotificationBannerEvent) Enum.Parse(typeof(eNotificationBannerEvent), Model.Banners.MaxBy(x => x.Version).First().AuditEvent, true);
-                    var finalStatus = Model.Banners.MaxBy(x => x.Version).First().Status;
-                    if (!(finalEvent == eNotificationBannerEvent.Delete || finalStatus == eNotificationBannerStatus.Expired))
+                    var latestBanner =
+                        Model.Banners
+                            .OrderByDescending(x => x.Version)
+                            .FirstOrDefault();
+
+                    var finalEvent = (eNotificationBannerEvent)Enum.Parse(typeof(eNotificationBannerEvent), latestBanner?.AuditEvent ?? "", true);
+                    var finalStatus = latestBanner?.Status;
+
+                    if (latestBanner != null &&
+                    finalEvent != eNotificationBannerEvent.Delete &&
+                    finalStatus != eNotificationBannerStatus.Expired)
                     {
                         <div class="govuk-grid-column-one-third gias-align-right">
-                            @Html.RouteLink("Edit", "EditBanner", new { id = @Model.Banners.Select(x => x.Tracker).First(), counter = 0 }, new { @class = "govuk-button" })
+                            <a asp-route="EditBanner"
+                               asp-route-id="@latestBanner.Tracker"
+                               asp-route-counter="0"
+                               class="govuk-button">
+                                Edit
+                            </a>
                         </div>
                     }
                 }
+
             </div>
 
             <table class="approval-changes govuk-table gias-table sortable-table">
@@ -123,7 +139,13 @@
                     var bannerEvent = (eNotificationBannerEvent) Enum.Parse(typeof(eNotificationBannerEvent), banner.AuditEvent, true);
 
                     <tr class="govuk-table__row">
-                        <td data-label="Time and date" class="govuk-table__cell">@(banner.Timestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br/> @banner.Timestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+
+                        <td data-label="Time and date" class="govuk-table__cell">
+                            @banner.Timestamp?.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()
+                            <br />
+                            @banner.Timestamp?.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)
+                        </td>
+
                         <td data-label="Status" class="govuk-table__cell">
                             @if (bannerEvent == eNotificationBannerEvent.Delete)
                             {

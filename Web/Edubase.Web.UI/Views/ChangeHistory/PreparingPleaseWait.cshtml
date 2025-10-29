@@ -1,5 +1,6 @@
 @using Edubase.Web.UI
 @using Edubase.Web.UI.Helpers
+@using Microsoft.AspNetCore.WebUtilities
 @model Edubase.Services.Domain.ProgressDto
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
@@ -48,8 +49,17 @@
             </div>
         </div>
     </div>
+    @{
+        var query = ViewContext.HttpContext.Request.Query;
+        var filteredQuery = query
+        .Where(kvp => !string.Equals(kvp.Key, "DownloadFormat", StringComparison.OrdinalIgnoreCase))
+        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
+
+        var cancelUrl = QueryHelpers.AddQueryString(Url.RouteUrl("ChangeHistorySearch"), filteredQuery);
+    }
+
     <div class="govuk-grid-column-full govuk-!-padding-top-8">
-        <a href=@($"{Url.RouteUrl("ChangeHistorySearch")}?{Request.QueryString.RemoveKey("DownloadFormat")}") class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+        <a href="@cancelUrl" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
     </div>
 </div>
 

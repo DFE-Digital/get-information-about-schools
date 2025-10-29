@@ -21,13 +21,13 @@ else if (Model.Results.Count > 0)
 {
     <div class="search-results-header">
 
-      <div class="top-pagination">
-            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
-            {
-                {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
-                {"maxPages", 5}
-            })
-        </div>
+    <div class="top-pagination">
+        @await Html.PartialAsync("_GenericPagination", Model, new ViewDataDictionary(ViewData)
+        {
+            { "resultsDescription", $"Showing {startResult}-{endResult} of <span id='list-count'>{Model.Count}</span> establishments" },
+            { "maxPages", 5 }
+        })
+    </div>
 
     </div>
     <hr class="govuk-section-break govuk-section-break--visible">
@@ -84,8 +84,13 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="lower-pagination push--bottom">
-            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary { {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")}, {"maxPages", 5} })
+            @await Html.PartialAsync("_GenericPagination", Model, new ViewDataDictionary(ViewData)
+            {
+                { "resultsDescription", $"Showing {startResult}-{endResult} of <span id='list-count'>{Model.Count}</span> establishments" },
+                { "maxPages", 5 }
+            })
         </div>
+
         <back-to-top-link />
     }
 }

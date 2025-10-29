@@ -134,16 +134,18 @@
             @Html.HiddenFieldsFromQueryString()
 
             @{
-                var laIdValues = Request.QueryString.GetValues("SelectedLocalAuthorityIds") ?? new string[0];
+                var laIdValues = ViewContext.HttpContext.Request.Query["SelectedLocalAuthorityIds"].ToArray();
                 foreach (var id in laIdValues)
                 {
                     <input type="hidden" name="SelectedLocalAuthorityIds" value="@id"/>
                 }
 
-                var statusId = Request.QueryString.GetValues("SelectedEstablishmentStatusIds") ?? new string[0];
-                foreach (var status in statusId)
+                var statusId = ViewContext.HttpContext.Request.Query["SelectedEstablishmentStatusIds"].ToArray();
+                @using System.Net
+
+                @foreach (var status in statusId)
                 {
-                    @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{HttpUtility.HtmlEncode(status)}\" />")
+                    @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{WebUtility.HtmlEncode(status)}\" />")
                 }
             }
             <input class="govuk-button" data-module="govuk-button" type="submit" value="Select and continue">

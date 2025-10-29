@@ -1,6 +1,8 @@
 @using Edubase.Common;
 @using Edubase.Services.Security
 @using Edubase.Web.UI.Areas.Groups.Controllers
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Helpers.Edubase.Web.UI.Helpers
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @using S = Edubase.Services.Enums.eLookupGroupStatus;
@@ -31,7 +33,13 @@
 
 <div class="tab-content">
 
-    @using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post, new { @id = "edit-group-details" }))
+    @using (Html.BeginForm(
+        actionName: "EditDetails",
+        controllerName: "Group",
+        routeValues: new { area = "Groups" },
+        method: FormMethod.Post,
+        antiforgery: true,
+        htmlAttributes: new { id = "edit-group-details" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(x => x.GroupUId)
@@ -47,7 +55,6 @@
         @Html.HiddenFor(x => x.CanUserEditStatus)
         @Html.HiddenFor(x => x.OriginalStatusId)
         @Html.HiddenFor(x => x.LocalAuthorityId)
-
 
         if (Model.ChangesSummary != null)
         {
@@ -240,8 +247,6 @@
                         </div>
                     }
 
-
-
                     @if (Model.CanUserCloseAndMarkAsCreatedInError)
                     {
                         // var groupTypeShortName = Model.GroupTypeId == 5 ? Model.GroupTypeName.ToLower() : "trust";
@@ -250,12 +255,14 @@
 
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CloseAndMarkAsCreatedInError)">
                             @Html.ValidationMessageFor(x => x.CloseAndMarkAsCreatedInError, null, new { @class = "govuk-error-message" })
-                            @FormHelpers.GiasCheckbox("true",
-                                 nameof(Model.CloseAndMarkAsCreatedInError),
-                                 Model.CloseAndMarkAsCreatedInErrorLabel,
-                                 " govuk-!-padding-top-0",
-                                 new { id = "CloseAndMarkAsCreatedInError" },
-                                 Model.CloseAndMarkAsCreatedInError)
+
+                            @FormHelpers.GiasCheckbox(
+                                "true",
+                                nameof(Model.CloseAndMarkAsCreatedInError),
+                                Model.CloseAndMarkAsCreatedInErrorLabel,
+                                " govuk-!-padding-top-0",
+                                new { id = "CloseAndMarkAsCreatedInError" },
+                                Model.CloseAndMarkAsCreatedInError)
                         </div>
                     }
 

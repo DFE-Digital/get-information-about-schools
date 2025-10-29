@@ -13,14 +13,13 @@
 }
 else if (Model.Results.Count > 0)
 {
-
-        <div class="top-pagination">
-            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
-            {
-                {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of ", @Model.Count, " groups")},
-                {"maxPages", 5 }
-            })
-        </div>
+    <div class="top-pagination">
+        @await Html.PartialAsync("_GenericPagination", Model, new ViewDataDictionary(ViewData)
+        {
+            { "resultsDescription", $"Showing {startResult}-{endResult} of {Model.Count} groups" },
+        { "maxPages", 5 }
+        })
+    </div>
 
     <ul class="school-results-listing">
         @foreach (var result in Model.Results)
@@ -53,13 +52,14 @@ else if (Model.Results.Count > 0)
     </ul>
 
     <div class="lower-pagination push--bottom">
-        @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+        @await Html.PartialAsync("_GenericPagination", Model, new ViewDataDictionary(ViewData)
         {
-            {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of ", @Model.Count, " groups")},
-            {"maxPages", 5 }
+            { "resultsDescription", $"Showing {startResult}-{endResult} of {Model.Count} groups" },
+        { "maxPages", 5 }
         })
     </div>
-    @helpers.BackToTopLink()
+
+    @await Html.PartialAsync("_BackToTopLink");
 }
 else
 {

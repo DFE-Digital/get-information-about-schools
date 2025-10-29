@@ -1,4 +1,5 @@
 @using Edubase.Web.UI.Helpers
+@using Microsoft.AspNetCore.WebUtilities
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
@@ -37,10 +38,28 @@
 
             <ul class="govuk-list">
                 <li>
-                    <a id="download-button" class="govuk-button" href="@Url.Current(new { start = true })" rel="nofollow">
+                    @{
+                        var request = ViewContext.HttpContext.Request;
+                        var currentPath = request.Path;
+                        var queryParams = request.Query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
+
+                        // Add or update the "start" parameter
+                        queryParams["start"] = "true";
+
+                        var downloadUrl = QueryHelpers.AddQueryString(currentPath, queryParams);
+                    }
+
+                    <a id="download-button" class="govuk-button" href="@downloadUrl" rel="nofollow">
                         Download
                     </a>
-                    <p id="download-file-format-body" class="govuk-body">The data is in @(Request.QueryString["downloadtype"]?.ToString().ToUpper()) format and will download as a ZIP file. Open the ZIP file to access its content.</p>
+                    @{
+                        var downloadType = ViewContext.HttpContext.Request.Query["downloadtype"].ToString().ToUpper();
+                    }
+
+                    <p id="download-file-format-body" class="govuk-body">
+                        The data is in @downloadType format and will download as a ZIP file. Open the ZIP file to access its content.
+                    </p>
+
                 </li>
             </ul>
         </div>

@@ -123,7 +123,7 @@
             {
                 <a id="@tooltipUnderscoredTitle-ToolTipLink" href="#help-text-@tooltipUnderscoredTitle" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with the @tooltipTitle.ToLower() field</span>
-                    @helpers.DialogHiddenPrompt()
+                    @await Html.PartialAsync("_DialogHiddenPrompt", Model);
                 </a>
             }
         </legend>
@@ -183,33 +183,41 @@
 
         <span id="@legendId-errors">
             @{
-                var errContent = new List<MvcHtmlString>
-                    {
-                Html.ValidationMessageFor(x => x, null, new {@class = "govuk-error-message"}),
-                Html.ValidationMessageFor(x => x.Day, null, new {@class = "govuk-error-message"}),
-                Html.ValidationMessageFor(x => x.Month, null, new {@class = "govuk-error-message"}),
-                Html.ValidationMessageFor(x => x.Year, null, new {@class = "govuk-error-message"})
-            };
-
-                if (!Html.ViewData.ModelState.ContainsKey(fullFieldId) ||
-                        !Html.ViewData.ModelState[fullFieldId].Errors.Any())
+                var errContent = new List<IHtmlContent>
                 {
-                    errContent.Insert(0, Html.ValidationMessageNested(fullFieldId));
+                    Html.ValidationMessageFor(x => x, null, new { @class = "govuk-error-message" }),
+                    Html.ValidationMessageFor(x => x.Day, null, new { @class = "govuk-error-message" }),
+                    Html.ValidationMessageFor(x => x.Month, null, new { @class = "govuk-error-message" }),
+                    Html.ValidationMessageFor(x => x.Year, null, new { @class = "govuk-error-message" })
+                };
+
+                if (!ViewData.ModelState.ContainsKey(fullFieldId) ||
+                !ViewData.ModelState[fullFieldId].Errors.Any())
+                {
+                    // Replace this with a custom helper or remove if not needed
+                    // errContent.Insert(0, Html.ValidationMessageNested(fullFieldId));
                 }
 
-                var enumerable = errContent.Select(x => x?.ToHtmlString()).Where(s => !string.IsNullOrWhiteSpace(s));
-                foreach (var html in enumerable)
+                foreach (var content in errContent)
                 {
-                    var withBreaks = System.Text.RegularExpressions.Regex.Replace(
+                    using (var writer = new System.IO.StringWriter())
+                    {
+                        content?.WriteTo(writer, System.Text.Encodings.Web.HtmlEncoder.Default);
+                        var html = writer.ToString();
+
+                        var withBreaks = System.Text.RegularExpressions.Regex.Replace(
                         html,
                         "&lt;br\\s*/?&gt;",
                         "<br />",
                         System.Text.RegularExpressions.RegexOptions.IgnoreCase
-                    );
-                    @Html.Raw(withBreaks)
+                        );
+
+                        @Html.Raw(withBreaks)
+                    }
                 }
             }
         </span>
+
 
         @if (ViewData["vueModel"] != null)
         {

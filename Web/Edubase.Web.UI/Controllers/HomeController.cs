@@ -1,17 +1,15 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Edubase.Common.Cache;
 using Edubase.Data.Repositories;
 using Edubase.Services;
 using Edubase.Services.Lookup;
-using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Controllers.Extensions;
 using Edubase.Web.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace Edubase.Web.UI.Controllers
@@ -88,12 +86,12 @@ namespace Edubase.Web.UI.Controllers
         [HttpPost, Route("~/CookieChoices"), ValidateAntiForgeryToken]
         public ActionResult CookieChoices(bool acceptAnalyticsCookies = false)
         {
-            var cookieDomain = Url.CookieDomain();
+            var cookieDomain = Request.GetCookieDomain();
             var returnTo = Request.Form["OriginatingPage"];
             Response.Cookies.Append(UserPrefsCookieName, acceptAnalyticsCookies.ToString(), new CookieOptions
             {
                 Expires = DateTimeOffset.UtcNow.AddDays(28),
-                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax,
+                SameSite = SameSiteMode.Lax,
                 Domain = cookieDomain
             });
 
@@ -106,19 +104,17 @@ namespace Edubase.Web.UI.Controllers
 
             returnTo = Uri.UnescapeDataString(returnTo);
 
-            if (Uri.IsWellFormedUriString(returnTo, UriKind.RelativeOrAbsolute) && !returnTo.Contains("\n") &&
-                !returnTo.Contains("\r") && Url.IsLocalUrl(returnTo))
-            {
-                return Redirect(returnTo);
-            }
-            return RedirectToAction("cookies");
+            return Uri.IsWellFormedUriString(returnTo, UriKind.RelativeOrAbsolute) && !returnTo.Contains("\n") &&
+                !returnTo.Contains("\r") && Url.IsLocalUrl(returnTo)
+                ?  Redirect(returnTo)
+                :  RedirectToAction("cookies");
         }
 
         [HttpPost("CookieChoicesAjax")]
         [IgnoreAntiforgeryToken] // Optional: use if you're not validating tokens for AJAX
         public IActionResult CookieChoicesAjax([FromForm] bool acceptAnalyticsCookies = false)
         {
-            var cookieDomain = Url.CookieDomain(); // Replace with your own logic or extension method
+            var cookieDomain = Request.GetCookieDomain();
 
             Response.Cookies.Append(UserPrefsCookieName, acceptAnalyticsCookies.ToString(), new CookieOptions
             {

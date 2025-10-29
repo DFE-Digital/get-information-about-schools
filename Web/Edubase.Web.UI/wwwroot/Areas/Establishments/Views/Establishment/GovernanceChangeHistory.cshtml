@@ -10,17 +10,19 @@
     ViewBag.PageClass = "school-details";
     ViewBag.HideLogo = true;
 
-    var request = HttpContext.Current.Request;
+    var request = ViewContext.HttpContext.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = "effectiveDateUtc";
     var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
 
-    if (request.QueryString["sortby"] != null)
+    var sortBy = request.Query["sortby"].ToString();
+
+    if (!string.IsNullOrEmpty(sortBy) && sortBy.Contains("-"))
     {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+        sortField = sortBy.Substring(0, sortBy.IndexOf("-"));
+        sortDir = sortBy.Contains("asc") ? "asc" : "desc";
+        sortDirText = sortBy.Contains("asc") ? "an ascending order" : "a descending order";
     }
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";

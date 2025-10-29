@@ -68,15 +68,14 @@
         {
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full top-pagination">
-                    @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+                    @await Html.PartialAsync("_GenericPagination", Model, new ViewDataDictionary(ViewData)
                     {
-                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
-                        {"maxPages", 5 }
+                        { "resultsDescription", $"Showing {startResult}-{endResult} of <span id='list-count'>{Model.Count}</span> establishments" },
+                        { "maxPages", 5 }
                     })
                 </div>
             </div>
         }
-
 
         if (Model.Results.Items.Any())
         {
@@ -113,10 +112,10 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <div class="lower-pagination">
-                        @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+                        @await Html.PartialAsync("_GenericPagination", Model, new ViewDataDictionary(ViewData)
                         {
-                            {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
-                            {"maxPages", 5 }
+                            { "resultsDescription", $"Showing {startResult}-{endResult} of <span id='list-count'>{Model.Count}</span> establishments" },
+                            { "maxPages", 5 }
                         })
                     </div>
                     <back-to-top-link />

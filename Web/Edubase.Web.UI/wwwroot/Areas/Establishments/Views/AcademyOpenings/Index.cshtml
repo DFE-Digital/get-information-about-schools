@@ -1,6 +1,7 @@
 @using Azure.Core
 @using Edubase.Web.UI.Areas.Establishments.Models
 @using Edubase.Web.UI.Helpers
+@using System.Text.Json
 
 @model ManageAcademyOpeningsViewModel
 @{
@@ -8,10 +9,13 @@
     ViewBag.bodyClasses = "manage-academy-openings";
     ViewBag.SiteSection = "tools";
 
+    var request = ViewContext.HttpContext.Request;
+
     var establishmentTypeId = Model.EstablishmentTypeId;
-    var sortBy = Request.QueryString["sortBy"] ?? "OpenDate-asc";
-    var month = Request.QueryString["month"] ?? Model.SelectedMonth;
-    var sortParts = (sortBy ?? "OpenDate-asc").Split('-');
+    var sortBy = request.Query["sortBy"].ToString() ?? "OpenDate-asc";
+    var month = request.Query["month"].ToString() ?? Model.SelectedMonth;
+
+    var sortParts = sortBy.Split('-');
     var sortField = sortParts.Length > 0 && !string.IsNullOrWhiteSpace(sortParts[0]) ? sortParts[0] : "OpenDate";
     var sortDir = sortParts.Length > 1 ? sortParts[1].ToLowerInvariant() : "desc";
 
@@ -25,24 +29,45 @@
         Tuple.Create("PredecessorName", "Predecessor name"),
     };
 
-    var currentRouteName = !string.IsNullOrWhiteSpace(Model.CurrentRouteName) ? Model.CurrentRouteName : "ManageAcademyOpenings";
-    var baseUrl = Request?.Url?.AbsolutePath ?? Url.RouteUrl(currentRouteName);
-    var detailUrlTemplate = Url.Action("Details", "Establishment", new { area = "Establishments", id = "__urn__" });
-    var editUrlTemplate = Url.Action("EditAcademyOpening", "AcademyOpenings", new { area = "Establishments", urn = "__urn__", establishmentTypeId = establishmentTypeId, returnTo = currentRouteName });
-    var allOpeningsPayload = (Model.AllAcademyOpenings ?? Enumerable.Empty<EditAcademyOpeningViewModel>()).Select(x => new
+
+    var currentRouteName = !string.IsNullOrWhiteSpace(Model.CurrentRouteName)
+    ? Model.CurrentRouteName
+    : "ManageAcademyOpenings";
+
+    var baseUrl = request.Path.HasValue
+        ? request.Path.Value
+        : Url.RouteUrl(currentRouteName);
+
+    var detailUrlTemplate = Url.Action("Details", "Establishment", new
     {
-        urn = x.Urn,
-        establishmentName = x.EstablishmentName,
-        establishmentType = x.EstablishmentType,
-        predecessorUrn = x.PredecessorUrn,
-        predecessorName = x.PredecessorName,
-        openDate = x.OpenDate.ToString("O"),
-        openDateDisplay = x.OpenDate.ToString("d MMMM yyyy"),
-        openDateYear = x.OpenDate.Year,
-        openDateMonth = x.OpenDate.Month,
-        openDateDay = x.OpenDate.Day
+        area = "Establishments",
+        id = "__urn__"
     });
-    var allOpeningsJson = Json.Encode(allOpeningsPayload);
+
+    var editUrlTemplate = Url.Action("EditAcademyOpening", "AcademyOpenings", new
+    {
+        area = "Establishments",
+        urn = "__urn__",
+        establishmentTypeId = establishmentTypeId,
+        returnTo = currentRouteName
+    });
+
+    var allOpeningsPayload = (Model.AllAcademyOpenings ?? Enumerable.Empty<EditAcademyOpeningViewModel>())
+        .Select(x => new
+        {
+            urn = x.Urn,
+            establishmentName = x.EstablishmentName,
+            establishmentType = x.EstablishmentType,
+            predecessorUrn = x.PredecessorUrn,
+            predecessorName = x.PredecessorName,
+            openDate = x.OpenDate.ToString("O"),
+            openDateDisplay = x.OpenDate.ToString("d MMMM yyyy"),
+            openDateYear = x.OpenDate.Year,
+            openDateMonth = x.OpenDate.Month,
+            openDateDay = x.OpenDate.Day
+        });
+
+    var allOpeningsJson = JsonSerializer.Serialize(allOpeningsPayload);
 }
 
 @section BreadCrumbs

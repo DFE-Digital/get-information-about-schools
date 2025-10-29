@@ -1,15 +1,14 @@
-﻿using FluentValidation;
+using FluentValidation;
 
-namespace Edubase.Web.UI.Models.Validators
+namespace Edubase.Web.UI.Models.Validators;
+
+/// <summary>
+/// Validates whether the date specified is valid (can be empty).
+/// </summary>
+public class DateTimeViewModelValidator : AbstractValidator<DateTimeViewModel>
 {
-    /// <summary>
-    /// Validates whether the date specified is valid (can be empty).
-    /// </summary>
-    public class DateTimeViewModelValidator : AbstractValidator<DateTimeViewModel>
+    public DateTimeViewModelValidator()
     {
-        public DateTimeViewModelValidator()
-        {
-            RuleFor(x => x).Must(x => x.IsEmpty() || x.IsValid()).WithMessage("The date specified is not valid");
-        }
+        RuleFor(x => x).Must(x => x.IsEmpty() || x.IsValid()).WithMessage("The date specified is not valid");
     }
 }

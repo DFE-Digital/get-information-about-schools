@@ -1,6 +1,7 @@
 @using Edubase.Services.Domain
 @using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models.Tools
+@using Microsoft.AspNetCore.WebUtilities
 @model IndSchoolsSearchViewModel
 @{
     ViewBag.Title = "View independent schools' significant dates";
@@ -46,7 +47,17 @@
             @Html.Conditional(Model.IsWelfareMode, "Next action required by welfare")
         </h1>
         <div class="search-results-download-link-container @Html.Conditional(Model.Results.Count < 1, "hidden")">
-            <a class="search-results-download-link" id="search-results-download-link" href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">Download these results</a>
+
+            @{
+                var queryParams = ViewContext.HttpContext.Request.Query;
+                var queryString = QueryHelpers.AddQueryString("", queryParams.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString()));
+                var downloadUrl = Url.RouteUrl("IndSchSearchResultsRequestDownload") + queryString;
+            }
+
+            <a class="search-results-download-link" id="search-results-download-link" href="@downloadUrl">
+                Download these results
+            </a>
+
         </div>
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">

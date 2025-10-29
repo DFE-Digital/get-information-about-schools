@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Helpers
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @model VM
@@ -298,8 +299,7 @@
         <script nonce="@Html.ScriptNonce()">var isConfirmingChanges = false;</script>
     }
 
-
-    @if (Request.HttpMethod == "POST" && Model.Action != "cancel")
+    @if (ViewContext.HttpContext.Request.Method == "POST" && Model.Action != "cancel")
     {
         <script nonce="@Html.ScriptNonce()">var isConfirmingChanges = true;</script>
     }

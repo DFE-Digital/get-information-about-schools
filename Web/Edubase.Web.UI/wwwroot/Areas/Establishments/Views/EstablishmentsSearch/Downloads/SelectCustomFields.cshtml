@@ -100,7 +100,9 @@
     {
         <input type="hidden" name="SelectedLocalAuthorityIds" value="@laId" />
     }
-    var statusId = Request.QueryString.GetValues("SelectedEstablishmentStatusIds") ?? new string[0];
+
+    var statusId = ViewContext.HttpContext.Request.Query["SelectedEstablishmentStatusIds"].ToArray() ?? new string[0];
+
     foreach (var status in statusId)
     {
         @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{HttpUtility.HtmlEncode(status)}\" />")

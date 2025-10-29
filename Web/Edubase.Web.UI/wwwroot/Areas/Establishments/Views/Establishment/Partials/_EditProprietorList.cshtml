@@ -7,7 +7,14 @@
 <div id="proprietorList">
     @for (int i = 0; i < Model.Proprietors.Count; i++)
     {
-        Html.RenderPartial(@"Partials\_EditProprietors", Model.Proprietors[i], new ViewDataDictionary{{"ProprietorTypeId", Model.ProprietorTypeId}, {"ProprietorsCount", Model.Proprietors.Count}, {"ShowCounter", i+1}, {"ModelState", Html.ViewData.ModelState}, {"displayPolicy", Model.EditPolicy.IEBTDetail.Proprietors}});
+        await Html.RenderPartialAsync("Partials/_EditProprietors", Model.Proprietors[i], new ViewDataDictionary(ViewData)
+        {
+        { "ProprietorTypeId", Model.ProprietorTypeId },
+        { "ProprietorsCount", Model.Proprietors.Count },
+        { "ShowCounter", i + 1 },
+        { "ModelState", ViewData.ModelState },
+        { "displayPolicy", Model.EditPolicy.IEBTDetail.Proprietors }
+        });
     }
 </div>
 

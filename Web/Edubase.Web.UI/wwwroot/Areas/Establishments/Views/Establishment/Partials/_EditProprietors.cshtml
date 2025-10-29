@@ -34,6 +34,12 @@
 
     @using (Html.BeginCollectionItem("Proprietors"))
     {
-        @Html.EditorFor(x => x, new { ProprietorType = "proprietors", displayPolicy});
+        var viewData = new ViewDataDictionary(ViewData)
+        {
+        { "ProprietorType", "proprietors" },
+        { "displayPolicy", displayPolicy }
+        };
+
+        @Html.EditorFor(x => x, viewData)
     }
 </div>

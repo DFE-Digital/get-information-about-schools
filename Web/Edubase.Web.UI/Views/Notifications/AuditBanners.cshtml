@@ -3,7 +3,9 @@
 @using Edubase.Common
 @using Edubase.Data.Entity
 @using Edubase.Web.UI.Helpers
+
 @model Edubase.Web.UI.Models.Notifications.NotificationsBannersAuditViewModel
+
 @{ ViewBag.Title = "Get Information about Schools";
     ViewBag.SiteSection = "tools"; }
 
@@ -14,13 +16,13 @@
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="govuk-breadcrumbs__link">Home</a>
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        <a asp-area="" asp-controller="Tools" asp-action="Index" class="govuk-breadcrumbs__link">Tools</a>
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        <a asp-area="" asp-controller="Notifications" asp-action="Index" class="govuk-breadcrumbs__link">Notifications</a>
                     </li>
                 </ol>
             </div>
@@ -36,16 +38,18 @@
 
 
 @{
-    var request = HttpContext.Current.Request;
+    var request = ViewContext.HttpContext.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = nameof(NotificationBanner.AuditTimestamp);
 
-    if (request.QueryString["sortby"] != null)
+    var sortBy = request.Query["sortby"].ToString();
+
+    if (!string.IsNullOrEmpty(sortBy) && sortBy.Contains("-"))
     {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+        sortField = sortBy.Substring(0, sortBy.IndexOf("-"));
+        sortDir = sortBy.Contains("asc") ? "asc" : "desc";
+        sortDirText = sortBy.Contains("asc") ? "an ascending order" : "a descending order";
     }
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
@@ -107,7 +111,11 @@
                     var bannerEvent = (eNotificationBannerEvent)Enum.Parse(typeof(eNotificationBannerEvent), banner.AuditEvent, true);
                     <tr class="govuk-table__row">
                         <td data-label="Notification banner ID" class="govuk-table__cell">@banner.Tracker</td>
-                        <td data-label="Time and date" class="govuk-table__cell" >@(banner.Timestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br /> @banner.Timestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                            <td data-label="Time and date" class="govuk-table__cell">
+                                @banner.Timestamp?.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()
+                                <br />
+                                @banner.Timestamp?.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)
+                            </td>
                         <td data-label="Status" class="govuk-table__cell">
                             @if (bannerEvent == eNotificationBannerEvent.Delete)
                             {
@@ -126,12 +134,12 @@
                         <td data-label="History" class="govuk-table__cell">
                             @if (banner.Version > 1)
                             {
-                                @Html.ActionLink(
-                                    "View",
-                                    "AuditBanner",
-                                    "Notifications",
-                                    new { id = banner.Tracker },
-                                    null)
+                                <a asp-controller="Notifications"
+                                    asp-action="AuditBanner"
+                                    asp-route-id="@banner.Tracker"
+                                    class="govuk-link">
+                                    View
+                                </a>
                             }
                             else
                             {
@@ -145,12 +153,13 @@
                             }
                             else
                             {
-                                @Html.ActionLink(
-                                    "Edit",
-                                    "EditBannerAsync",
-                                    "Notifications",
-                                    new { id = banner.RowKey, counter = 0 },
-                                    null)
+                                <a asp-controller="Notifications"
+                                    asp-action="EditBannerAsync"
+                                    asp-route-id="@banner.RowKey"
+                                    asp-route-counter="0"
+                                    class="govuk-link">
+                                    Edit
+                                </a>
                             }
                         </td>
                     </tr>

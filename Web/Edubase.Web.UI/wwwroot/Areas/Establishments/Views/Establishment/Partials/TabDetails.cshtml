@@ -29,10 +29,16 @@
                 )
         )
         {
-            using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new { Model.Establishment.Urn, showBanner = true }, FormMethod.Post, new { @class = "gias-action-form" }))
+            @using (Html.BeginRouteForm(
+                routeName: "EstablishmentConfirmUpToDate",
+                routeValues: new { Model.Establishment.Urn, showBanner = true },
+                method: FormMethod.Post,
+                antiforgery: true,
+                htmlAttributes: new { @class = "gias-action-form" }))
             {
-                @Html.AntiForgeryToken()
-                <button class="govuk-button" data-module="govuk-button" id="establishment-data-confirm-button">Confirm details</button>
+                <button class="govuk-button" data-module="govuk-button" id="establishment-data-confirm-button">
+                    Confirm details
+                </button>
             }
         }
     }

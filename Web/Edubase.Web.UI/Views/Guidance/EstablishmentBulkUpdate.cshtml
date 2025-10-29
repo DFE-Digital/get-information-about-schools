@@ -317,7 +317,9 @@
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Telephone</td>
             </tr>
 
-            @if ("true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowBulkUpdateGuidance"], StringComparison.OrdinalIgnoreCase))
+            @inject IConfiguration Configuration
+
+            @if ("true".Equals(Configuration["Feature_Ofsted_ShowBulkUpdateGuidance"], StringComparison.OrdinalIgnoreCase))
             {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedRating</td>
@@ -328,7 +330,7 @@
                     <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted last inspection</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Osted report link</td>
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedReportLink</td>
                     <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted report link</td>
                 </tr>
             }
@@ -713,7 +715,9 @@
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last Bridge Visit</td>
             </tr>
 
-            @if ("true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowBulkUpdateGuidance"], StringComparison.OrdinalIgnoreCase))
+            @inject IConfiguration Configuration
+
+            @if ("true".Equals(Configuration["Feature_Ofsted_ShowBulkUpdateGuidance"], StringComparison.OrdinalIgnoreCase))
             {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullOfstedInspection</td>

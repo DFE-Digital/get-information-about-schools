@@ -1,4 +1,5 @@
 @using System.Globalization
+@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @using Edubase.Web.UI.Models.Search
 @model HomepageViewModel
@@ -11,8 +12,10 @@
 @{
     // Not all uses of the URL on this page strictly require being forwarded header aware,
     // but it's easier and safer to be consistent and just do it everywhere.
-    var urlHelper = new UrlHelper(Request.RequestContext);
-    var currentUrl = urlHelper.GetForwardedHeaderAwareUrl();
+    var urlHelper = Url;
+    var request = ViewContext.HttpContext.Request;
+    var currentUrl = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
+    var currentPathAndQuery = $"{request.Path}{request.QueryString}";
 }
 
 <div class="govuk-grid-row">
@@ -100,7 +103,7 @@
             </div>
         </div>
 
-        @if (!Request.IsAuthenticated)
+        @if (!User.Identity.IsAuthenticated)
         {
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full @groupSpacing">
@@ -109,7 +112,13 @@
                         This is for establishment users only and local authority and group users where applicable. Please sign into your DfE Sign-in (DSI) account to make any updates
                     </p>
                     <p>
-                        @Html.ActionLink("DfE Sign-in", "LogIn", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { rel = "nofollow" })
+                        @Html.ActionLink(
+                            "DfE Sign-in",
+                            "LogIn",
+                            "Account",
+                            new { area = "", returnUrl = currentPathAndQuery },
+                            new { rel = "nofollow" }
+                        )
                     </p>
                 </div>
             </div>

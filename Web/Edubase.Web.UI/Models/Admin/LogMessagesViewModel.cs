@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AzureTableLogger.LogMessages;
+using Edubase.Services.Domain;
 
 namespace Edubase.Web.UI.Models.Admin;
 public class LogMessagesViewModel

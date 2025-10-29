@@ -1,6 +1,7 @@
 @using Edubase.Services.Enums
 @using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
+@using Microsoft.AspNetCore.WebUtilities
 @model ChangeHistoryViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Download change history");
@@ -64,11 +65,15 @@
             @Html.HiddenFor(x => x.DisplayErrors, new { Value = "true" })
 
             @Html.HiddenFieldsFromQueryString()
+            
+            var queryParams = ViewContext.HttpContext.Request.Query;
+            var queryDict = queryParams.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
+            var cancelUrl = QueryHelpers.AddQueryString(Url.RouteUrl("ChangeHistorySearch"), queryDict);
+
             <div class="button-row govuk-!-padding-top-8">
                 <button type="submit" class="govuk-button" value="Continue">Continue</button>
-                <a href=@($"{Url.RouteUrl("ChangeHistorySearch")}?{Request.QueryString}") id="cancel-button" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+                <a href="@cancelUrl" id="cancel-button" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
             </div>
-
         }
     </div>
 </div>

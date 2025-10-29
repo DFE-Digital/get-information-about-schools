@@ -17,6 +17,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Common;
     using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
     using Exceptions;
+    using FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.IdentityModel.Tokens;

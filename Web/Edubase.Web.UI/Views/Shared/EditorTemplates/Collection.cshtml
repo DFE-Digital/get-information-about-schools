@@ -1,12 +1,13 @@
-﻿@using HtmlHelpers.BeginCollectionItem
+@using HtmlHelpers.BeginCollectionItem
+@using Edubase.Web.UI.Helpers;
 
-<ul>                                 
+<ul>
     @foreach (object item in Model)
     {
         <li>
             @using (Html.BeginCollectionItem(Html.ViewData.TemplateInfo.HtmlFieldPrefix))
             {
-                @Html.EditorFor(_ => item, null, "")
+                @Html.Editor(expression: "", templateName: "", htmlFieldName: "", additionalViewData: null)
             }
         </li>
     }

@@ -24,10 +24,10 @@ else if (Model.Count > 0)
     }
     <div class="govenors-results">
         <div class="top-pagination">
-            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+            @await Html.PartialAsync("_GenericPagination", Model, new ViewDataDictionary(ViewData)
             {
-                {"resultsDescription", String.Concat("Showing ", startResult, "-", @endResult, " of ", @Model.Count, " governors")},
-                {"maxPages", 5 }
+                { "resultsDescription", $"Showing {startResult}-{endResult} of {Model.Count} governors" },
+                { "maxPages", 5 }
             })
         </div>
         <ul class="school-results-listing" id="governors-search-results">
@@ -59,10 +59,10 @@ else if (Model.Count > 0)
 
 
     <div class="lower-pagination">
-        @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+        @await Html.PartialAsync("_GenericPagination", Model, new ViewDataDictionary(ViewData)
         {
-            {"resultsDescription", String.Concat("Showing ", startResult, "-", @endResult, " of ", @Model.Count, " governors")},
-            {"maxPages", 5 }
+            { "resultsDescription", $"Showing {startResult}-{endResult} of {Model.Count} governors" },
+            { "maxPages", 5 }
         })
     </div>
     <back-to-top-link />

@@ -7,17 +7,16 @@
 @model ChangeHistoryViewModel
 
 @{
-    var request = HttpContext.Current.Request;
+    var request = ViewContext.HttpContext.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = "requestedDateUtc";
-
     var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
 
-    if (request.QueryString["sortby"] != null)
-    {
-        var sortByQuery = (request.QueryString["sortby"] ?? "");
+    var sortByQuery = request.Query["sortby"].ToString();
 
+    if (!string.IsNullOrEmpty(sortByQuery))
+    {
         sortField = sortByQuery.Contains("-") ? sortByQuery.Substring(0, sortByQuery.IndexOf("-")) : sortByQuery;
         sortDir = sortByQuery.Contains("asc") ? "asc" : "desc";
         sortDirText = sortByQuery.Contains("asc") ? "an ascending order" : "a descending order";
