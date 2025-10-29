@@ -225,7 +225,7 @@ namespace Edubase.Web.UI
                 if (ctx != null && ex != null)
                 {
                     var msg = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>().Log(new HttpContextWrapper(ctx), ex);
-                    ctx.Items["edubase_error_code"] = msg.Id;
+                ctx.Items["edubase_error_code"] = msg.Id;
                 }
             }
         }
@@ -250,7 +250,6 @@ namespace Edubase.Web.UI
                     }
                 });
             }
-
         }
 
         private static XmlReaderSettings GetSecureXmlReaderSettings()
