@@ -375,14 +375,31 @@ namespace Edubase.Services
         private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage message, string requestUri)
         {
             AssertJsonContent(message);
-            if (typeof(T) == typeof(string)) return (T) (object) await message.Content.ReadAsStringAsync();
-            else if (typeof(T) == typeof(int?)) return (T) (object) (await message.Content.ReadAsStringAsync()).ToInteger();
-            else
+
+            if (message.Content == null ||
+                message.Content.Headers?.ContentLength == 0)
             {
-                var errorLogger = new FormatterErrorLogger();
-                var retVal = await message.Content.ReadAsAsync<T>(new[] { _formatter }, errorLogger);
-                if (errorLogger.Errors.Any()) throw new TexunaApiSystemException($"Error parsing the JSON returned by the API; (Request URI: {requestUri}) details: {errorLogger.Errors.First().ErrorMessage}");
-                return retVal;
+                return default(T);
+            }
+
+            try
+            {
+                if (typeof(T) == typeof(string)) return (T) (object) await message.Content.ReadAsStringAsync();
+                else if (typeof(T) == typeof(int?))
+                    return (T) (object) (await message.Content.ReadAsStringAsync()).ToInteger();
+                else
+                {
+                    var errorLogger = new FormatterErrorLogger();
+                    var retVal = await message.Content.ReadAsAsync<T>(new[] { _formatter }, errorLogger);
+                    if (errorLogger.Errors.Any())
+                        throw new TexunaApiSystemException(
+                            $"Error parsing the JSON returned by the API; (Request URI: {requestUri}) details: {errorLogger.Errors.First().ErrorMessage}");
+                    return retVal;
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                return default(T);
             }
         }
 
