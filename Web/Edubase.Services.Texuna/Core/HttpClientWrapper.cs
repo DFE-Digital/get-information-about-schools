@@ -417,7 +417,7 @@ namespace Edubase.Services
 
             try
             {
-                response = await _httpClient.SendAsync(requestMessage);
+                response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
                 return response;
             }
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
