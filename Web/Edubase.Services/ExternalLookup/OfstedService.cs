@@ -7,6 +7,7 @@ using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Edubase.Common;
 using Edubase.Services.IntegrationEndPoints;
+using Microsoft.Extensions.Configuration;
 using Polly;
 
 namespace Edubase.Services.ExternalLookup
@@ -14,21 +15,25 @@ namespace Edubase.Services.ExternalLookup
     public class OfstedService : IOfstedService
     {
         private readonly HttpClient _client;
+        private readonly IAsyncPolicy<HttpResponseMessage> _retryPolicy;
+        private readonly TimeSpan[] _retryIntervals;
+        private readonly int _cacheHours;
+        private readonly string _baseUrl;
 
-        private const string OfstedServiceTimeoutKey = "OfstedService_TimeoutSeconds";
-
-        private IAsyncPolicy<HttpResponseMessage> RetryPolicy => PollyUtil.CreateRetryPolicy(RetryIntervals, OfstedServiceTimeoutKey);
-
-        private TimeSpan[] RetryIntervals => PollyUtil.CsvSecondsToTimeSpans(ConfigurationManager.AppSettings["OfstedService_RetryIntervals"]);
-
-        private int CacheHours => ConfigurationManager.AppSettings["OfstedService_CacheHours"].ToInteger() ?? 8;
-
-        private string BaseUrl => ConfigurationManager.AppSettings["OfstedService_BaseAddress"];
-
-
-        public OfstedService(HttpClient client)
+        public OfstedService(HttpClient client, IConfiguration configuration)
         {
             _client = client;
+
+            // Read configuration values
+            var retryCsv = configuration["AppSettings:OfstedService_RetryIntervals"] ?? "1,2,5";
+            var timeoutValue = configuration["AppSettings:OfstedService_TimeoutSeconds"] ?? "10";
+            var cacheRaw = configuration["AppSettings:OfstedService_CacheHours"];
+            var baseUrlRaw = configuration["AppSettings:OfstedService_BaseAddress"];
+
+            _retryIntervals = PollyUtil.CsvSecondsToTimeSpans(retryCsv);
+            _retryPolicy = PollyUtil.CreateRetryPolicy(configuration, _retryIntervals, timeoutValue);
+            _cacheHours = int.TryParse(cacheRaw, out var hours) ? hours : 8;
+            _baseUrl = baseUrlRaw ?? throw new ArgumentNullException("AppSettings:OfstedService_BaseAddress");
         }
 
         private HttpRequestMessage HeadRestRequest(int? urn)
@@ -49,13 +54,13 @@ namespace Edubase.Services.ExternalLookup
             var request = HeadRestRequest(urn);
             try
             {
-                using (var response = await RetryPolicy.ExecuteAsync(async () =>
+                using (var response = await _retryPolicy.ExecuteAsync(async () =>
                            await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
                 {
                     var isOk = response.StatusCode == HttpStatusCode.OK;
                     MemoryCache.Default.Set(
                         new CacheItem(key, isOk),
-                        new CacheItemPolicy {AbsoluteExpiration = DateTimeOffset.Now.AddHours(CacheHours)}
+                        new CacheItemPolicy {AbsoluteExpiration = DateTimeOffset.Now.AddHours(_cacheHours) }
                     );
                     return isOk;
                 }
@@ -68,7 +73,7 @@ namespace Edubase.Services.ExternalLookup
 
         public string PublicURL(int? urn)
         {
-            return BaseUrl + urn;
+            return _baseUrl + urn;
         }
     }
 }

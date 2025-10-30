@@ -1,8 +1,7 @@
 using System;
-using System.Configuration;
 using Azure.Core;
 using Azure.Data.Tables;
-using Edubase.Common;
+using Microsoft.Extensions.Configuration;
 using PluralizeService.Core;
 
 namespace Edubase.Data.Repositories.TableStorage;
@@ -11,28 +10,31 @@ public class TableStorageBase<T> where T : class, ITableEntity, new()
 {
     public TableClient Table { get; }
 
-    public TableStorageBase(string connectionStringName, string tableName = "")
+    public TableStorageBase(IConfiguration configuration, string connectionStringName, string? tableName = null)
     {
-        string sanitisedConnectionStringName = (connectionStringName?.Clean()) ?? throw new ArgumentNullException(nameof(connectionStringName));
+        if (string.IsNullOrWhiteSpace(connectionStringName))
+            throw new ArgumentNullException(nameof(connectionStringName));
 
-        string connectionString =
-            (ConfigurationManager.ConnectionStrings[sanitisedConnectionStringName]?.ConnectionString?.Clean())
-                ?? throw new ArgumentException($"The connection string for '{connectionStringName}' is empty");
+        string connectionString = configuration.GetConnectionString(connectionStringName)?.Trim()
+            ?? throw new ArgumentException($"The connection string for '{connectionStringName}' is missing or empty");
 
-        string tsTableName = string.IsNullOrEmpty(tableName) ?
-            PluralizationProvider.Pluralize(typeof(T).Name) :
-                tableName;
+        string tsTableName = string.IsNullOrWhiteSpace(tableName)
+            ? PluralizationProvider.Pluralize(typeof(T).Name)
+            : tableName;
 
-        TableClientOptions options = new();
-
-        options.Retry.Mode = RetryMode.Exponential;
-        options.Retry.Delay = TimeSpan.FromSeconds(2);
-        options.Retry.MaxRetries = 10;
-        options.Retry.MaxDelay = TimeSpan.FromSeconds(30);
+        var options = new TableClientOptions
+        {
+            Retry =
+            {
+                Mode = RetryMode.Exponential,
+                Delay = TimeSpan.FromSeconds(2),
+                MaxRetries = 10,
+                MaxDelay = TimeSpan.FromSeconds(30)
+            }
+        };
 
         var serviceClient = new TableServiceClient(connectionString, options);
-        Table = serviceClient.GetTableClient(tableName);
-
+        Table = serviceClient.GetTableClient(tsTableName);
         Table.CreateIfNotExists();
     }
 }

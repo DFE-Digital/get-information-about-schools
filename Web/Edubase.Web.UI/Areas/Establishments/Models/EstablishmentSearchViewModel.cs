@@ -140,122 +140,119 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         [BindAlias(BIND_ALIAS_SELECTED_SEARCH_FILTERS)]
         public string SelectedExtraSearchFilters { get; set; }
 
-        public IEnumerable<HeirarchicalLookupItemViewModel> EstablishmentTypes { get; set; }
+        public IEnumerable<HeirarchicalLookupItemViewModel> EstablishmentTypes { get; set; } = [];
         public Dictionary<int, string> EstablishmentTypeLookup { get; set; }
 
         [BindAlias(BIND_ALIAS_TYPEIDS)]
-        public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
+        public List<int> SelectedEstablishmentTypeIds { get; set; } = [];
 
-        public IEnumerable<LookupItemViewModel> EstablishmentStatuses { get; set; }
+        public IEnumerable<LookupItemViewModel> EstablishmentStatuses { get; set; } = [];
 
         [BindAlias(BIND_ALIAS_STATUSIDS)]
-        public List<int> SelectedEstablishmentStatusIds { get; set; } = new List<int>();
+        public List<int> SelectedEstablishmentStatusIds { get; set; } = [];
 
-        public IEnumerable<LookupItemViewModel> EducationPhases { get; set; }
+        public IEnumerable<LookupItemViewModel> EducationPhases { get; set; } = [];
 
         [BindAlias(BIND_ALIAS_PHASEIDS)]
-        public List<int> SelectedEducationPhaseIds { get; set; } = new List<int>();
+        public List<int> SelectedEducationPhaseIds { get; set; } = [];
 
-        public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
+        public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; } = [];
 
         [BindAlias(BIND_ALIAS_LAIDS)]
-        public List<int> SelectedLocalAuthorityIds { get; set; } = new List<int>();
+        public List<int> SelectedLocalAuthorityIds { get; set; } = [];
 
-        public IEnumerable<LookupItemViewModel> ReligiousCharacters { get; set; }
+        public IEnumerable<LookupItemViewModel> ReligiousCharacters { get; set; } = [];
 
         [BindAlias(BIND_ALIAS_RELICHARIDS)]
-        public List<int> SelectedReligiousCharacterIds { get; set; } = new List<int>();
+        public List<int> SelectedReligiousCharacterIds { get; set; } = [];
 
-        public IEnumerable<LookupItemViewModel> GovernorRoles { get; set; }
+        public IEnumerable<LookupItemViewModel> GovernorRoles { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_ADMPOL)]
-        public List<int> SelectedAdmissionsPolicyIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> AdmissionsPolicies { get; set; }
+        public List<int> SelectedAdmissionsPolicyIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> AdmissionsPolicies { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_BOARDPOL)]
-        public List<int> SelectedBoardingProvisionIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> BoardingProvisions { get; set; }
+        public List<int> SelectedBoardingProvisionIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> BoardingProvisions { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_DIOCESE)]
-        public List<int> SelectedDioceseIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> Dioceses { get; set; }
+        public List<int> SelectedDioceseIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> Dioceses { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_DISTRICT)]
-        public List<int> SelectedDistrictIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> Districts { get; set; }
+        public List<int> SelectedDistrictIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> Districts { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_FETYPE)]
-        public List<int> SelectedFETypeIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> FurtherEducationTypes { get; set; }
+        public List<int> SelectedFETypeIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> FurtherEducationTypes { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_GENDER)]
-        public List<int> SelectedGenderIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> Genders { get; set; }
+        public List<int> SelectedGenderIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> Genders { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_GOR)]
-        public List<int> SelectedGORIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> GORs { get; set; }
+        public List<int> SelectedGORIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> GORs { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_NURSERY)]
-        public List<int> SelectedNurseryProvisionIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> NurseryProvisions { get; set; }
+        public List<int> SelectedNurseryProvisionIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> NurseryProvisions { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_PARLCONST)]
-        public List<int> SelectedParliamentaryConstituencyIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> ParliamentaryConstituencies { get; set; }
+        public List<int> SelectedParliamentaryConstituencyIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> ParliamentaryConstituencies { get; set; } = [];
 
         [BindAlias(BIND_ALIAS_REGSUSPENDED)]
-        public List<int> SelectedRegistrationStatusIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> RegistrationStatuses { get; set; }
+        public List<int> SelectedRegistrationStatusIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> RegistrationStatuses { get; set; } = [];
 
         [BindAlias(BIND_ALIAS_RELETHOS)]
-        public List<int> SelectedReligiousEthosIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> ReligiousEthoses { get; set; }
+        public List<int> SelectedReligiousEthosIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> ReligiousEthoses { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_RSCREG)]
-        public List<int> SelectedRSCRegionIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> RSCRegions { get; set; }
+        public List<int> SelectedRSCRegionIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> RSCRegions { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_SECT41)]
-        public List<int> SelectedSection41Ids { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> Section41Designations { get; set; }
+        public List<int> SelectedSection41Ids { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> Section41Designations { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_SIXTHFORM)]
-        public List<int> SelectedSixthFormProvisionIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> SixthFormProvisions { get; set; }
+        public List<int> SelectedSixthFormProvisionIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> SixthFormProvisions { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_SPECLASS)]
-        public List<int> SelectedSpecialClassesProvisionIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> SpecialClassesProvisions { get; set; }
+        public List<int> SelectedSpecialClassesProvisionIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> SpecialClassesProvisions { get; set; } = [];
 
 
         [BindAlias(BIND_ALIAS_TYPEOFSENPRV)]
-        public List<int> SelectedTypeOfSENProvisionIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> TypeOfSENProvisions { get; set; }
-
+        public List<int> SelectedTypeOfSENProvisionIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> TypeOfSENProvisions { get; set; } = [];
 
         [BindAlias(BIND_ALIAS_URBRUR)]
-        public List<int> SelectedUrbanRuralIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> UrbanRuralDesignations { get; set; }
+        public List<int> SelectedUrbanRuralIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> UrbanRuralDesignations { get; set; } = [];
 
         [BindAlias(BIND_ALIAS_OFSTEDRATINGS)]
-        public List<int> SelectedOfstedRatingIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> OfstedRatings { get; set; }
-
-
+        public List<int> SelectedOfstedRatingIds { get; set; } = [];
+        public IEnumerable<LookupItemViewModel> OfstedRatings { get; set; } = [];
 
         /// <summary>
         /// When one result is found, whether to redirect the user to the detail page

@@ -88,15 +88,17 @@
 
     @RenderSection("Head", required: false)
 
-    @functions {
-        public static Microsoft.AspNetCore.Html.HtmlString GetCsrfTokenMeta()
-        {
-            string cookieToken, formToken;
-            System.Web.Helpers.AntiForgery.GetTokens(null, out cookieToken, out formToken);
-            return new Microsoft.AspNetCore.Html.HtmlString($"<meta name=\"csrf-token\" content=\"{formToken}\" />");
-        }}
+    @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+    @{
+        var tokens = Antiforgery.GetAndStoreTokens(Context);
+    }
+
+    <!-- CSRF token for AJAX requests -->
+    <meta name="csrf-token" content="@tokens.RequestToken" />
+
+    <!-- Hidden input for form submission -->
     @Html.AntiForgeryToken()
-    @GetCsrfTokenMeta()
 
 </head>
 <body class="govuk-template__body @(ViewBag.bodyClasses) no-js govuk-frontend-supported" data-module="app-navigation" id="top">

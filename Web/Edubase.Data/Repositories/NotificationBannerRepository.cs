@@ -1,50 +1,39 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
-using Azure.Data.Tables;
 using Azure;
+using Azure.Data.Tables;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories.TableStorage;
-using Microsoft.WindowsAzure.Storage.Table;
-using MoreLinq;
+using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Data.Repositories;
 
-public class NotificationBannerRepository : TableStorageBase<NotificationBanner> // INotificationBannerRepository
+public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
 {
     private const string CurrentNotificationBannersCacheKey = "currentNotificationBanners";
     private readonly MemoryCache _cache = MemoryCache.Default;
     private readonly int _notificationBannerCacheExpirationInSeconds;
 
-    public NotificationBannerRepository()
-        : base("DataConnectionString")
+    public NotificationBannerRepository(IConfiguration configuration)
+        : base(configuration, "DataConnectionString", "NotificationBanners")
     {
-        if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInSeconds"],
-                out _notificationBannerCacheExpirationInSeconds))
-        {
-            _notificationBannerCacheExpirationInSeconds = 300;
-        }
+        _notificationBannerCacheExpirationInSeconds = configuration.GetValue<int?>("NotificationBannerCacheExpirationInSeconds") ?? 300;
     }
 
     public async Task CreateAsync(NotificationBanner entity)
     {
+        entity.PartitionKey = eNotificationBannerPartition.Current.ToString();
+        entity.RowKey ??= Guid.NewGuid().ToString("N").Substring(0, 8);
         await Table.AddEntityAsync(entity);
         _cache.Remove(CurrentNotificationBannersCacheKey);
     }
 
-    /// <summary>
-    ///     Synchronously get active notification banners for a given datetime and for a maximum number of banners
-    ///     Only use this method for notification banners on the template.
-    ///     Other processes should use async methods if possible
-    /// </summary>
-    /// <param name="maximumAmount">The maximum number of banners to be returned</param>
-    /// <returns>An IEnumerable of NotificationBanner</returns>
     public IEnumerable<NotificationBanner> GetNotificationBanners(int maximumAmount)
     {
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
         if (_cache[CurrentNotificationBannersCacheKey] is not IList<NotificationBanner> activeBanners)
         {
             activeBanners = GetActiveBanners(now);
@@ -53,18 +42,12 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
                 new DateTimeOffset(now.AddSeconds(_notificationBannerCacheExpirationInSeconds)));
         }
 
-        var result = (from banner in activeBanners
-            where banner.Start <= now
-                  && banner.End >= now
-            orderby banner.Start
-            select banner).Take(maximumAmount).ToList();
-
-        return result;
+        return [.. activeBanners
+            .Where(b => b.Start <= now && b.End >= now)
+            .OrderBy(b => b.Start)
+            .Take(maximumAmount)];
     }
 
-    /// <summary>
-    ///     Gets notification banners that are active during the cache period
-    /// </summary>
     private IList<NotificationBanner> GetActiveBanners(DateTime forDateTime)
     {
         var expirationWindow = forDateTime.AddSeconds(_notificationBannerCacheExpirationInSeconds);
@@ -83,34 +66,29 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
         bool excludeExpired = false,
         eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
     {
-        var query = Table.QueryAsync<NotificationBanner>(
-            (banner)
-                => banner.PartitionKey == partitionKey.ToString() &&
-                    (!excludeExpired || banner.End >= DateTime.UtcNow));
+        var results = new List<NotificationBanner>();
 
-        List<NotificationBanner> results = [];
-
-        await foreach (var banner in query)
+        await foreach (var banner in Table.QueryAsync<NotificationBanner>(b =>
+            b.PartitionKey == partitionKey.ToString() &&
+            (!excludeExpired || b.End >= DateTime.UtcNow)))
         {
             results.Add(banner);
-
             if (results.Count >= take)
             {
-                return results.Take(take);
+                break;
             }
         }
 
         return results;
     }
 
-
-    public async Task<NotificationBanner> GetAsync(
+    public async Task<NotificationBanner?> GetAsync(
         string id,
         eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
     {
         try
         {
-            var response = await Table.GetEntityAsync<NotificationBanner>(partitionKey: partitionKey.ToString(), rowKey: id);
+            var response = await Table.GetEntityAsync<NotificationBanner>(partitionKey.ToString(), id);
             return response.Value;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
@@ -119,41 +97,14 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
         }
     }
 
-
     public async Task DeleteAsync(string id, string auditUser)
     {
         await ArchiveAsync(id, auditUser);
 
         var item = await GetAsync(id);
-
-        if (item != null)
+        if (item is not null)
         {
             await Table.DeleteEntityAsync(item.PartitionKey, item.RowKey);
-        }
-        _cache.Remove(CurrentNotificationBannersCacheKey);
-    }
-
-    private async Task ArchiveAsync(string id, string auditUser = "")
-    {
-        var item = await GetAsync(id);
-        item.PartitionKey = eNotificationBannerPartition.Archive.ToString();
-        if (item.Version > 1)
-        {
-            item.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
-        }
-
-        await CreateAsync(item);
-
-
-        if (!string.IsNullOrEmpty(auditUser))
-        {
-            // if this is triggered as part of a delete, once we've ported the original entry over to the audit, we want to create a final one which is the delete entry
-            item.Version++;
-            item.AuditEvent = eNotificationBannerEvent.Delete.ToString();
-            item.AuditUser = auditUser;
-            item.AuditTimestamp = DateTime.Now;
-            item.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
-            await CreateAsync(item);
         }
 
         _cache.Remove(CurrentNotificationBannersCacheKey);
@@ -161,12 +112,36 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
 
     public async Task UpdateAsync(NotificationBanner item)
     {
-        // archive the existing one first so we have a snapshot
         await ArchiveAsync(item.RowKey);
-
-        // now update the record
         item.Version++;
         await Table.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
+        _cache.Remove(CurrentNotificationBannersCacheKey);
+    }
+
+    private async Task ArchiveAsync(string id, string auditUser = "")
+    {
+        var item = await GetAsync(id);
+        if (item is null)
+        {
+            return;
+        }
+
+        item.PartitionKey = eNotificationBannerPartition.Archive.ToString();
+        item.RowKey = item.Version > 1
+            ? Guid.NewGuid().ToString("N").Substring(0, 8)
+            : item.RowKey;
+
+        await CreateAsync(item);
+
+        if (!string.IsNullOrEmpty(auditUser))
+        {
+            item.Version++;
+            item.AuditEvent = eNotificationBannerEvent.Delete.ToString();
+            item.AuditUser = auditUser;
+            item.AuditTimestamp = DateTime.UtcNow;
+            item.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
+            await CreateAsync(item);
+        }
 
         _cache.Remove(CurrentNotificationBannersCacheKey);
     }

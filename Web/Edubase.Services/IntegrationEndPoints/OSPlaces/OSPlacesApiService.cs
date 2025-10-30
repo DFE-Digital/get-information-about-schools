@@ -1,31 +1,37 @@
-using Edubase.Common;
-using Edubase.Common.Spatial;
-using Edubase.Services.Geo;
-using Edubase.Services.IntegrationEndPoints.OSPlaces.Models;
-using Polly;
 using System;
-using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Edubase.Common;
+using Edubase.Common.Spatial;
+using Edubase.Services.Geo;
+using Edubase.Services.IntegrationEndPoints.OSPlaces.Models;
+using Microsoft.Extensions.Configuration;
+using Polly;
 
 namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 {
     public class OSPlacesApiService : IOSPlacesApiService
     {
-        private readonly string _apiKey = ConfigurationManager.AppSettings["OSPlacesApiKey"];
-
+        private readonly string _apiKey;
         private readonly HttpClient _osApiClient;
+        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy;
 
-        private const string OSPlacesApiServicesTimeoutKey = "OSPlacesApiServices_Timeout";
+        public OSPlacesApiService(HttpClient httpClient, IConfiguration configuration)
+        {
+            _osApiClient = httpClient;
 
-        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = PollyUtil.CreateRetryPolicy(
-            PollyUtil.CsvSecondsToTimeSpans(
-                ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"]
-            ), OSPlacesApiServicesTimeoutKey
-        );
+            // Read configuration values using IConfiguration
+            _apiKey = configuration["AppSettings:OSPlacesApiKey"] ?? throw new ArgumentNullException("OSPlacesApiKey is missing");
+
+            var retryCsv = configuration["AppSettings:OSPlacesApiServices_RetryIntervals"] ?? "1,2,5";
+            var timeoutValue = configuration["AppSettings:OSPlacesApiServices_Timeout"] ?? "10";
+
+            var retryIntervals = PollyUtil.CsvSecondsToTimeSpans(retryCsv);
+            RetryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, timeoutValue);
+        }
 
         public OSPlacesApiService(HttpClient httpClient)
         {
@@ -46,7 +52,7 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
                 {
                     if (!message.IsSuccessStatusCode)
                     {
-                        return new PlaceDto[0];
+                        return [];
                     }
 
                     var response = await ParseHttpResponseMessageAsync<OSPlacesResponse>(message);
@@ -70,19 +76,11 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 
         private Task<T> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message)
         {
-            if (message.IsSuccessStatusCode)
-            {
-                if (!message.Content.Headers.ContentType.MediaType.Equals("application/json"))
-                {
-                    throw new Exception($"The API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
-                }
-
-                return message.Content.ReadAsAsync<T>(new[] { new JsonMediaTypeFormatter() });
-            }
-            else
-            {
-                throw new Exception($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
-            }
+            return message.IsSuccessStatusCode
+                ? !message.Content.Headers.ContentType.MediaType.Equals("application/json")
+                    ? throw new Exception($"The API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})")
+                    : message.Content.ReadAsAsync<T>([new JsonMediaTypeFormatter()])
+                : throw new Exception($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
         }
     }
 }

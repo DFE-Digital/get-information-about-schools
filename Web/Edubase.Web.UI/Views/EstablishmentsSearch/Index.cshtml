@@ -159,10 +159,18 @@
                                 <select class="govuk-select trigger-result-update sortby-selector" name="@M.BIND_ALIAS_SORT_BY" id="sortby-selector">
                                     @if (Model.SearchType == eSearchType.Location)
                                     {
-                                        <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>Distance</option>
+                                        var isSelected = Model.GetSortOption() == eSortBy.Distance ? "selected" : "";
+                                        <option id="distance" value="d" isSelected>Distance</option>
                                     }
-                                    <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
-                                    <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+
+                                    @{
+                                        var selectedAZ = Model.GetSortOption() == eSortBy.NameAlphabeticalAZ ? "selected" : "";
+                                        var selectedZA = Model.GetSortOption() == eSortBy.NameAlphabeticalZA ? "selected" : "";
+                                    }
+
+                                    <option id="alpha-az" value="a" selectedAZ>Alphabetical A-Z</option>
+                                    <option id="alpha-za" value="z" selectedZA>Alphabetical Z-A</option>
+
                                 </select>
                                 <filter-skip-link />
                             </div>

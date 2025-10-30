@@ -7,6 +7,7 @@ using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Edubase.Common;
 using Edubase.Services.IntegrationEndPoints;
+using Microsoft.Extensions.Configuration;
 using Polly;
 
 namespace Edubase.Services.ExternalLookup
@@ -14,22 +15,23 @@ namespace Edubase.Services.ExternalLookup
     public class FSCPDService : IFSCPDService
     {
         private readonly HttpClient _client;
+        private readonly IAsyncPolicy<HttpResponseMessage> _retryPolicy;
+        private readonly IConfiguration _configuration;
 
         private const string MatAddress = "multi-academy-trust";
-
         private const string SchoolAddress = "school";
+        
 
-        private const string FBServiceTimeoutKey = "FscpdClient_Timeout";
-
-        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = PollyUtil.CreateRetryPolicy(
-            PollyUtil.CsvSecondsToTimeSpans(
-                ConfigurationManager.AppSettings["FscpdClient_RetryIntervals"]
-            ), FBServiceTimeoutKey
-        );
-
-        public FSCPDService(HttpClient client)
+        public FSCPDService(HttpClient client, IConfiguration configuration)
         {
             _client = client;
+            _configuration = configuration;
+
+            var retryCsv = configuration["AppSettings:FscpdClient_RetryIntervals"] ?? "1,2,5";
+            var timeoutValue = configuration["AppSettings:FscpdClient_Timeout"] ?? "10";
+
+            var retryIntervals = PollyUtil.CsvSecondsToTimeSpans(retryCsv);
+            _retryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, timeoutValue);
         }
 
         private string GetCollection(bool mat)
@@ -72,7 +74,7 @@ namespace Edubase.Services.ExternalLookup
             }
             else
             {
-                var cacheTime = ConfigurationManager.AppSettings["FscpdCacheHours"].ToInteger() ?? 8;
+                var cacheTime = _configuration["AppSettings:FscpdCacheHours"].ToInteger() ?? 8;
                 var request = HeadRestRequest(urn, name, collection);
 
                 request.Headers.UserAgent.Add(productValue);
@@ -80,10 +82,12 @@ namespace Edubase.Services.ExternalLookup
 
                 try
                 {
-                    using (var response = await RetryPolicy.ExecuteAsync(async () => await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
+                    using (var response = await _retryPolicy.ExecuteAsync(async () =>
+                        await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
                     {
                         var isOk = response.StatusCode == HttpStatusCode.OK;
-                        MemoryCache.Default.Set(new CacheItem(key, isOk), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(cacheTime) });
+                        MemoryCache.Default.Set(new CacheItem(key, isOk),
+                            new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(cacheTime) });
                         return isOk;
                     }
                 }

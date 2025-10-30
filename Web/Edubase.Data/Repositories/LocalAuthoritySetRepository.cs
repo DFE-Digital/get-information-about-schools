@@ -1,49 +1,51 @@
-using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.WindowsAzure.Storage.Table;
-using System.Threading.Tasks;
-using MoreLinq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using System.Threading.Tasks;
 using Azure;
 using Azure.Data.Tables;
+using Edubase.Data.Entity;
+using Edubase.Data.Repositories.TableStorage;
+using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Data.Repositories;
 
 public class LocalAuthoritySetRepository : TableStorageBase<LocalAuthoritySet>, ILocalAuthoritySetRepository
 {
-    public LocalAuthoritySetRepository()
-        : base("DataConnectionString")
+    private const string PartitionKey = "LocalAuthoritySet";
+
+    public LocalAuthoritySetRepository(IConfiguration configuration)
+        : base(configuration, "DataConnectionString", "LocalAuthoritySets")
     {
     }
 
-    public async Task CreateAsync(LocalAuthoritySet message) => await Table.AddEntityAsync(message);
+    public async Task CreateAsync(LocalAuthoritySet message)
+    {
+        message.PartitionKey = PartitionKey;
+        message.RowKey ??= Guid.NewGuid().ToString();
+        await Table.AddEntityAsync(message);
+    }
 
     public async Task<IEnumerable<LocalAuthoritySet>> GetAllAsync(int? take = null)
     {
-        var query = Table.QueryAsync<LocalAuthoritySet>();
-
-        List<LocalAuthoritySet> results = [];
-
-        await foreach (var item in query) // Haven't specified how large each page is, so many return more than Take
+        var results = new List<LocalAuthoritySet>();
+        await foreach (var item in Table.QueryAsync<LocalAuthoritySet>(x => x.PartitionKey == PartitionKey))
         {
             results.Add(item);
-
-            if (take.HasValue && results.Count >= take)
+            if (take.HasValue && results.Count >= take.Value)
             {
-                return results.Take(take.Value);
+                break;
             }
         }
 
-        return results;
+        return take.HasValue ? results.Take(take.Value) : results;
     }
 
-    public async Task<LocalAuthoritySet> GetAsync(string id)
+    public async Task<LocalAuthoritySet?> GetAsync(string id)
     {
         try
         {
-            var response = await Table.GetEntityAsync<LocalAuthoritySet>(partitionKey: string.Empty, rowKey: id);
+            var response = await Table.GetEntityAsync<LocalAuthoritySet>(PartitionKey, id);
             return response.Value;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
@@ -55,13 +57,15 @@ public class LocalAuthoritySetRepository : TableStorageBase<LocalAuthoritySet>, 
     public async Task DeleteAsync(string id)
     {
         var item = await GetAsync(id);
-
-        if (item != null)
+        if (item is not null)
         {
             await Table.DeleteEntityAsync(item.PartitionKey, item.RowKey);
         }
     }
 
-    public async Task UpdateAsync(LocalAuthoritySet item) => await Table.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
-
+    public async Task UpdateAsync(LocalAuthoritySet item)
+    {
+        item.PartitionKey = PartitionKey;
+        await Table.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
+    }
 }

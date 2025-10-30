@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Edubase.Common;
 using Edubase.Services.IntegrationEndPoints;
+using Microsoft.Extensions.Configuration;
 using Polly;
 
 namespace Edubase.Services.ExternalLookup
@@ -21,25 +22,28 @@ namespace Edubase.Services.ExternalLookup
     public class FBService : IFBService
     {
         private readonly HttpClient _client;
-
         private readonly string urlBaseAddress;
-
         private readonly string apiBaseAddress;
+        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy;
+        private readonly IConfiguration _configuration;
 
-        private const string FBServiceTimeoutKey = "FBService_Timeout";
-
-        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = PollyUtil.CreateRetryPolicy(
-            PollyUtil.CsvSecondsToTimeSpans(
-                ConfigurationManager.AppSettings["FBService_RetryIntervals"]
-            ), FBServiceTimeoutKey
-        );
-
-        public FBService(HttpClient httpClient)
+        public FBService(HttpClient httpClient, IConfiguration configuration)
         {
             _client = httpClient;
+            _configuration = configuration;
 
-            apiBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"];
-            urlBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingURL"];
+            // Read configuration values
+            apiBaseAddress = configuration["AppSettings:FinancialBenchmarkingApiURL"]
+                ?? throw new ArgumentNullException("FinancialBenchmarkingApiURL is missing");
+
+            urlBaseAddress = configuration["AppSettings:FinancialBenchmarkingURL"]
+                ?? throw new ArgumentNullException("FinancialBenchmarkingURL is missing");
+
+            var retryCsv = configuration["AppSettings:FBService_RetryIntervals"] ?? "1,2,5";
+            var timeoutValue = configuration["FBService_Timeout"] ?? "10";
+
+            var retryIntervals = PollyUtil.CsvSecondsToTimeSpans(retryCsv);
+            RetryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, timeoutValue);
         }
 
         public string PublicURL(int? lookupId, FbType lookupType)
@@ -99,7 +103,7 @@ namespace Edubase.Services.ExternalLookup
             }
             else
             {
-                var cacheTime = ConfigurationManager.AppSettings["FinancialBenchmarkingCacheHours"].ToInteger() ?? 8;
+                var cacheTime = _configuration["AppSettings:FinancialBenchmarkingCacheHours"].ToInteger() ?? 8;
                 var request = HeadRestRequest(lookupId, lookupType);
 
                 try
@@ -108,7 +112,7 @@ namespace Edubase.Services.ExternalLookup
                            {
                                return await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead,
                                    cancellationToken);
-                           }, new Context(), CancellationToken.None))
+                           }, [], CancellationToken.None))
                     {
                         var isOk = response.StatusCode == HttpStatusCode.OK;
                         MemoryCache.Default.Set(new CacheItem(key, isOk), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(cacheTime) });

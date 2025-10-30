@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Controllers
 {
     using Common.Spatial;
     using Edubase.Services.Geo;
-    using eStatus = Services.Enums.eLookupEstablishmentStatus;
+    using eStatus = eLookupEstablishmentStatus;
 
     [Route("Search")]
     public class SearchController : EduBaseController
@@ -208,7 +208,6 @@ namespace Edubase.Web.UI.Controllers
                                         viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
                 }
 
-
                 if (viewModel.SearchType.HasValue)
                 {
                     if (viewModel.SearchType == eSearchType.LocalAuthorityDisambiguation)
@@ -237,32 +236,22 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
                         {
-                            var url = Url.Action(ConstIndex, "EstablishmentsSearch", new { area = "Establishments" });
-                            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(Request.QueryString.Value);
-                            var uriBuilder = new UriBuilder(url);
-                            var queryParams = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+                            var baseUrl = "/Establishments/Search/index";
+                            var query = HttpContext.Request.Query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
 
                             if (viewModel.OpenOnly)
                             {
-                                if (!query.ContainsKey(SearchViewModel.BIND_ALIAS_STATUSIDS))
-                                {
-                                    queryParams.Add(SearchViewModel.BIND_ALIAS_STATUSIDS, ((int) eStatus.Open).ToString());
-                                    queryParams.Add(SearchViewModel.BIND_ALIAS_STATUSIDS, ((int) eStatus.OpenButProposedToClose).ToString());
-                                }
+                                query.TryAdd(SearchViewModel.BIND_ALIAS_STATUSIDS, $"{(int) eStatus.Open},{(int) eStatus.OpenButProposedToClose}");
                             }
                             else
                             {
-                                if (!query.ContainsKey("OpenOnly"))
-                                {
-                                    queryParams.Add("OpenOnly", "false");
-                                }
+                                query.TryAdd("OpenOnly", "false");
                             }
 
-                            uriBuilder.Query = queryParams.ToString();
-                            url = uriBuilder.ToString();
+                            var queryString = string.Join("&", query.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+                            var urlWithQuery = $"{baseUrl}?{queryString}";
 
-
-                            return Redirect(url);
+                            return Redirect(urlWithQuery);
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))

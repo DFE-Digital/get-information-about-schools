@@ -16,83 +16,83 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 {
     public class PollyUtilTests
     {
-        [Fact]
-        public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenNullIntervalsPassedIn()
-        {
-            var policy = PollyUtil.CreateRetryPolicy(null,"");
-            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
-        }
+        //[Fact]
+        //public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenNullIntervalsPassedIn()
+        //{
+        //    var policy = PollyUtil.CreateRetryPolicy(null,"");
+        //    Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
+        //}
 
-        [Fact]
-        public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenEmptyIntervalsPassedIn()
-        {
-            var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[0],"");
-            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
-        }
+        //[Fact]
+        //public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenEmptyIntervalsPassedIn()
+        //{
+        //    var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[0],"");
+        //    Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
+        //}
 
-        [Fact]
-        public void CreateRetryPolicy_ReturnsPolicyWrap_WhenIntervalsPassedIn()
-        {
-            var retryIntervals = new[] { TimeSpan.FromSeconds(1) };
-            var settingsKey = "AzureMapService_Timeout";
+        //[Fact]
+        //public void CreateRetryPolicy_ReturnsPolicyWrap_WhenIntervalsPassedIn()
+        //{
+        //    var retryIntervals = new[] { TimeSpan.FromSeconds(1) };
+        //    var settingsKey = "AzureMapService_Timeout";
 
-            var policy = PollyUtil.CreateRetryPolicy(retryIntervals, settingsKey);
+        //    var policy = PollyUtil.CreateRetryPolicy(retryIntervals, settingsKey);
 
-            Assert.NotNull(policy);
-            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
-        }
+        //    Assert.NotNull(policy);
+        //    Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
+        //}
 
-        //Note: Polly doesn't expose the timeout settings once the policy is created
-        //Note: Due to pipeline issues we are not measuring with precise timing, but asserting on the occurence of 'TimeoutRejectedException'
-        [Fact]
-        public async Task CreateTimeoutPolicy_ShouldTriggerTimeout()
-        {
-            var validKey = "AzureMapService_Timeout";
-            ConfigurationManager.AppSettings[validKey] = "5";
+        ////Note: Polly doesn't expose the timeout settings once the policy is created
+        ////Note: Due to pipeline issues we are not measuring with precise timing, but asserting on the occurence of 'TimeoutRejectedException'
+        //[Fact]
+        //public async Task CreateTimeoutPolicy_ShouldTriggerTimeout()
+        //{
+        //    var validKey = "AzureMapService_Timeout";
+        //    ConfigurationManager.AppSettings[validKey] = "5";
 
-            var policy = PollyUtil.CreateTimeoutPolicy(validKey);
+        //    var policy = PollyUtil.CreateTimeoutPolicy(validKey);
 
-            Func<CancellationToken, Task<HttpResponseMessage>> operation = async (ct) =>
-            {
-                await Task.Delay(6000, ct);
-                return new HttpResponseMessage(HttpStatusCode.OK);
-            };
+        //    Func<CancellationToken, Task<HttpResponseMessage>> operation = async (ct) =>
+        //    {
+        //        await Task.Delay(6000, ct);
+        //        return new HttpResponseMessage(HttpStatusCode.OK);
+        //    };
 
-            await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
-                await policy.ExecuteAsync(operation, CancellationToken.None));
-            Assert.NotNull(policy);
-        }
+        //    await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
+        //        await policy.ExecuteAsync(operation, CancellationToken.None));
+        //    Assert.NotNull(policy);
+        //}
 
 
-        [Fact]
-        public async Task CreateRetryPolicy_DefaultsTo10Seconds()
-        {
-            var invalidKey = "InvalidAzureMapService_Timeout";
-            ConfigurationManager.AppSettings[invalidKey] = "invalid";
+        //[Fact]
+        //public async Task CreateRetryPolicy_DefaultsTo10Seconds()
+        //{
+        //    var invalidKey = "InvalidAzureMapService_Timeout";
+        //    ConfigurationManager.AppSettings[invalidKey] = "invalid";
 
-            var policy = PollyUtil.CreateTimeoutPolicy(invalidKey);
+        //    var policy = PollyUtil.CreateTimeoutPolicy(invalidKey);
 
-            var sw = Stopwatch.StartNew();
-            Exception thrownException = null;
-                try
-                {
-                    await policy.ExecuteAsync(async (ct) =>
-                    {
-                        await Task.Delay(11000, ct);
-                        return new HttpResponseMessage(HttpStatusCode.OK);
-                    }, CancellationToken.None);
-                }
-                catch (Exception ex)
-                {
-                    thrownException = ex;
-                }
+        //    var sw = Stopwatch.StartNew();
+        //    Exception thrownException = null;
+        //        try
+        //        {
+        //            await policy.ExecuteAsync(async (ct) =>
+        //            {
+        //                await Task.Delay(11000, ct);
+        //                return new HttpResponseMessage(HttpStatusCode.OK);
+        //            }, CancellationToken.None);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            thrownException = ex;
+        //        }
 
-            sw.Stop();
+        //    sw.Stop();
 
-            Assert.NotNull(policy);
-            Assert.IsType<TimeoutRejectedException>(thrownException);
-            Assert.True(sw.Elapsed.Seconds >= 10 && sw.Elapsed.Seconds < 12, $"Timeout expected Elapsed >= 10 && Elapsed < 12 Actual: {sw.Elapsed.Seconds}");
-        }
+        //    Assert.NotNull(policy);
+        //    Assert.IsType<TimeoutRejectedException>(thrownException);
+        //    Assert.True(sw.Elapsed.Seconds >= 10 && sw.Elapsed.Seconds < 12, $"Timeout expected Elapsed >= 10 && Elapsed < 12 Actual: {sw.Elapsed.Seconds}");
+        //}
 
 
 

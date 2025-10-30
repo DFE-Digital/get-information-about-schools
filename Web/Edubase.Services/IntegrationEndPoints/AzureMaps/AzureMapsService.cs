@@ -1,36 +1,37 @@
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Edubase.Common;
+using Edubase.Common.Spatial;
+using Edubase.Services.Geo;
+using Edubase.Services.IntegrationEndPoints.AzureMaps.Models;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Polly;
+
 namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 {
-    using System;
-    using System.Configuration;
-    using System.IO;
-    using System.Linq;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Common;
-    using Edubase.Common.Spatial;
-    using Edubase.Services.Geo;
-    using Edubase.Services.IntegrationEndPoints.AzureMaps.Models;
-    using Newtonsoft.Json;
-    using Polly;
-
     public class AzureMapsService : IAzureMapsService
     {
-        private readonly string _apiKey = ConfigurationManager.AppSettings["AzureMapsApiKey"];
-
+        private readonly string _apiKey;
         private readonly HttpClient _azureMapsClient;
+        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy;
 
         private const string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
 
-        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = PollyUtil.CreateRetryPolicy(
-            PollyUtil.CsvSecondsToTimeSpans(
-                ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"]
-            ), AzureMapServiceTimeoutKey
-        );
-
-        public AzureMapsService(HttpClient httpClient)
+        public AzureMapsService(IConfiguration configuration, HttpClient httpClient)
         {
+            _apiKey = configuration["AppSettings:AzureMapsApiKey"];
             _azureMapsClient = httpClient;
+
+            var retryIntervals = configuration["AppSettings:AzureMapService_RetryIntervals"];
+            RetryPolicy = PollyUtil.CreateRetryPolicy(
+                configuration,
+                PollyUtil.CsvSecondsToTimeSpans(retryIntervals),
+                AzureMapServiceTimeoutKey
+            );
         }
 
         public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead, CancellationToken cancellationToken = default)
@@ -46,7 +47,8 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                 HttpMethod.Get,
                 $"/search/address/json?api-version=1.0&countrySet=GB&typeahead={(isTypeahead ? "true" : "false")}&limit=10&query={text}&subscription-key={_apiKey}");
 
-            using (var response = await RetryPolicy.ExecuteAsync(async () => await _azureMapsClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)))
+            using (var response = await RetryPolicy.ExecuteAsync(async () =>
+                await _azureMapsClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)))
             {
                 var stream = await response.Content.ReadAsStreamAsync();
 
@@ -103,16 +105,9 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
         private string GetAddressDescription(Result locationResult, string text)
         {
-            var output = "";
-
-            if (locationResult.entityType != null && locationResult.entityType.ToString() == "MunicipalitySubdivision")
-            {
-                output = $"{locationResult.address.municipalitySubdivision}, {locationResult.address.municipality}";
-            }
-            else
-            {
-                output = locationResult.address.freeformAddress;
-            }
+            var output = locationResult.entityType != null && locationResult.entityType.ToString() == "MunicipalitySubdivision"
+                ? $"{locationResult.address.municipalitySubdivision}, {locationResult.address.municipality}"
+                : locationResult.address.freeformAddress;
 
             // if a location shares multiple postcodes, azure does not include it within the normal freeformaddress. So we need to build the appropriate address.
             if (locationResult.address.postalCode != null && !output.Contains(locationResult.address.postalCode.Split(',')[0]))
@@ -132,6 +127,5 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
             return $"{output}, {locationResult.address.countrySecondarySubdivision}";
         }
-
     }
 }

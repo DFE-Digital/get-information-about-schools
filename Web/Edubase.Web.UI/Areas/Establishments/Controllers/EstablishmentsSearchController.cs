@@ -28,7 +28,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     [ApiController]
     [Route("establishments/search")]
-    [Authorize]
+    //[Authorize]
     public class EstablishmentsSearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;

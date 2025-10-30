@@ -86,9 +86,13 @@
                             </div>
                             <div class="options-container">
                                 <label for="sortBy" class="govuk-visually-hidden">Sort by</label>
+                                @{
+                                    var selectedAZ = Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ ? "selected" : "";
+                                    var selectedZA = Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA ? "selected" : "";
+                                }
                                 <select class="govuk-select trigger-result-update sortby-selector" name="SortBy" id="sortBy">
-                                    <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
-                                    <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                                    <option value="a" selectedAZ>Alphabetical A-Z</option>
+                                    <option value="z" selectedZA>Alphabetical Z-A</option>
                                 </select>
                                 <filter-skip-link />
                             </div>

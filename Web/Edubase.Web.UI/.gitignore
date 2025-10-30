@@ -1,4 +1,4 @@
-﻿# Temp Files
+# Temp Files
 **/*.log
 **/.docpad.db
 
@@ -12,5 +12,5 @@ out/
 /public/assets/scripts/
 # =====================================
 # CUSTOM MODIFICATIONS
-
+Web/Edubase.Web.UI/appsettings.Development.json
 # None
