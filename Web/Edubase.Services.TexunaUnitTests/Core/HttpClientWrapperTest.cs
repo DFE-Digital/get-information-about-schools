@@ -129,5 +129,43 @@ namespace Edubase.Services.TexunaUnitTests.Core
         private static HttpClientWrapper CreateWrapper(HttpMessageHandler mockHandler) =>
             new HttpClientWrapper(new HttpClient(mockHandler), IocConfig.CreateJsonMediaTypeFormatter(),
                 new Mock<IClientStorage>(MockBehavior.Loose).Object);
+
+        [Fact]
+        public async Task SendAsync_TaskCanceled_ShouldNotThrow()
+        {
+            var handler = new Mock<HttpMessageHandler>();
+
+            handler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ThrowsAsync(new TaskCanceledException());
+
+            var client = new HttpClient(handler.Object);
+            var wrapper = new HttpClientWrapper(client);
+
+            var request = new HttpRequestMessage(HttpMethod.Get, "http://test.com");
+
+            var ex = await Record.ExceptionAsync(async () => await wrapper.SendAsync(request));
+            Assert.Null(ex);
+        }
+
+        [Fact]
+        public async Task SendAsync_HttpRequestException_ShouldThrow()
+        {
+            var handler = new Mock<HttpMessageHandler>();
+
+            handler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ThrowsAsync(new HttpRequestException("fail"));
+
+            var client = new HttpClient(handler.Object);
+            var wrapper = new HttpClientWrapper(client);
+            var request = new HttpRequestMessage(HttpMethod.Get, "http://test.com");
+
+            await Assert.ThrowsAsync<HttpRequestException>(() => wrapper.SendAsync(request));
+        }
     }
 }
