@@ -1,0 +1,126 @@
+@using Edubase.Web.UI.Helpers
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@model ViewModel
+@{
+    if (Model.ChangesSummary == null)
+    {
+        Layout = "_EditLayoutPage.cshtml";
+    }
+    else
+    {
+        ViewBag.bodyClasses = "create-edit-school school-details";
+        ViewBag.hideLogo = true;
+        ViewBag.Title = "Edit establishment";
+    }
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm())
+{
+    <div class="tab-content">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.Urn)
+        @Html.HiddenFor(x => x.Name)
+        @Html.HiddenFor(x => x.SelectedTab)
+        @Html.HiddenFor(x => x.LegalParentGroupToken)
+        @Html.HiddenFor(x => x.ChangesInstantCount)
+        @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
+
+        <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="button-row govuk-!-margin-bottom-4">
+                        @Html.ActionLink(
+                            "Back",
+                            "Details",
+                            "Establishment",
+                            null,
+                            null,
+                            "helpdesk",
+                            new { id = Model.Urn },
+                            new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+                    </div>
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    @if (Model.EditPolicy.HelpdeskNotes)
+                    {
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.HelpdeskNotes, new { @class = "govuk-label" })
+                            @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "govuk-textarea", rows = "10", maxlength = "1000" })
+                        </div>
+                    }
+                    @if (Model.EditPolicy.HelpdeskLastUpdate)
+                    {
+                        @Html.EditorFor(x => x.HelpdeskLastUpdate, new { fieldsetClassName = "edit-date-fieldset" })
+                    }
+                    @if (Model.EditPolicy.HelpdeskPreviousLocalAuthorityId)
+                    {
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
+                            @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, new { @class = "govuk-label" })
+                            @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new { @class = "govuk-select" })
+                        </div>
+                    }
+                    @if (Model.EditPolicy.HelpdeskPreviousEstablishmentNumber)
+                    {
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
+                            @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "govuk-input" })
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="button-row govuk-!-padding-top-4">
+                        <button id="save-helpdesk-note" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        @if (Model.ChangesSummary != null)
+        {
+            Html.RenderPartial("Partials/_ConfirmChanges");
+
+            <div class="button-row">
+                @* <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button> *@
+                <button id="accept-and-save" type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Accept and save</button>
+
+                @* @Html.ActionLink( *@
+                @*     "Cancel", *@
+                @*     "Details", *@
+                @*     "Establishment", *@
+                @*     null, *@
+                @*     null, *@
+                @*     "helpdesk", *@
+                @*     new {id = Model.Urn}, *@
+                @*     new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"}) *@
+            </div>
+        }
+
+    </div>
+}
+
+@section ViewScripts
+{
+    <script nonce="@Html.ScriptNonce()">
+        var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
+    </script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-helpdesk.*.js"))"></script>
+}

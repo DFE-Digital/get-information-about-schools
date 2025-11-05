@@ -1,0 +1,176 @@
+@using Edubase.Services.Domain
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+@using Edubase.Common
+@using System.Text.RegularExpressions
+
+@model EstablishmentDetailViewModel
+@{
+    ViewBag.Title = Model.Establishment.Name;
+    ViewBag.PageClass = "school-details";
+    ViewBag.HideLogo = true;
+
+    var request = ViewContext.HttpContext.Request;
+    var sortDir = "desc";
+    var sortDirText = "a descending order";
+    var sortField = "effectiveDateUtc";
+    var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
+
+    var sortBy = request.Query["sortby"].ToString();
+
+    if (!string.IsNullOrEmpty(sortBy) && sortBy.Contains("-"))
+    {
+        sortField = sortBy.Substring(0, sortBy.IndexOf("-"));
+        sortDir = sortBy.Contains("asc") ? "asc" : "desc";
+        sortDirText = sortBy.Contains("asc") ? "an ascending order" : "a descending order";
+    }
+
+    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
+    var unsortedDescription = ". Click to sort data by this column.";
+
+    var tableColumns = new List<Tuple<string, string>>
+{
+        Tuple.Create("effectiveDateUtc", "Date changed"),
+        Tuple.Create("fieldName", "Updated field"),
+        Tuple.Create("oldValue", "Old value"),
+        Tuple.Create("newValue", "New value"),
+        Tuple.Create("requestedDateUtc", "Date requested"),
+        Tuple.Create("originatorUserName", "Suggested from"),
+        Tuple.Create("approverUserName", "Approved by"),
+    };
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    @if (Model.LegalParentGroup != null)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">
+                            @Html.RouteLink(Model.LegalParentGroupRouteDto.Label, Model.LegalParentGroupRouteDto.RouteName, Model.LegalParentGroupRouteDto.RouteValues, HtmlHelper.AnonymousObjectToHtmlAttributes(new { @class = "govuk-breadcrumbs__link" }))
+                        </li>
+                    }
+                    <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.Establishment.Name, "EstabDetails", new { id = Model.Establishment.Urn }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l gias-landing-heading">
+            <span class="heading-preamble">Establishment</span>
+            @(Model.Establishment.Name.Clean() ?? "(name not recorded)")
+        </h1>
+        <p class="urn establishment-fine-detail"><abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn</p>
+        <p class="establishment-type establishment-fine-detail">@Model.TypeName</p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="gias-tabs-wrapper">
+            <div class="tab-wrap" id="governance-change-history-tab-wrap">
+                <ul class="gias-tabs">
+                    <li class="gias-tabs__list-item gias-tabs__list-item--selected">
+                        <span class="gias-tabs__tab">Governance Change History</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content-wrapper gias-tabs-content">
+                <div id="change-history" class="tab-content approval-data">
+                    <h2 class="govuk-heading-s">Governance Change History</h2>
+                    @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
+                    {
+                        <div class="gias-governance-history-link-container">
+                            <p>
+                                @Html.RouteLink("View establishment change history", "EstabDetails", null, null, "school-change-history", new { id = Model.Establishment.Urn }, null)
+                            </p>
+                        </div>
+                    }
+
+                    @if (!Model.ChangeHistory.Items.Any())
+                    {
+                        <p class="govuk-body">There are no change records available at the moment</p>
+                    }
+                    else
+                    {
+                        <p class="govuk-body">
+                            @Html.RouteLink("Download data in CSV format", "DownloadEstablishmentGovernanceChangeHistory", new { id = Model.Establishment.Urn, downloadType = DownloadType.csv })
+                        </p>
+                        <p class="govuk-body">
+                            @Html.RouteLink("Download data in XLSX format", "DownloadEstablishmentGovernanceChangeHistory", new { id = Model.Establishment.Urn, downloadType = DownloadType.xlsx })
+                        </p>
+                        if (Model.ChangeHistory.PageCount > 1)
+                        {
+                            <div class="top-pagination">
+                                @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+                            </div>
+                        }
+                        <table class="approval-changes govuk-table gias-table sortable-table">
+                            <caption class="govuk-visually-hidden">Governance change history</caption>
+                            <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    @foreach (var tableColumn in tableColumns)
+                                    {
+                                        <th scope="col" class="govuk-table__header">
+                                            <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                                               class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                               aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                                        </th>
+                                    }
+
+                                </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                                @foreach (var item in Model.ChangeHistory.Items)
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td data-label="Date changed" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("d MMMM yyyy"))</td>
+                                        <td data-label="Updated field" class="govuk-table__cell">@item.Name</td>
+                                        <td data-label="Old value" class="govuk-table__cell">
+                                            @if (item.OldValue != null && RE.IsMatch(item.OldValue))
+                                            {
+                                                var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
+                                                var dt = new DateTime(parts[2], parts[1], parts[0]);
+                                                @dt.ToString("d MMMM yyyy");
+                                            }
+                                            else
+                                            {
+                                                @item.OldValue
+                                            }
+                                        </td>
+                                        <td data-label="New value" class="govuk-table__cell">
+                                            @if (item.NewValue != null && RE.IsMatch(item.NewValue))
+                                            {
+                                                var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
+                                                var dt = new DateTime(parts[2], parts[1], parts[0]);
+                                                @dt.ToString("d MMMM yyyy");
+                                            }
+                                            else
+                                            {
+                                                @item.NewValue
+                                            }
+                                        </td>
+                                        <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("d MMMM yyyy"))</td>
+                                        <td data-label="Suggested from" class="govuk-table__cell">@item.OriginatorUserName</td>
+                                        <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        if (Model.ChangeHistory.PageCount > 1)
+                        {
+                            <div class="lower-pagination push--bottom">
+                                @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+                            </div>
+                            <back-to-top-link />
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

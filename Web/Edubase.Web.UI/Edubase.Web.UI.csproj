@@ -18,12 +18,158 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
+    <Content Remove="wwwroot\Assets\Scripts\Entry\news.js" />
+    <Content Remove="wwwroot\Assets\Scripts\GiasLandingPages\GiasNewsFilters.js" />
+    <Content Remove="wwwroot\Assets\Scripts\JSON\establishmentChanges.js" />
+    <Content Remove="wwwroot\css\govuk-core.css" />
+    <Content Remove="wwwroot\css\govuk-core.css.map" />
+    <Content Remove="wwwroot\css\main.css" />
+    <Content Remove="wwwroot\css\main.css.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\approvals-tool.5e64faa6ade04b108103.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\approvals-tool.5e64faa6ade04b108103.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\bulk-academies.62aecb8818122a9e1da8.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\bulk-academies.62aecb8818122a9e1da8.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\bundle.00792bbbcd4204a07fba.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\bundle.00792bbbcd4204a07fba.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\change-history-results.d505d6dcc25c6d004e4b.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\change-history-results.d505d6dcc25c6d004e4b.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\change-history-search.f7407781ebdd89b59603.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\change-history-search.f7407781ebdd89b59603.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\create-childrens-centre.cd0f8fd2ba65d7329269.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\create-childrens-centre.cd0f8fd2ba65d7329269.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\create-establishment.b83d0ed70f06a2a30eb2.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\create-establishment.b83d0ed70f06a2a30eb2.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\delegated-authority.34977fd228f5ebc7c487.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\delegated-authority.34977fd228f5ebc7c487.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\download-select-fields.1e9dd1ce27e161d2c390.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\download-select-fields.1e9dd1ce27e161d2c390.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\downloads.db5a3f15445cf1e262bf.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\downloads.db5a3f15445cf1e262bf.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-details.1c65d493aa13adc7d6aa.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-details.1c65d493aa13adc7d6aa.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-establishment-links.5b05de05e5c76f138f4a.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-establishment-links.5b05de05e5c76f138f4a.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-faq-glossary.5d76b2c16e18e4195aaf.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-faq-glossary.5d76b2c16e18e4195aaf.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-group-details.7694528b736cf3f47681.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-group-details.7694528b736cf3f47681.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-group-links.d941fb0aa702e27eb279.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-group-links.d941fb0aa702e27eb279.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-helpdesk.61451c195b3f9d95fc06.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-helpdesk.61451c195b3f9d95fc06.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-iebt.4c593a94be5b753d7c49.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-iebt.4c593a94be5b753d7c49.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-location.858224bf0a10d8e87fff.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\edit-location.858224bf0a10d8e87fff.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\govuk-core.532b7d2659c8165397c0.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\govuk-core.532b7d2659c8165397c0.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\independent-schools-predefinedsets.e2f121aa3942bbb42955.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\independent-schools-predefinedsets.e2f121aa3942bbb42955.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\independent-schools-sig-search-results.742c7b98b4e62906f060.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\independent-schools-sig-search-results.742c7b98b4e62906f060.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\independent-schools-sig-search.565edb0cea1da44a3d31.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\independent-schools-sig-search.565edb0cea1da44a3d31.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\landing-page-bundle.3956b14fa56f1c8f09f5.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\landing-page-bundle.3956b14fa56f1c8f09f5.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\main.62dbb4c1ae0a221e3a8f.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\main.62dbb4c1ae0a221e3a8f.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\main.778093c324bd83c11798.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\main.778093c324bd83c11798.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\manage-academy-openings.53ea4c0b6aa3529995c7.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\manage-academy-openings.53ea4c0b6aa3529995c7.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\merge-amalgamate.738c5142f8e485266cbb.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\merge-amalgamate.738c5142f8e485266cbb.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\news.0e0aee78c356e2e4bedb.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\news.0e0aee78c356e2e4bedb.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\news.ed1d94ec9cca8e6ec6b0.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\news.ed1d94ec9cca8e6ec6b0.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\polling.51c3db81f66a77171e4f.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\polling.51c3db81f66a77171e4f.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\search-bundle.98d35f7223259ace7370.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\search-bundle.98d35f7223259ace7370.js.map" />
+    <Content Remove="wwwroot\public\assets\scripts\build\search-results-bundle.d90881f07bb0027aabeb.js" />
+    <Content Remove="wwwroot\public\assets\scripts\build\search-results-bundle.d90881f07bb0027aabeb.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models\Search\SelectorNestedViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
+    <None Include="wwwroot\Assets\Scripts\Entry\news.js" />
+    <None Include="wwwroot\Assets\Scripts\GiasLandingPages\GiasNewsFilters.js" />
+    <None Include="wwwroot\Assets\Scripts\JSON\establishmentChanges.js" />
+    <None Include="wwwroot\css\govuk-core.css" />
+    <None Include="wwwroot\css\govuk-core.css.map" />
+    <None Include="wwwroot\css\main.css" />
+    <None Include="wwwroot\css\main.css.map" />
+    <None Include="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js" />
+    <None Include="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\approvals-tool.5e64faa6ade04b108103.js" />
+    <None Include="wwwroot\public\assets\scripts\build\approvals-tool.5e64faa6ade04b108103.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\bulk-academies.62aecb8818122a9e1da8.js" />
+    <None Include="wwwroot\public\assets\scripts\build\bulk-academies.62aecb8818122a9e1da8.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\bundle.00792bbbcd4204a07fba.js" />
+    <None Include="wwwroot\public\assets\scripts\build\bundle.00792bbbcd4204a07fba.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\change-history-results.d505d6dcc25c6d004e4b.js" />
+    <None Include="wwwroot\public\assets\scripts\build\change-history-results.d505d6dcc25c6d004e4b.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\change-history-search.f7407781ebdd89b59603.js" />
+    <None Include="wwwroot\public\assets\scripts\build\change-history-search.f7407781ebdd89b59603.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\create-childrens-centre.cd0f8fd2ba65d7329269.js" />
+    <None Include="wwwroot\public\assets\scripts\build\create-childrens-centre.cd0f8fd2ba65d7329269.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\create-establishment.b83d0ed70f06a2a30eb2.js" />
+    <None Include="wwwroot\public\assets\scripts\build\create-establishment.b83d0ed70f06a2a30eb2.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\delegated-authority.34977fd228f5ebc7c487.js" />
+    <None Include="wwwroot\public\assets\scripts\build\delegated-authority.34977fd228f5ebc7c487.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\download-select-fields.1e9dd1ce27e161d2c390.js" />
+    <None Include="wwwroot\public\assets\scripts\build\download-select-fields.1e9dd1ce27e161d2c390.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\downloads.db5a3f15445cf1e262bf.js" />
+    <None Include="wwwroot\public\assets\scripts\build\downloads.db5a3f15445cf1e262bf.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-details.1c65d493aa13adc7d6aa.js" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-details.1c65d493aa13adc7d6aa.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-establishment-links.5b05de05e5c76f138f4a.js" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-establishment-links.5b05de05e5c76f138f4a.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-faq-glossary.5d76b2c16e18e4195aaf.js" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-faq-glossary.5d76b2c16e18e4195aaf.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-group-details.7694528b736cf3f47681.js" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-group-details.7694528b736cf3f47681.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-group-links.d941fb0aa702e27eb279.js" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-group-links.d941fb0aa702e27eb279.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-helpdesk.61451c195b3f9d95fc06.js" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-helpdesk.61451c195b3f9d95fc06.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-iebt.4c593a94be5b753d7c49.js" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-iebt.4c593a94be5b753d7c49.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-location.858224bf0a10d8e87fff.js" />
+    <None Include="wwwroot\public\assets\scripts\build\edit-location.858224bf0a10d8e87fff.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\govuk-core.532b7d2659c8165397c0.js" />
+    <None Include="wwwroot\public\assets\scripts\build\govuk-core.532b7d2659c8165397c0.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\independent-schools-predefinedsets.e2f121aa3942bbb42955.js" />
+    <None Include="wwwroot\public\assets\scripts\build\independent-schools-predefinedsets.e2f121aa3942bbb42955.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\independent-schools-sig-search-results.742c7b98b4e62906f060.js" />
+    <None Include="wwwroot\public\assets\scripts\build\independent-schools-sig-search-results.742c7b98b4e62906f060.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\independent-schools-sig-search.565edb0cea1da44a3d31.js" />
+    <None Include="wwwroot\public\assets\scripts\build\independent-schools-sig-search.565edb0cea1da44a3d31.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\landing-page-bundle.3956b14fa56f1c8f09f5.js" />
+    <None Include="wwwroot\public\assets\scripts\build\landing-page-bundle.3956b14fa56f1c8f09f5.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\main.62dbb4c1ae0a221e3a8f.js" />
+    <None Include="wwwroot\public\assets\scripts\build\main.62dbb4c1ae0a221e3a8f.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\main.778093c324bd83c11798.js" />
+    <None Include="wwwroot\public\assets\scripts\build\main.778093c324bd83c11798.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\manage-academy-openings.53ea4c0b6aa3529995c7.js" />
+    <None Include="wwwroot\public\assets\scripts\build\manage-academy-openings.53ea4c0b6aa3529995c7.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\merge-amalgamate.738c5142f8e485266cbb.js" />
+    <None Include="wwwroot\public\assets\scripts\build\merge-amalgamate.738c5142f8e485266cbb.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\news.0e0aee78c356e2e4bedb.js" />
+    <None Include="wwwroot\public\assets\scripts\build\news.0e0aee78c356e2e4bedb.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\news.ed1d94ec9cca8e6ec6b0.js" />
+    <None Include="wwwroot\public\assets\scripts\build\news.ed1d94ec9cca8e6ec6b0.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\polling.51c3db81f66a77171e4f.js" />
+    <None Include="wwwroot\public\assets\scripts\build\polling.51c3db81f66a77171e4f.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\search-bundle.98d35f7223259ace7370.js" />
+    <None Include="wwwroot\public\assets\scripts\build\search-bundle.98d35f7223259ace7370.js.map" />
+    <None Include="wwwroot\public\assets\scripts\build\search-results-bundle.d90881f07bb0027aabeb.js" />
+    <None Include="wwwroot\public\assets\scripts\build\search-results-bundle.d90881f07bb0027aabeb.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Data.OracleClient" />
@@ -38,7 +184,7 @@
     <Reference Include="System.Transactions" />
     <Reference Include="System.Configuration" />
     <PackageReference Include="Antlr" Version="3.5.0.2" />
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="AzureTableLogger" Version="1.1.3" />
     <PackageReference Include="BeginCollectionItem" Version="1.2.1.0" />
     <PackageReference Include="Castle.Core" Version="5.1.1" />

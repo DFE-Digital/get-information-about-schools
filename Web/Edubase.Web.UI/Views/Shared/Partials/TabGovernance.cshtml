@@ -1,0 +1,62 @@
+@using Edubase.Common
+@using Edubase.Services.Enums
+@using Edubase.Web.UI.Models
+@model EstablishmentDetailViewModel
+
+<div id="school-governance" class="tab-content">
+
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Governance)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
+
+                @if (!Model.MediumPriorityGovernanceConfirmationPending &&
+                     !Model.HighPriorityGovernanceConfirmationPending &&
+                     !Model.Establishment.TypeId.OneOfThese(
+                         eLookupEstablishmentType.ChildrensCentre,
+                         eLookupEstablishmentType.ChildrensCentreLinkedSite,
+                         eLookupEstablishmentType.FurtherEducation,
+                         eLookupEstablishmentType.SixthFormCentres,
+                         eLookupEstablishmentType.BritishSchoolsOverseas,
+                         eLookupEstablishmentType.InstitutionFundedByOtherGovernmentDepartment,
+                         eLookupEstablishmentType.Miscellaneous,
+                         eLookupEstablishmentType.OffshoreSchools,
+                         eLookupEstablishmentType.SecureUnits,
+                         eLookupEstablishmentType.ServiceChildrensEducation,
+                         eLookupEstablishmentType.HigherEducationInstitutions,
+                         eLookupEstablishmentType.WelshEstablishment,
+                         eLookupEstablishmentType.OnlineProvider
+                         )
+                )
+                {
+                    @using (Html.BeginRouteForm(
+                        routeName: "EstablishmentGovernanceConfirmUpToDate",
+                        routeValues: new { Model.Establishment.Urn, showBanner = true },
+                        method: FormMethod.Post,
+                        antiforgery: true,
+                        htmlAttributes: new { @class = "gias-action-form" }))
+                    {
+                        <button class="govuk-button" data-module="govuk-button" id="governance-data-confirm-button">
+                            Confirm governance information
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    @Html.Partial("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", Model.GovernorsGridViewModel)
+
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Governance)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
+            </div>
+        </div>
+
+    }
+
+    <back-to-top-link />
+</div>

@@ -13,7 +13,7 @@ namespace Edubase.Web.UI.Helpers
     {
         public static class FormHelpers
         {
-            public static HtmlString GiasRadioFor<TModel, TProperty>(
+            public static IHtmlContent GiasRadioFor<TModel, TProperty>(
                 this IHtmlHelper<TModel> helper,
                 Expression<Func<TModel, TProperty>> expression,
                 object value,
@@ -25,7 +25,6 @@ namespace Edubase.Web.UI.Helpers
                 var name = ExpressionHelper.GetExpressionText(expression);
                 var id = helper.IdFor(expression).ToString();
 
-
                 if (attributes.ContainsKey("id"))
                 {
                     id = attributes["id"]?.ToString();
@@ -34,9 +33,9 @@ namespace Edubase.Web.UI.Helpers
                 var viewData = new ViewDataDictionary<TModel>(
                     metadataProvider: new EmptyModelMetadataProvider(),
                     modelState: helper.ViewData.ModelState)
-            {
-                { "id", id }
-            };
+                    {
+                        { "id", id }
+                    };
 
                 foreach (var kvp in attributes)
                 {
@@ -45,15 +44,20 @@ namespace Edubase.Web.UI.Helpers
 
                 var radioButton = helper.RadioButtonFor(expression, value, viewData);
 
-                var tagBuilder = new TagBuilder("label");
-                tagBuilder.Attributes["for"] = id;
-                tagBuilder.AddCssClass("govuk-label govuk-radios__label" + additionalLabelClasses);
-                tagBuilder.InnerHtml.AppendHtml(labelText);
+                var label = new TagBuilder("label");
+                label.Attributes["for"] = id;
+                label.AddCssClass("govuk-label govuk-radios__label" + additionalLabelClasses);
+                label.InnerHtml.AppendHtml(labelText);
 
-                return new HtmlString(radioButton.ToString() + tagBuilder.ToString());
+                var container = new HtmlContentBuilder();
+                container.AppendHtml(radioButton);
+                container.AppendHtml(label);
+
+                return container;
             }
 
-            public static HtmlString GiasRadio(
+
+            public static IHtmlContent GiasRadio(
                 string inputValue,
                 string inputName,
                 string labelText,
@@ -61,19 +65,17 @@ namespace Edubase.Web.UI.Helpers
                 object htmlAttributes = null)
             {
                 var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-                var id = $"{inputName}_{inputValue}";
-
-                if (attributes.ContainsKey("id"))
-                {
-                    id = attributes["id"].ToString();
-                }
+                var id = attributes.ContainsKey("id") ? attributes["id"].ToString() : $"{inputName}_{inputValue}";
 
                 var labelBuilder = new TagBuilder("label");
                 labelBuilder.Attributes["for"] = id;
                 labelBuilder.AddCssClass("govuk-label govuk-radios__label" + additionalLabelClasses);
-                labelBuilder.InnerHtml.AppendHtml(labelText);
+                labelBuilder.InnerHtml.Append(labelText); // Use Append for plain text
 
-                var radio = new TagBuilder("input");
+                TagBuilder radio = new("input")
+                {
+                    TagRenderMode = TagRenderMode.SelfClosing
+                };
                 radio.Attributes["type"] = "radio";
                 radio.Attributes["name"] = inputName;
                 radio.Attributes["value"] = inputValue;
@@ -85,8 +87,14 @@ namespace Edubase.Web.UI.Helpers
                     radio.Attributes[kvp.Key] = kvp.Value?.ToString();
                 }
 
-                return new HtmlString($"<div class=\"govuk-radios__item\">{radio.ToString()}{labelBuilder.ToString()}</div>");
+                TagBuilder container = new("div");
+                container.AddCssClass("govuk-radios__item");
+                container.InnerHtml.AppendHtml(radio);
+                container.InnerHtml.AppendHtml(labelBuilder);
+
+                return container;
             }
+
 
             public static HtmlString GiasCheckboxFor<TModel>(
                 this IHtmlHelper<TModel> helper,
@@ -126,7 +134,7 @@ namespace Edubase.Web.UI.Helpers
                 return new HtmlString($"<div class=\"govuk-checkboxes__item\">{checkbox.ToString()}{labelBuilder.ToString()}</div>");
             }
 
-            public static HtmlString GiasCheckbox(
+            public static IHtmlContent GiasCheckbox(
                 string inputValue,
                 string inputName,
                 string labelText,
@@ -135,14 +143,17 @@ namespace Edubase.Web.UI.Helpers
                 bool isChecked = false)
             {
                 var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-                var id = attributes.ContainsKey("id") ? attributes["id"].ToString() : $"{inputName}_{inputValue}";
+                var id = attributes.TryGetValue("id", out var value) ? value.ToString() : $"{inputName}_{inputValue}";
 
-                var labelBuilder = new TagBuilder("label");
+                TagBuilder labelBuilder = new("label");
                 labelBuilder.Attributes["for"] = id;
                 labelBuilder.AddCssClass("govuk-label govuk-checkboxes__label" + additionalLabelClasses);
-                labelBuilder.InnerHtml.AppendHtml(labelText);
+                labelBuilder.InnerHtml.Append(labelText); // Use Append for plain text
 
-                var checkbox = new TagBuilder("input");
+                TagBuilder checkbox = new("input")
+                {
+                    TagRenderMode = TagRenderMode.SelfClosing
+                };
                 checkbox.Attributes["type"] = "checkbox";
                 checkbox.Attributes["name"] = inputName;
                 checkbox.Attributes["value"] = inputValue;
@@ -159,7 +170,12 @@ namespace Edubase.Web.UI.Helpers
                     checkbox.Attributes[kvp.Key] = kvp.Value?.ToString();
                 }
 
-                return new HtmlString($"<div class=\"govuk-checkboxes__item\">{checkbox.ToString()}{labelBuilder.ToString()}</div>");
+                TagBuilder container = new("div");
+                container.AddCssClass("govuk-checkboxes__item");
+                container.InnerHtml.AppendHtml(checkbox);
+                container.InnerHtml.AppendHtml(labelBuilder);
+
+                return container;
             }
         }
     }

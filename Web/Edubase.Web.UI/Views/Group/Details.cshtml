@@ -130,7 +130,9 @@
 </div>
 
 
-@{Html.RenderPartial(@"Partials\GroupConfirmationNotifications");}
+@{
+    Html.RenderPartial(@"Partials\GroupConfirmationNotifications");
+}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -396,7 +398,7 @@
                                                 {
                                                     var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
                                                     var dt = new DateTime(parts[2], parts[1], parts[0]);
-                                                    @dt.ToString("d MMMM yyyy");
+                                                    @dt.ToString("d MMMM yyyy")
                                                 }
                                                 else
                                                 {
@@ -411,7 +413,7 @@
                                                 {
                                                     var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
                                                     var dt = new DateTime(parts[2], parts[1], parts[0]);
-                                                    @dt.ToString("d MMMM yyyy");
+                                                    @dt.ToString("d MMMM yyyy")
                                                 }
                                                 else
                                                 {

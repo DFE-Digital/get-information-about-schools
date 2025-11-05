@@ -1,0 +1,45 @@
+@using Edubase.Common.Text
+@using Edubase.Services.Enums
+@using Edubase.Services.Establishments.DisplayPolicies
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+@using HtmlHelpers.BeginCollectionItem
+@model ProprietorViewModel
+
+@{
+    var displayPolicy = ViewData["displayPolicy"] as ProprietorFieldList<bool> ?? new ProprietorFieldList<bool>();
+}
+
+<div class="proprietorRow">
+    @if (ViewBag.ShowCounter != null && ViewBag.ProprietorTypeId != (int)eProprietorType.ProprietorBody)
+    {
+        <div class="proprietorRowTitle">
+            <div class="proprietorRowTitleHeader">
+                <h4 class="govuk-heading-s">@eProprietorType.IndividualProprietor.EnumDisplayNameFor().ToSentenceCase() details - <span class="proprietorRowCounter">@(ViewBag.ShowCounter)</span></h4>
+            </div>
+            <div class="proprietorRowTitleRemove">
+                <div class="js-show-block">
+                    <a class="removeProprietor js-allow-exit" href="#">Remove</a>
+                </div>
+                @if (ViewBag.ProprietorsCount > 1)
+                {
+                    <button type="submit" name="@nameof(EditEstablishmentModel.ActionSpecifier)" value="@EditEstablishmentModel.ASRemoveProprietor-@ViewBag.ShowCounter" class="govuk-button--secondary govuk-button no-js-show-block">Remove</button>
+                }
+            </div>
+            <div class="govuk-clearfix"></div>
+        </div>
+    }
+
+    @Html.HiddenFor(x => x.Index, new { Name = $"Proprietors.Index", @id = $"Proprietors.Index" })
+
+    @using (Html.BeginCollectionItem("Proprietors"))
+    {
+        var viewData = new ViewDataDictionary(ViewData)
+        {
+        { "ProprietorType", "proprietors" },
+        { "displayPolicy", displayPolicy }
+        };
+
+        @Html.EditorFor(x => x, viewData)
+    }
+</div>

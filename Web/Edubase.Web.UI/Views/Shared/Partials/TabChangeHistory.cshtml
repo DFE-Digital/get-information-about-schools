@@ -1,0 +1,130 @@
+@using Edubase.Services.Domain
+@using System.Text.RegularExpressions
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+@model EstablishmentDetailViewModel
+
+@{
+    var request = ViewContext.HttpContext.Request;
+    var sortDir = "desc";
+    var sortDirText = "a descending order";
+    var sortField = "changedDateUtc";
+
+    var sortBy = request.Query["sortby"].ToString();
+
+    if (!string.IsNullOrEmpty(sortBy) && sortBy.Contains("-"))
+    {
+        sortField = sortBy.Substring(0, sortBy.IndexOf("-"));
+        sortDir = sortBy.Contains("asc", StringComparison.OrdinalIgnoreCase) ? "asc" : "desc";
+        sortDirText = sortBy.Contains("asc", StringComparison.OrdinalIgnoreCase) ? "an ascending order" : "a descending order";
+    }
+
+    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
+    var unsortedDescription = ". Click to sort data by this column.";
+    var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
+
+    var tableColumns = new List<Tuple<string, string>>
+    {
+        Tuple.Create("changedDateUtc", "Date changed"),
+        Tuple.Create("effectiveDateUtc", "Effective date"),
+        Tuple.Create("fieldName", "Updated field"),
+        Tuple.Create("oldValue", "Old value"),
+        Tuple.Create("newValue", "New value"),
+        Tuple.Create("requestedDateUtc", "Date requested"),
+        Tuple.Create("originatorUserName", "Suggested from"),
+        Tuple.Create("approverUserName", "Approved by"),
+    };
+
+}
+<div id="school-change-history" class="tab-content approval-data">
+    <h2 id="change-history-heading" class="govuk-heading-s">Change History</h2>
+    @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors && Model.GovernorsGridViewModel.GovernorPermissions.Add)
+    {
+        <div class="gias-governance-history-link-container">
+            <p>
+                @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new {id = Model.GovernorsGridViewModel.EstablishmentUrn})
+            </p>
+        </div>
+    }
+
+    @if (!Model.ChangeHistory.Items.Any())
+    {
+        <p class="govuk-body">There are no change records available at the moment</p>
+    }
+    else
+    {
+        <p class="govuk-body">
+            @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, null)
+        </p>
+        <p class="govuk-body">
+            @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx }, null)
+
+        </p>
+        if (Model.ChangeHistory.PageCount > 1)
+        {
+            <div class="top-pagination">
+                @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+            </div>
+        }
+        <table class="approval-changes govuk-table gias-table sortable-table">
+            <caption class="govuk-visually-hidden">Change history</caption>
+            <thead class="govuk-table__head">
+                <tr class="gocuk-table__row">
+                    @foreach (var tableColumn in tableColumns)
+                {
+                    <th scope="col" class="govuk-table__header">
+                        <a href="@Url.SortUrl(tableColumn.Item1, "#school-change-history")"
+                           class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                           aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                    </th>
+                }
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            @foreach (var item in Model.ChangeHistory.Items)
+            {
+                <tr class="govuk-table__row">
+                    <td id="date-changed" data-label="Date changed" class="govuk-table__cell">@(item.ChangedDateUtc?.ToString("d MMMM yyyy"))</td>
+                    <td id="effective-date" data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("d MMMM yyyy"))</td>
+                    <td id="updated-field" data-label="Updated field" class="govuk-table__cell">@item.Name</td>
+                    <td id="old-value" data-label="Old value" class="govuk-table__cell">
+                        @if (item.OldValue != null && RE.IsMatch(item.OldValue))
+                        {
+                            var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
+                            var dt = new DateTime(parts[2], parts[1], parts[0]);
+                            @dt.ToString("d MMMM yyyy");
+                        }
+                        else
+                        {
+                            @item.OldValue
+                        }
+                    </td>
+                    <td id="new-value" data-label="New value" class="govuk-table__cell">
+                        @if (item.NewValue != null && RE.IsMatch(item.NewValue))
+                        {
+                            var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
+                            var dt = new DateTime(parts[2], parts[1], parts[0]);
+                            @dt.ToString("d MMMM yyyy");
+                        }
+                        else
+                        {
+                            @item.NewValue
+                        }
+                    </td>
+                    <td id="date-requested" data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("d MMMM yyyy"))</td>
+                    <td data-label="Suggested from" class="govuk-table__cell">@item.OriginatorUserName</td>
+                    <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        if (Model.ChangeHistory.PageCount > 1)
+        {
+            <div class="lower-pagination push--bottom">
+                @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+            </div>
+            <back-to-top-link />
+        }
+
+    }
+</div>

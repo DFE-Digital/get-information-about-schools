@@ -1,26 +1,35 @@
 using Edubase.Common;
 using Edubase.Services.Core;
-using System.Linq;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace Edubase.Web.UI.Helpers
 {
     public class BrowserClientStorage : IClientStorage
     {
-        private HttpContextBase _httpContext;
+        private readonly HttpContext _httpContext;
 
-        public BrowserClientStorage(HttpContextBase httpContext)
+        public BrowserClientStorage(IHttpContextAccessor accessor)
         {
-            _httpContext = httpContext;
+            _httpContext = accessor.HttpContext;
         }
 
-        public string IPAddress { get => _httpContext.Request.UserHostAddress; }
+        public string IPAddress => _httpContext?.Connection?.RemoteIpAddress?.ToString();
 
-        public string Get(string key) => _httpContext.Request.Cookies.AllKeys.Contains(key) ? _httpContext.Request.Cookies.Get(key)?.Value.Clean() : null;
+        public string Get(string key)
+        {
+            return _httpContext?.Request?.Cookies?.ContainsKey(key) == true ? (_httpContext.Request.Cookies[key]?.Clean()) :  null;
+        }
 
         public string Save(string key, string value)
         {
-            _httpContext.Response.Cookies.Set(new HttpCookie(key, value) { SameSite = SameSiteMode.Strict});
+            var options = new CookieOptions
+            {
+                SameSite = SameSiteMode.Strict,
+                HttpOnly = true,
+                Secure = true
+            };
+
+            _httpContext?.Response?.Cookies?.Append(key, value, options);
             return value;
         }
     }

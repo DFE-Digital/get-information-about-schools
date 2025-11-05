@@ -1,0 +1,288 @@
+@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.ValueConverters;
+@using Edubase.Web.UI.Areas.Establishments.Models.Search;
+@using Edubase.Common;
+@using ET = Edubase.Services.Enums.eLookupEstablishmentType;
+@model EstablishmentDetailViewModel
+
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Address</dt>
+    <dd class="govuk-summary-list__value">@Model.GetAddress()</dd>
+</div>
+<div class="govuk-summary-list__row">
+    <dt id="local-authority-key" class="govuk-summary-list__key">Local authority</dt>
+    <dd class="govuk-summary-list__value">
+        @if (Model.Establishment.LocalAuthorityId.HasValue)
+        {
+            <a id="local-authority-value" href="@Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
+                @Model.LocalAuthorityName
+            </a>
+            <text>(@Model.LocalAuthorityCode)</text>
+        }
+    </dd>
+</div>
+<div class="govuk-summary-list__row">
+    <dt id="head-teacher-label-key" class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel)</dt>
+    <dd id="head-teacher-value" class="govuk-summary-list__value">
+        @if (Model.DisplayPolicy.HeadTitleId)
+        {
+            <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
+        }
+        @if (Model.DisplayPolicy.HeadFirstName)
+        {
+            <text>@Model.Establishment.HeadFirstName</text>
+        }
+        @if (Model.DisplayPolicy.HeadLastName)
+        {
+            <text>@Model.Establishment.HeadLastName</text>
+        }
+    </dd>
+</div>
+
+@if (Model.DisplayPolicy.HeadAppointmentDate)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel) appointment date</dt>
+        <dd id="head-master-appointment-date-value" class="govuk-summary-list__value">
+            @(Model.Establishment.HeadAppointmentDate?.ToString("d MMMM yyyy") ?? "Not recorded")
+        </dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.HeadEmailAddress)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadEmailAddressLabel)</dt>
+        <dd id="head-master-email-value" class="govuk-summary-list__value">
+            @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
+        </dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.AgeRange)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Age range
+            <a href="#help-text-age-range" class="help-icon modal-link">
+                <span class="govuk-visually-hidden">Help with age range field</span>
+                <dialog-hidden-prompt />
+            </a>
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
+            {
+                <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
+            }
+        </dd>
+    </div>
+}
+
+<div class="govuk-summary-list__row">
+    <dt id="education-phase-key" class="govuk-summary-list__key">Phase of education</dt>
+    <dd id="education-phase-value" class="govuk-summary-list__value">
+        @Model.EducationPhaseName
+    </dd>
+</div>
+@if (Model.DisplayPolicy.TypeId)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">@(Model.DisplayPolicy.EstablishmentTypeLabel)</dt>
+        <dd id="school-type-value" class="govuk-summary-list__value">
+            @Model.TypeName
+        </dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.FurtherEducationTypeId)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Further education type</dt>
+        <dd class="govuk-summary-list__value">
+            @Model.FurtherEducationTypeName
+        </dd>
+    </div>
+}
+
+@foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g)))
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">@(Model.GetGroupFieldLabel(group))</dt>
+        <dd class="govuk-summary-list__value">
+            @Html.ActionLink(group.Name, "Details", "Group", new {id = group.GroupUId, area = "Groups"}, null)
+        </dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.GenderId)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Gender of entry</dt>
+        <dd class="govuk-summary-list__value">
+            @Model.GenderName
+        </dd>
+    </div>
+}
+<div class="govuk-summary-list__row">
+
+    <dt class="govuk-summary-list__key">ID</dt>
+    <dd class="govuk-summary-list__value">
+        <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
+        @if (Model.DisplayPolicy.EstablishmentNumber)
+        {
+            <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br/></text>
+        }
+        @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
+        {
+            <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
+        }
+    </dd>
+</div>
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Establishment status</dt>
+    <dd id="establishment-status-value" class="govuk-summary-list__value">
+        @if (Model.IsClosed)
+        {
+            <span class="pending-closure">
+                @Model.StatusName
+            </span>
+        }
+        else
+        {
+            @Model.StatusName
+        }
+    </dd>
+</div>
+
+@if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
+{
+    <div class="govuk-summary-list__row">
+        <dt id="registration-suspended-key" class="govuk-summary-list__key">Registration suspended</dt>
+        <dd id="registration-suspended-value" class="govuk-summary-list__value">
+            @Model.RegistrationSuspendedDisplay
+        </dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.AdmissionsPolicyId)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Admissions policy</dt>
+        <dd class="govuk-summary-list__value">
+            @Model.AdmissionsPolicyName
+        </dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.Contact_WebsiteAddress)
+{
+    <div class="govuk-summary-list__row">
+        <dt id="website-key" class="govuk-summary-list__key">Website</dt>
+        <dd id="website-value" class="govuk-summary-list__value">
+            @if (Model.Establishment.Contact_WebsiteAddress == null)
+            {
+                <text>Not recorded</text>
+            }
+            else
+            {
+            <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
+                @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress) (opens in new tab)
+            </a>
+            }
+        </dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.Contact_TelephoneNumber)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Telephone</dt>
+        <dd class="govuk-summary-list__value">@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</dd>
+    </div>
+}
+
+@*
+ * #232199: If there is a valid Ofsted report page on the Ofsted website for this establishment's URN, always link to it.
+ * Where we _also_ hold a cached copy of the latest Ofsted rating and inspection date, follow the usual display-policy rules.
+ *@
+@if (Model.ShowOfstedReportLink)
+{
+    <dl class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key" id="ofsted-rating-and-reports-key">Ofsted rating and reports</dt>
+        <dd class="govuk-summary-list__value" id="ofsted-rating-and-reports-value">
+            @{
+                var newlineRequired = false;
+            }
+
+            @if (Model.ShowOfstedRatings)
+            {
+                if (Model.DisplayPolicy.OfstedRatingId)
+                {
+                    if (Model.Establishment.OfstedRatingId.HasValue)
+                    {
+                        newlineRequired = true;
+                        <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
+                        if (Model.Establishment.OfstedInspectionDate.HasValue)
+                        {
+                            <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
+                        }
+                    }
+                    else
+                    {
+                        newlineRequired = true;
+                        <span>Latest inspection results not recorded on GIAS</span>
+                    }
+                }
+            }
+
+            @if (newlineRequired)
+            {
+                <br/>
+            }
+
+            <div class="govuk-!-margin-bottom-3">
+                <a href="@Model.OfstedReportUrl" target="_blank" rel="noreferrer noopener">
+                    Ofsted report (opens in new tab)
+                </a>
+            </div>
+
+            @if (!Model.ShowOfstedRatings)
+            {
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            Why the rating is not displayed
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        From September 2024, Ofsted no longer makes an overall effectiveness judgement in inspections of state-funded schools.
+                    </div>
+                </details>
+            }
+        </dd>
+    </dl>
+}
+
+@if (Model.ShowFscpd || Model.ShowFinancialBenchmarking)
+{
+    @Html.Partial("OtherServicesLinks", Model)
+}
+
+@if (Model.DisplayPolicy.InspectorateId)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Inspectorate name</dt>
+        <dd class="govuk-summary-list__value">
+            @Model.InspectorateName
+        </dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.ProprietorBodyName)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Proprietor's name</dt>
+        <dd class="govuk-summary-list__value">@Model.Establishment.ProprietorBodyName</dd>
+    </div>
+
+}

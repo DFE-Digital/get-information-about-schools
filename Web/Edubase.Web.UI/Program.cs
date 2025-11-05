@@ -3,9 +3,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
+using Autofac.Core;
 using AzureTableLogger;
 using AzureTableLogger.Services;
 using Edubase.Common.Cache;
@@ -14,10 +14,13 @@ using Edubase.Data.Repositories;
 using Edubase.Services;
 using Edubase.Services.Core;
 using Edubase.Services.DataQuality;
+using Edubase.Services.Downloads;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
+using Edubase.Services.ExternalLookup;
 using Edubase.Services.Geo;
 using Edubase.Services.Governors;
+using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Services.IntegrationEndPoints.AzureMaps;
@@ -26,6 +29,7 @@ using Edubase.Services.IntegrationEndPoints.OSPlaces;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
+using Edubase.Services.Texuna.Downloads;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Governors;
 using Edubase.Services.Texuna.Groups;
@@ -99,107 +103,6 @@ static HttpClient CreateHttpClient(IConfiguration configuration)
 
     return client;
 }
-
-//static HttpClient CreateFscpdClient(IConfiguration configuration)
-//{
-//    var timeoutSetting = configuration["AppSettings:FscpdClient_Timeout"];
-//    var baseAddress = configuration["AppSettings:FscpdURL"];
-//    var apiUsername = configuration["AppSettings:FscpdUsername"];
-//    var apiPassword = configuration["AppSettings:FscpdPassword"];
-
-//    if (!int.TryParse(timeoutSetting, out var timeoutSeconds))
-//    {
-//        timeoutSeconds = 10;
-//    }
-
-//    var client = new HttpClient(new HttpClientHandler { UseCookies = false })
-//    {
-//        BaseAddress = new Uri(baseAddress),
-//        Timeout = TimeSpan.FromSeconds(timeoutSeconds)
-//    };
-
-//    if (!string.IsNullOrEmpty(apiUsername) && !string.IsNullOrEmpty(apiPassword))
-//    {
-//        var credentials = Convert.ToBase64String(
-//            System.Text.Encoding.ASCII.GetBytes($"{apiUsername}:{apiPassword}")
-//        );
-//        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
-//    }
-
-//    return client;
-//}
-
-//static HttpClient CreateSfbClient(IConfiguration configuration)
-//{
-//    var timeoutSetting = configuration["AppSettings:FBService_Timeout"];
-//    var baseAddress = configuration["AppSettings:FinancialBenchmarkingApiURL"];
-//    var apiUsername = configuration["AppSettings:FinancialBenchmarkingUsername"];
-//    var apiPassword = configuration["AppSettings:FinancialBenchmarkingPassword"];
-
-//    if (!int.TryParse(timeoutSetting, out var timeoutSeconds))
-//    {
-//        timeoutSeconds = 10;
-//    }
-
-//    var client = new HttpClient(new HttpClientHandler { UseCookies = false })
-//    {
-//        BaseAddress = new Uri(baseAddress),
-//        Timeout = TimeSpan.FromSeconds(timeoutSeconds)
-//    };
-
-//    if (!string.IsNullOrEmpty(apiUsername) && !string.IsNullOrEmpty(apiPassword))
-//    {
-//        var credentials = Convert.ToBase64String(
-//            System.Text.Encoding.ASCII.GetBytes($"{apiUsername}:{apiPassword}")
-//        );
-//        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
-//    }
-
-//    var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0";
-//    var productValue = new ProductInfoHeaderValue("GIAS", version);
-//    var commentValue = new ProductInfoHeaderValue("(Chrome; Edge; Mozilla; +https://www.get-information-schools.service.gov.uk)");
-
-//    client.DefaultRequestHeaders.UserAgent.Add(productValue);
-//    client.DefaultRequestHeaders.UserAgent.Add(commentValue);
-
-//    return client;
-//}
-
-//static HttpClient CreateOfstedClient(IConfiguration configuration)
-//{
-//    var timeoutSetting = configuration["AppSettings:OfstedService_TimeoutSeconds"];
-//    var baseAddress = configuration["AppSettings:OfstedService_BaseAddress"];
-//    var apiUsername = configuration["AppSettings:OfstedService_Username"];
-//    var apiPassword = configuration["AppSettings:OfstedService_Password"];
-
-//    if (!int.TryParse(timeoutSetting, out var timeoutSeconds))
-//    {
-//        timeoutSeconds = 10;
-//    }
-
-//    var client = new HttpClient(new HttpClientHandler { UseCookies = false })
-//    {
-//        BaseAddress = new Uri(baseAddress),
-//        Timeout = TimeSpan.FromSeconds(timeoutSeconds)
-//    };
-
-//    if (!string.IsNullOrEmpty(apiUsername) && !string.IsNullOrEmpty(apiPassword))
-//    {
-//        var credentials = Convert.ToBase64String(
-//            System.Text.Encoding.ASCII.GetBytes($"{apiUsername}:{apiPassword}")
-//        );
-//        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
-//    }
-
-//    var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0";
-//    var productValue = new ProductInfoHeaderValue("GIAS", version);
-//    var commentValue = new ProductInfoHeaderValue("(Chrome; Edge; Mozilla; +https://www.get-information-schools.service.gov.uk)");
-
-//    client.DefaultRequestHeaders.UserAgent.Add(productValue);
-//    client.DefaultRequestHeaders.UserAgent.Add(commentValue);
-
-//    return client;
-//}
 
 static HttpClient CreateLookupClient(IConfiguration configuration)
 {
@@ -350,8 +253,10 @@ builder.Services
 
 // service registrations
 builder.Services.AddScoped<IEstablishmentReadService, EstablishmentReadApiService>();
+builder.Services.AddScoped<IEstablishmentWriteService, EstablishmentWriteApiService>();
 builder.Services.AddScoped<IEstablishmentDownloadService, EstablishmentDownloadApiService>();
 builder.Services.AddScoped<IGroupReadService, GroupReadApiService>();
+builder.Services.AddScoped<IGroupsWriteService, GroupsWriteApiService>();
 builder.Services.AddScoped<IGroupDownloadService, GroupDownloadApiService>();
 builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>();
 builder.Services.AddTransient<IResourcesHelper, ResourcesHelper>();
@@ -378,7 +283,14 @@ builder.Services.AddTransient<IGovernorsGridViewModelFactory, GovernorsGridViewM
 builder.Services.AddTransient<ISmtpEndPoint, MockSmtpEndPoint>();
 builder.Services.AddSingleton<IAzLogger, AzLogger>();
 builder.Services.AddScoped<ICachedLookupService, CachedLookupService>();
-builder.Services.AddSingleton<IPlacesLookupService, PlacesLookupService>();
+builder.Services.AddScoped<IPlacesLookupService, PlacesLookupService>();
+builder.Services.AddScoped<IExternalLookupService, ExternalLookupService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IClientStorage, BrowserClientStorage>();
+builder.Services.AddScoped<IGovernorDownloadService, GovernorDownloadApiService>();
+builder.Services.AddScoped<IDownloadsService, DownloadsApiService>();
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 // Default HttpClient and HttpClientWrapper
 var httpClient = CreateHttpClient(builder.Configuration); // Make sure this method doesn't rely on ConfigurationManager
@@ -388,34 +300,15 @@ builder.Services.AddTransient<IHttpClientWrapper, HttpClientWrapper>();
 builder.Services.AddTransient<HttpClientWrapper>();
 builder.Services.AddScoped<ISecurityService, SecurityApiService>();
 
-// Register the Azure Maps HttpClient
-var azureMapsClient = CreateAzureMapsClient(builder.Configuration);
-builder.Services.AddSingleton(azureMapsClient);
-
 // Register the OS Places HttpClient
-var osPlacesClient = CreateOSPlacesClient(builder.Configuration);
-builder.Services.AddSingleton(osPlacesClient);
+//var osPlacesClient = CreateOSPlacesClient(builder.Configuration);
+//builder.Services.AddSingleton(osPlacesClient);
 
-builder.Services.AddSingleton<IOSPlacesApiService>(provider =>
-{
-    var client = provider.GetRequiredService<HttpClient>();
-    return new OSPlacesApiService(client);
-});
-
-builder.Services.AddSingleton<IPlacesLookupService, PlacesLookupService>();
-
-builder.Services.AddSingleton<IAzureMapsService>(provider =>
-{
-    var client = provider.GetRequiredService<HttpClient>();
-    return new AzureMapsService(builder.Configuration, client);
-});
-
-// Register the AzureMapsService
-builder.Services.AddSingleton<IAzureMapsService>(provider =>
-{
-    var httpClient = provider.GetRequiredService<HttpClient>();
-    return new AzureMapsService(builder.Configuration, httpClient);
-});
+//builder.Services.AddSingleton<IOSPlacesApiService>(provider =>
+//{
+//    var client = provider.GetRequiredService<HttpClient>();
+//    return new OSPlacesApiService(client);
+//});
 
 var dataConnectionString = builder.Configuration.GetConnectionString("DataConnectionString");
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
@@ -457,15 +350,37 @@ var jsonFormatter = CreateJsonMediaTypeFormatter();
 builder.Services.AddSingleton(jsonFormatter);
 
 // Named HttpClient for Lookup Service
-var lookupClient = CreateLookupClient(builder.Configuration);
-builder.Services.AddSingleton(lookupClient);
-builder.Services.AddSingleton<HttpClientWrapper>(provider =>
+builder.Services.AddHttpClient("LookupApiClient", client => CreateLookupClient(builder.Configuration));
+builder.Services.AddScoped<LookupApiService>(provider =>
 {
-    var formatter = provider.GetRequiredService<JsonMediaTypeFormatter>();
-    var storage = provider.GetRequiredService<IClientStorage>();
-    var recorder = provider.GetRequiredService<ApiRecorderSessionItemRepository>();
-    return new HttpClientWrapper(lookupClient, formatter, storage, recorder);
+    var wrapper = provider.GetRequiredService<HttpClientWrapper>();
+    var security = provider.GetRequiredService<ISecurityService>();
+    return new LookupApiService(wrapper, security);
 });
+builder.Services.AddScoped<ILookupService>(provider => provider.GetRequiredService<LookupApiService>());
+builder.Services.AddScoped<IUserDependentLookupService>(provider => provider.GetRequiredService<LookupApiService>());
+
+
+// Named Azure Maps service
+//builder.Services.AddHttpClient("AzureMapsClient", client => CreateAzureMapsClient(builder.Configuration));
+//builder.Services.AddScoped<AzureMapsService>(provider =>
+//{
+//    var wrapper = provider.GetRequiredService<HttpClientWrapper>();
+//    var security = provider.GetRequiredService<ISecurityService>();
+//    return new AzureMapsService(wrapper, security);
+//});
+
+//builder.RegisterInstance(CreatAzureMapsClient()).SingleInstance().Named<HttpClient>("AzureMapsClient");
+//builder.Register(c => new AzureMapsService(c.ResolveNamed<HttpClient>("AzureMapsClient"))).As<IAzureMapsService>();
+
+builder.Services.AddSingleton<HttpClient>(provider => CreateOSPlacesClient(builder.Configuration));
+builder.Services.AddSingleton<IOSPlacesApiService>(provider =>
+{
+    var osPlacesClient = provider.GetRequiredService<HttpClient>();
+    return new OSPlacesApiService(osPlacesClient);
+});
+builder.Services.AddTransient<IPlacesLookupService, PlacesLookupService>();
+
 
 // Named HttpClient for Governor Search Service
 var governorClient = CreateGovernorSearchClient(builder.Configuration);
@@ -478,21 +393,65 @@ builder.Services.AddScoped<HttpClientWrapper>(provider =>
     return new HttpClientWrapper(governorClient, formatter, storage, recorder);
 });
 
-
-builder.Services.AddScoped<LookupApiService>(provider =>
+// Register the Azure Maps HttpClient
+builder.Services.AddHttpClient("AzureMapsClient", client =>
 {
-    var wrapper = provider.GetRequiredService<HttpClientWrapper>();
-    var security = provider.GetRequiredService<ISecurityService>();
-    return new LookupApiService(wrapper, security);
+    // use builder.Configuration to get settings
+
+    // Configure base address, headers, timeouts, etc.
+    client.BaseAddress = new Uri("https://atlas.microsoft.com");
+});
+builder.Services.AddSingleton<IAzureMapsService>(provider =>
+{
+    var clientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var client = clientFactory.CreateClient("AzureMapsClient");
+    return new AzureMapsService(builder.Configuration, client);
 });
 
-builder.Services.AddScoped<ILookupService>(provider => provider.GetRequiredService<LookupApiService>());
-builder.Services.AddScoped<IUserDependentLookupService>(provider => provider.GetRequiredService<LookupApiService>());
+// CSCP service registrations.
+builder.Services.AddHttpClient("FscpdClient", client =>
+{
+    // use builder.Configuration to get settings
 
+    // Configure base address, headers, timeouts, etc.
+    client.BaseAddress = new Uri("https://www.compare-school-performance.service.gov.uk/");
+});
+builder.Services.AddScoped<IFSCPDService>(provider =>
+{
+    var clientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var client = clientFactory.CreateClient("FscpdClient");
+    return new FSCPDService(client, builder.Configuration);
+});
 
-builder.Services.AddScoped<IUserDependentLookupService>(provider =>
-    provider.GetRequiredService<LookupApiService>());
+// Financial Benchmarking service registrations.
+builder.Services.AddHttpClient("SfbClient", client =>
+{
+    // use builder.Configuration to get settings
 
+    // Configure base address, headers, timeouts, etc.
+    client.BaseAddress = new Uri("https://api.schools-financial-benchmarking.service.gov.uk/");
+});
+builder.Services.AddScoped<IFBService>(provider =>
+{
+    var clientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var client = clientFactory.CreateClient("SfbClient");
+    return new FBService(client, builder.Configuration);
+});
+
+// Ofsted service registrations.
+builder.Services.AddHttpClient("OfstedClient", client =>
+{
+    // use builder.Configuration to get settings
+
+    // Configure base address, headers, timeouts, etc.
+    client.BaseAddress = new Uri("http://www.ofsted.gov.uk/oxedu_providers/full/(urn)/");
+});
+builder.Services.AddScoped<IOfstedService>(provider =>
+{
+    var clientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var client = clientFactory.CreateClient("OfstedClient");
+    return new OfstedService(client, builder.Configuration);
+});
 
 // Governors Read Service
 builder.Services.AddScoped<IGovernorsReadService>(provider =>

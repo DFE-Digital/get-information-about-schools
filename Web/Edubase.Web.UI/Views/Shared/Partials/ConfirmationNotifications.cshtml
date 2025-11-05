@@ -1,0 +1,26 @@
+@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Models.Establishments.Establishment
+@model EstablishmentDetailViewModel
+
+@if (Model.MediumPriorityConfirmationsPending || Model.HighPriorityConfirmationsPending)
+{
+    if (Model.MediumPriorityEstablishmentConfirmationPending || Model.HighPriorityEstablishmentConfirmationPending)
+    {
+        @await Html.PartialAsync("_WarningBox", new WarningBoxViewModel {
+            Type = "Establishment",
+            Date = Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("d MMMM yyyy") ?? "Not recorded",
+            Route = "EstablishmentConfirmUpToDate",
+            Urn = Model.Establishment.Urn.HasValue ? Model.Establishment.Urn.Value : default(int)
+        })
+    }
+
+    if (Model.MediumPriorityGovernanceConfirmationPending || Model.HighPriorityGovernanceConfirmationPending)
+    {
+        @await Html.PartialAsync("_WarningBox", new WarningBoxViewModel {
+            Type = "Governance",
+            Date = Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("d MMMM yyyy") ?? "Not recorded",
+            Route = "EstablishmentGovernanceConfirmUpToDate",
+            Urn = Model.Establishment.Urn.HasValue ? Model.Establishment.Urn.Value : default(int)
+        })
+    }
+}

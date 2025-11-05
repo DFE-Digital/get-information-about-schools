@@ -25,7 +25,7 @@ else if (Model.Results.Count > 0)
         @foreach (var result in Model.Results)
         {
         <li class="gias-result-tile">
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">@Html.ActionLink(result.Name, "Details", "Group", new {id = result.GroupUId, area = "groups", searchQueryString = Model.SearchQueryString}, new {@class = "bold-small"})</h3>
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">@Html.ActionLink(result.Name, "Details", "Group", new {id = result.GroupUId, searchQueryString = Model.SearchQueryString}, new {@class = "bold-small"})</h3>
             <dl>
                 <dt>Type:</dt>
                 <dd>@(Model.GroupTypes.FirstOrDefault(x => x.Id == result.GroupTypeId)?.Name)</dd>

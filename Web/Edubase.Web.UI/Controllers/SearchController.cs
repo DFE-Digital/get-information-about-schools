@@ -236,7 +236,7 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
                         {
-                            var baseUrl = "/Establishments/Search/index";
+                            const string baseUrl = "/Establishments/Search/index";
                             var query = HttpContext.Request.Query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
 
                             if (viewModel.OpenOnly)
@@ -256,7 +256,12 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
-                            return Redirect(Url.Action(ConstIndex, "GroupSearch", new { area = "Groups" }) + "?" + Request.Query);
+                            const string baseUrl = "/Groups/Search";
+                            var query = HttpContext.Request.Query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
+                            var queryString = string.Join("&", query.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+                            var urlWithQuery = $"{baseUrl}?{queryString}";
+
+                            return Redirect(urlWithQuery);
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))

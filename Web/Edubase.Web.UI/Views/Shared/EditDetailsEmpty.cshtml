@@ -1,0 +1,61 @@
+@using Edubase.Web.UI.Helpers
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@model ViewModel
+@{
+    if (Model.ChangesSummary == null)
+    {
+        ViewBag.OriginalEstablishmentName = Model.OriginalEstablishmentName;
+        ViewBag.OriginalTypeName = Model.OriginalTypeName;
+        Layout = "_EditLayoutPage.cshtml";
+    }
+    else
+    {
+        ViewBag.bodyClasses = "create-edit school-details";
+        ViewBag.hideLogo = true;
+        ViewBag.Title = "Edit establishment";
+        if (Model.HasEmptyEmailFields.GetValueOrDefault())
+        {
+            Layout = "_EditLayoutPage.cshtml";
+        }
+    }
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    @if (Model.LegalParentGroup != null)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="tab-content">
+    <div class="@Html.Conditional(Model.ChangesSummary != null || Model.IsUpdatingEmailFields.GetValueOrDefault(), "hidden")">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <div class="button-row govuk-!-padding-bottom-4">
+                    @Html.ActionLink("Back", ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["controller"].ToString(), new { id = Model.Urn }, new { @class = "govuk-back-link" })
+                </div>
+                
+                <h1 class="govuk-heading-l">Check your updates before saving</h1>
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        <span>No fields have been updated so there is nothing to save.</span>
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

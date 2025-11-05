@@ -16,12 +16,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public class CustomFieldGroup
         {
             public string Category { get; set; }
-            public IEnumerable<EstablishmentSearchDownloadCustomField> CustomFields { get; set; }
+            public IEnumerable<EstablishmentSearchDownloadCustomField> CustomFields { get; set; } = [];
         }
 
         public eFileFormat? FileFormat { get; set; }
         public eDataSet? Dataset { get; set; }
-        public ProgressDto Progress { get { throw new Exception("Progress object not available"); } }
+        public ProgressDto Progress { get; set; }
         public int? Step => null;
         public int? TotalSteps => null;
         public string DownloadName => "establishment";
@@ -37,7 +37,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public bool AllowIncludeChildrensCentreFields { get; set; }
         public bool AllowAnyExtraFields => AllowIncludeEmailAddresses || AllowIncludeIEBTFields || AllowIncludeBringUpFields || AllowIncludeChildrensCentreFields;
 
-        public IList<EstablishmentSearchDownloadCustomField> CustomFields { get; internal set; }
+        public IList<EstablishmentSearchDownloadCustomField> CustomFields { get; internal set; } = [];
 
         [BindAlias(SelectedCustomFieldsBindAlias)]
         public string[] SelectedCustomFields { get; set; } = new string[0];

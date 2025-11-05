@@ -150,6 +150,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View("Downloads/SelectDataset", viewModel);
             }
 
+            if (viewModel.CustomFields == null)
+            {
+                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
+            }
+
             if (viewModel.Dataset == eDataSet.Custom && !viewModel.SelectedCustomFields.Any())
             {
                 if (viewModel.ViewedCustomFields)

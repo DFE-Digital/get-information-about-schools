@@ -1,0 +1,203 @@
+@using System.Linq
+@using Edubase.Common
+@using Edubase.Services.Enums
+@using Edubase.Web.UI.Helpers.Edubase.Web.UI.Helpers
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@using System.Text.RegularExpressions
+
+@model ViewModel
+@{
+    var RE = new Regex(@"^(0)(\d{1} )(January|February|March|April|May|June|July|August|September|October|November|December)( \d{2,4})$");
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    @if (Model.LegalParentGroup != null)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    }
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.OriginalEstablishmentName ?? Model.Name, "Details", "Establishment", new { @class = "requires-conf-to-leave govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.ActionSpecifier)"
+                value="@ViewModel.GetActionSpecifier(ViewModel.ASEmailBack, "details")">Back</button>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @if (
+            Model.EstablishmentTypeGroupId.OneOfThese(eLookupEstablishmentTypeGroup.IndependentSchools, eLookupEstablishmentTypeGroup.LAMaintainedSchools)
+            && Model.ChangesSummary.Any(x => x.Id.Equals(nameof(Model.StatusId)))
+            && Model.ChangesSummary.First(x => x.Id.Equals(nameof(Model.StatusId))).NewValue.Equals(Model.Statuses.First(x => x.Value.Equals("4")).Text)
+            )
+        {
+            <div class="warning-message js-trigger-aria-live">
+                <p class="message-text">
+                    Once the updates have been confirmed, the system will automatically change the status of the record to closed based on the close date provided
+                </p>
+            </div>
+        }
+        <h1 class="govuk-heading-l">Confirm updates to establishment</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (Model.IsAcademy || Model.IsLAMaintained || Model.CCIsDemoting || Model.CCIsPromoting)
+        {
+            <div class="gias-panel-indent">
+                @if (Model.IsAcademy)
+                {
+                    <p>
+                        Please confirm that in making these changes the academy has:
+                    </p>
+                    <ul class="govuk-list govuk-list--bullet warning-list">
+                        <li>
+                            followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="noreferrer noopener" target="_blank">statutory guidance (opens in new tab)</a>
+                        </li>
+                        <li>submitted a deed of variation to the funding agreement where required</li>
+                    </ul>
+                }
+                else if (Model.IsLAMaintained)
+                {
+            <p>
+                Please confirm that in making prescribed alterations the governing body or local authority has followed and completed the
+                <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="noreferrer noopener" target="_blank">
+                    statutory process (opens in new tab)</a>.
+            </p>
+                }
+
+                @if (Model.CCIsDemoting)
+                {
+                    <h3 class="govuk-heading-s">I confirm that:</h3>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                            I have read the
+                            @Html.ActionLink("DfE's short guide for LAs", "Guidance", "Home", new { area = "", file = "DfE Short Guide for LAs.docx" }, null)
+                            document, and
+                        </li>
+                        <li>I have demoted this children's centre record because it's no longer a children's centre in its own right but continues to contribute to our children's centre provision.</li>
+                    </ul>
+
+                    <p>Before you save this record, please link this linked site centre to a children's centre using the links tab. If you don't make this link, the children's centre linked site will be automatically deleted.</p>
+                }
+                else if (Model.CCIsPromoting)
+                {
+                    <h3 class="govuk-heading-s">I confirm that:</h3>
+                    <ul class="govuk-list govuk-list--bullet warning-list">
+                        <li>
+                            I have read the
+                            @Html.ActionLink("DfE's short guide for LAs", "Guidance", "Home", new { area = "", file = "DfE Short Guide for LAs.docx" }, null)
+                            document, and
+                        </li>
+                        <li>I have promoted this linked site record because it fulfils the legal definition of a children's centre in its own right.</li>
+                    </ul>
+                }
+            </div>
+        }
+
+        @if (Model.ShowDuplicateRecordWarning)
+        {
+            <div class="panel-indent">
+                <p>
+                    There is already an establishment with the same name and local authority recorded. By confirming this change you acknowledge you may be duplicating the record.
+                </p>
+            </div>
+        }
+        <p>Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn.</p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <p class="govuk-body-s">Showing 1 - @Model.ChangesSummary.Count of @Model.ChangesSummary.Count</p>
+        <table class="gias-table govuk-table confirm-changes">
+            <caption class="govuk-visually-hidden">Establishment updates summary</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Field</th>
+                    <th scope="col" class="govuk-table__header">Old value</th>
+                    <th scope="col" class="govuk-table__header">New value</th>
+                    <th scope="col" class="govuk-table__header">Approval required</th>
+                    <th scope="col" class="govuk-table__header">Approver</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var item in Model.ChangesSummary)
+                {
+                <tr class="govuk-table__row">
+                    <td data-label="Field" class="govuk-table__cell">@item.Name</td>
+                    <td data-label="Old value" class="govuk-table__cell">
+                        @if (item.OldValue != null && RE.IsMatch(item.OldValue))
+                        {
+                            var dt = RE.Replace(item.OldValue, "$2$3$4");
+                            @dt;
+                        }
+                        else
+                        {
+                            @(item.OldValue ?? "<empty>")
+                        }
+                    </td>
+
+                    <td data-label="New value" class="govuk-table__cell">
+                        @if (item.NewValue != null && RE.IsMatch(item.NewValue))
+                        {
+                            var dt = RE.Replace(item.NewValue, "$2$3$4");
+                            @dt;
+                        }
+                        else
+                        {
+                            @(item.NewValue ?? "<empty>")
+                        }
+                    </td>
+                    <td data-label="Approval required" class="govuk-table__cell">
+                        @if (item.RequiresApproval)
+                        {
+                            <span class="gias-!-uppercase">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="gias-!-uppercase">No</span>
+                        }
+                    </td>
+                    <td data-label="Approver name" class="govuk-table__cell">
+                        @if (item.RequiresApproval)
+                        {
+                            @(item.ApproverName ?? "-")
+                        }
+                        else
+                        {
+                            @: &ndash;
+                        }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <p class="govuk-body-s">Showing 1 - @Model.ChangesSummary.Count of @Model.ChangesSummary.Count</p>
+
+        <div class="gias-confirmation--date-editor">
+            @Html.EditorFor(x => x.ChangeEffectiveDate, new { title = "Effective date (optional)" })
+        </div>
+        @if (Model.CanOverrideCRProcess)
+        {
+            <div class="govuk-form-group">
+                <div class="govuk-checkboxes">
+                    @FormHelpers.GiasCheckbox("true", "OverrideCRProcess", "Override change request", null, new { @id = "override-cr", @class = "govuk-checkboxes__input" })
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

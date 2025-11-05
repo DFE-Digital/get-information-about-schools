@@ -119,14 +119,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         public double GetRadiusOption() => RadiusInMiles ?? 3;
 
-        private Lazy<LatLon> _coordinate;
-
-        public LatLon LocationSearchCoordinate => _coordinate.Value;
+        public LatLon LocationSearchCoordinate { get; }
 
         public EstablishmentSearchViewModel()
         {
-            _coordinate = new Lazy<LatLon>(() => LatLon.Parse(LocationSearchModel.AutoSuggestValue));
+            LocationSearchCoordinate = LatLon.Parse(LocationSearchModel.AutoSuggestValue);
         }
+
 
         public SearchPayloadViewModel TextSearchModel { get; set; } = new SearchPayloadViewModel();
         public SearchPayloadViewModel LocationSearchModel { get; set; } = new SearchPayloadViewModel();

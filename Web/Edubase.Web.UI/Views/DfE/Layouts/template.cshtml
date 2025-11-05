@@ -4,6 +4,7 @@
     Layout = "../../govuk/layouts/template.cshtml";
     var version = typeof(HomeController).Assembly.GetName().Version;
 }
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @{
     var isNotificationsController = ViewContext.RouteData.Values["controller"]?.ToString() == nameof(NotificationsController);
@@ -35,7 +36,7 @@
     @if (!isIE8)
     {
         <script nonce="@Html.ScriptNonce()">
-            var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
+            var azureMapsApiKey = "@Configuration["AppSettings:AzureMapsApiKey"]";
         </script>
 
         <script src="@Html.Raw(Html.GetWebpackScriptUrl("bundle.*.js"))"></script>

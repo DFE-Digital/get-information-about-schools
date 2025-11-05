@@ -1,0 +1,61 @@
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+@model EstablishmentDetailViewModel
+
+<div id="school-links" class="tab-content">
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Links)
+    {
+        <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="govuk-button govuk-button--secondary">Edit links</a>
+
+    }
+
+    @if (Model.LinkedEstablishments.Any())
+    {
+        <p class="govuk-!-font-size-16">
+            These establishments are linked with @Model.Establishment.Name,
+            <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn. For example, they may be predecessor or successor establishments.
+        </p>
+
+        <div class="table-count">
+            <p class="govuk-body-s">Showing 1 - @Model.LinkedEstablishments.Count() of @Model.LinkedEstablishments.Count()</p>
+        </div>
+
+        <table class="govuk-table gias-table">
+            <caption class="govuk-visually-hidden">Links</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header links-urn"><abbr title="Unique Reference Number">URN</abbr></th>
+                    <th scope="col" class="govuk-table__header links-name">Establishment name</th>
+                    <th scope="col" class="govuk-table__header links-type">Type of link</th>
+                    <th scope="col" class="govuk-table__header links-date">Date linked</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            @foreach (var l in Model.LinkedEstablishments)
+            {
+                <tr class="govuk-table__row">
+                    <td data-label="URN" id="@l.Urn"  class="govuk-table__cell">@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
+                    <td data-label="Establishment name" id="@StringUtils.ElementIdFormat(Html.Field(l.EstablishmentName))" class="govuk-table__cell">@Html.ActionLink((l.EstablishmentName ?? "-"), "Details", new {id = l.Urn})</td>
+                    <td data-label="Type of link" class="govuk-table__cell">@l.LinkTypeName</td>
+                    <td data-label="Date linked" class="govuk-table__cell">@(l.LinkDate?.ToString("d MMMM yyyy") ?? "None recorded")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+
+    }
+    else
+    {
+        <p class="govuk-body">There are no linked establishments</p>
+    }
+
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Links)
+    {
+        <div class="button-row">
+            <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="govuk-button govuk-button--secondary">Edit links</a>
+        </div>
+
+    }
+
+</div>

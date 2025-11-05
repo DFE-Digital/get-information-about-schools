@@ -5,12 +5,10 @@
 @using Edubase.Web.UI.Helpers;
 @model VM
 
-
 <p class="group-search-intro">
     You can search for academy trusts and sponsors, local authority maintained school
     federations and trusts as well as children's centre groups and collaborations.
 </p>
-
 
 <div>
     <h2 class="govuk-heading-s">Search by:</h2>
@@ -52,7 +50,10 @@
                             </div>
                         </div>
                         <div class="govuk-form-group">
-                            <button type="submit" id="group-search-submit" class="govuk-button  search-button" name="searchtype" value="@eSearchType.Group">Search</button>
+                            <a href="@Url.Action("Details", "Group", new { id = 19865 })"
+                               class="govuk-button search-button">
+                                Search
+                            </a>
                         </div>
                     </div>
                 </fieldset>
@@ -89,7 +90,5 @@
                 </fieldset>
             }
         </li>
-
-
     </ul>
 </div>

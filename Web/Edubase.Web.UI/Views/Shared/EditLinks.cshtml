@@ -1,0 +1,77 @@
+@using System.Linq
+@using Edubase.Web.UI.Areas.Establishments.Models
+@model EditEstablishmentLinksViewModel
+@{
+    Layout = "_EditLayoutPage.cshtml";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.LegalParentGroupToken)
+    <div class="tab-content">
+        <div class="links-list">
+            <div class="button-row govuk-!-margin-bottom-4">
+                @Html.ActionLink(
+                    "Back",
+                    "Details",
+                    "Establishment",
+                    null,
+                    null,
+                    "school-links",
+                    new { id = Model.Urn },
+                    new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+            </div>
+
+            <p>
+                These establishments are linked with @Model.Name,
+                <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn For example, they may be predecessor or successor establishments.
+            </p>
+            <table class="govuk-table gias-table no-pagination">
+                <caption class="govuk-visually-hidden">Edit establishment links</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" id="establishment-link-urn" class="govuk-table__header"><abbr title="Unique Reference Number">URN</abbr></th>
+                        <th scope="col" id="establishment-link-name" class="govuk-table__header">Establishment name</th>
+                        <th scope="col" id="establishment-link-type-link" class="govuk-table__header">Type of link</th>
+                        <th scope="col" id="establishment-link-date" class="govuk-table__header">Date linked</th>
+                        <th scope="col" class="govuk-table__header">
+                            <span class="govuk-visually-hidden">Action links</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var item in Model.Links)
+                    {
+                        <tr class="govuk-table__row">
+                            <td data-label="URN" class="govuk-table__cell">@item.Urn</td>
+                            <td data-label="Establishment name" class="govuk-table__cell">@item.EstablishmentName</td>
+                            <td data-label="Type of link" class="govuk-table__cell">@item.LinkTypeName</td>
+                            <td data-label="Date linked" class="govuk-table__cell">@(item.LinkDate?.ToString("d MMMM yyyy"))</td>
+                            <td class="govuk-table__cell"><a href="@Url.RouteUrl("EditEstabLink", new { urn = Model.Urn, linkid = item.Id })" aria-label="Edit establishment link">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <a href="@Url.RouteUrl("EditEstabLinks_SearchForEstablishment", new {id = Model.Urn})" class="plus-link">
+                    <span>Add another link</span>
+                </a>
+            </p>
+        </div>
+    </div>
+}

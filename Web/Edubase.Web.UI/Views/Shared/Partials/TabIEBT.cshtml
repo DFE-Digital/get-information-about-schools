@@ -1,0 +1,456 @@
+@using Edubase.Web.UI.Models
+@model EstablishmentDetailViewModel
+@{
+    var p = Model.DisplayPolicy.IEBTDetail;
+}
+
+<div id="school-iebt" class="tab-content">
+@if (Model.UserCanEdit && Model.TabEditPolicy.IEBT)
+{
+    @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null, new {@id = "edit-iebt-button", @class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
+}
+
+<div class="detail-summary">
+@if (Model.DisplayPolicy.IEBTDetail.Notes && p.Notes)
+{
+    <h2 class="govuk-heading-s">Notes</h2>
+    <div class="govuk-body">@(Model.Establishment.IEBTModel.Notes ?? "Not recorded")</div>
+}
+
+@if (Model.DisplayPolicy.IEBTDetail.Associations && p.Associations)
+{
+    <h2 class="govuk-heading-s">Associations</h2>
+    <div id="associations-text" class="govuk-body">@(Model.Establishment.IEBTModel.Associations ?? "Not recorded")</div>
+}
+
+<dl class="govuk-summary-list">
+@if (
+    (Model.DisplayPolicy.IEBTDetail.DateOfTheLastBridgeVisit && p.DateOfTheLastBridgeVisit) ||
+    (Model.DisplayPolicy.IEBTDetail.DateOfLastOfstedVisit && p.DateOfLastOfstedVisit) ||
+    (Model.DisplayPolicy.IEBTDetail.DateOfTheLastISIVisit && p.DateOfTheLastISIVisit) ||
+    (Model.DisplayPolicy.IEBTDetail.DateOfTheLastWelfareVisit && p.DateOfTheLastWelfareVisit) ||
+    (Model.DisplayPolicy.IEBTDetail.DateOfTheLastFPVisit && p.DateOfTheLastFPVisit) ||
+    (Model.DisplayPolicy.IEBTDetail.DateOfTheLastSISVisit && p.DateOfTheLastSISVisit) ||
+    (Model.DisplayPolicy.IEBTDetail.NextOfstedVisit && p.NextOfstedVisit) ||
+    (Model.DisplayPolicy.IEBTDetail.NextGeneralActionRequired && p.NextGeneralActionRequired) ||
+    (Model.DisplayPolicy.IEBTDetail.NextActionRequiredByWEL && p.NextActionRequiredByWEL) ||
+    (Model.DisplayPolicy.IEBTDetail.NextActionRequiredByFP && p.NextActionRequiredByFP)
+    )
+{
+    if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastBridgeVisit && p.DateOfTheLastBridgeVisit)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of the last Bridge visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.DateOfLastOfstedVisit && p.DateOfLastOfstedVisit)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last Ofsted visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfLastOfstedVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastISIVisit && p.DateOfTheLastISIVisit)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last ISI visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastISIVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastWelfareVisit && p.DateOfTheLastWelfareVisit)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last welfare visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastWelfareVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastFPVisit && p.DateOfTheLastFPVisit)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last FP visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastFPVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastSISVisit && p.DateOfTheLastSISVisit)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last SIS visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastSISVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.NextOfstedVisit && p.NextOfstedVisit)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Next Ofsted visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.NextOfstedVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.NextGeneralActionRequired && p.NextGeneralActionRequired)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Next general action required</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.NextGeneralActionRequired?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.NextActionRequiredByWEL && p.NextActionRequiredByWEL)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Next action required by WEL</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByWEL?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.NextActionRequiredByFP && p.NextActionRequiredByFP)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Next action required by FP</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByFP?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        </div>
+    }
+}
+
+@if (
+    (Model.DisplayPolicy.InspectorateId) ||
+    (Model.DisplayPolicy.IEBTDetail.IndependentSchoolTypeId && p.IndependentSchoolTypeId) ||
+    (Model.DisplayPolicy.IEBTDetail.CharityOrganisation && p.CharityOrganisation) ||
+    (Model.DisplayPolicy.IEBTDetail.CharityRegistrationNumber && p.CharityRegistrationNumber)
+    )
+{
+    if (Model.DisplayPolicy.InspectorateId)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Inspectorate</dt>
+            <dd class="govuk-summary-list__value">@Model.InspectorateName</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.IndependentSchoolTypeId && p.IndependentSchoolTypeId)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Independent school type</dt>
+            <dd class="govuk-summary-list__value">@Model.IndependentSchoolTypeName</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.CharityOrganisation && p.CharityOrganisation)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Charity organisation</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.CharityOrganisation ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.CharityRegistrationNumber && p.CharityRegistrationNumber)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Charity registration number</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+}
+
+@if (
+    (Model.DisplayPolicy.IEBTDetail.TotalNumberOfFullTimePupils && p.TotalNumberOfFullTimePupils) ||
+    (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPartTimePupils && p.TotalNumberOfPartTimePupils) ||
+    (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPupilsOfCompulsorySchoolAge && p.TotalNumberOfPupilsOfCompulsorySchoolAge) ||
+    (Model.DisplayPolicy.SENStat) ||
+    (Model.DisplayPolicy.SENNoStat) ||
+    (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPupilsInPublicCare && p.TotalNumberOfPupilsInPublicCare)
+    )
+{
+    if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfFullTimePupils && p.TotalNumberOfFullTimePupils)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of full time pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfFullTimePupils?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPartTimePupils && p.TotalNumberOfPartTimePupils)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of part time pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPartTimePupils?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPupilsOfCompulsorySchoolAge && p.TotalNumberOfPupilsOfCompulsorySchoolAge)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of pupils of compulsory school age</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPupilsOfCompulsorySchoolAge?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.SENStat)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Number of special pupils under a special educational needs (SEN) statement/education, health and care (EHC) plan</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.SENStat?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.SENNoStat)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Number of special pupils not under a special educational needs (SEN) statement/education, health and care (EHC) plan</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.SENNoStat?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPupilsInPublicCare && p.TotalNumberOfPupilsInPublicCare)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of pupils in public care</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+}
+
+@if (
+    (Model.DisplayPolicy.IEBTDetail.PTBoysAged2AndUnder && p.PTBoysAged2AndUnder) ||
+    (Model.DisplayPolicy.IEBTDetail.PTBoysAged3 && p.PTBoysAged3) ||
+    (Model.DisplayPolicy.IEBTDetail.PTBoysAged4A && p.PTBoysAged4A) ||
+    (Model.DisplayPolicy.IEBTDetail.PTBoysAged4B && p.PTBoysAged4B) ||
+    (Model.DisplayPolicy.IEBTDetail.PTBoysAged4C && p.PTBoysAged4C) ||
+    (Model.DisplayPolicy.IEBTDetail.TotalNumberOfBoysInBoardingSchools && p.TotalNumberOfBoysInBoardingSchools)
+    )
+{
+    if (Model.DisplayPolicy.IEBTDetail.PTBoysAged2AndUnder && p.PTBoysAged2AndUnder)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 2 and under)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged2AndUnder?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.PTBoysAged3 && p.PTBoysAged3)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 3)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged3?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4A && p.PTBoysAged4A)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 4a)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4A?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4B && p.PTBoysAged4B)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 4b)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4B?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4C && p.PTBoysAged4C)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 4c)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfBoysInBoardingSchools && p.TotalNumberOfBoysInBoardingSchools)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of boys in boarding schools</dt>
+            <dd class="govuk-summary-list__value"> @(Model.Establishment.IEBTModel.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+}
+
+@if (
+    (Model.DisplayPolicy.IEBTDetail.PTGirlsAged2AndUnder && p.PTGirlsAged2AndUnder) ||
+    (Model.DisplayPolicy.IEBTDetail.PTGirlsAged3 && p.PTGirlsAged3) ||
+    (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4A && p.PTGirlsAged4A) ||
+    (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4B && p.PTGirlsAged4B) ||
+    (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4C && p.PTGirlsAged4C) ||
+    (Model.DisplayPolicy.IEBTDetail.TotalNumberOfGirlsInBoardingSchools && p.TotalNumberOfGirlsInBoardingSchools)
+    )
+{
+    if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged2AndUnder && p.PTGirlsAged2AndUnder)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 2 and under)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged2AndUnder?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged3 && p.PTGirlsAged3)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 3)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged3?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4A && p.PTGirlsAged4A)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 4a)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4A?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4B && p.PTGirlsAged4B)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 4b)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4B?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4C && p.PTGirlsAged4C)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 4c)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4C?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfGirlsInBoardingSchools && p.TotalNumberOfGirlsInBoardingSchools)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of girls in boarding schools</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+}
+
+
+@if (Model.DisplayPolicy.IEBTDetail.TotalFTTeachersTutors || Model.DisplayPolicy.IEBTDetail.TotalPTTeachersTutors)
+{
+    if (p.TotalFTTeachersTutors)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of full time teachers or tutors</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalFTTeachersTutors?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (p.TotalPTTeachersTutors)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of part time teachers or tutors</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalPTTeachersTutors?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+}
+
+@if (
+    (Model.DisplayPolicy.IEBTDetail.TotalNumberOfFullTimeStaff && p.TotalNumberOfFullTimeStaff) ||
+    (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPartTimeStaff && p.TotalNumberOfPartTimeStaff)
+    )
+{
+    if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfFullTimeStaff && p.TotalNumberOfFullTimeStaff)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of full time staff</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfFullTimeStaff?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPartTimeStaff && p.TotalNumberOfPartTimeStaff)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of part time staff</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+}
+
+@if (
+    (Model.DisplayPolicy.IEBTDetail.LowestAnnualRateForDayPupils && p.LowestAnnualRateForDayPupils) ||
+    (Model.DisplayPolicy.IEBTDetail.HighestAnnualRateForDayPupils && p.HighestAnnualRateForDayPupils) ||
+    (Model.DisplayPolicy.IEBTDetail.LowestAnnualRateForBoardingPupils && p.LowestAnnualRateForBoardingPupils) ||
+    (Model.DisplayPolicy.IEBTDetail.HighestAnnualRateForBoardingPupils && p.HighestAnnualRateForBoardingPupils)
+    )
+{
+    if (Model.DisplayPolicy.IEBTDetail.LowestAnnualRateForDayPupils && p.LowestAnnualRateForDayPupils)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Lowest annual rate for day pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.LowestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.HighestAnnualRateForDayPupils && p.HighestAnnualRateForDayPupils)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Highest annual rate for day pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.HighestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.LowestAnnualRateForBoardingPupils && p.LowestAnnualRateForBoardingPupils)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Lowest annual rate for boarding pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.LowestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+
+    if (Model.DisplayPolicy.IEBTDetail.HighestAnnualRateForBoardingPupils && p.HighestAnnualRateForBoardingPupils)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Highest annual rate for boarding pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.HighestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
+        </div>
+    }
+}
+
+
+@if (Model.DisplayPolicy.IEBTDetail.BoardingEstablishmentId)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Boarding establishment</dt>
+        <dd class="govuk-summary-list__value">@(Model.BoardingEstabName ?? "Not recorded")</dd>
+    </div>
+}
+
+
+@if (Model.DisplayPolicy.IEBTDetail.AnyProprietors)
+{
+    @Html.DisplayFor(x => x.Establishment.IEBTModel.Proprietors, new {displayPolicy = Model.DisplayPolicy.IEBTDetail.Proprietors})
+}
+
+@if (Model.DisplayPolicy.IEBTDetail.AnyChairOfProprietors)
+{
+    @Html.DisplayFor(x => x.Establishment.IEBTModel.ChairOfProprietor, "ProprietorModel", new {prefix = "Chair of the proprietary body", displayPolicy = Model.DisplayPolicy.IEBTDetail.ChairOfProprietor})
+}
+
+
+@if (Model.DisplayPolicy.IEBTDetail.AccommodationChangedId && p.AccommodationChangedId)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Accommodation changed</dt>
+        <dd class="govuk-summary-list__value">@(Model.AccommodationChangedName ?? "Not recorded")</dd>
+    </div>
+}
+
+</dl>
+</div>
+
+@if (Model.UserCanEdit && Model.TabEditPolicy.IEBT)
+{
+    <div class="button-row govuk-!-padding-top-4">
+        @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null, new {@id = "edit-iebt-button", @class = "govuk-button govuk-button--secondary", data_module ="govuk-button" })
+    </div>
+}
+
+</div>

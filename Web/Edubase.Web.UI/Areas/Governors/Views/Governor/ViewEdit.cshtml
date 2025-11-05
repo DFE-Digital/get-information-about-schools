@@ -1,0 +1,214 @@
+@using Edubase.Services.Enums
+@using Edubase.Services.Governors.Factories
+@using Edubase.Web.UI.Areas.Governors.Models
+@using Edubase.Web.UI.Helpers.Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Grid
+@using Edubase.Web.UI.Helpers
+
+@model GovernorsGridViewModel
+
+@functions {
+
+    private static readonly string[] BannedTitles =
+    {
+        "Not applicable", "Not-applicable", "Not recorded"
+    };
+
+    private string CleanName(string fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName)) return fullName;
+
+        var match = BannedTitles.FirstOrDefault(x =>
+            fullName.StartsWith(x, StringComparison.OrdinalIgnoreCase));
+
+        return match == null
+            ? fullName
+            : fullName.Substring(match.Length).TrimStart();
+    }
+}
+
+@{
+    Layout = Model.Layout;
+}
+
+@section BreadCrumbs {
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.EditMode)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            @(Model.GroupUId.HasValue
+                ? Html.ActionLink("Back", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button" })
+                : Html.ActionLink("Back", "Details", "Establishment", null, null, "school-governance", new { area = "Establishments", id = Model.EstablishmentUrn }, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel" }))
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            @await Html.PartialAsync("_ShowLegalDuty", Model);
+        </div>
+    </div>
+    if (Model.ShowDelegationAndCorpContactInformation)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @await Html.PartialAsync("_ShowDelegationInformation", Model);
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @await Html.PartialAsync("_ShowCorporateContactInformation", Model);
+            </div>
+        </div>
+    }
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            @await Html.PartialAsync("_DisplayGovernanceMode", Model);
+        </div>
+    </div>
+
+    if (Model.GovernorPermissions.Add)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @if(Model.GovernorRoles.Any())
+                {
+                    <h2 id="role" class="govuk-heading-s">Add person</h2>
+
+                    using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="govuk-form-group @Html.ValidationGroupCssClass("role")">
+                            <label class="govuk-label" for="roleid">Select role</label>
+                            @Html.ValidationMessage("role", null, new { @class = "govuk-error-message", id = "add-governor-select-role-error-message" })
+
+                            @{
+                                var selectListItems = Model.GovernorRoles
+                                    .Select(x =>
+                                    {
+                                        var selectListItem = new SelectListItem
+                                        {
+                                            Text = x.Name,
+                                            Value = ((eLookupGovernorRole)x.Id).ToString(),
+                                        };
+
+                                        // If recognised as an enum and we have a C#-overridden name for it, use that instead
+                                        if (Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole)x.Id))
+                                        {
+                                            var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole)x.Id);
+                                            if (!factoryName.ToLowerInvariant().Equals(selectListItem.Text.ToLowerInvariant()))
+                                            {
+                                                Console.Error.WriteLine($"Governor role name mismatch - not just a case difference: {selectListItem.Text} -> {factoryName}");
+                                            }
+
+                                            selectListItem.Text = factoryName;
+                                        }
+
+                                        // If we have been bounced back to this form (e.g., due to an error), pre-select whichever role the user previously attempted to submit.
+                                        // Came up in the context of "The role already contains an appointee" error, where the first item would be pre-selected and would be
+                                        // misleading to the user (as it would look like the first entry already has an appointee, rather than whatever the user submitted).
+                                        // See also WCAG 2.2 requirements to not clear any form fields when validating users' input.
+                                        // https://design-system.service.gov.uk/patterns/validation/#wcag-edit-to-correct-errors
+                                        var currentValue = selectListItem.Value;
+                                        var submittedValue = (ViewData["SelectedGovernorRole"] as eLookupGovernorRole?).ToString();
+                                        if (currentValue.Equals(submittedValue, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            selectListItem.Selected = true;
+                                        }
+
+                                        return selectListItem;
+                                    });
+                            }
+
+                            @Html.DropDownList(
+                                "role",
+                                selectListItems,
+                                new
+                                {
+                                    id = "edit-establishment-new-governor-role-id",
+                                    @class = string.Concat(Html.ValidationSelectCssClass("role"), " govuk-select govuk-input--width-20 gias-role-selection"),
+                                }
+                            )
+                            <input type="submit" value="Add person" id="edit-governance-add-person-button" class="govuk-button btn-add-person" data-module="govuk-button"/>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="govuk-body govuk-!-margin-bottom-9">No governance roles may be added to this @Model.ParentEntityName.</p>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body-s">
+                @if (User.Identity.IsAuthenticated && Model.DomainModel.HasGovernors && Model.GovernorPermissions.Add)
+                {
+                    if (Model.EstablishmentUrn.HasValue)
+                    {
+                        @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.EstablishmentUrn })
+                    }
+                    else
+                    {
+                        @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new { id = Model.GroupUId })
+                    }
+                }
+            </p>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            @await Html.PartialAsync("_ShowLegalDuty", Model);
+        </div>
+    </div>
+
+    if (Model.GovernanceMode.HasValue)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                @await Html.PartialAsync("_DisplayGovernanceMode", Model);
+            </div>
+        </div>
+    }
+
+    if (Model.ShowDelegationAndCorpContactInformation)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full governors-section">
+                @await Html.PartialAsync("_ShowDelegationInformation", Model);
+                @await Html.PartialAsync("_ShowCorporateContactInformation", Model);
+            </div>
+        </div>
+    }
+}
+
+@if (Model.DomainModel.HasGovernors)
+{
+    @await Html.PartialAsync("_DisplayGovernors", Model);
+}
+else
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <p>There is no governance information for this @Model.ParentEntityName</p>
+        </div>
+    </div>
+}
+
+@section ViewScripts {
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("add-edit-governor.*.js"))"></script>
+}

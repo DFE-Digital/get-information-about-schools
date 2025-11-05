@@ -1,0 +1,174 @@
+@using Edubase.Web.UI.Areas.Establishments.Models
+@using Edubase.Web.UI.Helpers
+@model AddOrReplaceAddressViewModel
+@{
+    Layout = "_EditLayoutPage.cshtml";
+}
+
+@using (Html.BeginRouteForm("AddOrReplaceEstablishmentAddressPost", new { Model.Target }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.AddressLookupResultJsonToken)
+    @Html.HiddenFor(x => x.CountiesJsonToken)
+    @Html.HiddenFor(x => x.CountriesJsonToken)
+    @Html.HiddenFor(x => x.Target)
+    @Html.HiddenFor(x => x.Easting)
+    @Html.HiddenFor(x => x.Northing)
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-margin-bottom-4">
+                @if (Model.Step == "editaddress")
+                {
+                    <button type="submit" name="@nameof(Model.ActionName)" value="replace-address" class="govuk-button edubase-button inline-button">@(Model.Target.EndsWith("new") ? "Add" : "Replace") address</button>
+                }
+                else if (Model.Step == "selectaddress")
+                {
+                    <button type="submit" name="@nameof(Model.ActionName)" value="address-selected" class="govuk-button edubase-button inline-button choose-address">Submit</button>
+                }
+                @Html.RouteLink("Cancel", "EditEstablishmentDetail", new {id = ViewContext.RouteData.Values["urn"]}, new {@class = "govuk-button govuk-button--secondary edubase-button cancel"})
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-m">Address</h2>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Address details</legend>
+                @if (Model.Step == "enterpostcode")
+                {
+                    <div id="address-search-step1">
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.CountryId, "Country", new {@class = "govuk-label"})
+                            @Html.DropDownListFor(x => x.CountryId, Model.Countries, "", new {@class = "govuk-select"})
+                        </div>
+
+                        <div class="govuk-form-group postcode-search @Html.ValidationCssClassFor(x => x.PostCode)">
+                            @Html.LabelFor(x => x.PostCode, "Postcode", new {@class = "govuk-label"})
+                            @Html.ValidationMessageFor(x => x.PostCode, "We couldn't find any addresses matching that postcode", new { @class="govuk-error-message"})
+                            @Html.TextBoxFor(x => x.PostCode, new {@class = "govuk-input  govuk-input--width-10"})
+                            <button id="find-address" type="submit" name="@nameof(Model.ActionName)" value="find-address" class="govuk-button gias-inline-search__button">Find address</button>
+                        </div>
+                    </div>
+                }
+                else if (Model.Step == "selectaddress")
+                {
+                    <div id="address-search-step2">
+
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.CountryId, "Country", new {@class = "govuk-label"})
+                            @Html.DropDownListFor(x => x.CountryId, Model.Countries, "", new {@class = "govuk-select"})
+                        </div>
+
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.PostCode, "Postcode", new {@class = "govuk-label"})
+                            @Html.TextBoxFor(x => x.PostCode, new {@class = "govuk-input   govuk-input--width-10"})
+                            <button id="find-address" type="submit" name="@nameof(Model.ActionName)" value="find-address" class="govuk-button gias-inline-search__button">Find address</button>
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SelectedUPRN)">
+                            @Html.LabelFor(x => x.SelectedUPRN, "Pick an address", new { @class = "govuk-label"})
+                            @Html.ValidationMessageFor(x => x.SelectedUPRN)
+                            @Html.DropDownListFor(x => x.SelectedUPRN, Model.GetLookupAddressSelectListItems(Model.SelectedUPRN), string.Empty, new {@class = "govuk-select"})
+                        </div>
+                    </div>
+                }
+                else if (Model.Step == "editaddress")
+                {
+                    @Html.HiddenFor(x => x.SelectedUPRN)
+                    <div id="address-search-step3">
+
+                        @if (Model.CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+                        {
+                            <div class="govuk-form-group">
+                                @Html.LabelFor(x => x.CountryId, "Country", new {@class = "govuk-label"})
+                                @Html.DropDownListFor(x => x.CountryId, Model.Countries, "", new {@class = "govuk-input"})
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(x => x.CountryId)
+                        }
+
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.Street, new {@class = "govuk-label"})
+                            @Html.TextBoxFor(x => x.Street, new {@class = "govuk-input"})
+                        </div>
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.Locality, new {@class = "govuk-label"})
+                            @Html.TextBoxFor(x => x.Locality, new {@class = "govuk-input"})
+                        </div>
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.Address3, "Address 3", new {@class = "govuk-label"})
+                            @Html.TextBoxFor(x => x.Address3, new {@class = "govuk-input"})
+                        </div>
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.Town, Model.TownLabel, new {@class = "govuk-label"})
+                            @Html.TextBoxFor(x => x.Town, new {@class = "govuk-input"})
+                        </div>
+                        @if (Model.CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+                        {
+                            <div class="govuk-form-group">
+                                @Html.LabelFor(x => x.CountyId, "County", new {@class = "govuk-label"})
+                                @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new {@class = "govuk-input"})
+                            </div>
+                            <div class="govuk-form-group">
+                                @Html.LabelFor(x => x.PostCode, Model.PostCodeLabel, new {@class = "govuk-label"})
+                                @Html.TextBoxFor(x => x.PostCode, new {@class = "govuk-input  govuk-input--width-10", disabled = true})
+                                @Html.RouteLink("Wrong postcode?", "AddOrReplaceEstablishmentAddress", new {urn = ViewContext.RouteData.Values["urn"], target = Model.Target}, new {@class = "replace-address"})
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="govuk-form-group">
+                                @Html.LabelFor(x => x.PostCode, Model.PostCodeLabel, new {@class = "govuk-label"})
+                                @Html.TextBoxFor(x => x.PostCode, new {@class = "govuk-input  govuk-input--width-10"})
+                                @Html.RouteLink("Wrong postcode?", "AddOrReplaceEstablishmentAddress", new {urn = ViewContext.RouteData.Values["urn"], target = Model.Target}, new {@class = "replace-address"})
+                            </div>
+                        }
+                        @Html.HiddenFor(x => x.PostCode)
+                    </div>
+                }
+
+            </fieldset>
+
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                @if (Model.Step == "editaddress")
+                {
+                    <button type="submit" name="@nameof(Model.ActionName)" value="replace-address" class="govuk-button edubase-button inline-button">@(Model.Target.EndsWith("new") ? "Add" : "Replace") address</button>
+                }
+                else if (Model.Step == "selectaddress")
+                {
+                    <button type="submit" name="@nameof(Model.ActionName)" value="address-selected" class="govuk-button edubase-button inline-button choose-address">Submit</button>
+                }
+                @Html.RouteLink("Cancel", "EditEstablishmentDetail", new {id = ViewContext.RouteData.Values["urn"]}, new {@class = "govuk-button govuk-button--secondary edubase-button cancel", data_module = "govuk-button"})
+            </div>
+        </div>
+    </div>
+
+}
+
+@section ViewScripts{
+
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
+        $(function () {
+            $("select#CountryId").change(function () {
+                $(document.forms[0]).submit();
+            });
+            $("button.choose-address").hide();
+            $("#SelectedUPRN").change(function () {
+                setTimeout(function () {
+                    $($("button.choose-address")[0]).click();
+                }, 100);
+            });
+        });
+    </script>
+}

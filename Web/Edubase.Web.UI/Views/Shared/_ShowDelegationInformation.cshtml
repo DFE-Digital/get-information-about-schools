@@ -1,0 +1,24 @@
+@using Edubase.Web.UI.Areas.Governors.Models
+@model GovernorsGridViewModel
+
+<h2 class="govuk-heading-s">Delegated authority of local governing body</h2>
+
+<div>
+    <p class="govuk-body-s">
+        @(Model.DelegationInformation ?? "Not recorded")
+    </p>
+</div>
+
+@if (Model.EditMode)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @Html.RouteLink(
+                "Edit delegated authority",
+                "GroupEditDelegation",
+                new { Model.GroupUId },
+                new { @class = "govuk-button govuk-button--secondary" }
+            )
+        </div>
+    </div>
+}

@@ -153,10 +153,10 @@ namespace Edubase.Web.UI.Helpers
             return condition ? html : new HtmlString(string.Empty);
         }
 
-        public static HtmlString HiddenFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
-        {
-            return (HtmlString) (condition ? htmlHelper.HiddenFor(expression) : new HtmlString(string.Empty));
-        }
+        public static IHtmlContent HiddenFor<TModel, TProperty>(
+            this IHtmlHelper<TModel> htmlHelper,
+            bool condition,
+            Expression<Func<TModel, TProperty>> expression) => condition ? htmlHelper.HiddenFor(expression) : HtmlString.Empty;
 
         public static HtmlString HiddenFieldsFromQueryString(this IHtmlHelper html, string[] keysToExclude = null)
         {

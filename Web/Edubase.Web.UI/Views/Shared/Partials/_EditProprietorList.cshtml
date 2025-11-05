@@ -1,0 +1,30 @@
+@using Edubase.Common
+@using Edubase.Services.Enums
+@using Edubase.Services.Establishments
+@using Edubase.Web.UI.Models
+@model EditEstablishmentModel
+
+<div id="proprietorList">
+    @for (int i = 0; i < Model.Proprietors.Count; i++)
+    {
+        await Html.RenderPartialAsync("Partials/_EditProprietors", Model.Proprietors[i], new ViewDataDictionary(ViewData)
+        {
+        { "ProprietorTypeId", Model.ProprietorTypeId },
+        { "ProprietorsCount", Model.Proprietors.Count },
+        { "ShowCounter", i + 1 },
+        { "ModelState", ViewData.ModelState },
+        { "displayPolicy", Model.EditPolicy.IEBTDetail.Proprietors }
+        });
+    }
+</div>
+
+<div id="proprietorAdd">
+    <p class="js-show-block">
+        <a id="addProprietor" href="#">Add another @eProprietorType.IndividualProprietor.EnumDisplayNameFor().ToLower()</a>
+    </p>
+    <div class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor)? "no-js-show-block": "hidden")">
+        <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@EditEstablishmentModel.ASAddProprietor" class="govuk-button--secondary govuk-button">Add another @eProprietorType.IndividualProprietor.EnumDisplayNameFor().ToLower()</button>
+    </div>
+</div>
+
+

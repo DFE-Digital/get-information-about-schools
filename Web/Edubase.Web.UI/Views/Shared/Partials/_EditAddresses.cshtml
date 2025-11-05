@@ -1,0 +1,60 @@
+@using Edubase.Web.UI.Models
+@model EditEstablishmentModel
+
+@for (int i = 0; i < Model.AdditionalAddresses.Count; i++)
+{
+    var address = Model.AdditionalAddresses[i];
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <div class="govuk-form-group">
+        @Html.LabelFor(x => x.AdditionalAddresses[i].SiteName, $"Site name " + (i+1), new { @class = "govuk-label" })
+        @Html.TextBoxFor(x => x.AdditionalAddresses[i].SiteName, new { maxlength = 120, @class = "govuk-input" })
+    </div>
+    <div class="govuk-form-group">
+        @Html.LabelFor(x => x.AdditionalAddresses[i].Street, "Street", new { @class = "govuk-label" })
+        @Html.TextBoxFor(x => x.AdditionalAddresses[i].Street, new { maxlength = 120, @class = "govuk-input" })
+    </div>
+    <div class="govuk-form-group">
+        @Html.LabelFor(x => x.AdditionalAddresses[i].Locality, "Locality", new { @class = "govuk-label" })
+        @Html.TextBoxFor(x => x.AdditionalAddresses[i].Locality, new { maxlength = 120, @class = "govuk-input" })
+    </div>
+    <div class="govuk-form-group">
+        @Html.LabelFor(x => x.AdditionalAddresses[i].Address3, "Address 3", new { @class = "govuk-label" })
+        @Html.TextBoxFor(x => x.AdditionalAddresses[i].Address3, new { maxlength = 120, @class = "govuk-input" })
+    </div>
+    <div class="govuk-form-group">
+        @Html.LabelFor(x => x.AdditionalAddresses[i].Town, "Town", new { @class = "govuk-label" })
+        @Html.TextBoxFor(x => x.AdditionalAddresses[i].Town, new { maxlength = 120, @class = "govuk-input" })
+    </div>
+
+    if (Model.AdditionalAddresses[i].CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+    {
+        <div class="govuk-form-group">
+            @Html.LabelFor(x => x.AdditionalAddresses[i].CountyId, "County", new { @class = "govuk-label" })
+            @Html.DropDownListFor(x => x.AdditionalAddresses[i].CountyId, new SelectList(Model.Counties, "Value", "Text", address.CountyId), "", new { @class = "govuk-select" })
+        </div>
+    }
+
+    if (Model.AdditionalAddresses[i].CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+    {
+        <div class="govuk-form-group">
+            @Html.LabelFor(x => x.AdditionalAddresses[i].CountryId, "Country", new { @class = "govuk-label" })
+            @Html.DropDownListFor(x => x.AdditionalAddresses[i].CountryId, new SelectList(Model.Countries, "Value", "Text", address.CountryId), "", new { @class = "govuk-select", disabled = "disabled" })
+        </div>
+    }
+
+    @Html.HiddenFor(x => x.AdditionalAddresses[i].CountryId)
+
+    <div class="govuk-form-group">
+        @Html.LabelFor(x => x.AdditionalAddresses[i].PostCode, "Postcode", new { @class = "govuk-label" })
+        @Html.TextBoxFor(x => x.AdditionalAddresses[i].PostCode, new { maxlength = 120, @class = "govuk-input govuk-input--width-10", disabled = "disabled" })
+        @Html.HiddenFor(x => x.AdditionalAddresses[i].PostCode)
+        @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-" + i }, new { @class = "replace-address" })
+    </div>
+
+    @Html.HiddenFor(x => x.AdditionalAddresses[i].UPRN)
+    @Html.HiddenFor(x => x.AdditionalAddresses[i].Id)
+
+    <div class="govuk-form-group">
+        <button type="submit" name="@nameof(EditEstablishmentModel.ActionSpecifier)" value="@EditEstablishmentModel.GetActionSpecifier(EditEstablishmentModel.ASRemoveAddress, i)" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1">Remove address</button>
+    </div>
+}

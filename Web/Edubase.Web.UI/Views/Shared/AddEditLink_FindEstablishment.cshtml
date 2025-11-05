@@ -1,0 +1,53 @@
+@using Edubase.Web.UI.Areas.Establishments.Models
+@using Edubase.Web.UI.Helpers
+@model SearchForEstablishmentViewModel
+@{
+    Layout = "_EditLayoutPage.cshtml";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginRouteForm("EditEstabLinks_SearchForEstablishment", FormMethod.Get))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-margin-bottom-4">
+                <a class="govuk-button govuk-button--secondary" id="cancel-button" href="@Url.RouteUrl("EditEstabLinks", new {id = Model.Urn})">Cancel</a>
+            </div>
+
+            <h2 class="govuk-heading-m">Link to other establishment</h2>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SearchUrn)">
+                <label class="govuk-label" for="SearchUrn">
+                    Other establishment's Unique Reference Number (URN)
+                </label>
+                @Html.ValidationMessageFor(x => x.SearchUrn, null, new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.SearchUrn, new { @class = "govuk-input govuk-input--width-10" })
+                <button id="search-urn-submit" class="govuk-button links-estab-search-button" name="@SearchForEstablishmentViewModel.BIND_ALIAS_DOSEARCH" value="true">Search URN</button>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <a class="govuk-button govuk-button--secondary" id="cancel-button" href="@Url.RouteUrl("EditEstabLinks", new {id = Model.Urn})">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+}

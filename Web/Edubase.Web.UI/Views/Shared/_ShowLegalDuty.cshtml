@@ -1,0 +1,13 @@
+@using Edubase.Services.Enums
+@using Edubase.Web.UI.Areas.Governors.Models
+@model GovernorsGridViewModel
+
+@if (Model.GroupTypeId == (int)eLookupGroupType.SecureSingleAcademyTrust)
+{
+    // Viewing the governance tab for a secure single-academy trust
+    @await Html.PartialAsync("~/Areas/Governors/Views/Governor/_LegalDutySecureAcademyTrustStatement.cshtml")
+}
+else
+{
+    @await Html.PartialAsync("~/Areas/Governors/Views/Governor/_LegalDutyStatement.cshtml")
+}

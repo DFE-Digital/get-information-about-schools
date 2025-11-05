@@ -117,35 +117,50 @@
         @using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get))
         {
             @Html.HiddenFor(m => m.SearchQueryString)
+
             <div class="download-step">
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-visually-hidden">Select a data set</legend>
+
                         <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                            @* Core set option *@
                             <div class="govuk-radios__item">
-                                <div class="govuk-radios__item">
-                                    <input asp-for="Dataset"
-                                           type="radio"
-                                           value="core"
-                                           checked="checked"
-                                           class="govuk-radios__input core-full"
-                                           data-aria-controls="core-additional" />
-
-                                    <label for="Dataset" class="govuk-label">Core set of data</label>
-                                </div>
-
+                                <input type="radio"
+                                       id="dataset-core"
+                                       name="Dataset"
+                                       value="core"
+                                       checked="checked"
+                                       class="govuk-radios__input"
+                                       data-aria-controls="core-additional" />
+                                <label for="dataset-core" class="govuk-label govuk-radios__label">Core set of data</label>
                             </div>
                             <div class="govuk-radios__conditional" id="core-additional">
                                 @await Html.PartialAsync("_DataOptions", Model)
                             </div>
+
+                            @* Full set option *@
                             <div class="govuk-radios__item">
-                                @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data", null, new { @class = "govuk-radios__input core-full", data_aria_controls = "full-additional" })
+                                <input type="radio"
+                                       id="dataset-full"
+                                       name="Dataset"
+                                       value="full"
+                                       class="govuk-radios__input"
+                                       data-aria-controls="full-additional" />
+                                <label for="dataset-full" class="govuk-label govuk-radios__label">Full set of data</label>
                             </div>
                             <div class="govuk-radios__conditional" id="full-additional">
                                 @await Html.PartialAsync("_DataOptions", Model)
                             </div>
+
+                            @* Custom set option *@
                             <div class="govuk-radios__item">
-                                @Html.GiasRadioFor(m => m.Dataset, "custom", "Choose a specific set of data", null, new { @class = "govuk-radios__input  custom-fields" })
+                                <input type="radio"
+                                       id="dataset-custom"
+                                       name="Dataset"
+                                       value="custom"
+                                       class="govuk-radios__input" />
+                                <label for="dataset-custom" class="govuk-label govuk-radios__label">Choose a specific set of data</label>
                             </div>
                         </div>
                     </fieldset>
@@ -153,16 +168,22 @@
             </div>
 
             @Html.HiddenFieldsFromQueryString()
+
+            @* Preserve selected local authority IDs *@
             foreach (var laId in Model.SelectedLocalAuthorityIds ?? Enumerable.Empty<int>())
             {
                 <input type="hidden" name="SelectedLocalAuthorityIds" value="@laId" />
             }
+
+            @* Preserve selected establishment status IDs *@
             var statusId = Context.Request.Query["SelectedEstablishmentStatusIds"].ToArray() ?? new string[0];
             foreach (var status in statusId)
             {
-                @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{HttpUtility.HtmlEncode(status)}\" />")
+                <input type="hidden" name="SelectedEstablishmentStatusIds" value="@HttpUtility.HtmlEncode(status)" />
             }
+
             <input class="govuk-button" type="submit" value="Select and continue">
         }
+
     </div>
 </div>
