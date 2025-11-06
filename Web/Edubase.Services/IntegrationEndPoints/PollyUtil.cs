@@ -1,47 +1,84 @@
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Polly;
+using Polly.Timeout;
 
 namespace Edubase.Services.IntegrationEndPoints
 {
     public static class PollyUtil
     {
         /// <summary>
-        /// Creates a retry policy based on the specified retry intervals.
+        /// Creates a retry + timeout policy
         /// </summary>
-        /// <param name="retryIntervals">The array of time intervals to wait between retries.</param>
+        /// <param name="retryIntervals">Array of retry intervals (seconds).</param>
+        /// <param name="settingsKey">App.config key for timeout seconds.</param>
         /// <returns>
-        ///     A retry policy that handles <see cref="HttpRequestException"/> and waits for the specified retry intervals.
-        ///     If <paramref name="retryIntervals"/> is null or empty, returns a no-op policy that doesn't perform any retries.
+        /// A combined policy that retries faults and times out safely.
         /// </returns>
         public static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
         {
-            if(retryIntervals is null || retryIntervals.Length == 0)
+            if (retryIntervals is null || retryIntervals.Length == 0)
             {
                 return Policy.NoOpAsync<HttpResponseMessage>();
             }
 
+            // Retry policy: handles transient network errors and TaskCanceledException
             var retryPolicy = Policy<HttpResponseMessage>
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
-                .WaitAndRetryAsync(retryIntervals);
+                .WaitAndRetryAsync(
+                    retryIntervals,
+                    onRetry: (outcome, timespan, retryAttempt, context) =>
+                    {
+                        // Optional low-severity logging hook
+                    });
 
             var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
 
-            return Policy.WrapAsync<HttpResponseMessage>(retryPolicy, timeoutPolicy);
+            var combinedPolicy = Policy.WrapAsync(retryPolicy, timeoutPolicy);
+
+            var safePolicy = Policy<HttpResponseMessage>
+                .Handle<TimeoutRejectedException>()
+                .FallbackAsync(
+                    fallbackAction: (ct) =>
+                    {
+                        // Returns a safe 408 response instead of throwing
+                        var response = new HttpResponseMessage(HttpStatusCode.RequestTimeout)
+                        {
+                            ReasonPhrase = "Request timed out by Polly policy"
+                        };
+
+                        // Optional logging (low severity)
+                        return Task.FromResult(response);
+                    });
+
+            return safePolicy.WrapAsync(combinedPolicy);
         }
 
+        /// <summary>
+        /// Creates a timeout policy that cancels requests exceeding the configured time limit.
+        /// </summary>
+        /// <param name="settingsKey">Configuration key for timeout duration in seconds.</param>
+        /// <returns>An asynchronous timeout policy for HTTP calls.</returns>
         public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(string settingsKey)
         {
-            if (!int.TryParse(ConfigurationManager.AppSettings[settingsKey], out var timeoutSettings))
+            if (!int.TryParse(ConfigurationManager.AppSettings[settingsKey], out var timeoutSeconds))
             {
-                timeoutSettings = 10;
+                timeoutSeconds = 10;
             }
 
-            return Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(timeoutSettings));
+            return Policy.TimeoutAsync<HttpResponseMessage>(
+                TimeSpan.FromSeconds(timeoutSeconds),
+                TimeoutStrategy.Optimistic,
+                onTimeoutAsync: async (context, timeout, task, exception) =>
+                {
+                    // Optional: structured logging, low severity
+                    await Task.CompletedTask;
+                });
         }
 
         /// <summary>
