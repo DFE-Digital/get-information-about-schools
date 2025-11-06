@@ -197,7 +197,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route("Results", Name = "SearchResults")]
-        public async Task<ActionResult> IndexResults(SearchViewModel viewModel)
+        public async Task<ActionResult> IndexResults([FromQuery] SearchViewModel viewModel)
         {
             if (!viewModel.NoResults)
             {

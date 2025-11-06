@@ -7,7 +7,9 @@
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @{
-    var isNotificationsController = ViewContext.RouteData.Values["controller"]?.ToString() == nameof(NotificationsController);
+    var isNotificationsController =
+        ViewContext.RouteData.Values["controller"]?
+            .ToString() == nameof(NotificationsController);
 }
 
 @if (!isNotificationsController)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Edubase.Common;
 using Edubase.Common.Spatial;
 using Edubase.Services.Enums;
@@ -119,13 +120,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         public double GetRadiusOption() => RadiusInMiles ?? 3;
 
-        public LatLon LocationSearchCoordinate { get; }
+        private readonly Lazy<LatLon> _coordinate;
+
+        public LatLon LocationSearchCoordinate => _coordinate.Value;
 
         public EstablishmentSearchViewModel()
         {
-            LocationSearchCoordinate = LatLon.Parse(LocationSearchModel.AutoSuggestValue);
+            _coordinate = new Lazy<LatLon>(
+                () => LatLon.Parse(LocationSearchModel.AutoSuggestValue),
+                LazyThreadSafetyMode.PublicationOnly
+            );
         }
-
 
         public SearchPayloadViewModel TextSearchModel { get; set; } = new SearchPayloadViewModel();
         public SearchPayloadViewModel LocationSearchModel { get; set; } = new SearchPayloadViewModel();
@@ -147,7 +152,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         public IEnumerable<LookupItemViewModel> EstablishmentStatuses { get; set; } = [];
 
-        [BindAlias(BIND_ALIAS_STATUSIDS)]
+        //[BindAlias(BIND_ALIAS_STATUSIDS)]
+        [BindAlias("b")]
         public List<int> SelectedEstablishmentStatusIds { get; set; } = [];
 
         public IEnumerable<LookupItemViewModel> EducationPhases { get; set; } = [];

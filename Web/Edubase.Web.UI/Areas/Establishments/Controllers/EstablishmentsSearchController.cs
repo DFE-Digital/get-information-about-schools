@@ -65,7 +65,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             var payload = await GetEstablishmentSearchPayload(model);
-            if (!payload.Success) model.Error = payload.ErrorMessage;
+
+            if (!payload.Success)
+            {
+                model.Error = payload.ErrorMessage;
+            }
 
             return await ProcessEstablishmentsSearch(model, payload.Object);
         }

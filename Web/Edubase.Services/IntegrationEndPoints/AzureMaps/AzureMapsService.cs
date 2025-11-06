@@ -40,7 +40,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                return new PlaceDto[0];
+                return [];
             }
 
             var request = new HttpRequestMessage(
@@ -54,7 +54,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new PlaceDto[0];
+                    return [];
                 }
 
                 using (var sr = new StreamReader(stream))
@@ -94,7 +94,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                         var postCode = text.Remove(" ").ToLower();
                         if (!parsedResults.Any(x => (x.Name ?? "").ToLower().Remove(" ").Contains("," + postCode.Remove(" "))))
                         {
-                            return new PlaceDto[0];
+                            return [];
                         }
                     }
 

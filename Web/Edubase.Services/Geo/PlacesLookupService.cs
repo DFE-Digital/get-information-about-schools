@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Services.IntegrationEndPoints.AzureMaps;
 using Edubase.Services.IntegrationEndPoints.OSPlaces;
@@ -20,16 +19,16 @@ namespace Edubase.Services.Geo
 
         public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead)
         {
-            var retVal = (await _azureMapsService.SearchAsync(text, isTypeahead)).ToArray();
+            PlaceDto[] retVal = [.. await _azureMapsService.SearchAsync(text, isTypeahead)];
 
-            if (retVal.Any())
+            if (retVal.Length != 0)
             {
                 return retVal;
             }
 
             if (!isTypeahead)
             {
-                retVal = (await _osPlacesApiService.SearchAsync(text)).ToArray();
+                retVal = [.. await _osPlacesApiService.SearchAsync(text)];
             }
 
             return retVal;

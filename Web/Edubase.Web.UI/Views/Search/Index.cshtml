@@ -53,8 +53,7 @@
 
             <div class="tab-content-wrapper gias-tabs-content">
                 <div id="establishments" class="tab-content @((Model.SelectedTab != SearchViewModel.Tab.Establishments) ? "hidden-tab-content" : "")" aria-hidden="@((Model.SelectedTab != SearchViewModel.Tab.Establishments).ToString().ToLower())">
-                    @{ Html.RenderPartial("Partials/_EstablishmentSearch"); }
-
+                    @await Html.PartialAsync("Partials/_EstablishmentSearch")
                 </div>
 
                 <div id="groups" class="tab-content @((Model.SelectedTab != SearchViewModel.Tab.Groups) ? "hidden-tab-content" : "")" aria-hidden="@((Model.SelectedTab != SearchViewModel.Tab.Groups).ToString().ToLower())">

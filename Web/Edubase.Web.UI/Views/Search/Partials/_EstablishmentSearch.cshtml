@@ -76,10 +76,13 @@
                 @Html.ValidationMessageFor(x => x.LocationSearchModel.Text, null, new { @class = "govuk-error-message" })
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="LocationSearchModel_Text">Enter postcode, town or city</label>
-                    @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "govuk-input govuk-input--width-20 location-search", autocomplete = "off", maxlength = "200"})
-                </div>
 
-                @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
+
+                            @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { id = "LocationSearchModel_Text", @class = "govuk-input govuk-input--width-20 location-search", autocomplete = "off", maxlength = "200" })
+                </div>
+                @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue, new { id = "LocationSearchModel_AutoSuggestValue" })
+
+                @* @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue) *@
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
