@@ -2,39 +2,40 @@ $govuk-global-styles: true;
 
 @import "GiasHelpers/all";
 //@import "node_modules/govuk-frontend/govuk/all";
-@import "govuk-frontend/govuk/base";
+@import "govuk-frontend/dist/govuk/base";
 //
-@import "govuk-frontend/govuk/core/all";
-@import "govuk-frontend/govuk/objects/all";
-@import "govuk-frontend/govuk/components/footer/index";
-@import "govuk-frontend/govuk/components/header/index";
-@import "govuk-frontend/govuk/components/skip-link/index";
-@import "govuk-frontend/govuk/components/checkboxes/index";
-@import "govuk-frontend/govuk/components/radios/index";
-@import "govuk-frontend/govuk/components/button/index";
-@import "govuk-frontend/govuk/components/label/index";
-@import "govuk-frontend/govuk/components/select/index";
-@import "govuk-frontend/govuk/components/file-upload/index";
-@import "govuk-frontend/govuk/components/fieldset";
-@import "govuk-frontend/govuk/components/phase-banner/index";
-@import "govuk-frontend/govuk/components/input";
-@import "govuk-frontend/govuk/components/date-input/index";
-@import "govuk-frontend/govuk/components/textarea/index";
-@import "govuk-frontend/govuk/components/error-summary/index";
-@import "govuk-frontend/govuk/components/error-message/index";
-@import "govuk-frontend/govuk/components/summary-list/index";
-@import "govuk-frontend/govuk/components/accordion/index";
-@import "govuk-frontend/govuk/components/breadcrumbs/index";
-@import "govuk-frontend/govuk/components/back-link/index";
-@import "govuk-frontend/govuk/components/details/index";
-@import "govuk-frontend/govuk/components/table/index";
-@import "govuk-frontend/govuk/components/warning-text/index";
-@import "govuk-frontend/govuk/components/notification-banner/index";
-@import "govuk-frontend/govuk/components/cookie-banner/index";
-@import "govuk-frontend/govuk/utilities/all";
-@import "govuk-frontend/govuk/overrides/all";
-@import "govuk-frontend/govuk/components/inset-text";
-@import "govuk-frontend/govuk/settings/all";
+@import "govuk-frontend/dist/govuk/core/all";
+@import "govuk-frontend/dist/govuk/objects/all";
+@import "govuk-frontend/dist/govuk/components/footer/index";
+@import "govuk-frontend/dist/govuk/components/header/index";
+@import "govuk-frontend/dist/govuk/components/skip-link/index";
+@import "govuk-frontend/dist/govuk/components/checkboxes/index";
+@import "govuk-frontend/dist/govuk/components/radios/index";
+@import "govuk-frontend/dist/govuk/components/button/index";
+@import "govuk-frontend/dist/govuk/components/label/index";
+@import "govuk-frontend/dist/govuk/components/select/index";
+@import "govuk-frontend/dist/govuk/components/file-upload/index";
+@import "govuk-frontend/dist/govuk/components/fieldset";
+@import "govuk-frontend/dist/govuk/components/phase-banner/index";
+@import "govuk-frontend/dist/govuk/components/input";
+@import "govuk-frontend/dist/govuk/components/date-input/index";
+@import "govuk-frontend/dist/govuk/components/textarea/index";
+@import "govuk-frontend/dist/govuk/components/error-summary/index";
+@import "govuk-frontend/dist/govuk/components/error-message/index";
+@import "govuk-frontend/dist/govuk/components/summary-list/index";
+@import "govuk-frontend/dist/govuk/components/accordion/index";
+@import "govuk-frontend/dist/govuk/components/breadcrumbs/index";
+@import "govuk-frontend/dist/govuk/components/back-link/index";
+@import "govuk-frontend/dist/govuk/components/details/index";
+@import "govuk-frontend/dist/govuk/components/table/index";
+@import "govuk-frontend/dist/govuk/components/warning-text/index";
+@import "govuk-frontend/dist/govuk/components/notification-banner/index";
+@import "govuk-frontend/dist/govuk/components/cookie-banner/index";
+@import "govuk-frontend/dist/govuk/components/service-navigation";
+@import "govuk-frontend/dist/govuk/utilities/all";
+@import "govuk-frontend/dist/govuk/overrides/all";
+@import "govuk-frontend/dist/govuk/components/inset-text";
+@import "govuk-frontend/dist/govuk/settings/all";
 // GIAS specifics
 @import "GiasGovukOverrides/all";
 @import "GiasHelpers/gias-display";
@@ -48,3 +49,123 @@ $govuk-global-styles: true;
 @import "GiasSearchResults/all";
 @import "leaflet/leaflet";
 @import "GiasLandingPages/all";
+@import "govuk-frontend/dist/govuk/tools/rebrand";
+
+.govuk-option-select .govuk-checkboxes__item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+
+.govuk-option-select .govuk-checkboxes__input {
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+}
+.govuk-option-select .govuk-checkboxes__label {
+  margin: 0 0 0 10px !important;
+  display: inline-block;
+  line-height: 1.3;
+  white-space: normal;
+}
+#download-radios .gias-radio__item--bordered-filter {
+  display: block;
+  width: 100%;
+  max-width: none;
+  float: none;
+  box-sizing: border-box;
+}
+#download-radios .gias-radios__label {
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 36px;
+  margin: 0;
+  box-sizing: border-box;
+}
+#download-radios .govuk-radios.govuk-radios--small .govuk-radios__item {
+  min-height: 0;
+  margin: 0;
+  padding: 4px 0;
+}
+#download-radios .govuk-radios.govuk-radios--small .govuk-radios__label {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 1.35;
+}
+#download-radios .govuk-radios__item {
+  position: relative;
+}
+#download-radios .govuk-radios__input {
+  position: absolute;
+  left: 0;
+  top: 0.34em;
+  margin: 0;
+}
+#download-radios .govuk-radios__label {
+  padding-left: 42px;
+}
+#accordion-default .govuk-accordion__section-heading {
+  margin: 8px;
+}
+#accordion-default .govuk-accordion__section-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  line-height: 1.2;
+}
+#accordion-default .govuk-accordion__icon {
+  margin-left: auto;
+  position: static;
+  transform: none;
+}
+#accordion-default .govuk-accordion__section-toggle-text {
+  display: inline;
+  white-space: nowrap;
+}
+#accordion-default + .govuk-accordion__controls {
+  text-align: right;
+}
+#accordion-default + .govuk-accordion__controls .gias-scroll-to-top {
+  float: left;
+}
+#accordion-default > .govuk-accordion__controls {
+  text-align: right;
+}
+.faq-page .govuk-accordion__section-heading {
+  margin: 0;
+}
+.faq-page .govuk-accordion__section-header-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid #b1b4b6;
+  padding-top: 8px;
+  margin-top: 8px;
+  margin-left: -8px;
+  padding-bottom: 8px;
+}
+.faq-page .govuk-grid-column-one-third.gias-align-right {
+  margin-top: 0;
+}
+.faq-page #accordion-default .govuk-accordion__section-button {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+.faq-page #accordion-default .govuk-accordion__section-heading {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.news-page .no-js-show-block .govuk-button {
+  margin-left: 12px !important;
+}
+
+@media (max-width: 640px) {
+  .news-page .no-js-show-block .govuk-button {
+    margin-left: 0 !important;
+  }
+}

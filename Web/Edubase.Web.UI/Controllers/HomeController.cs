@@ -88,14 +88,23 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult Cookies() => View();
 
         [HttpPost, Route("~/CookieChoices"), ValidateAntiForgeryToken]
-        public ActionResult CookieChoices(bool acceptAnalyticsCookies)
+        public ActionResult CookieChoices(bool acceptAnalyticsCookies = false)
         {
             var urlHelper = new UrlHelper(Request.RequestContext);
             var cookieDomain = urlHelper.CookieDomain();
             var returnTo = Request.Form["OriginatingPage"];
             Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain });
             TempData["CookiesPrefsSaved"] = acceptAnalyticsCookies;
-            if (returnTo != null)
+
+            if (string.IsNullOrWhiteSpace(returnTo))
+            {
+                return RedirectToAction("cookies");
+            }
+
+            returnTo = Uri.UnescapeDataString(returnTo);
+
+            if (Uri.IsWellFormedUriString(returnTo, UriKind.RelativeOrAbsolute) && !returnTo.Contains("\n") &&
+                !returnTo.Contains("\r") && urlHelper.IsLocalUrl(returnTo))
             {
                 return Redirect(returnTo);
             }
@@ -103,7 +112,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, Route("~/CookieChoicesAjax")]
-        public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies)
+        public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies = false)
         {
             var urlHelper = new UrlHelper(Request.RequestContext);
             var cookieDomain = urlHelper.CookieDomain();

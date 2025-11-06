@@ -100,7 +100,14 @@ namespace Edubase.Web.UI.Controllers
                 Id = id,
                 Title = item.Title,
                 Content = item.Content,
-                ArticleDate = new DateTimeViewModel(item.ArticleDate, item.ArticleDate),
+                ArticleDate = new RequiredDateTimeViewModel
+                {
+                    Day = item.ArticleDate.Day,
+                    Month = item.ArticleDate.Month,
+                    Year = item.ArticleDate.Year,
+                    Hour = item.ArticleDate.Hour,
+                    Minute = item.ArticleDate.Minute
+                },
                 ShowDate = item.ShowDate
             });
         }

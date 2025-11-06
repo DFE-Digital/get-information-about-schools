@@ -121,6 +121,13 @@
             </div>
         }
 
+        @if (Model.IsSuspended)
+        {
+            <div id="gias-establishment-suspended-message" class="gias-establishment-closed-message">
+                <p>@Model.SuspendedStatusMessage</p>
+            </div>
+        }
+
 
         @if (Model.IsClosed)
         {

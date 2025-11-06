@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Models
     using System.ComponentModel;
     using System.Linq;
     using ET = Services.Enums.eLookupEstablishmentType;
-    
+
     public class EditEstablishmentModel : IEstablishmentPageViewModel
     {
         /// <summary>
@@ -444,6 +444,9 @@ namespace Edubase.Web.UI.Models
 
         public string Layout { get; set; }
 
+        [DisplayName("Registration suspended")]
+        public RegistrationSuspendedStatus? RegistrationSuspended { get; set; }
+        public IEnumerable<SelectListItem> RegistrationSuspendedList { get; set; }
 
         #endregion
 
@@ -508,6 +511,8 @@ namespace Edubase.Web.UI.Models
         /// When the name and LA match another record
         /// </summary>
         public bool ShowDuplicateRecordWarning { get; set; }
+
+
 
         public EditEstablishmentModel()
         {

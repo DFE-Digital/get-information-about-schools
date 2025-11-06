@@ -87,38 +87,106 @@
                     <table class="govuk-table gias-cookie-table">
                         <caption class="govuk-visually-hidden">Google Analytics cookies</caption>
                         <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th scope="col" role="columnheader" class="govuk-table__header">
-                                    Name
-                                </th>
-                                <th scope="col" role="columnheader" class="govuk-table__header">
-                                    Purpose
-                                </th>
-                                <th scope="col" role="columnheader" class="govuk-table__header">
-                                    Expires
-                                </th>
-                            </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="col" role="columnheader" class="govuk-table__header">
+                                Name
+                            </th>
+                            <th scope="col" role="columnheader" class="govuk-table__header">
+                                Purpose
+                            </th>
+                            <th scope="col" role="columnheader" class="govuk-table__header">
+                                Expires
+                            </th>
+                        </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell" data-label="Name">_ga</td>
-                                <td class="govuk-table__cell" data-label="Purpose">This helps us count how many people visit GOV.UK by tracking if you&apos;ve visited before</td>
-                                <td class="govuk-table__cell" data-label="Expires">2 years</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell" data-label="Name">_gat</td>
-                                <td class="govuk-table__cell" data-label="Purpose">Used to manage the rate at which page view requests are made</td>
-                                <td class="govuk-table__cell" data-label="Expires">10 minutes</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell" data-label="Name">_gid</td>
-                                <td class="govuk-table__cell" data-label="Purpose">Used to distinguish users</td>
-                                <td class="govuk-table__cell" data-label="Expires">24 hours</td>
-                            </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">_ga</td>
+                            <td class="govuk-table__cell" data-label="Purpose">This helps us count how many people visit GOV.UK by tracking if you&apos;ve visited before</td>
+                            <td class="govuk-table__cell" data-label="Expires">2 years</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">_gat</td>
+                            <td class="govuk-table__cell" data-label="Purpose">Used to manage the rate at which page view requests are made</td>
+                            <td class="govuk-table__cell" data-label="Expires">10 minutes</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">_gid</td>
+                            <td class="govuk-table__cell" data-label="Purpose">Used to distinguish users</td>
+                            <td class="govuk-table__cell" data-label="Expires">24 hours</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
-                @using (Html.BeginForm("CookieChoices", "Home", new { area = "" }, FormMethod.Post))
+
+                <h2 class="govuk-heading-m">Microsoft Clarity</h2>
+
+                <p>
+                    We use Microsoft Clarity to understand how you use the Get Information About Schools. This information helps us to improve the website.
+                </p><p>
+                    Microsoft Clarity uses the following cookies:
+                </p>
+
+                <div class="table-wrapper">
+                    <table class="govuk-table gias-cookie-table">
+                        <caption class="govuk-visually-hidden">Microsoft clarity cookies</caption>
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" role="columnheader" class="govuk-table__header">
+                                Name
+                            </th>
+                            <th scope="col" role="columnheader" class="govuk-table__header">
+                                Purpose
+                            </th>
+                            <th scope="col" role="columnheader" class="govuk-table__header">
+                                Expires
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">
+                                _clck</td>
+                            <td class="govuk-table__cell" data-label="Purpose">Checks if you&apos;ve visited the Get Information About Schools before and makes sure you&apos;re given the same ID</td>
+                            <td class="govuk-table__cell" data-label="Expires">1 year</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">_clsk</td>
+                            <td class="govuk-table__cell" data-label="Purpose">Connects a user&apos;s page views into a single session recording</td>
+                            <td class="govuk-table__cell" data-label="Expires">1 day</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">CLID</td>
+                            <td class="govuk-table__cell" data-label="Purpose">Identifies the first time Microsoft Clarity saw this user on any website that uses Microsoft Clarity</td>
+                            <td class="govuk-table__cell" data-label="Expires">1 year</td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">
+                                ANONCHK</td>
+                            <td class="govuk-table__cell" data-label="Purpose">	Indicates whether the MUID cookie is sent to ANID. ANID is not used by Microsoft Clarity, so is set to expire at the end of your session.</td>
+                            <td class="govuk-table__cell" data-label="Expires">end of session</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">MUID</td>
+                            <td class="govuk-table__cell" data-label="Purpose">Identifies unique web browsers visiting Microsoft sites. These cookies are used for advertising, analytics and operational purposes</td>
+                            <td class="govuk-table__cell" data-label="Expires">1 year</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">MR</td>
+                            <td class="govuk-table__cell" data-label="Purpose">Indicates whether to refresh the MUID cookie</td>
+                            <td class="govuk-table__cell" data-label="Expires">7 days</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">SM</td>
+                            <td class="govuk-table__cell" data-label="Purpose">Used to synchronise the MUID cookie across Microsoft domains</td>
+                            <td class="govuk-table__cell" data-label="Expires">end of session</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            @using (Html.BeginForm("CookieChoices", "Home", new { area = "" }, FormMethod.Post))
                 {
                     @Html.AntiForgeryToken();
                     <div class=" govuk-!-padding-top-4">

@@ -45,6 +45,7 @@
     </div>
 </div>
 
+
 <div class="gias-tabs-wrapper">
     @if (Model.AreScheduledExtractsAvailable)
     {
@@ -78,10 +79,21 @@
                                 {
                                     <div class="govuk-radios__item gias-radio__item--bordered-filter">
                                         @{
-                                            var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "search-type", ft));
+                                            var id = TagBuilder.CreateSanitizedId($"search-type-{ft}");
+
+                                            var attrs = new Dictionary<string, object>
+                                            {
+                                                ["id"] = id,
+                                                ["class"] = "govuk-radios__input"
+                                            };
+                                            if (ft == eDownloadFilter.DateFilter)
+                                            {
+                                                attrs["data-aria-controls"] = ft.ToString();
+                                            }
                                         }
-                                        @Html.RadioButtonFor(x => x.SearchType, ft, new { id, data_aria_controls = $"{ft}", @class = "govuk-radios__input" })
-                                        @Html.Label(ft.EnumDisplayNameFor(), new { @for = id, @class = "govuk-label govuk-radios__label" })
+
+                                        @Html.RadioButtonFor(x => x.SearchType, ft, attrs)
+                                        @Html.Label(ft.EnumDisplayNameFor(), new { @for = id, @class = "govuk-radios__label govuk-body" })
                                     </div>
                                 }
 
@@ -166,13 +178,11 @@
                         <div class="lower-pagination">
                             @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
                         </div>
-                        @helpers.BackToTopLink()
                     }
                 </div>
             </div>
         </div>
     }
-
 
     @helpers.BackToTopLink()
 </div>

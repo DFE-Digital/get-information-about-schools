@@ -31,10 +31,10 @@
         <p>All news items show what was originally displayed at the time of publication, therefore some links in these news items may no longer work.</p>
     </div>
 
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds govuk-!-padding-0">
         <form>
-            <div class="govuk-grid-column-one-third govuk-!-padding-0">
-                <p>
+            <div class="govuk-grid-column-one-third">
+                <p style="margin:0">
                     Showing
                     <select class="govuk-select" id="news-year" name="year">
                         @{
@@ -45,8 +45,8 @@
                     </select>
                 </p>
             </div>
-            <div class="govuk-grid-column-two-thirds no-js-show-block">
-                <button type="submit" class="govuk-button">Update</button>
+            <div class="govuk-grid-column-two-thirds no-js-show-block" style="margin-top: 25px">
+                <button type="submit" class="govuk-button" style="margin-left: 12px">Update</button>
             </div>
         </form>
     </div>

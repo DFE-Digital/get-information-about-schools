@@ -396,8 +396,10 @@
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\QueryValidator.cs" />
+    <Compile Include="Helpers\RequireUrlNotification.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Helpers\AcademyUtility.cs" />
+    <Compile Include="Helpers\ServiceNavigationItem.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
@@ -419,7 +421,9 @@
     <Compile Include="Models\Notifications\NotificationsTemplateViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsTemplatesViewModel.cs" />
     <Compile Include="Models\Notifications\Validators\NotificationsBannerValidator.cs" />
+    <Compile Include="Models\Notifications\Validators\ValidateUrl.cs" />
     <Compile Include="Models\ProprietorViewModel.cs" />
+    <Compile Include="Models\RequiredDateTimeViewModel.cs" />
     <Compile Include="Models\SiteMapNode.cs" />
     <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
@@ -608,6 +612,7 @@
     <Content Include="Assets\Scripts\Entry\create-establishment.js" />
     <Content Include="Assets\Scripts\Entry\delegated-authority.js" />
     <Content Include="Assets\Scripts\Entry\download-select-fields.js" />
+    <Content Include="Assets\Scripts\Entry\Download-specific-field.js" />
     <Content Include="Assets\Scripts\Entry\downloads.js" />
     <Content Include="Assets\Scripts\Entry\edit-details.js" />
     <Content Include="Assets\Scripts\Entry\edit-establishment-links.js" />
@@ -743,6 +748,7 @@
     <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
     <Content Include="Views\DataQuality\EditDataOwnerDetails.cshtml" />
     <Content Include="Views\Home\Accessibility.cshtml" />
+    <Content Include="Views\Shared\OtherServicesLinks.cshtml" />
     <Content Include="Views\Tools\DownloadClosedTrustsInformation.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamateEstablishments.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamationComplete.cshtml" />

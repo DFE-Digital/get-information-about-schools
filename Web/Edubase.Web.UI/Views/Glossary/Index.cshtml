@@ -33,31 +33,49 @@
         {
             @Html.RouteLink("Add entry", "CreateGlossaryItem", null, new { @class = "govuk-button" })
         }
+        @{
+            var i = 0;
+        }
         <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
             @foreach (var group in Model.Items)
             {
-                <div class="govuk-accordion__section ">
+                i++;
+                var headingId = $"accordion-default-heading-{i}";
+                var contentId = $"accordion-default-content-{i}";
+
+                <div class="govuk-accordion__section">
                     <div class="govuk-accordion__section-header">
                         <h2 class="govuk-accordion__section-heading">
-                            <span class="govuk-accordion__section-button" id="ctrl-@group.Key">
+                            <button type="button"
+                                    class="govuk-accordion__section-button"
+                                    id="@headingId"
+                                    aria-controls="@contentId"
+                                    aria-expanded="false">
                                 @group.Key
-                            </span>
+                            </button>
                         </h2>
                     </div>
-                    <div id="target-@group.Key" class="govuk-accordion__section-content" aria-labelledby="ctrl-@group.Key">
+
+                    <div id="@contentId"
+                         class="govuk-accordion__section-content"
+                         aria-labelledby="@headingId">
+
                         @foreach (var item in group)
                         {
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-two-thirds govuk-!-padding-bottom-2">
-                                    <h2 class="govuk-heading-s">@item.Title</h2>
-                                    <div class="gias-user-content">@Html.Raw(System.Text.RegularExpressions.Regex.Replace(item.Content, @"\r\n|\r|\n", "<br/>"))</div>
+                            <div class="gias-glossary-item govuk-!-margin-bottom-3">
+                                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">@item.Title</h3>
+                                <div class="gias-user-content govuk-body">
+                                    @Html.Raw(System.Text.RegularExpressions.Regex
+                                        .Replace(item.Content, @"\r\n|\r|\n", "<br/>"))
                                 </div>
-
                                 @if (Model.UserCanEdit)
                                 {
-                                    <div class="govuk-grid-column-one-third gias-align-right govuk-!-padding-bottom-2">
-                                        @Html.RouteLink("Edit entry", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "govuk-button govuk-button--secondary glossary-edit-button" })
-                                    </div>
+                                    <p class="govuk-!-margin-top-2">
+                                        @Html.RouteLink("Edit entry",
+                                            "EditGlossaryItem",
+                                            new { id = item.RowKey },
+                                            new { @class = "govuk-button govuk-button--secondary glossary-edit-button" })
+                                    </p>
                                 }
                             </div>
                         }
@@ -65,7 +83,17 @@
                 </div>
             }
         </div>
-
-        <p class="no-js-show-block">@helpers.BackToTopLink()</p>
     </div>
 </div>
+
+<noscript>
+    <style>
+    #accordion-default .govuk-accordion__section-content,
+    #accordion-default .govuk-accordion__section-content[hidden] {
+      display: block !important;
+    }
+  </style>
+    <p class="no-js-show-block">
+        @helpers.BackToTopLink()
+    </p>
+</noscript>

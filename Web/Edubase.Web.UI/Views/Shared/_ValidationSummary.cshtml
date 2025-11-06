@@ -11,11 +11,25 @@
                     var validationResult = (FluentValidation.Results.ValidationResult)ViewBag.FVErrors;
                     if (validationResult != null)
                     {
-                        // fluentValidation errors
+                        // fluentvalidation errors
                         foreach (var modelError in validationResult.Errors)
                         {
+                            var key = modelError.PropertyName;
+                            var rawMsg = modelError.CustomState?.ToString() ?? modelError.ErrorMessage ?? "";
+                            var decoded = System.Net.WebUtility.HtmlDecode(rawMsg);
+                            var hasBr = decoded.IndexOf("<br", System.StringComparison.OrdinalIgnoreCase) >= 0;
+
                             <li>
-                                <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.PropertyName)-list-item" href="#@modelError.PropertyName">@(modelError.CustomState?.ToString() ?? modelError.ErrorMessage)</a>
+                                <a id="error-summary-@StringUtils.ElementIdFormat(key)-list-item" href="#@key">
+                                    @if (hasBr)
+                                    {
+                                        @Html.Raw(decoded)  // allow intentional <br />
+                                    }
+                                    else
+                                    {
+                                        @Html.HtmlNewlines(decoded) // keeps \n -> <br /> with safe encoding
+                                    }
+                                </a>
                             </li>
                         }
                     }
@@ -24,10 +38,23 @@
                         // traditional model validation
                         foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
                         {
+                            var key = modelError.Item1;
+                            var href = "#" + key.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+                            var rawMsg = modelError.Item2 ?? "";
+                            var decoded = System.Net.WebUtility.HtmlDecode(rawMsg);
+                            var hasBr = decoded.IndexOf("<br", System.StringComparison.OrdinalIgnoreCase) >= 0;
+
                             <li>
-                                 <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>
-                                    @Html.HtmlNewlines(@modelError.Item2)
-                                 </a>
+                                <a id="error-summary-@StringUtils.ElementIdFormat(key)-list-item" href='@href'>
+                                    @if (hasBr)
+                                    {
+                                        @Html.Raw(decoded)  // allow intentional <br />
+                                    }
+                                    else
+                                    {
+                                        @Html.HtmlNewlines(decoded) // keeps \n -> <br /> with safe encoding
+                                    }
+                                </a>
                             </li>
                         }
                     }
