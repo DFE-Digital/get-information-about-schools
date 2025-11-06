@@ -15,7 +15,7 @@ namespace Edubase.Services.IntegrationEndPoints
         /// Creates a retry + timeout policy
         /// </summary>
         /// <param name="retryIntervals">Array of retry intervals (seconds).</param>
-        /// <param name="settingsKey">App.config key for timeout seconds.</param>
+        /// <param name="settingsKey">key for timeout seconds.</param>
         /// <returns>
         /// A combined policy that retries faults and times out safely.
         /// </returns>
@@ -34,7 +34,7 @@ namespace Edubase.Services.IntegrationEndPoints
                     retryIntervals,
                     onRetry: (outcome, timespan, retryAttempt, context) =>
                     {
-                        // Optional low-severity logging hook
+                        // Optional low-severity logging hook - for future severity ticket - link (220998)
                     });
 
             var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
@@ -52,7 +52,7 @@ namespace Edubase.Services.IntegrationEndPoints
                             ReasonPhrase = "Request timed out by Polly policy"
                         };
 
-                        // Optional logging (low severity)
+                        // Optional logging (low severity) - for future severity ticket - link (220998)
                         return Task.FromResult(response);
                     });
 
@@ -76,7 +76,7 @@ namespace Edubase.Services.IntegrationEndPoints
                 TimeoutStrategy.Optimistic,
                 onTimeoutAsync: async (context, timeout, task, exception) =>
                 {
-                    // Optional: structured logging, low severity
+                    // Optional: structured logging, low severity - for future severity ticket - link (220998)
                     await Task.CompletedTask;
                 });
         }
