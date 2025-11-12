@@ -21,42 +21,25 @@ namespace Edubase.Services.IntegrationEndPoints
         /// </returns>
         public static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
         {
+            var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
+
             if (retryIntervals is null || retryIntervals.Length == 0)
             {
-                return Policy.NoOpAsync<HttpResponseMessage>();
+                return timeoutPolicy;
             }
 
-            // Retry policy: handles transient network errors and TaskCanceledException
+            // Retry on network faults and timeouts
             var retryPolicy = Policy<HttpResponseMessage>
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
-                .WaitAndRetryAsync(
-                    retryIntervals,
-                    onRetry: (outcome, timespan, retryAttempt, context) =>
-                    {
-                        // Optional low-severity logging hook - for future severity ticket - link (220998)
-                    });
+                .Or<TimeoutRejectedException>()
+                .OrResult(r =>
+                    r.StatusCode == HttpStatusCode.RequestTimeout ||
+                    (int)r.StatusCode == 429 ||
+                    (int)r.StatusCode >= 500)
+                .WaitAndRetryAsync(retryIntervals);
 
-            var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
-
-            var combinedPolicy = Policy.WrapAsync(retryPolicy, timeoutPolicy);
-
-            var safePolicy = Policy<HttpResponseMessage>
-                .Handle<TimeoutRejectedException>()
-                .FallbackAsync(
-                    fallbackAction: (ct) =>
-                    {
-                        // Returns a safe 408 response instead of throwing
-                        var response = new HttpResponseMessage(HttpStatusCode.RequestTimeout)
-                        {
-                            ReasonPhrase = "Request timed out by Polly policy"
-                        };
-
-                        // Optional logging (low severity) - for future severity ticket - link (220998)
-                        return Task.FromResult(response);
-                    });
-
-            return safePolicy.WrapAsync(combinedPolicy);
+            return Policy.WrapAsync(retryPolicy, timeoutPolicy);
         }
 
         /// <summary>
@@ -73,12 +56,7 @@ namespace Edubase.Services.IntegrationEndPoints
 
             return Policy.TimeoutAsync<HttpResponseMessage>(
                 TimeSpan.FromSeconds(timeoutSeconds),
-                TimeoutStrategy.Optimistic,
-                onTimeoutAsync: async (context, timeout, task, exception) =>
-                {
-                    // Optional: structured logging, low severity - for future severity ticket - link (220998)
-                    await Task.CompletedTask;
-                });
+                TimeoutStrategy.Pessimistic);
         }
 
         /// <summary>
@@ -93,13 +71,11 @@ namespace Edubase.Services.IntegrationEndPoints
         /// <returns>An array of TimeSpans converted from the provided string.</returns>
         public static TimeSpan[] CsvSecondsToTimeSpans(string csvSeconds)
         {
-            var retryIntervals = csvSeconds.Split(',')
+            return csvSeconds.Split(',')
                 .Select(x => x.Trim())
-                .Where(x => int.TryParse(x, out var seconds) && seconds >= 0)
+                .Where(x => int.TryParse(x, out var s) && s >= 0)
                 .Select(x => TimeSpan.FromSeconds(int.Parse(x)))
                 .ToArray();
-
-            return retryIntervals;
         }
     }
 }

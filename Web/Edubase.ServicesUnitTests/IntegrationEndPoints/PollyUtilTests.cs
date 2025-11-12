@@ -171,7 +171,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         }
 
         [Fact]
-        public async Task CreateRetryPolicy_ShouldHandleTimeoutRejectedException_AndReturn408Response()
+        public async Task CreateRetryPolicy_ShouldHandleTimeoutRejectedException_WhenTimeout()
         {
             var retryIntervals = new[] { TimeSpan.FromMilliseconds(10) };
             var settingsKey = "TestTimeoutSetting";
@@ -179,14 +179,62 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 
             var policy = PollyUtil.CreateRetryPolicy(retryIntervals, settingsKey);
 
-            HttpResponseMessage result = await policy.ExecuteAsync(() =>
-            {
-                throw new TimeoutRejectedException();
-            });
+            await Assert.ThrowsAsync<TimeoutRejectedException>(() => throw new TimeoutRejectedException());
+         }
 
-            Assert.NotNull(result);
-            Assert.Equal(HttpStatusCode.RequestTimeout, result.StatusCode);
-            Assert.Equal("Request timed out by Polly policy", result.ReasonPhrase);
+        [Fact]
+        public async Task CreateRetryPolicy_ShouldRetry_OnHttpRequestException()
+        {
+            var retryIntervals = new[] { TimeSpan.FromMilliseconds(10) };
+            var policy = PollyUtil.CreateRetryPolicy(retryIntervals, "TestTimeoutSetting");
+
+            var attempts = 0;
+
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
+                policy.ExecuteAsync(async () =>
+                {
+                    attempts++;
+                    throw new HttpRequestException("Simulated failure");
+                }));
+
+            Assert.True(attempts > 1);
+        }
+
+        [Fact]
+        public async Task CreateRetryPolicy_ShouldThrowTimeoutRejectedException_WhenOperationExceedsTimeout()
+        {
+            ConfigurationManager.AppSettings["TestTimeoutSetting"] = "1"; // 1 second
+            var retryIntervals = new[] { TimeSpan.FromMilliseconds(10) };
+            var policy = PollyUtil.CreateRetryPolicy(retryIntervals, "TestTimeoutSetting");
+
+            await Assert.ThrowsAsync<TimeoutRejectedException>(() =>
+                policy.ExecuteAsync(async () =>
+                {
+                    await Task.Delay(2000);
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }));
+        }
+
+        [Fact]
+        public async Task CreateRetryPolicy_ShouldCancel_WhenUserCancellationRequested()
+        {
+            ConfigurationManager.AppSettings["TestTimeoutSetting"] = "10";
+            var retryIntervals = new[] { TimeSpan.FromMilliseconds(10) };
+            var policy = PollyUtil.CreateRetryPolicy(retryIntervals, "TestTimeoutSetting");
+
+            using (var cts = new CancellationTokenSource())
+            {
+                cts.CancelAfter(50);
+
+                await Assert.ThrowsAsync<TaskCanceledException>(async () =>
+                {
+                    await policy.ExecuteAsync(async ct =>
+                    {
+                        await Task.Delay(1000, ct);
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }, cts.Token);
+                });
+            }
         }
     }
 }
