@@ -11,7 +11,7 @@ using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Helpers;
-using FluentValidation.Mvc;
+using Edubase.Web.UI.Validation;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
