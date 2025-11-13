@@ -1040,8 +1040,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.StatusName = await c.GetNameAsync(() => vm.Establishment.StatusId);
             vm.AdmissionsPolicyName = await c.GetNameAsync(() => vm.Establishment.AdmissionsPolicyId);
             vm.OfstedRatingName = await c.GetNameAsync(() => vm.Establishment.OfstedRatingId);
-            vm.HelpdeskPreviousLocalAuthorityName = await c.GetNameAsync("LocalAuthorityId", vm.Establishment.HelpdeskPreviousLocalAuthorityId);
-
+            vm.HelpdeskPreviousLocalAuthorityName = await GetLocalAuthorityDisplayNameAsync(vm.Establishment.HelpdeskPreviousLocalAuthorityId);
             var sens = await c.SpecialEducationNeedsGetAllAsync();
             vm.SENNames = StringUtil.SentencifyNoFormating((vm.Establishment.SENIds ?? new int[0]).Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
 
@@ -1080,11 +1079,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private async Task PopulateSelectLists(ViewModel viewModel)
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
+            var localAuthorityOptions = localAuthorities.ToSelectList(viewModel.LocalAuthorityId).ToList();
+            await EnsureHelpdeskPreviousLocalAuthorityOptionAsync(viewModel, localAuthorityOptions);
+            viewModel.LocalAuthorities = localAuthorityOptions;
 
             viewModel.AccommodationChanges = (await _cachedLookupService.AccommodationChangedGetAllAsync()).ToSelectList(viewModel.AccommodationChangedId);
             viewModel.FurtherEducationTypes = (await _cachedLookupService.FurtherEducationTypesGetAllAsync()).ToSelectList(viewModel.FurtherEducationTypeId);
             viewModel.Genders = (await _cachedLookupService.GendersGetAllAsync()).ToSelectList(viewModel.GenderId);
-            viewModel.LocalAuthorities = localAuthorities.ToSelectList(viewModel.LocalAuthorityId);
             viewModel.EstablishmentTypes = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).ToSelectList(viewModel.TypeId);
             viewModel.HeadTitles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.HeadTitleId);
             viewModel.Statuses = (await _lookupService.EstablishmentStatusesGetAllAsync(User)).ToSelectList(viewModel.StatusId);
@@ -1164,6 +1165,64 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                                                 where la.Id == viewModel.LocalAuthorityId.Value
                                                 select la.Code).FirstOrDefault();
             }
+        }
+
+                private async Task EnsureHelpdeskPreviousLocalAuthorityOptionAsync(ViewModel viewModel, List<SelectListItem> localAuthorityOptions)
+        {
+            if (!viewModel.HelpdeskPreviousLocalAuthorityId.HasValue)
+            {
+                return;
+            }
+
+            var previousId = viewModel.HelpdeskPreviousLocalAuthorityId.Value.ToString();
+            if (localAuthorityOptions.Any(x => x.Value == previousId))
+            {
+                return;
+            }
+
+            var displayName = await GetLocalAuthorityDisplayNameAsync(viewModel.HelpdeskPreviousLocalAuthorityId);
+            if (!string.IsNullOrWhiteSpace(displayName))
+            {
+                localAuthorityOptions.Add(new SelectListItem
+                {
+                    Value = previousId,
+                    Text = displayName
+                });
+            }
+        }
+
+        private async Task<string> GetLocalAuthorityDisplayNameAsync(int? localAuthorityId)
+        {
+            if (!localAuthorityId.HasValue)
+            {
+                return null;
+            }
+
+            var name = await _cachedLookupService.GetNameAsync("LocalAuthorityId", localAuthorityId.Value);
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                return name;
+            }
+
+            try
+            {
+                var groupResult = await _groupReadService.GetAsync(localAuthorityId.Value, User);
+                var groupName = groupResult?.ReturnValue?.Name;
+                if (!string.IsNullOrWhiteSpace(groupName))
+                {
+                    return $"{groupName} (archived)";
+                }
+            }
+            catch (EntityNotFoundException)
+            {
+
+            }
+            catch (PermissionDeniedException)
+            {
+
+            }
+
+            return $"Archived local authority ({localAuthorityId.Value})";
         }
 
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
