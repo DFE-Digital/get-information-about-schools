@@ -1,8 +1,6 @@
 using System;
 using Xunit;
 using Edubase.Services.IntegrationEndPoints;
-using Polly.NoOp;
-using Polly.Wrap;
 using System.Configuration;
 using Polly.Timeout;
 using System.Diagnostics;
