@@ -77,6 +77,9 @@ public class AzureMapsService : IAzureMapsService
                 var municipalities = results.Where(x => x.entityType == "Municipality").ToList();
                 var subMunicipalities = results.Where(x => x.entityType == "MunicipalitySubdivision").ToList();
 
+                // If the response contains a "MunicipalitySubdivision" with the same name as a returned Municipality (town),
+                // use the coordinates of that result for the position of the town and remove it from the result set.
+                // This addresses an issue where a small number of towns have inaccurate coordinates associated with them.
                 foreach (var municipality in municipalities)
                 {
                     var child = subMunicipalities.FirstOrDefault(x =>
@@ -96,6 +99,7 @@ public class AzureMapsService : IAzureMapsService
                     new PlaceDto(GetAddressDescription(x, text),
                         new LatLon(x.position.lat, x.position.lon))).ToArray();
 
+                // If the search string is a postcode and none of the returned results contain the given post code, then return zero results, so that the search is deferred to OS places.
                 if (text.IsUkPostCode())
                 {
                     var postCode = text.Remove(" ").ToLower();
