@@ -58,8 +58,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public const string BIND_ALIAS_RADIUS = "aa";
         public const string BIND_ALIAS_CLOSE_DATE_FROM = "1";
         public const string BIND_ALIAS_CLOSE_DATE_TO = "2";
-        public const string BIND_ALIAS_AGE_RANGE_LOW_FROM = "3";
-        public const string BIND_ALIAS_AGE_RANGE_HIGH_FROM = "4";
+        public const string BIND_ALIAS_AGE_RANGE_LOW_FROM = "4";
+        public const string BIND_ALIAS_AGE_RANGE_HIGH_FROM = "3";
         public const string BIND_ALIAS_OFSTEDRATINGS = "5";
         public const string BIND_ALIAS_OPEN_DATE_FROM = "6";
         public const string BIND_ALIAS_OPEN_DATE_TO = "7";
@@ -152,8 +152,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         public IEnumerable<LookupItemViewModel> EstablishmentStatuses { get; set; } = [];
 
-        //[BindAlias(BIND_ALIAS_STATUSIDS)]
-        [BindAlias("b")]
+        [BindAlias(BIND_ALIAS_STATUSIDS)]
         public List<int> SelectedEstablishmentStatusIds { get; set; } = [];
 
         public IEnumerable<LookupItemViewModel> EducationPhases { get; set; } = [];

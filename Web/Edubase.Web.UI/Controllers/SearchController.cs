@@ -299,10 +299,11 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("SuggestGroup"), HttpGet]
-        public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
+        public async Task<ActionResult> SuggestGroup(string text) =>
+            Json(await _groupReadService.SuggestAsync(text.Distill(), User));
 
         [Route("SuggestPlace"), HttpGet]
-        public async Task<ActionResult> SuggestPlace(string text)
+        public async Task<ActionResult> SuggestPlace([FromQuery] string text)
         {
             return QueryValidator.ValidatePlaceSuggestionQuery(text)
                 ? (ActionResult) Json(await _placesService.SearchAsync(text, true))

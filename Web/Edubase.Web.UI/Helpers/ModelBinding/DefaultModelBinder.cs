@@ -1,178 +1,103 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ModelBinding.Extensions;
 using Edubase.Web.UI.Helpers.ModelBinding.Factories;
-using Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
+namespace Edubase.Web.UI.Helpers.ModelBinding.BindingHandler;
 
 /// <summary>
-/// Custom model binder that supports binding of simple types, complex objects, and collections.
-/// Uses type resolution and conversion helpers to dynamically populate model properties.
+/// Default model binder that orchestrates binding using a chain of property binder handlers.
 /// </summary>
+/// <remarks>
+/// This binder implements the <em>Chain of Responsibility</em> pattern.
+/// It delegates binding of individual properties to a sequence of <see cref="IPropertyBinderHandler"/> instances.
+/// For top-level simple models (e.g. string, int), it delegates binding to the injected
+/// <see cref="SimpleTypeBinderHandler"/>.
+/// </remarks>
 public class DefaultModelBinder : IModelBinder
 {
-    private readonly ITypeConverter _typeConverter;
-    private readonly ITypeFactory _typeFactory;
+    private readonly IPropertyBinderHandler _handlerChain;
+    private readonly ITypeFactory _factory;
+    private readonly SimpleTypeBinderHandler _simpleHandler;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultModelBinder"/> class.
     /// </summary>
+    /// <param name="handlers">The collection of property binder handlers to chain together.</param>
+    /// <param name="factory">The type factory used to create model instances.</param>
+    /// <exception cref="InvalidOperationException">Thrown if no handlers are registered.</exception>
     public DefaultModelBinder(
-        ITypeConverter typeConverter,
-        ITypeFactory typeFactory)
+        IEnumerable<IPropertyBinderHandler> handlers, ITypeFactory factory)
     {
-        _typeConverter = typeConverter;
-        _typeFactory = typeFactory;
+        _factory = factory;
+
+        IPropertyBinderHandler current = null;
+
+        foreach (IPropertyBinderHandler handler in handlers)
+        {
+            if (handler is SimpleTypeBinderHandler simple)
+            {
+                _simpleHandler = simple;
+            }
+
+            current = current == null
+                ? (_handlerChain = handler)
+                : current.SetNext(handler);
+        }
+
+        if (_handlerChain == null)
+        {
+            throw new InvalidOperationException(
+                "No property binder handlers were registered.");
+        }
     }
 
     /// <summary>
-    /// Binds the model from the value provider context.
-    /// Handles simple types directly and recursively binds complex types and collections.
+    /// Binds a model instance for the given <see cref="ModelBindingContext"/>.
     /// </summary>
-    /// <param name="bindingContext">The model binding context.</param>
+    /// <param name="bindingContext">The binding context containing metadata and value providers.</param>
+    /// <returns>A task representing the asynchronous binding operation.</returns>
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        Type modelType = bindingContext.ModelType.ResolveConcreteType();
+        Type modelType =
+            bindingContext.ModelType.ResolveConcreteType();
 
-        // Handle simple types directly
-        if (modelType.IsSimpleType())
-        {
-            string value =
-                bindingContext.ValueProvider.GetValue(bindingContext.ModelName).FirstValue;
-
-            object converted =
-                _typeConverter.Convert(value, modelType);
-
-            bindingContext.Result = ModelBindingResult.Success(converted);
-            return;
-        }
-
-        // Create an instance of the complex model
-        object modelInstance =
-            _typeFactory.CreateInstance(modelType);
-
-        PropertyInfo[] properties =
-            modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-        foreach (PropertyInfo property in properties)
-        {
-            // Skip indexers and non-settable properties
-            if (property.GetIndexParameters().Length > 0 ||
-                !property.CanWrite ||
-                property.GetSetMethod() == null)
-            {
-                continue;
-            }
-
-            bool propertySet =
-                TryBindFromAliases(bindingContext, modelInstance, property);
-
-            if (!propertySet && !property.PropertyType.IsSimpleType())
-            {
-                propertySet =
-                    await TryBindComplexTypeAsync(bindingContext, modelInstance, property);
-            }
-
-            if (!propertySet)
-            {
-                TryBindFromPropertyName(bindingContext, modelInstance, property);
-            }
-        }
-
-        bindingContext.Result = ModelBindingResult.Success(modelInstance);
-    }
-
-    /// <summary>
-    /// Attempts to bind a property using its <see cref="BindAliasAttribute"/> aliases.
-    /// </summary>
-    private bool TryBindFromAliases(ModelBindingContext context, object model, PropertyInfo property)
-    {
-        foreach (var alias in property.GetCustomAttributes<BindAliasAttribute>(true))
-        {
-            ValueProviderResult valueResult =
-                context.ValueProvider.GetValue(alias.Alias);
-
-            if (valueResult == ValueProviderResult.None)
-            {
-                continue;
-            }
-
-            try
-            {
-                object converted =
-                    _typeConverter.Convert(valueResult.FirstValue, property.PropertyType);
-
-                property.SetValue(model, converted);
-                return true;
-            }
-            catch
-            {
-                // Ignore failed conversions and continue
-            }
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to bind a complex property recursively using a nested model binder.
-    /// </summary>
-    private async Task<bool> TryBindComplexTypeAsync(ModelBindingContext context, object model, PropertyInfo property)
-    {
-        string propertyPrefix =
-            string.IsNullOrEmpty(context.ModelName)
-                ? property.Name
-                : $"{context.ModelName}.{property.Name}";
-
-        IModelMetadataProvider metadataProvider =
-            context.ActionContext.HttpContext.RequestServices
-                .GetService(typeof(IModelMetadataProvider)) as IModelMetadataProvider;
-
-        ModelBindingContext nestedContext =
-            DefaultModelBindingContext.CreateBindingContext(
-                context.ActionContext,
-                context.ValueProvider,
-                metadataProvider.GetMetadataForType(property.PropertyType),
-                bindingInfo: null,
-                modelName: propertyPrefix);
-
-        await new DefaultModelBinder(_typeConverter, _typeFactory).BindModelAsync(nestedContext);
-
-        if (nestedContext.Result.IsModelSet)
-        {
-            property.SetValue(model, nestedContext.Result.Model);
-            return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to bind a property using its direct name in the value provider.
-    /// </summary>
-    private void TryBindFromPropertyName(ModelBindingContext context, object model, PropertyInfo property)
-    {
-        string propertyPrefix =
-            string.IsNullOrEmpty(context.ModelName)
-                ? property.Name
-                : $"{context.ModelName}.{property.Name}";
-
-        ValueProviderResult valueResult =
-            context.ValueProvider.GetValue(propertyPrefix);
-
-        if (valueResult == ValueProviderResult.None)
+        // Delegate top-level simple models to the injected SimpleTypeBinderHandler.
+        if (_simpleHandler != null &&
+            await _simpleHandler.BindModelAsync(bindingContext))
         {
             return;
         }
 
-        object converted =
-            _typeConverter.Convert(valueResult.FirstValue, property.PropertyType);
+        // Complex type binding
+        object modelInstance = null!;
 
-        property.SetValue(model, converted);
+        try
+        {
+            modelInstance = _factory.CreateInstance(modelType);
+        }
+        catch (Exception)
+        {
+            bindingContext.Result = ModelBindingResult.Failed();
+        }
+
+        if (modelInstance != null)
+        {
+            foreach (PropertyInfo property in
+                modelType.GetProperties(
+                    BindingFlags.Public | BindingFlags.Instance))
+            {
+                await _handlerChain.HandleAsync(
+                    bindingContext, modelInstance, property);
+            }
+        }
+
+        bindingContext.Result =
+            ModelBindingResult.Success(modelInstance);
     }
 }

@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using Autofac.Core;
-using AutoMapper;
 using AzureTableLogger;
 using AzureTableLogger.Services;
 using Edubase.Common.Cache;
@@ -47,6 +46,8 @@ using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Helpers.ModelBinding;
+using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler;
+using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers;
 using Edubase.Web.UI.Helpers.ModelBinding.Factories;
 using Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
 using Edubase.Web.UI.Models;
@@ -234,6 +235,7 @@ builder.Services.AddSingleton<FaqGroupRepository>();
 builder.Services.AddSingleton<NotificationBannerRepository>();
 builder.Services.AddSingleton<NotificationTemplateRepository>();
 builder.Services.AddSingleton<NewsArticleRepository>();
+builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IGovernorsGridViewModelFactory, GovernorsGridViewModelFactory>();
 builder.Services.AddTransient<ISmtpEndPoint, MockSmtpEndPoint>();
 builder.Services.AddSingleton<IAzLogger, AzLogger>();
@@ -252,11 +254,18 @@ builder.Services.AddSingleton<ITypeFactory, TypeFactory>();
 builder.Services.AddSingleton<IValueConverter, DefaultValueConverter>();
 builder.Services.AddSingleton<ITypeConverter, DefaultTypeConverter>();
 builder.Services.AddSingleton<IModelBinderProvider, DefaultModelBinderProvider>();
+builder.Services.AddTransient<IPropertyBinderHandler, AliasBinderHandler>();
+builder.Services.AddTransient<IPropertyBinderHandler, ArrayBinderHandler>();
+builder.Services.AddTransient<IPropertyBinderHandler, ListBinderHandler>();
+builder.Services.AddTransient<IPropertyBinderHandler, ComplexTypeBinderHandler>();
+builder.Services.AddTransient<IPropertyBinderHandler, PropertyNameBinderHandler>();
+builder.Services.AddTransient<IPropertyBinderHandler, SimpleTypeBinderHandler>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
 {
     ServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
+    options.ValueProviderFactories.Add(new TokenValueProviderFactory(serviceProvider.GetRequiredService<ITokenRepository>()));
     options.ModelBinderProviders.Insert(0, new DefaultModelBinderProvider(serviceProvider));
 });
 

@@ -9,24 +9,16 @@ namespace Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
 /// Provides a default implementation of <see cref="ITypeConverter"/> for converting string values
 /// into strongly typed .NET objects. Supports primitive types, enums, and collections.
 /// </summary>
-public class DefaultTypeConverter : ITypeConverter
+/// <remarks>
+/// Initializes a new instance of the <see cref="DefaultTypeConverter"/> class.
+/// </remarks>
+/// <param name="valueConverter">
+/// A value converter used to convert individual string values to specific types.
+/// </param>
+public class DefaultTypeConverter(
+    IValueConverter valueConverter,
+    ICollectionFactory collectionFactory) : ITypeConverter
 {
-    private readonly IValueConverter _valueConverter;
-    private readonly ICollectionFactory _collectionFactory;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DefaultTypeConverter"/> class.
-    /// </summary>
-    /// <param name="valueConverter">
-    /// A value converter used to convert individual string values to specific types.
-    /// </param>
-    public DefaultTypeConverter(
-        IValueConverter valueConverter,
-        ICollectionFactory collectionFactory)
-    {
-        _valueConverter = valueConverter;
-        _collectionFactory = collectionFactory;
-    }
 
     /// <summary>
     /// Converts a string value into an object of the specified target type.
@@ -55,20 +47,23 @@ public class DefaultTypeConverter : ITypeConverter
         // If the type is not a collection, delegate to the value converter
         if (!underlyingType.IsCollectionType())
         {
-            return _valueConverter.Convert(value, underlyingType);
+            return valueConverter.Convert(value, underlyingType);
         }
 
         // Determine the element type of the collection
         Type elementType =
             underlyingType.GetElementType()
-                ?? throw new InvalidCastException(
-                    $"Cannot determine element type for {targetType.Name}");
+            ?? (underlyingType.IsGenericType
+                ? underlyingType.GetGenericArguments().FirstOrDefault()
+                : null)
+            ?? throw new InvalidCastException(
+                $"Cannot determine element type for {targetType.Name}");
 
         // Parse and convert the collection items
         object[] items = ParseCollectionItems(value, elementType);
 
         // Create and return the populated collection instance
-        return _collectionFactory.CreateListInstance(underlyingType, elementType, items);
+        return collectionFactory.CreateListInstance(underlyingType, elementType, items);
     }
 
     /// <summary>
@@ -80,18 +75,16 @@ public class DefaultTypeConverter : ITypeConverter
     private object[] ParseCollectionItems(string value, Type elementType)
     {
         // If the element type is primitive or enum, split and convert each segment
-        if (elementType.IsPrimitiveType() || elementType.IsEnum)
+        if (elementType.IsPrimitiveType() || elementType.IsEnum || elementType == typeof(string))
         {
             return [.. value
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(str =>
                 {
-                    try
-                    {
-                        return _valueConverter.Convert(str.Trim(), elementType);
+                    try{
+                        return valueConverter.Convert(str.Trim(), elementType);
                     }
-                    catch
-                    {
+                    catch{
                         // Skip invalid entries
                         return null;
                     }
@@ -100,6 +93,6 @@ public class DefaultTypeConverter : ITypeConverter
         }
 
         // For non-primitive types, treat the entire string as a single item
-        return [_valueConverter.Convert(value, elementType)];
+        return [valueConverter.Convert(value, elementType)];
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Common;
@@ -74,7 +75,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return await ProcessEstablishmentsSearch(model, payload.Object);
         }
 
-        [HttpGet("results-js")]
+        [HttpGet("Search/results-js")]
         public async Task<IActionResult> ResultsPartial([FromQuery] EstablishmentSearchViewModel model)
         {
             model.SearchQueryString = Request.QueryString.Value;

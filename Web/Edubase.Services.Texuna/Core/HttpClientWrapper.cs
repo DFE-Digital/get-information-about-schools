@@ -107,7 +107,6 @@ public class HttpClientWrapper : IHttpClientWrapper
         var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Post, uri, principal, data);
         var result = await SendAsync(requestMessage);
         return await ParseHttpResponseMessageAsync<T>(uri, result);
-
     }
 
     public async Task<ApiResponse> PostAsync(string uri, object data, IPrincipal principal)

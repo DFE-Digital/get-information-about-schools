@@ -1,14 +1,14 @@
-﻿using Edubase.Web.UI.Helpers.ModelBinding;
+using Edubase.Web.UI.Helpers.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace Edubase.Web.UI.Models
 {
     public class AgeRangeFilterViewModel
     {
-        [BindAlias("a"), Display(Name = "From")]
+        [BindAlias("4"), Display(Name = "From")]
         public int? From { get; set; }
 
-        [BindAlias("b"), Display(Name = "To")]
+        [BindAlias("3"), Display(Name = "To")]
         public int? To { get; set; }
     }
 }

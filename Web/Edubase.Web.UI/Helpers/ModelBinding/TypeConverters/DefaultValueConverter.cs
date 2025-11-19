@@ -38,7 +38,9 @@ public class DefaultValueConverter : IValueConverter
         }
 
         // Unwrap nullable types to get the underlying non-nullable type
-        var underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+        Type underlyingType =
+            Nullable.GetUnderlyingType(
+                nullableType: targetType) ?? targetType;
 
         // Reject comma-separated values for single primitive types (e.g., "1,2" for int)
         if (value.Contains(',') &&
@@ -55,10 +57,11 @@ public class DefaultValueConverter : IValueConverter
         }
 
         // Use TypeDescriptor to get a converter for the target type
-        var converter = TypeDescriptor.GetConverter(underlyingType);
+        TypeConverter converter =
+            TypeDescriptor.GetConverter(type: underlyingType);
 
         // If the converter supports conversion from string, perform the conversion
-        if (converter.CanConvertFrom(typeof(string)))
+        if (converter.CanConvertFrom(sourceType: typeof(string)))
         {
             return converter.ConvertFromInvariantString(value);
         }
