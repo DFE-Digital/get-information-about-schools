@@ -214,12 +214,14 @@
     <Compile Include="Enums\EnumSets.cs" />
     <Compile Include="Enums\GroupChangeLinkType.cs" />
     <Compile Include="Enums\GroupChangeRequestType.cs" />
+    <Compile Include="Enums\RegistrationSuspendedStatus.cs" />
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\IEBTFieldList.cs" />
     <Compile Include="Establishments\DisplayPolicies\ProprietorFieldList.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
     <Compile Include="Establishments\EditPolicies\EstablishmentEditPolicyEnvelope.cs" />
+    <Compile Include="Establishments\EnumExtensions.cs" />
     <Compile Include="Establishments\Models\AdditionalAddressModel.cs" />
     <Compile Include="Establishments\Models\AmalgamateMergeRequest.cs" />
     <Compile Include="Establishments\Models\BulkCreateAcademiesProgress.cs" />
@@ -245,6 +247,8 @@
     <Compile Include="ExternalLookup\IFSCPService.cs" />
     <Compile Include="ExternalLookup\IExternalLookupService.cs" />
     <Compile Include="ExternalLookup\IFBService.cs" />
+    <Compile Include="ExternalLookup\IOfstedService.cs" />
+    <Compile Include="ExternalLookup\OfstedService.cs" />
     <Compile Include="Geo\IPlacesLookupService.cs" />
     <Compile Include="Geo\PlaceDto.cs" />
     <Compile Include="Geo\PlacesLookupService.cs" />
@@ -258,7 +262,6 @@
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="Enums\eSortBy.cs" />
     <Compile Include="Domain\CompaniesHouseNumber.cs" />
-    <Compile Include="Domain\OfstedRatingUrl.cs" />
     <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
     <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
     <Compile Include="Governors\IGovernorsReadService.cs" />

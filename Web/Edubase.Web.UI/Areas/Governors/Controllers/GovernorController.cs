@@ -24,6 +24,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
+using GR = Edubase.Services.Enums.eLookupGovernorRole;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -112,6 +113,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.GovernorShared = false;
             if (removalGid.HasValue)
             {
+                if (domainModel.CurrentGovernors.Count(g => g.Id == removalGid.Value) > 1)
+                {
+                    throw new InvalidOperationException(
+                        "domainModel.CurrentGovernors contains more than one governor with the same Id (governorController)");
+                }
+
                 var govToBeRemoved = domainModel.CurrentGovernors.SingleOrDefault(g => g.Id == removalGid.Value);
                 if (govToBeRemoved != null && EnumSets.SharedGovernorRoles.Contains(govToBeRemoved.RoleId.Value))
                 {
@@ -237,6 +244,28 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var replaceMode =
                 ((Route) ControllerContext.RouteData.Route).Url.IndexOf("/Replace/",
                     StringComparison.OrdinalIgnoreCase) > -1;
+
+            if (replaceMode && !role.HasValue && gid.HasValue)
+            {
+                var previousGov = await _governorsReadService.GetGovernorAsync(gid.Value, User);
+                role = (eLookupGovernorRole) previousGov.RoleId.Value;
+            }
+
+            if (replaceMode && role == eLookupGovernorRole.ChairOfGovernors
+                            && establishmentUrn.HasValue && gid.HasValue)
+            {
+                return RedirectToRoute("EstabReplaceChair",
+                    new
+                    {
+                        establishmentUrn = establishmentUrn.Value,
+                        gid = gid.Value,
+                        d = Request.QueryString["d"],
+                        m = Request.QueryString["m"],
+                        y = Request.QueryString["y"],
+                        ri = "true"
+                    });
+            }
+
             if (role == null && gid == null)
             {
                 throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
@@ -244,7 +273,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (role.HasValue)
             {
-                if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User))
+                if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User, replaceMode))
                 {
                     return RedirectToRoute(establishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
                         new { establishmentUrn, groupUId, roleAlreadyExists = true, selectedRole = role });
@@ -272,6 +301,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 if (replaceMode)
                 {
                     viewModel.Mode = CreateEditGovernorViewModel.EditMode.Replace;
+
                     viewModel.ReplaceGovernorViewModel.AppointmentEndDate =
                         new DateTimeViewModel(model.AppointmentEndDate);
                     viewModel.ReplaceGovernorViewModel.GID = gid;
@@ -434,7 +464,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
         public async Task<bool> RoleAllowed(eLookupGovernorRole newRole, int? groupUId, int? establishmentUrn,
-            IPrincipal user)
+            IPrincipal user, bool replaceMode)
         {
             var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
             var existingGovernorRoleIds = existingGovernors
@@ -443,8 +473,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 .OfType<int>()
                 .ToHashSet();
 
-            // Only a single chair of a local governing body may be attached (either directly, or via shared role)
-            if (IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
+            // Allow an exception
+            if (newRole != GR.Group_SharedChairOfLocalGoverningBody && IsEquivalentRoleAlreadyPresent
+                    (newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
             {
                 return false;
             }
@@ -452,7 +483,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
             var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(newRole);
             var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) newRole);
-            if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
+            if (!replaceMode && isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
             {
                 return false;
             }
@@ -750,22 +781,74 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
+            var preRetirementModel = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
+            var originalChairEndDate = preRetirementModel?.AppointmentEndDate;
+
             if (ModelState.IsValid)
             {
                 if (model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair)
                 {
-                    var newGovernor = model.SharedGovernors.SingleOrDefault(s => s.Id == model.SelectedGovernorId);
+                    var selectedId = model.SelectedGovernorId;
+                    if (selectedId <= 0)
+                    {
+                        ModelState.AddModelError("SharedGovernors", "Please select a shared chair.");
+                        return View(model);
+                    }
+
+                    var newGovernor = model.SharedGovernors.FirstOrDefault(s => s.Id == selectedId);
+                    if (newGovernor == null)
+                    {
+                        ModelState.AddModelError("SharedGovernors", "The selected chair could not be found.");
+                        return View(model);
+                    }
+
+                    var sharedEndDate = newGovernor.AppointmentEndDate?.ToDateTime();
+
+                    var selectedSharedGovernor = await _governorsReadService.GetGovernorAsync(model.SelectedGovernorId, User);
+                    if (selectedSharedGovernor?.RoleId == null || selectedSharedGovernor.RoleId.Value == 0)
+                    {
+                        ModelState.AddModelError("", "The selected shared governor has an invalid or missing role.");
+                        return View(model);
+                    }
 
                     var validation = await _governorsWriteService.AddSharedGovernorAppointmentAsync(
                         model.SelectedGovernorId,
                         model.Urn.Value,
                         model.DateTermEnds.ToDateTime().Value.AddDays(1),
-                        newGovernor.AppointmentEndDate.ToDateTime(), User);
+                        sharedEndDate, User);
 
                     if (!validation.HasErrors)
                     {
-                        var url =
-                            $"{Url.RouteUrl(EstablishmentDetails, new { id = model.Urn, saved = true })}#school-governance";
+                        await RetireGovernorAsync(model.ExistingGovernorId, model.DateTermEnds.ToDateTime().Value);
+
+                        if (model.Reinstate)
+                        {
+                            if (preRetirementModel?.RoleId.HasValue == true &&
+                                Enum.IsDefined(typeof(eLookupGovernorRole), preRetirementModel.RoleId.Value) &&
+                                preRetirementModel.RoleId.Value != 0)
+                            {
+                                var oldRole = (eLookupGovernorRole)preRetirementModel.RoleId.Value;
+
+                                var newRole = RoleEquivalence.GetEquivalentToLocalRole(oldRole)
+                                    .Where(r => r == eLookupGovernorRole.LocalGovernor)
+                                    .DefaultIfEmpty(eLookupGovernorRole.LocalGovernor)
+                                    .First();
+
+                                await ReInstateAsGovernorAsync(
+                                    model.ExistingGovernorId,
+                                    model.Urn.Value,
+                                    model.DateTermEnds.ToDateTime().Value.AddDays(1),
+                                    originalChairEndDate,
+                                    newRole,
+                                    User);
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", "The previous chair's role is invalid or missing.");
+                            }
+                        }
+
+                        var url = $"{Url.RouteUrl(EstablishmentDetails, new { id = model.Urn, saved = true })}#school-governance";
                         return Redirect(url);
                     }
 
@@ -790,7 +873,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         PreviousPerson_LastName = model.NewLocalGovernor.PreviousLastName,
                         PreviousPerson_TitleId = model.NewLocalGovernor.PreviousTitleId,
                         PostCode = model.NewLocalGovernor.PostCode,
-                        RoleId = (int) (RoleEquivalence.GetLocalEquivalentToSharedRole(model.Role) ?? model.Role),
+                        RoleId = (int)(RoleEquivalence.GetLocalEquivalentToSharedRole(model.Role) ?? model.Role),
                         TelephoneNumber = model.NewLocalGovernor.TelephoneNumber
                     };
 
@@ -801,28 +884,48 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         GovernorModel oldGovernorModel = null;
                         if (model.Reinstate)
                         {
-                            oldGovernorModel =
-                                await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
+                            oldGovernorModel = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
                         }
 
                         await _governorsWriteService.SaveAsync(newGovernor, User);
 
                         if (model.SelectedPreviousExistingNonChairId.HasValue)
                         {
-                            await RetireGovernorAsync(model.SelectedPreviousExistingNonChairId.Value,
+                            await RetireGovernorAsync(
+                                model.SelectedPreviousExistingNonChairId.Value,
                                 model.DateTermEnds.ToDateTime().GetValueOrDefault());
                         }
 
                         if (model.Reinstate) // re-instate the old chair to be the non-chair equivalent role.
                         {
-                            await ReInstateChairAsNonChairAsync(model.ExistingGovernorId,
-                                newGovernor.AppointmentStartDate.GetValueOrDefault(),
-                                (oldGovernorModel?.AppointmentEndDate).GetValueOrDefault(),
-                                eLookupGovernorRole.ChairOfLocalGoverningBody);
+                            await RetireGovernorAsync(model.ExistingGovernorId, model.DateTermEnds.ToDateTime().Value);
+
+                            if (oldGovernorModel?.RoleId.HasValue == true &&
+                                Enum.IsDefined(typeof(eLookupGovernorRole), oldGovernorModel.RoleId.Value) &&
+                                oldGovernorModel.RoleId.Value != 0)
+                            {
+                                var oldRole = (eLookupGovernorRole)oldGovernorModel.RoleId.Value;
+
+                                var newRole = RoleEquivalence.GetEquivalentToLocalRole(oldRole)
+                                                .Where(r => r == eLookupGovernorRole.LocalGovernor)
+                                                .DefaultIfEmpty(eLookupGovernorRole.LocalGovernor)
+                                                .First();
+
+                                await ReInstateAsGovernorAsync(
+                                    model.ExistingGovernorId,
+                                    model.Urn.Value,
+                                    model.DateTermEnds.ToDateTime().Value.AddDays(1),
+                                    originalChairEndDate,
+                                    newRole,
+                                    User);
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", "Could not determine a valid local role for reinstatement.");
+                            }
                         }
 
-                        var url =
-                            $"{Url.RouteUrl(EstablishmentDetails, new { id = model.Urn, saved = true })}#school-governance";
+                        var url = $"{Url.RouteUrl(EstablishmentDetails, new { id = model.Urn, saved = true })}#school-governance";
                         return Redirect(url);
                     }
 
@@ -831,29 +934,30 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             }
 
             var governor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
-            var roles = new List<eLookupGovernorRole> { (eLookupGovernorRole) governor.RoleId };
+            var roles = new List<eLookupGovernorRole> { (eLookupGovernorRole)governor.RoleId };
 
             if (EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value))
             {
-                var localEquivalent =
-                    RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId);
+                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole)governor.RoleId);
                 if (localEquivalent != null)
                     roles.Add(localEquivalent.Value);
             }
             else
             {
-                roles.AddRange(RoleEquivalence.GetEquivalentToLocalRole((eLookupGovernorRole) governor.RoleId));
+                roles.AddRange(RoleEquivalence.GetEquivalentToLocalRole((eLookupGovernorRole)governor.RoleId));
             }
 
-            var governors = (await _governorsReadService.GetSharedGovernorsAsync(model.Urn.Value, User)).Where(g =>
-                roles.Contains((eLookupGovernorRole) g.RoleId) && g.Id != model.ExistingGovernorId).ToList();
+            var governors = (await _governorsReadService.GetSharedGovernorsAsync(model.Urn.Value, User))
+                .Where(g => roles.Contains((eLookupGovernorRole)g.RoleId) && g.Id != model.ExistingGovernorId)
+                .ToList();
 
             model.NewLocalGovernor.DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync(
-                (RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value) ??
-                 (eLookupGovernorRole) governor.RoleId.Value), false, User);
+                (RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole)governor.RoleId.Value) ??
+                 (eLookupGovernorRole)governor.RoleId.Value), false, User);
 
             var sourceGovernors = (await Task.WhenAll(governors.Select(async g =>
                 await SharedGovernorViewModel.MapFromGovernor(g, model.Urn.Value, _cachedLookupService)))).ToList();
+
             if (model.SharedGovernors == null)
             {
                 model.SharedGovernors = sourceGovernors;
@@ -862,7 +966,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 for (var i = 0; i < model.SharedGovernors?.Count; i++)
                 {
-                    // if this is the one the user selected, we dont want to change any of the values they entered
                     if (model.SharedGovernors[i].Selected)
                     {
                         model.SharedGovernors[i].SharedWith =
@@ -879,10 +982,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await PopulateSelectLists(model.NewLocalGovernor);
             await _layoutHelper.PopulateLayoutProperties(model, model.Urn, null, User);
 
-
             var models = await _governorsReadService.GetGovernorListAsync(model.Urn, principal: User);
-            var localGovernors = models.CurrentGovernors.Where(x => x.RoleId == (int) eLookupGovernorRole.LocalGovernor)
-                .OrderBy(x => x.Person_LastName).ToArray();
+            var localGovernors = models.CurrentGovernors.Where(x => x.RoleId == (int)eLookupGovernorRole.LocalGovernor)
+                .OrderBy(x => x.Person_LastName)
+                .ToArray();
 
             if (model.SelectedPreviousExistingNonChairId.HasValue)
             {
@@ -898,8 +1001,49 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                            model.SelectedPreviousExistingNonChairId.Value == x.Id
             });
 
-
             return View(model);
+        }
+
+        public async Task ReInstateAsGovernorAsync(
+            int gid,
+            int urn,
+            DateTime appointmentStartDate,
+            DateTime? appointmentEndDate,
+            eLookupGovernorRole role,
+            IPrincipal user)
+        {
+            var oldGovernor = await _governorsReadService.GetGovernorAsync(gid, user);
+
+            var newGovernor = new GovernorModel
+            {
+                EstablishmentUrn = urn,
+                AppointingBodyId = 2,
+                Person_TitleId = oldGovernor.Person_TitleId ?? 1,
+                Person_FirstName = oldGovernor.Person_FirstName,
+                Person_MiddleName = oldGovernor.Person_MiddleName,
+                Person_LastName = oldGovernor.Person_LastName,
+                PreviousPerson_TitleId = oldGovernor.PreviousPerson_TitleId,
+                PreviousPerson_FirstName = oldGovernor.PreviousPerson_FirstName,
+                PreviousPerson_MiddleName = oldGovernor.PreviousPerson_MiddleName,
+                PreviousPerson_LastName = oldGovernor.PreviousPerson_LastName,
+                AppointmentStartDate = appointmentStartDate,
+                AppointmentEndDate = appointmentEndDate,
+                RoleId = (int)role,
+                DOB = oldGovernor.DOB ?? new DateTime(1970, 1, 1),
+                PostCode = oldGovernor.PostCode,
+                EmailAddress = null,
+                TelephoneNumber = null,
+                GroupUId = null
+            };
+
+            await _governorsWriteService.SaveAsync(newGovernor, user);
+
+            var result = await _governorsReadService.GetGovernorListAsync(urn);
+            var match = result.CurrentGovernors.FirstOrDefault(g =>
+                g.RoleId == (int)role &&
+                g.Person_FirstName.Equals(newGovernor.Person_FirstName, StringComparison.OrdinalIgnoreCase) &&
+                g.Person_LastName.Equals(newGovernor.Person_LastName, StringComparison.OrdinalIgnoreCase)
+            );
         }
 
         internal async Task<GovernorsGridViewModel> CreateGovernorsViewModel(int? groupUId = null,
@@ -946,7 +1090,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 viewModel.CorporateContact = groupModel.CorporateContact;
                 viewModel.GroupTypeId = groupModel.GroupTypeId;
             }
-
             return viewModel;
         }
 

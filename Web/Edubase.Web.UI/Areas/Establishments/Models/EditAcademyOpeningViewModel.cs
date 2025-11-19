@@ -22,5 +22,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public DateTime OpenDate { get; set; }
 
         public bool IsSearching { get; set; } = false;
+
+        public string EstablishmentTypeId { get; set; }
+        public string ReturnTo { get; set; }
     }
 }

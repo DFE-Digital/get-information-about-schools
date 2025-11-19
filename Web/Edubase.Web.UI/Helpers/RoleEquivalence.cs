@@ -48,5 +48,16 @@ namespace Edubase.Web.UI.Helpers
                 }
                 : new List<eLookupGovernorRole> {role};
         }
+
+        public static bool IsSharedChairOfLocalGoverningBody(this eLookupGovernorRole role)
+        {
+            return RoleEquivalence.GetEquivalentRole(role)
+                .Intersect(new[]
+                {
+                    eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody,
+                    eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody
+                })
+                .Any();
+        }
     }
 }

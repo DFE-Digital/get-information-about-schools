@@ -33,7 +33,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _layoutHelper = layoutHelper;
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Governance/ConfirmEstabishment/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate"), ValidateAntiForgeryToken]
+        [HttpPost, EdubaseAuthorize, Route("ConfirmEstablishment/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> EstablishmentGovernanceConfirmUpToDateAsync(int urn, bool showBanner = false)
         {
             await _establishmentWriteService.ConfirmGovernanceAsync(urn, User);
@@ -57,7 +57,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> EditGovernanceMode(int? establishmentUrn, bool failed = false)
         {
             establishmentUrn.AssertIsNotEmpty(nameof(establishmentUrn));
-            
+
             if (failed)
             {
                 ModelState.AddModelError("", "Unable to update Governance");
@@ -70,7 +70,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             };
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, null, User, x => viewModel.GovernanceMode = x.GovernanceMode ?? eGovernanceMode.LocalGovernors);
             return View(viewModel);
-            
+
         }
 
         /// <summary>

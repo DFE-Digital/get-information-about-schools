@@ -1,11 +1,8 @@
-@using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
-@using Edubase.Web.UI.Areas.Establishments.Models.Search
 @model EstablishmentSearchDownloadViewModel
 @using Edubase.Web.UI.Models.Search
-@using Edubase.Web.UI.Helpers
 @{
-    ViewBag.Title = string.Format("Download establishment search results");
+    ViewBag.Title = "Download establishment search results";
     ViewBag.bodyClasses = " search-page custom-fields-download";
     ViewBag.hideLogo = true;
 }
@@ -13,7 +10,26 @@
 @section Head
 {
     <meta name="robots" content="noindex,nofollow"/>
+    <style>
+        .govuk-form-group-search.govuk-form-group--error {
+            border-left: 4px solid #d4351c;
+            padding-left: 0.5rem;
+            margin-left: 0;
+        }
+    </style>
+    <style>
+    .js-only {
+    display: none;
+    }
+    </style>
 }
+
+<div id="search-error-summary" class="govuk-error-summary" role="alert" style="display: none;">
+    <h2 class="govuk-error-summary__title">There was a problem</h2>
+    <ul class="govuk-list govuk-error-summary__list">
+        <li><a href="#field-search">Enter a field name to search.</a></li>
+    </ul>
+</div>
 
 @section BreadCrumbs
 {
@@ -38,7 +54,9 @@
                                 new { @class = "govuk-breadcrumbs__link" })
                         </li>
                         <li class="govuk-breadcrumbs__list-item">
-                            <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")>Search results</a>
+                            <a class="govuk-breadcrumbs__link"
+                               href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")>Search
+                                results</a>
                         </li>
                     </ol>
                 </div>
@@ -47,142 +65,127 @@
     }
 }
 
-<div id="field-select-app" v-cloak>
-    <div class="govuk-grid-row js-show-block">
-        <div class="govuk-grid-column-full">
-            <error-summary error-title="There was a problem" :errors="errorMessages"/>
-        </div>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="govuk-error-summary" role="alert">
+        <h2 class="govuk-error-summary__title">There was a problem</h2>
+        <ul class="govuk-list govuk-error-summary__list">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
     </div>
+}
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <div class="no-js-show-block">
-                @Html.Partial("_ValidationSummary", ViewData.ModelState)
-            </div>
-            <h1 class="govuk-heading-xl">Download data</h1>
-
-            <h2 class="govuk-heading-m">Download establishment search results</h2>
-            <h2 class="govuk-heading-m">Select the data you are interested in</h2>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="no-js-show-block">
+            @Html.Partial("_ValidationSummary", ViewData.ModelState)
         </div>
+        <h1 class="govuk-heading-xl">Download data</h1>
+
+        <h2 class="govuk-heading-m">Download establishment search results</h2>
+        <h2 class="govuk-heading-m">Select the data you are interested in</h2>
     </div>
-    @using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get,
-        new Dictionary<string, object> { ["@submit"] = "handleSubmit", ["id"] = "field-selection" }))
+</div>
+
+@using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get, new { id = "field-selection" }))
+{
+    @Html.HiddenFieldsFromQueryString()
+    foreach (var laId in Model.SelectedLocalAuthorityIds ?? Enumerable.Empty<int>())
     {
-        <div id="js-field-selection" class="js-show-block">
+        <input type="hidden" name="SelectedLocalAuthorityIds" value="@laId" />
+    }
+    var statusId = Request.QueryString.GetValues("SelectedEstablishmentStatusIds") ?? new string[0];
+    foreach (var status in statusId)
+    {
+        @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{HttpUtility.HtmlEncode(status)}\" />")
+    }
+    <!-- Top error summary (already works) -->
+    <div id="search-error-summary" class="govuk-error-summary" role="alert" style="display: none;">
+        <h2 class="govuk-error-summary__title">There was a problem</h2>
+        <ul class="govuk-list govuk-error-summary__list">
+            <li><a href="#field-search">Enter a field name to search.</a></li>
+        </ul>
+    </div>
 
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <search-by-field-name :fields="fields" :selected-fields="selectedFields"/>
-                </div>
-                <div class="govuk-grid-column-one-third search-results-download-view-in-sections">
-                    <view-switcher :view-as-list="viewAsList"/>
-                </div>
-            </div>
+    <div id="search-error" style="display: none; margin-top: 1rem; font-size: 19px;"></div>
+    <input type="hidden" name="Dataset" value="Custom"/>
+    <input type="hidden" name="SearchType" value="@((int)Model.SearchType)"/>
 
-            <div class="govuk-grid-row" v-if="shouldShowContinue">
-                <div class="govuk-grid-column-one-half">
-                    <input type="submit" class="govuk-button" value="Next"/>
-                </div>
-                <checkbox-remote-selection :selected-fields="selectedFields"/>
-            </div>
+    <div class="js-only">
+        <div class="govuk-form-group-search" id="search-form-group" style="margin-bottom: 1rem;">
+            <p id="search-inline-error" class="govuk-error-message" style="display: none;">
+                Enter a field name to search.
+            </p>
+            <label for="field-search" class="govuk-label">Search by field name</label>
 
-            <div class="govuk-grid-row" v-show="!viewAsList">
-                <div class="govuk-grid-column-full">
-                    <download-categorised-fields accordion-id="categorised-fields"
-                                                 :panel-data="categoryList"
-                                                 :selected-fields="selectedFields"
-                                                 :has-error="radioError"/>
-                </div>
-            </div>
+            <div class="govuk-input__wrapper" style="display: flex; gap: 0.5rem;">
+                <input type="text"
+                       class="govuk-input"
+                       id="field-search"
+                       style="width: 35ch;"/>
 
-            <div class="govuk-grid-row" v-show="viewAsList">
-                <div class="govuk-grid-column-full">
-                    <div v-bind:class="['govuk-form-group', radioError? 'govuk-form-group--error' : '']" v-if="searchMatches.length === 0  && !isFilteringFields">
-                        <span v-if="radioError" class="govuk-error-message">Select at least one field</span>
-                        <div class="govuk-checkboxes">
-                            <checkbox :input-id="chx.id"
-                                      id-prefix="alpha"
-                                      :label="chx.name"
-                                      :value="chx.id"
-                                      v-model="selectedFields"
-                                      v-for="(chx, i) in fields" :key="i+'_'">
-                            </checkbox>
-                        </div>
-                    </div>
-                    <div v-bind:class="['govuk-form-group', radioError? 'govuk-form-group--error' : '']" v-else>
-                        <span v-if="radioError" class="govuk-error-message">Select at least one field</span>
-                        <div class="govuk-checkboxes">
-                            <checkbox :input-id="chx.id"
-                                      id-prefix="alpha"
-                                      :label="chx.name"
-                                      :value="chx.id"
-                                      v-model="selectedFields"
-                                      v-for="(chx, i) in searchMatches" :key="i+'_'">
-                            </checkbox>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <button class="govuk-button" id="search-btn">Search</button>
 
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full  govuk-!-padding-top-4" v-if="shouldShowContinue">
-                    <input type="submit" class="govuk-button" value="Next"/>
-                </div>
+                <a href="#" class="govuk-link" id="clear-search" role="button" style="display:none;">
+                    Clear Search
+                </a>
+                <a href="#" class="govuk-link govuk-!-font-size-19" id="switch-view" role="button"
+                   style="margin-left: auto;">
+                    View in alphabetical order
+                </a>
             </div>
         </div>
 
-        <div id="no-js-container">
-            <input type="hidden" value="true" name="ViewedCustomFields"/>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    <input type="submit" class="govuk-button" value="Next"/>
-                </div>
+        <div class="govuk-grid-row" style="margin-bottom: 1rem;">
+            <div class="govuk-grid-column-full" style="text-align: right;">
+                <a href="#" class="govuk-link govuk-!-font-size-19" id="select-all" role="button">Select all</a>&nbsp;&nbsp;&nbsp;
+                <span></span>
+                <a href="#" class="govuk-link govuk-!-font-size-19" id="clear-all" role="button">Clear all</a>
             </div>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    <div class="gias-download-fields  @Html.ValidationGroupCssClass("CustomFieldsByCategory")" id="CustomFieldsByCategory">
-                        @Html.ValidationMessageFor(x => x.CustomFieldsByCategory, null, new { @class = "govuk-error-message" })
-                        @foreach (var fieldCategory in Model.CustomFieldsByCategory)
+        </div>
+    </div>
+    <div id="response-error" style="display: none; margin-top: 10px; font-size: 19px;">
+        There are no results for your search.
+        Please <a href="#" id="inline-clear">clear your search</a> and try again.
+    </div>
+
+    <button type="submit" id="next-button" class="govuk-button">Next</button>
+
+    <div id="checkbox-container">
+        @foreach (var category in Model.CustomFieldsByCategory)
+        {
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        @category.Category
+                    </legend>
+                    <div class="govuk-checkboxes">
+                        @foreach (var field in category.CustomFields)
                         {
-                            <div class="gias-download-fields--section">
-                                <h2 class="govuk-heading-m">@fieldCategory.Category</h2>
-                                <div class="gias-download-fields--section__content">
-                                    <div class="govuk-checkboxes">
-                                        @foreach (var chx in fieldCategory.CustomFields)
-                                        {
-                                            <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="@chx.Id" name="zm" type="checkbox" value="@chx.Id">
-                                                <label class="govuk-label govuk-checkboxes__label" for="@chx.Id">
-                                                    @chx.Name
-                                                </label>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input"
+                                       type="checkbox"
+                                       id="@field.Id"
+                                       name="selectedCustomFields"
+                                       value="@field.Id"
+                                       @(Model.SelectedCustomFields.Contains(field.Id) ? "checked" : "")/>
+                                <label class="govuk-label govuk-checkboxes__label" for="@field.Id">
+                                    @field.Name
+                                </label>
                             </div>
                         }
                     </div>
-
-                    <p>@helpers.BackToTopLink()</p>
-
-                </div>
+                </fieldset>
             </div>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full govuk-!-padding-top-4">
-                    <input type="submit" class="govuk-button" value="Next"/>
-                </div>
-            </div>
-        </div>
-        @Html.HiddenFieldsFromQueryString(new[] { EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias })
-    }
-</div>
-
+        }
+    </div>
+    <button type="submit" id="next-button" class="govuk-button">Next</button>
+}
 
 @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
-        var fieldListByCat = @Html.Json(Model.CustomFieldsByCategory);
-        var fieldList = @Html.Json(Model.CustomFields);
-    </script>
-    <script src="@Html.Raw(Html.GetWebpackScriptUrl("download-select-fields.*.js"))"></script>
+    <script src="~/Assets/Scripts/Entry/Download-specific-field.js"></script>
 }

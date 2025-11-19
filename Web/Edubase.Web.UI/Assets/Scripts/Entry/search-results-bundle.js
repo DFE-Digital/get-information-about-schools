@@ -32,7 +32,18 @@ if (document.getElementById('governors-search-results')) {
 let popupFilters;
 if ($(window).width() < 835) {
   popupFilters = new GiasFilterToggle();
+} else {
+
 }
+$(document).on('click', '#clear-filters-additional', function (e) {
+  e.preventDefault();
+
+  $('#additional-filter-wrap input:checked').each(function () {
+    this.checked = false;
+    $(this).trigger('change');
+  });
+  $('.js-selected-counter-text').text('');
+});
 
 window.addEventListener('resize',
   _throttle(function(){

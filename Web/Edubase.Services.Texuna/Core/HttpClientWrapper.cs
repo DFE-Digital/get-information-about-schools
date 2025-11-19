@@ -30,6 +30,7 @@ namespace Edubase.Services
         private readonly HttpClient _httpClient;
         private readonly JsonMediaTypeFormatter _formatter;
         private readonly ApiRecorderSessionItemRepository _apiRecorderSessionItemRepository;
+        private readonly bool _enableApiLogging;
         private const string HEADER_SA_USER_ID = "sa_user_id";
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
         private readonly IClientStorage _clientStorage;
@@ -40,6 +41,11 @@ namespace Edubase.Services
             _clientStorage = clientStorage;
             _formatter = formatter;
             _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
+
+            if (!bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out _enableApiLogging))
+            {
+                _enableApiLogging = false;
+            }
         }
 
         public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null, null)
@@ -332,6 +338,9 @@ namespace Edubase.Services
                         throw new EduSecurityException($"The current principal does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                     case (HttpStatusCode) 429:
                         throw new UsageQuotaExceededException();
+                    // used to mark user/browser disconnects
+                    case (HttpStatusCode) 499:
+                        return;
                     default:
                         throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
                 }
@@ -369,14 +378,31 @@ namespace Edubase.Services
         private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage message, string requestUri)
         {
             AssertJsonContent(message);
-            if (typeof(T) == typeof(string)) return (T) (object) await message.Content.ReadAsStringAsync();
-            else if (typeof(T) == typeof(int?)) return (T) (object) (await message.Content.ReadAsStringAsync()).ToInteger();
-            else
+
+            if (message.Content == null ||
+                message.Content.Headers?.ContentLength == 0)
             {
-                var errorLogger = new FormatterErrorLogger();
-                var retVal = await message.Content.ReadAsAsync<T>(new[] { _formatter }, errorLogger);
-                if (errorLogger.Errors.Any()) throw new TexunaApiSystemException($"Error parsing the JSON returned by the API; (Request URI: {requestUri}) details: {errorLogger.Errors.First().ErrorMessage}");
-                return retVal;
+                return default(T);
+            }
+
+            try
+            {
+                if (typeof(T) == typeof(string)) return (T) (object) await message.Content.ReadAsStringAsync();
+                else if (typeof(T) == typeof(int?))
+                    return (T) (object) (await message.Content.ReadAsStringAsync()).ToInteger();
+                else
+                {
+                    var errorLogger = new FormatterErrorLogger();
+                    var retVal = await message.Content.ReadAsAsync<T>(new[] { _formatter }, errorLogger);
+                    if (errorLogger.Errors.Any())
+                        throw new TexunaApiSystemException(
+                            $"Error parsing the JSON returned by the API; (Request URI: {requestUri}) details: {errorLogger.Errors.First().ErrorMessage}");
+                    return retVal;
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                return default(T);
             }
         }
 
@@ -386,91 +412,103 @@ namespace Edubase.Services
             catch { return null; }
         }
 
-        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
+public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
+{
+    var startTime = DateTime.UtcNow;
+    HttpResponseMessage response = null;
+    var stopwatch = Stopwatch.StartNew();
+
+    try
+    {
+        response = await _httpClient.SendAsync(
+            requestMessage,
+            HttpCompletionOption.ResponseHeadersRead
+        );
+        return response;
+    }
+    catch (HttpRequestException)
+    {
+        throw;
+    }
+    catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
+    {
+        throw new TexunaApiSystemException(
+            $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})",
+            GetRequestJsonBody(requestMessage));
+    }
+    catch (TaskCanceledException ex)
+    {
+        // Following changes to the timeout, we notice that not all timeouts are caught by the above catch block
+        // and the development/"full error detail" error page does not have the exception details.
+        // For this reason we introduce this new catch block to catch all TaskCanceledExceptions that
+        // aren't caught by the above (pre-existing) catch block.
+        var aborted = new HttpResponseMessage((HttpStatusCode)499)
         {
-            var startTime = DateTime.UtcNow;
-            HttpResponseMessage response = null;
-            var stopwatch = Stopwatch.StartNew();
+            ReasonPhrase = "ClientClosedRequest",
+            RequestMessage = requestMessage
+        };
+        response = aborted;
+        return aborted;
+    }
+    finally
+    {
+        stopwatch.Stop();
+        string responseMessage = null;
 
-            try
-            {
-                response = await _httpClient.SendAsync(requestMessage);
-                return response;
-            }
-            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
-            {
-                throw new TexunaApiSystemException(
-                    $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})",
-                    GetRequestJsonBody(requestMessage));
-            }
-            catch (TaskCanceledException ex)
-            {
-                // Following changes to the timeout, we notice that not all timeouts are caught by the above catch block
-                // and the development/"full error detail" error page does not have the exception details.
-                // For this reason we introduce this new catch block to catch all TaskCanceledExceptions that
-                // aren't caught by the above (pre-existing) catch block.
-                throw new TexunaApiSystemException(
-                    $"Task/request cancelled before completion, possibly due to a slow API response (Request URI: {requestMessage.RequestUri.PathAndQuery})",
-                    GetRequestJsonBody(requestMessage));
-            }
-            finally
-            {
-                stopwatch.Stop();
-                string responseMessage = null;
+        var context = HttpContext.Current;
 
-                var context = HttpContext.Current;
-
-                if (response?.Content != null)
-                {
-                    responseMessage = await response.Content?.ReadAsStringAsync();
-                }
+        if (response?.Content != null)
+        {
+            responseMessage = await response.Content.ReadAsStringAsync();
+        }
 #if DEBUG
-                var data = new ApiTraceData
-                {
-                    StartTime = startTime,
-                    DurationMillis = (int) Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
-                    Method = requestMessage.Method.Method,
-                    Url = requestMessage.RequestUri.ToString(),
-                    Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
-                    Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
-                    ResponseCode = response != null ? (int) response.StatusCode : 0,
-                    ClientIpAddress = context?.Request.UserHostAddress,
-                    UserId = context?.User?.Identity?.GetUserId(),
-                    UserName = context?.User?.Identity?.GetUserName()
-                };
+        var data = new ApiTraceData
+        {
+            StartTime = startTime,
+            DurationMillis = (int)Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
+            Method = requestMessage.Method.Method,
+            Url = requestMessage.RequestUri.ToString(),
+            Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
+            Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
+            ResponseCode = response != null ? (int)response.StatusCode : 0,
+            ClientIpAddress = context?.Request.UserHostAddress,
+            UserId = context?.User?.Identity?.GetUserId(),
+            UserName = context?.User?.Identity?.GetUserName()
+        };
 
-                ApiTrace.Data.Add(data);
+        ApiTrace.Data.Add(data);
 #endif
 
-                await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, context?.User?.Identity?.GetUserId());
-            }
-        }
+        await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, context?.User?.Identity?.GetUserId());
+    }
+}
 
         private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed, string userId)
         {
+            if (!_enableApiLogging || _apiRecorderSessionItemRepository == null)
+            {
+                return;
+            }
+
             try
             {
-                bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out bool enableApiLogging);
-                var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? (enableApiLogging ? userId.Clean() : null);
-
-                if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
+                if (responseMessage == null && response?.Content != null)
                 {
-                    if (responseMessage == null && response?.Content != null)
-                    {
-                        responseMessage = await response.Content?.ReadAsStringAsync();
-                    }
-
-                    await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
-                    {
-                        HttpMethod = requestMessage.Method.ToString(),
-                        RawRequestBody = GetRequestJsonBody(requestMessage),
-                        RawResponseBody = responseMessage.Ellipsis(32000),
-                        RequestHeaders = ToJsonIndented(requestMessage.Headers),
-                        ResponseHeaders = ToJsonIndented(response.Headers),
-                        ElapsedTimeSpan = elapsed.ToString(),
-                        ElapsedMS = elapsed.TotalMilliseconds
-                    });
+                    responseMessage = await response.Content.ReadAsStringAsync();
                 }
+
+                var apiSessionId = string.IsNullOrWhiteSpace(userId) ? "global" : userId.Clean();
+
+                await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+                {
+                    HttpMethod = requestMessage.Method.ToString(),
+                    RawRequestBody = GetRequestJsonBody(requestMessage),
+                    RawResponseBody = responseMessage.Ellipsis(32000),
+                    RequestHeaders = ToJsonIndented(requestMessage.Headers),
+                    ResponseHeaders = ToJsonIndented(response.Headers),
+                    ElapsedTimeSpan = elapsed.ToString(),
+                    ElapsedMS = elapsed.TotalMilliseconds
+                });
             }
             catch (Exception)
             {

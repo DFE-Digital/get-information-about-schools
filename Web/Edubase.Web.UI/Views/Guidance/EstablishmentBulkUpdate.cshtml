@@ -1,3 +1,4 @@
+@using System.Configuration
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.imageMQ = "(max-width: 768px)";
@@ -146,722 +147,965 @@
 
         <h2 class="govuk-heading-m">Appendix</h2>
         <table class="govuk-table gias-table gias-table">
+            <colgroup>
+                <col style="width: 35%">
+                <col style="width: 20%">
+                <col style="width: 45%">
+            </colgroup>
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header">
-                    Database name (use this for your upload file)
+                    Guidance Page<br/>(Equivalent field name in app)
                 </th>
                 <th class="govuk-table__header">
-                    Equivalent field name in app
+                    Name / Code
+                </th>
+                <th class="govuk-table__header">
+                    Guidance Page<br/>(Database name)
                 </th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">EstablishmentName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">School / College Name</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Street</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Street</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Locality</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Locality</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Address3</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Address3</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Town</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Town</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">County (name)</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">County (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">County</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
+                <td class="govuk-table__cell" data-label="Equivalent field name in app">County  (name)</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Postcode</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Postcode</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LA</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Local authority</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LA</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)"></td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">LA code</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HeadTitle (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HeadTitle</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Headteacher/Principal title</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HeadFirstName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Headteacher/Principal first name</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HeadLastName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Headteacher/Principal last name</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HeadAppointmentDate</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Headteacher date of appointment</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HeadEmail</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Headteacher/Principal email address</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">StatutoryLowAge</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Age range Low</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">StatutoryHighAge</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Age range High</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PhaseOfEducation (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PhaseOfEducation</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Phase of education</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TypeOfEstablishment (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TypeOfEstablishment</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Establishment type</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">FurtherEducationType (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">FurtherEducationType</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Further education type</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Trusts (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Trusts</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Academy trust or Trust</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SchoolSponsors (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SchoolSponsors</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Academy sponsor</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Federations (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Federations</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Federation</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Gender (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Gender</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Gender of entry</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">URN</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">URN</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">EstablishmentNumber</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Establishment Number</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">UKPRN</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">UK provider reference number (UKPRN)</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">EstablishmentStatus (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">EstablishmentStatus</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Establishment status</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">AdmissionsPolicy (name)</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Admissons policy</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">AdmissionsPolicy</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
+                <td class="govuk-table__cell" data-label="Equivalent field name in app">Admissions policy</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SchoolWebsite</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Website</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TelephoneNum</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Telephone</td>
             </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedRating</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted rating</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedLastInspection</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted last inspection</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Osted report link</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted report link</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Inspectorate</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Inspectorate</td>
-            </tr>
+
+            @if ("true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowBulkUpdateGuidance"], StringComparison.OrdinalIgnoreCase))
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedRating</td>
+                    <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted rating</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedLastInspection</td>
+                    <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted last inspection</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Osted report link</td>
+                    <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted report link</td>
+                </tr>
+            }
+
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Proprietor's name</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's name</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ReligiousCharacter (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ReligiousCharacter</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Religious character</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Diocese (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Diocese</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Diocese</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ReligiousEthos (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ReligiousEthos</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Religious ethos</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Boarders (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Boarders</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Boarders</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">NurseryProvision (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">NurseryProvision</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Nursery provision</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfficialSixthForm (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfficialSixthForm</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Official sixth form</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SchoolCapacity</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">School capacity</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
+                <td class="govuk-table__cell" data-label="Equivalent field name in app">School Capacity</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Section 41 Approved</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Section41Approved</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Section 41 approved</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OpenDate</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Open date</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ReasonEstablishmentOpened (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ReasonEstablishmentOpened</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Reason establishment opened</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CloseDate</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Close date</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ReasonEstablishmentClosed (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ReasonEstablishmentClosed</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Reason establishment closed</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCOperationalHours</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Operational hours</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCNumberOfUnder5s</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Number of under 5s</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCGovernance</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Governance</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCGovernanceDetail</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Governance detail</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCLAContactName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Local authority contact name</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCLAContactEmail</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Local authority contact email</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCLAContactLAPhone</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Local authority contact telephone number</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChildrensCentresGroupFlag</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Delivery model</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChildrensCentresGroup (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChildrensCentresGroup</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Group/Collaboration name</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCGroupLead (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCGroupLead</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Group lead centre</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChildrensCentresPhaseType (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChildrensCentresPhaseType</td>
+                <td class="govuk-table__cell" data-label="Name / Code"This is a name field></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Phase</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCDisadvantagedArea (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCDisadvantagedArea</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Disadvantaged area</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCDirectProvisionOfEarlyYears (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCDirectProvisionOfEarlyYears</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Direct provision of early years</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SpecialClasses (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SpecialClasses</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Special classes</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SENStat</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Number of special pupils under a special educational needs (SEN) statement/education, health and care (EHC) plan</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SENNoStat</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Number of special pupils not under a special educational needs (SEN) statement/education, health and care (EHC) plan</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">MainEmail</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Email address</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">AlternativeEmail</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Alternative email address</td>
             </tr>
+
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LastChangedDate</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Last Changed Date</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Type of SEN provision</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a code field</td>
+                <td class="govuk-table__cell govuk-body-s" data-label="Equivalent field name in app">
+                    <div>SEN1</div>
+                    <br/>
+                    <div>
+                        Enter a comma separated list of codes for each type of SEN provision that you want applying to establishments: -
+                    </div>
+                    <br/><br>
+                    <table style="border-collapse: collapse;">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="govuk-visually-hidden" style="padding: 0;">Code</th>
+                            <th scope="col" class="govuk-visually-hidden" style="padding: 0;">Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(01)</td>
+                            <td style="padding: 0;">VI - Visual Impairment</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(02)</td>
+                            <td style="padding: 0;">HI - Hearing Impairment</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(03)</td>
+                            <td style="padding: 0;">SLCN - Speech, language and Communication</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(04)</td>
+                            <td style="padding: 0;">ASD - Autistic Spectrum Disorder</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(05)</td>
+                            <td style="padding: 0;">SEMH - Social, Emotional and Mental Health</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(06)</td>
+                            <td style="padding: 0;">MSI - Multi-Sensory Impairment</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(07)</td>
+                            <td style="padding: 0;">PD - Physical Disability</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(08)</td>
+                            <td style="padding: 0;">MLD - Moderate Learning Difficulty</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(09)</td>
+                            <td style="padding: 0;">SLD - Severe Learning Difficulty</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(10)</td>
+                            <td style="padding: 0;">PMLD - Profound and Multiple Learning Difficulty</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(11)</td>
+                            <td style="padding: 0;">SpLD - Specific Learning Difficulty</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 8px 0 0; vertical-align: top;">(12)</td>
+                            <td style="padding: 0;"> OTH - Other Difficulty/Disability</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 1.4em;">Example: 01, 07, 12</div>
+                </td>
             </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SEN1</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Type of SEN provision</td>
-            </tr>
+
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TeenMoth</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Teenage mothers provision</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TeenMothPlaces</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Teenage mothers capacity</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CCF</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Childcare facilities provision</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SENPRU</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">SEN facilities</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">EBD</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Pupils with EBD</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PlacesPRU</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Number of places</td>
             </tr>
-
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">FTProv</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Full time provision</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">EdByOther</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Pupils educated by other providers</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TypeOfResourcedProvision</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Type of resourced provision</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ResourcedProvisionOnRoll</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Resourced provision number on roll</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ResourcedProvisionCapacity</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Resourced provision capacity</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SenUnitOnRoll</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">SEN unit number on roll</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SenUnitCapacity</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">SEN unit capacity</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">InspectorateName</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Inspectoratename</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Inspectorate Name</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">InspectorateReport</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Inspectorate Report</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateOfLastInspectionVisit</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of Last Inspection Visit</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">NextInspectionVisit</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Next Inspection Visit</td>
             </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">RSCRegion</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">RSC Region</td>
-            </tr>
+
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">GOR</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Government Office Region</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DistrictAdministrative</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">District</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">AdministrativeWard</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Ward</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ParliamentaryConstituency</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Parliamentary Constituency</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">UrbanRural</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Urban/Rural Description</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">GSSLACode</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">GSS LA Code</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Easting</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Easting</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Northing</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Northing</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CensusAreaStatisticWard</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Census Ward</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">MSOA</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Middle Super Output Area (MSOA)</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LSOA</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Lower Super Output Area (LSOA)</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Notes</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Notes</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullBridgeInspection</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last Bridge Visit</td>
             </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullOfstedInspection</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last Ofsted Visit</td>
-            </tr>
+
+            @if ("true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowBulkUpdateGuidance"], StringComparison.OrdinalIgnoreCase))
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullOfstedInspection</td>
+                    <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last Ofsted Visit</td>
+                </tr>
+            }
+
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullISIInspection</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last ISI Visit</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullWelfareInspection</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last Welfare Visit</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFPVisit</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last FP Visit</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullSISInspection</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last SIS Visit</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateNextFullInspection</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date Next Full Inspection Due</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ActionGEN</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Next General Action Required</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ActionWEL</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Next Action Required by WEL</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ActionFP</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ActionFP </td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Next Action Required by FP</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Inspectorate</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Inspectorate</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">IndependentSchoolType</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Independent School Type</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CharityName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Charity Organisation</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CharityNum</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Charity Registration Number</td>
             </tr>
 
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TotalPupilsFullTime</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Total number of full time pupils</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TotalPupilsPartTime</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Total number of part time pupils</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">CompSchoolAge</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Total number of pupils of compulsory school age</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SENStat</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Number of special pupils under a SEN statement/EHCP</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">SENNoStat</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Number of special pupils not under a SEN statement/EHCP</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TotalPupilsInPublicCare</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Total Number of Pupils in Public Care</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTBoys2andUnder</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Boys (Aged 2 and Under):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTBoys3</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Boys (Aged 3):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTBoys4a</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Boys (Aged 4a):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTBoys4b</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Boys (Aged 4b):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTBoys4c</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Boys (Aged 4c):</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
+                <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Girls (Aged 4c):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TotalBoyBoarders</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Total number of boys in boarding schools</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTGirls2andUnder</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Girls (Aged 2 and Under):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTGirls3</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Girls (Aged 3):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTGirls4a</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Girls (Aged 4a):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTGirls4b</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Girls (Aged 4b):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PTGirls4c</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">PT Girls (Aged 4c):</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TotalGirlBoarders</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Total number of Girls in boarding schools</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TotalStaffFullTime</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Total Number of Full Time Staff</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TotalStaffPartTime</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Total Number of Part Time Staff</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LowDayFee</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Lowest Annual Rate for Day Pupils:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HighDayFee</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Highest Annual Rate for Day Pupils:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LowBoardFee</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Lowest Annual Rate for Boarding Pupils:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HighBoardFee</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Highest Annual Rate for Boarding Pupils:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">BoardingEstablishment</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Boarding Establishment</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Name:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsStreet</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Street:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsLocality</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Locality:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsAddress3</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Address 3:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsTown</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Town:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsCounty</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's County:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsPostcode</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Postcode:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsTelephoneNum</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Telephone Number:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsFaxNumber</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Fax Number:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsEmail</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Email:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PropsPreferredJobTitle</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Proprietor's Preferred Job Title:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Name:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyStreet</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Street:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyLocality</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Locality:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyAddress3</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Address 3:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyTown</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Town:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyCounty</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body County:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyPostcode</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Postcode:</td>
             </tr>
 
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyTelephoneNum</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Telephone Number:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyFaxNumber</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Fax Number:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyEmail</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Email:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ChairOfProprietorBodyPreferredJobTitle</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Chair of Proprietor's Body Preferred Job Title:</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">AccomChange</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Accomodation changed</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">HelpdeskNotes</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Helpdesk notes</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LastUpdate</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Last update</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Trigger1</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Trigger 1</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PreviousLA (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PreviousLA</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Previous local authority</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">PreviousEstablishmentNumber</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Previous establishment number</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">AltSiteName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Site 2 name</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ConStreet</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Street</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ConLocality</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Locality</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ContactAddress3</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Address 3</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ConTown</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Town</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ConCounty (name)</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ConCounty</td>
+                <td class="govuk-table__cell" data-label="Name / Code">This is a name field</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">County</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ConPostcode</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Postcode</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">ConTelNumber</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Telephone</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LinkURN</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">URN</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LinkName</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Establishment name</td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LinkType</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Type of link</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LinkEstablishedDate</td>
+                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">LinkEstablishmentDate</td>
+                <td class="govuk-table__cell" data-label="Name / Code"></td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date linked</td>
             </tr>
             </tbody>
@@ -870,3 +1114,16 @@
         @helpers.BackToTopLink()
     </div>
 </div>
+
+<script>
+    document.getElementById("copySafeTable").addEventListener("copy", function (e) {
+        e.preventDefault();
+
+        let rows = Array.from(this.querySelectorAll("tr"))
+            .map(tr => Array.from(tr.querySelectorAll("td"))
+                .map(td => td.innerText).join("\t"))
+            .join("\n");
+
+        e.clipboardData.setData("text/plain", rows);
+    });
+</script>

@@ -139,7 +139,15 @@
             </div>
 
             @Html.HiddenFieldsFromQueryString()
-
+            foreach (var laId in Model.SelectedLocalAuthorityIds ?? Enumerable.Empty<int>())
+            {
+                <input type="hidden" name="SelectedLocalAuthorityIds" value="@laId" />
+            }
+            var statusId = Request.QueryString.GetValues("SelectedEstablishmentStatusIds") ?? new string[0];
+            foreach (var status in statusId)
+            {
+                @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{HttpUtility.HtmlEncode(status)}\" />")
+            }
             <input class="govuk-button" type="submit" value="Select and continue">
         }
     </div>

@@ -11,7 +11,7 @@
 {
     <div class="govuk-checkboxes__item">
         @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "govuk-checkboxes__input gias-checkboxes__conditional--input", Html.NameFor(x => x.Selected), "expand-" + Model.Id))
-        <label class="govuk-checkboxes__label" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
+        <label class="govuk-checkboxes__label govuk-body" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
     </div>
 }
 else

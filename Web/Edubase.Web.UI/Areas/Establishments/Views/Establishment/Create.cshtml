@@ -119,7 +119,7 @@
 
                 <div id="number-gen-options">
                     <fieldset class="govuk-fieldset inline create-estab-number-gen">
-                        <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
+                        <legend id="GenerateEstabNumber" class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
                             @Html.ValidationMessageFor(x => x.GenerateEstabNumber, null, new { @class = "govuk-error-message" })
                             <div class="govuk-radios">
@@ -152,7 +152,7 @@
 
                     <div id="number-entry">
                         <fieldset class="govuk-fieldset inline create-estab-number-gen">
-                            <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
+                            <legend id="GenerateEstabNumber" class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
                             <div id="enter-number-nonjs">
                                 <div id="enter-number-form-group" class="govuk-form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
                                     @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new { @class = "govuk-label" })
