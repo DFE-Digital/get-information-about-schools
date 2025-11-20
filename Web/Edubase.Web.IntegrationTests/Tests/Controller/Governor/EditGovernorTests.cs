@@ -6,10 +6,10 @@ using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Resp
 using Edubase.Web.UI.Areas.Governors.Models;
 using Newtonsoft.Json;
 
-namespace Edubase.Web.IntegrationTests.Tests.EditGovernors;
+namespace Edubase.Web.IntegrationTests.Tests.Controller.Governor;
 
 [Collection(IntegrationTestsCollectionMarker.Name)]
-public sealed class EditGovernorTests 
+public sealed class EditGovernorTests
 {
     private readonly GiasWebApplicationFactory _webApplicationFactory;
     private readonly EdubaseApiServerFixture _apiServer;
@@ -31,17 +31,17 @@ public sealed class EditGovernorTests
                 new HttpMappingFile("display-policy", "test3.json")
             ]);
 
-        HttpMappedResponses mappedHttpResponses = await _apiServer.RegisterHttpMapping(request);
+        var mappedHttpResponses = await _apiServer.RegisterHttpMapping(request);
 
-        List<LookupDto> mappedResponse =
+        var mappedResponse =
             mappedHttpResponses.GetResponseById("governor-appointing-bodies")
                 .GetResponseBody<List<LookupDto>>();
 
-        List<LookupDto> mappedTitles =
+        var mappedTitles =
             mappedHttpResponses.GetResponseById("titles")
                 .GetResponseBody<List<LookupDto>>();
 
-        GovernorDisplayPolicy displayPolicy =
+        var displayPolicy =
             mappedHttpResponses.GetResponseById("display-policy")
                 .GetResponseBody<GovernorDisplayPolicy>();
 
