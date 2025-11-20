@@ -8,7 +8,8 @@ namespace Edubase.Web.UI.Helpers.ModelBinding.Factories;
 /// Provides functionality to create collection instances from a specified type and populate them with items.
 /// Supports arrays, generic interfaces (e.g., IEnumerable&lt;T&gt;), and concrete IList implementations.
 /// </summary>
-public class CollectionFactory : ICollectionFactory
+public class CollectionFactory(
+    ITypeFactory typeFactory) : ICollectionFactory
 {
     /// <summary>
     /// Creates a collection instance of the specified type and populates it with the provided items.
@@ -33,13 +34,15 @@ public class CollectionFactory : ICollectionFactory
         // Handle abstract or interface types by falling back to List<T>
         if (listType.IsInterface || listType.IsAbstract)
         {
-            return CreateAndPopulateList(typeof(List<>).MakeGenericType(elementType), items);
+            return CreateAndPopulateList(
+                concreteType: typeof(List<>).MakeGenericType(elementType), items);
         }
 
         // Handle concrete types that implement IList
         if (typeof(IList).IsAssignableFrom(listType))
         {
-            return CreateAndPopulateList(listType, items);
+            return CreateAndPopulateList(
+                concreteType: listType, items);
         }
 
         // If none of the above, the type is unsupported
@@ -53,18 +56,17 @@ public class CollectionFactory : ICollectionFactory
     /// <param name="concreteType">The concrete list type to instantiate.</param>
     /// <param name="items">The items to add to the list.</param>
     /// <returns>A populated IList instance.</returns>
-    private static object CreateAndPopulateList(Type concreteType, object[] items)
+    private object CreateAndPopulateList(Type concreteType, object[] items)
     {
-        object instance = Activator.CreateInstance(concreteType);
+        object instance =
+            typeFactory.CreateInstance(concreteType);
 
-        if (instance is not IList list)
-        {
+        if (instance is not IList list){
             throw new InvalidOperationException(
                 $"Type {concreteType.FullName} does not implement IList.");
         }
 
-        foreach (object item in items)
-        {
+        foreach (object item in items){
             list.Add(item);
         }
 

@@ -10,21 +10,19 @@ namespace Edubase.Web.UI.Helpers.ModelBinding.Factories;
 public interface ITypeFactory
 {
     /// <summary>
-    /// Creates an instance of the specified type.
+    /// Creates an instance of the specified type using its parameterless constructor.
     /// </summary>
-    /// <param name="type">
-    /// The <see cref="Type"/> to instantiate. This may be a concrete class, a generic type,
-    /// or a resolved implementation of an abstract or interface type.
-    /// </param>
-    /// <returns>
-    /// A new instance of the specified type, or throws an exception if the type cannot be instantiated.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when the provided <paramref name="type"/> is <c>null</c>.
-    /// </exception>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when the type is abstract, an interface, or lacks a public parameterless constructor.
-    /// </exception>
     object CreateInstance(Type type);
+
+    /// <summary>
+    /// Creates an instance of the specified type using a
+    /// constructor that matches the given argument types.
+    /// </summary>
+    object CreateInstance(Type type, params object[] args);
+
+    /// <summary>
+    /// Generic convenience overload for parameterless constructors.
+    /// </summary>
+    TObject CreateInstance<TObject>();
 }
 

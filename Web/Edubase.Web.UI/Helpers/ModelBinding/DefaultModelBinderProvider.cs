@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
+using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler;
 using Edubase.Web.UI.Helpers.ModelBinding.Factories;
-using Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,7 @@ namespace Edubase.Web.UI.Helpers.ModelBinding;
 /// <summary>
 /// Provides a custom model binder to the ASP.NET Core model binding system.
 /// This binder is responsible for resolving and supplying an instance of <see cref="DefaultModelBinder"/>
-/// using scoped services for type conversion and object creation.
+/// using scoped services for type conversion, object creation, and property binder handlers.
 /// </summary>
 public class DefaultModelBinderProvider : IModelBinderProvider
 {
@@ -42,11 +43,17 @@ public class DefaultModelBinderProvider : IModelBinderProvider
         // Create a new service scope for resolving scoped services
         IServiceScope scope = scopeFactory.CreateScope();
 
-        // Resolve the required services from the scoped provider and construct the model binder
-        var binder = new DefaultModelBinder(
-            scope.ServiceProvider.GetRequiredService<ITypeConverter>(),
-            scope.ServiceProvider.GetRequiredService<ITypeFactory>()
-        );
+        // Resolve the required services from the scoped provider
+        IEnumerable<IPropertyBinderHandler> handlers =
+            scope.ServiceProvider
+                .GetRequiredService<IEnumerable<IPropertyBinderHandler>>();
+
+        ITypeFactory factory =
+            scope.ServiceProvider
+                .GetRequiredService<ITypeFactory>();
+
+        // Construct the model binder with injected handlers and factory
+        DefaultModelBinder binder = new(handlers, factory);
 
         return binder;
     }
