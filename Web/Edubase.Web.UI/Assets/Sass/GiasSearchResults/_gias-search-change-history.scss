@@ -1,5 +1,3 @@
-@include mq-add-breakpoint('resultsBp', 835px);
-
 .hide-show-filters {
   position: relative;
   left: 15px;
@@ -26,7 +24,7 @@
     border-left: 9px solid $govuk-brand-colour;
   }
 
-  @include govuk-media-query($until: resultsBp) {
+/*  @include govuk-media-query($until: resultsBp) {
     display: none;
-  }
+  }*/
 }

@@ -49,13 +49,13 @@ const config = {
   },
   output: {
     filename: '[name].[contenthash].js',
-    path: buildDir + '/assets/scripts/build/'
+    path: path.resolve(__dirname, 'bin/Debug/net8.0/public/assets/scripts/build')
   },
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['*', '.js', '.vue', '.json']
+    extensions: ['.js', '.vue', '.json']
   },
   module: {
     rules: [
@@ -100,7 +100,7 @@ const config = {
               postcssOptions: {
                 plugins: [
                   base64({
-                    excludeAtFontFace: false,
+                    excludeAtFontFace: true,
                     replaceValues: true,
                     extensions: ['.woff2', '.woff']
                   }),

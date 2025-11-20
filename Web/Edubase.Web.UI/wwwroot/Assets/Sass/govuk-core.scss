@@ -3,8 +3,10 @@
 // but you'll need to copy / paste the output css and update any font urls to data uri when upgrading GOVUK front end
 //
 $govuk-global-styles: true;
+$govuk-assets-path: "/govuk-frontend/";
 
-@import "GiasHelpers/all";
+@import "govuk-frontend/dist/govuk/all";
+@import "govuk-frontend/dist/govuk/utilities/all";
 @import "govuk-frontend/dist/govuk/base";
 @import "govuk-frontend/dist/govuk/core/all";
 @import "govuk-frontend/dist/govuk/objects/all";
@@ -12,5 +14,5 @@ $govuk-global-styles: true;
 @import "govuk-frontend/dist/govuk/components/header/index";
 @import "govuk-frontend/dist/govuk/components/phase-banner/index";
 @import "govuk-frontend/dist/govuk/components/skip-link/index";
-@import "govuk-frontend/dist/govuk/utilities/all";
 @import "govuk-frontend/dist/govuk/overrides/all";
+@import "GiasHelpers/all";

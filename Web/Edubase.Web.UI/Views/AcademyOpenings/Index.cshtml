@@ -129,7 +129,7 @@
                         <option value="">All months</option>
                         @foreach (var m in Model.MonthOptions)
                         {
-                            <option value="@m.Value" (m.Selected ? "selected" : "")>@m.Text</option>
+                            <option value="@m.Value" selected="@(m.Selected ? "selected" : null)">@m.Text</option>
                         }
                     </select>
                     <noscript><button type="submit" class="govuk-button">Filter</button></noscript>

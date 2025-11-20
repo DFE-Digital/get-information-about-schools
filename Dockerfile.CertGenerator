@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/openjdk/jdk:25-ubuntu
+
+
+RUN apt-get update \
+    && apt-get install -y openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+COPY scripts/generate_wiremock_server_cert.sh .
+
+CMD ["/build/generate_wiremock_server_cert.sh"]
