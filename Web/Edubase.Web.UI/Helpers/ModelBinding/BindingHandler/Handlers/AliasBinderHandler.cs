@@ -1,15 +1,15 @@
 using System.Reflection;
 using System.Threading.Tasks;
+using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers.Extensions;
 using Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers;
 
 /// <summary>
-/// Handler that binds properties using BindAlias attributes.
+/// Handler that binds properties using <see cref="BindAliasAttribute"/> annotations.
 /// </summary>
-public sealed class AliasBinderHandler(
-    ITypeConverter converter) : PropertyBinderHandler
+public sealed class AliasBinderHandler(ITypeConverter converter) : PropertyBinderHandler
 {
     /// <summary>
     /// Attempts to bind a property using any <see cref="BindAliasAttribute"/> defined on it.
@@ -27,42 +27,27 @@ public sealed class AliasBinderHandler(
     /// A task that resolves to <c>true</c> if the property was successfully bound using an alias,
     /// or <c>false</c> if binding was delegated to the next handler in the chain.
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// This method inspects the property for any <see cref="BindAliasAttribute"/> instances.
-    /// For each alias, it attempts to retrieve a value from the <see cref="ModelBindingContext.ValueProvider"/>.
-    /// If a value is found, it is normalized (joined into a comma-separated string if multiple values exist),
-    /// converted to the target property type using the configured type converter, and assigned to the property.
-    /// </para>
-    /// <para>
-    /// If no alias values are found or conversion fails, the request is delegated to the next handler
-    /// in the chain (e.g., <c>ArrayBinderHandler</c>, <c>ListBinderHandler</c>, etc.).
-    /// </para>
-    /// </remarks>
     public override async Task<bool> HandleAsync(
         ModelBindingContext context, object model, PropertyInfo property)
     {
-        foreach (var alias in property.GetCustomAttributes<BindAliasAttribute>(true))
+        foreach (BindAliasAttribute alias in property.GetBindAliases())
         {
-            ValueProviderResult valueResult =
-                context.ValueProvider.GetValue(alias.Alias);
+            ValueProviderResult valueResult = context.ValueProvider.GetValue(alias.Alias);
 
-            if (valueResult == ValueProviderResult.None) { continue; }
+            if (!valueResult.HasValues()) { continue; }
 
             try
             {
-                // Instead of handling arrays/lists here, just normalise the alias
-                // and delegate to the rest of the chain.
-                string combined = string.Join(",", valueResult.Values);
-
-                // Use the converter for simple types
-                object converted =
-                    converter.Convert(combined, property.PropertyType);
-
+                // Normalise multiple values into a single string
+                string combined = valueResult.ToCombinedString();
+                // Convert to the target property type
+                object converted = converter.Convert(combined, property.PropertyType);
+                // Assign the converted value
                 property.SetValue(model, converted);
                 return true;
             }
-            catch{
+            catch
+            {
                 context.Result = ModelBindingResult.Failed();
             }
         }

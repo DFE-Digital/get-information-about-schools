@@ -7,7 +7,7 @@ namespace Edubase.Web.UI.Helpers.ModelBinding;
 /// model binding time (i.e. when data comes in from a request).
 /// </summary>
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
-internal class BindAliasAttribute : Attribute
+public sealed class BindAliasAttribute : Attribute
 {
     public BindAliasAttribute(string alias)
     {

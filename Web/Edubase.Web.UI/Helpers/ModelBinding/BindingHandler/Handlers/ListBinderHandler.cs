@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers.Extensions;
 using Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers;
 
 /// <summary>
-/// Handler that binds List&lt;T&gt; properties by converting values from the ValueProvider.
+/// Handler that binds <see cref="List{T}"/> properties by converting values from the ValueProvider.
 /// Delegates conversion logic to <see cref="DefaultTypeConverter"/>.
 /// </summary>
-public sealed class ListBinderHandler(
-    ITypeConverter converter) : PropertyBinderHandler
+public sealed class ListBinderHandler(ITypeConverter converter) : PropertyBinderHandler
 {
     /// <summary>
     /// Attempts to bind a property when its type is a generic <see cref="List{T}"/>.
@@ -51,14 +51,13 @@ public sealed class ListBinderHandler(
             return await base.HandleAsync(context, model, property);
         }
 
-        string propertyPrefix = string.IsNullOrEmpty(context.ModelName)
-            ? property.Name
-            : $"{context.ModelName}.{property.Name}";
+        string propertyPrefix =
+            context.BuildPropertyPrefix(property);
 
         ValueProviderResult valueResult =
             context.ValueProvider.GetValue(propertyPrefix);
 
-        if (valueResult == ValueProviderResult.None)
+        if (!valueResult.HasValues())
         {
             return await base.HandleAsync(context, model, property);
         }
@@ -66,14 +65,17 @@ public sealed class ListBinderHandler(
         try
         {
             // Delegate conversion to DefaultTypeConverter
+            string combined =
+                valueResult.ToCombinedString();
+
             object converted =
-                converter.Convert(string.Join(
-                    ",", valueResult.Values), property.PropertyType);
+                converter.Convert(combined, property.PropertyType);
 
             property.SetValue(model, converted);
             return true;
         }
-        catch{
+        catch
+        {
             context.Result = ModelBindingResult.Failed();
             return await base.HandleAsync(context, model, property);
         }

@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Threading.Tasks;
+using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers.Extensions;
 using Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -9,8 +10,7 @@ namespace Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers;
 /// Handler that binds array properties by converting values from the ValueProvider.
 /// Delegates conversion logic to <see cref="DefaultTypeConverter"/>.
 /// </summary>
-public sealed class ArrayBinderHandler(
-    ITypeConverter converter) : PropertyBinderHandler
+public sealed class ArrayBinderHandler(ITypeConverter converter) : PropertyBinderHandler
 {
     /// <summary>
     /// Attempts to bind a property when its type is an array.
@@ -49,31 +49,27 @@ public sealed class ArrayBinderHandler(
             return await base.HandleAsync(context, model, property);
         }
 
-        string propertyPrefix = string.IsNullOrEmpty(context.ModelName)
-            ? property.Name
-            : $"{context.ModelName}.{property.Name}";
+        string propertyPrefix = context.BuildPropertyPrefix(property);
 
-        ValueProviderResult valueResult =
-            context.ValueProvider.GetValue(propertyPrefix);
+        ValueProviderResult valueResult = context.ValueProvider.GetValue(propertyPrefix);
 
-        if (valueResult == ValueProviderResult.None){
+        if (!valueResult.HasValues())
+        {
             return await base.HandleAsync(context, model, property);
         }
 
         try
         {
             // Normalise multiple values into a single comma-delimited string
-            string combined =
-                string.Join(",", valueResult.Values);
-
+            string combined = valueResult.ToCombinedString();
             // Delegate conversion to DefaultTypeConverter
-            object converted =
-                converter.Convert(combined, property.PropertyType);
+            object converted = converter.Convert(combined, property.PropertyType);
 
             property.SetValue(model, converted);
             return true;
         }
-        catch{
+        catch
+        {
             context.Result = ModelBindingResult.Failed();
             return await base.HandleAsync(context, model, property);
         }

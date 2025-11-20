@@ -55,25 +55,25 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            @await Html.PartialAsync("_ShowLegalDuty", Model);
+            @await Html.PartialAsync("_ShowLegalDuty", Model)
         </div>
     </div>
     if (Model.ShowDelegationAndCorpContactInformation)
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                @await Html.PartialAsync("_ShowDelegationInformation", Model);
+                @await Html.PartialAsync("_ShowDelegationInformation", Model)
             </div>
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                @await Html.PartialAsync("_ShowCorporateContactInformation", Model);
+                @await Html.PartialAsync("_ShowCorporateContactInformation", Model)
             </div>
         </div>
     }
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            @await Html.PartialAsync("_DisplayGovernanceMode", Model);
+            @await Html.PartialAsync("_DisplayGovernanceMode", Model)
         </div>
     </div>
 
@@ -172,7 +172,7 @@ else
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            @await Html.PartialAsync("_ShowLegalDuty", Model);
+            @await Html.PartialAsync("_ShowLegalDuty", Model)
         </div>
     </div>
 
@@ -180,7 +180,7 @@ else
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                @await Html.PartialAsync("_DisplayGovernanceMode", Model);
+                @await Html.PartialAsync("_DisplayGovernanceMode", Model)
             </div>
         </div>
     }
@@ -189,8 +189,8 @@ else
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full governors-section">
-                @await Html.PartialAsync("_ShowDelegationInformation", Model);
-                @await Html.PartialAsync("_ShowCorporateContactInformation", Model);
+                @await Html.PartialAsync("_ShowDelegationInformation", Model)
+                @await Html.PartialAsync("_ShowCorporateContactInformation", Model)
             </div>
         </div>
     }
@@ -198,7 +198,7 @@ else
 
 @if (Model.DomainModel.HasGovernors)
 {
-    @await Html.PartialAsync("_DisplayGovernors", Model);
+    @await Html.PartialAsync("_DisplayGovernors", Model)
 }
 else
 {
