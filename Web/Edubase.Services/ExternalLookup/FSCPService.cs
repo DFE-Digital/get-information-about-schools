@@ -41,7 +41,13 @@ namespace Edubase.Services.ExternalLookup
         public string PublicURL(int? urn, string name, bool mat = false)
         {
             var collection = GetCollection(mat);
-            var safeName = UriHelper.SchoolNameUrl(name);
+            var originalName = name?.Trim() ?? string.Empty;
+            var safeName = UriHelper.SchoolNameUrl(originalName);
+
+            if (safeName.EndsWith("1") && !originalName.EndsWith("1") && !originalName.EndsWith(" 1"))
+            {
+                safeName = safeName.Substring(0, safeName.Length - 1);
+            }
             return $"{_client.BaseAddress.AbsoluteUri}{collection}/{urn}/{safeName}";
         }
 

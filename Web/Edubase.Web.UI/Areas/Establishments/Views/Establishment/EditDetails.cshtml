@@ -196,18 +196,17 @@
                     </summary>
                     <div class="govuk-details__text">
                         <p>
-                            The @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment email
-                            address must be added here. This must be an up-to-date, valid and actively monitored email address.
-                            This information is not publicly displayed on the website&apos;s interface and is classed as personal data,
-                            therefore it cannot be shared publicly, for example, through a Freedom of Information (FOI)
-                            request. Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with
-                            other government departments, non-departmental public bodies, arm&apos;s length bodies and
-                            partners for official functions and tasks within the public interest to be performed.
+                            The headteacher/principal/manager personal establishment email address must
+                            be added here. This must be an up-to-date, valid, and actively monitored email address.
+                            This information is not publicly displayed on the website's user interface (UI) or in any extracts of data;
+                            it is classed as personal data, therefore it cannot be shared publicly, for example, through a Freedom of
+                            Information (FOI) request. Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be
+                            shared with other government departments, non-departmental public bodies, arm's length bodies, local authorities,
+                            and partners, for official functions and tasks within the public interest to be performed.
+                            This can include for use in criminal investigations and safeguarding.
                         </p>
                         <p>
-                            This information is very important as it allows the Department for Education to share important
-                            information and messages with headteachers/principals/managers, especially during
-                            the Coronavirus pandemic.
+                            This information is extremely important as it allows the Department for Education to share important information and messages with headteachers/principals/managers.
                         </p>
                     </div>
                 </details>
@@ -326,6 +325,52 @@
                     <label class="govuk-label" for="StatusId">Establishment status</label>
                     @Html.ValidationMessageFor(x => x.StatusId, null, new { @class = "govuk-error-message" })
                     @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
+            {
+                var canEdit = Model.EditPolicy.IEBTDetail.RegistrationSuspended;
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RegistrationSuspended)">
+                    @Html.LabelFor(x => x.RegistrationSuspended, new { @class = "govuk-label" })
+
+                    @{
+                        var items = Enum.GetValues(typeof(Edubase.Services.Enums.RegistrationSuspendedStatus))
+                            .Cast<Edubase.Services.Enums.RegistrationSuspendedStatus>()
+                            .Select(e => new SelectListItem
+                            {
+                                Value = ((int)e).ToString(),
+                                Text = e.EnumDisplayNameFor(),
+                                Selected = (Model.RegistrationSuspended.HasValue && (int)Model.RegistrationSuspended == (int)e)
+                            });
+
+                        var selectedValue = Model.RegistrationSuspended.HasValue
+                            ? ((int)Model.RegistrationSuspended.Value).ToString()
+                            : null;
+                    }
+
+                    @if (canEdit)
+                    {
+                        @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message" })
+                        @Html.DropDownListFor(
+                            x => x.RegistrationSuspended,
+                            new SelectList(items, "Value", "Text", selectedValue),
+                            new { @class = "govuk-select" }
+                        )
+                    }
+                    else
+                    {
+                        @Html.DropDownList(
+                            "RegistrationSuspended_readonly",
+                            new SelectList(items, "Value", "Text", selectedValue),
+                            new { @class = "govuk-select", disabled = "disabled", aria_disabled = "true" }
+                        )
+                        @Html.Hidden(
+                            nameof(Model.RegistrationSuspended),
+                            selectedValue
+                        )
+                    }
                 </div>
             }
 
@@ -652,19 +697,19 @@
                     </summary>
                     <div class="govuk-details__text">
                         <p>
-                            The main establishment email address and the alternative establishment email address (if one exists for
-                            your establishment) should be added here respectively. These must be up-to-date, valid and actively
-                            monitored email addresses. No personal email addresses or personal establishment email addresses should
-                            be added to these fields. Although these fields are not publicly displayed on the website&apos;s
-                            interface they are not classed as personal data, therefore under certain circumstances GIAS must
-                            share this information, for example, if the department is requested to do so under a Freedom of
-                            Information (FOI) request. This data can be used by the DfE and other government departments,
-                            non-departmental public bodies, arm&apos;s length bodies and partners for official functions and tasks within
-                            the public interest.
+                            The main establishment email address and the alternative establishment email address
+                            (if one exists for your establishment) should be added here respectively.
+                            These must be up-to-date, valid, and actively monitored email addresses.
+                            No personal email addresses or personal establishment email addresses should be added to these fields.
+                            Although these fields are not publicly displayed on the website's user interface (UI) they
+                            are not classed as personal data, therefore under certain circumstances GIAS must share this information,
+                            for example, if the department is requested to do so under a Freedom of Information (FOI) request.
+                            This data can be used by the DfE and other government departments, non-departmental public bodies,
+                            arm's length bodies, local authorities, and partners, for official functions and tasks within the public
+                            interest to be performed. This can include for use in criminal investigations and safeguarding.
                         </p>
                         <p>
-                            This information is very important as it allows the Department for Education to share important
-                            information and messages with establishments, especially during the Coronavirus pandemic.
+                            This information is extremely important as it allows the Department for Education to share important information and messages with establishments.
                         </p>
                     </div>
                 </details>
@@ -700,7 +745,7 @@
                                 <div class="govuk-checkboxes__item">
                                     <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)" class="govuk-checkboxes__input"
                                            value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked") />
-                                    <label for="@nameof(Model.SENProvisions)_@item.Id" class="govuk-checkboxes__label">@item.Name</label>
+                                    <label for="@nameof(Model.SENProvisions)_@item.Id" class="govuk-checkboxes__label govuk-body">@item.Name</label>
                                 </div>
                             }
                         </div>

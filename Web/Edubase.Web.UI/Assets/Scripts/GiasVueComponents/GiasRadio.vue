@@ -4,8 +4,8 @@
            :id="inputId" type="radio"
            :value="value"
            :name="name"
-           :checked="checkedValue === value"
-           @change="emitValue($event.target.value)" />
+           v-model="value"
+           v-on:change="emitValue($event.target.value)" />
     <label class="govuk-label govuk-radios__label vue" :for="inputId">
       {{labeltext}}
     </label>
@@ -15,6 +15,10 @@
 <script>
     export default {
       name: "giasRadio",
+      model: {
+        prop: 'checked',
+        event: 'change'
+      },
       props: {
         value: String,
         labeltext: String,
@@ -24,7 +28,7 @@
       },
       methods: {
         emitValue: function(value) {
-          this.$emit('update:checkedValue', value);
+          this.$emit('input', value);
         }
       },
       computed: {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Web.Mvc;
 using Edubase.Services.Core;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models
@@ -11,7 +12,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
             Take = 50;
         }
         public PaginatedResult<EditAcademyOpeningViewModel> AcademyOpenings { get; set; }
+        public IEnumerable<EditAcademyOpeningViewModel> AllAcademyOpenings { get; set; } = new List<EditAcademyOpeningViewModel>();
         public string PageTitle { get; set; } = string.Empty;
-
+        public IEnumerable<SelectListItem> MonthOptions { get; set; } = new List<SelectListItem>();
+        public string SelectedMonth { get; set; }
+        public string EstablishmentTypeId { get; set; }
+        public string CurrentRouteName { get; set; }
     }
 }

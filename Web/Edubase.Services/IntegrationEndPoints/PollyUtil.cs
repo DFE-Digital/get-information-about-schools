@@ -1,47 +1,62 @@
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Polly;
+using Polly.Timeout;
 
 namespace Edubase.Services.IntegrationEndPoints
 {
     public static class PollyUtil
     {
         /// <summary>
-        /// Creates a retry policy based on the specified retry intervals.
+        /// Creates a retry + timeout policy
         /// </summary>
-        /// <param name="retryIntervals">The array of time intervals to wait between retries.</param>
+        /// <param name="retryIntervals">Array of retry intervals (seconds).</param>
+        /// <param name="settingsKey">key for timeout seconds.</param>
         /// <returns>
-        ///     A retry policy that handles <see cref="HttpRequestException"/> and waits for the specified retry intervals.
-        ///     If <paramref name="retryIntervals"/> is null or empty, returns a no-op policy that doesn't perform any retries.
+        /// A combined policy that retries faults and times out safely.
         /// </returns>
         public static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
         {
-            if(retryIntervals is null || retryIntervals.Length == 0)
+            var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
+
+            if (retryIntervals is null || retryIntervals.Length == 0)
             {
-                return Policy.NoOpAsync<HttpResponseMessage>();
+                return timeoutPolicy;
             }
 
+            // Retry on network faults and timeouts
             var retryPolicy = Policy<HttpResponseMessage>
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
+                .Or<TimeoutRejectedException>()
+                .OrResult(r =>
+                    r.StatusCode == HttpStatusCode.RequestTimeout ||
+                    (int)r.StatusCode == 429 ||
+                    (int)r.StatusCode >= 500)
                 .WaitAndRetryAsync(retryIntervals);
 
-            var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
-
-            return Policy.WrapAsync<HttpResponseMessage>(retryPolicy, timeoutPolicy);
+            return Policy.WrapAsync(retryPolicy, timeoutPolicy);
         }
 
+        /// <summary>
+        /// Creates a timeout policy that cancels requests exceeding the configured time limit.
+        /// </summary>
+        /// <param name="settingsKey">Configuration key for timeout duration in seconds.</param>
+        /// <returns>An asynchronous timeout policy for HTTP calls.</returns>
         public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(string settingsKey)
         {
-            if (!int.TryParse(ConfigurationManager.AppSettings[settingsKey], out var timeoutSettings))
+            if (!int.TryParse(ConfigurationManager.AppSettings[settingsKey], out var timeoutSeconds))
             {
-                timeoutSettings = 10;
+                timeoutSeconds = 10;
             }
 
-            return Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(timeoutSettings));
+            return Policy.TimeoutAsync<HttpResponseMessage>(
+                TimeSpan.FromSeconds(timeoutSeconds),
+                TimeoutStrategy.Pessimistic);
         }
 
         /// <summary>
@@ -56,13 +71,11 @@ namespace Edubase.Services.IntegrationEndPoints
         /// <returns>An array of TimeSpans converted from the provided string.</returns>
         public static TimeSpan[] CsvSecondsToTimeSpans(string csvSeconds)
         {
-            var retryIntervals = csvSeconds.Split(',')
+            return csvSeconds.Split(',')
                 .Select(x => x.Trim())
-                .Where(x => int.TryParse(x, out var seconds) && seconds >= 0)
+                .Where(x => int.TryParse(x, out var s) && s >= 0)
                 .Select(x => TimeSpan.FromSeconds(int.Parse(x)))
                 .ToArray();
-
-            return retryIntervals;
         }
     }
 }

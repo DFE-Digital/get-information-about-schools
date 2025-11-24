@@ -1,0 +1,24 @@
+@model dynamic
+
+<dl class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key" id="data-from-other-services-key">Data from other services</dt>
+    <dd class="govuk-summary-list__value" id="data-from-other-services-value">
+        <ul class="govuk-list">
+            @if (!Model.ShowFscpd)
+            {
+                <li>
+                    Not applicable
+                </li>
+            }
+            @if (Model.ShowFscpd)
+            {
+                <li>
+                    <a href="@Model.FscpdURL" id="cscp-link" rel="noreferrer noopener" target="_blank">
+                        @Model.FscpdServiceName (opens in new tab)
+                    </a>
+                </li>
+            }
+        </ul>
+    </dd>
+</dl>
+

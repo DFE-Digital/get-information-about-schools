@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Newtonsoft.Json;
@@ -32,6 +33,11 @@ namespace Edubase.Services.Establishments.DisplayPolicies
                 HeadPreferredJobTitleLabel = "Headteacher/Manager preferred job title";
                 HeadEmailAddressLabel = "Headteacher/Manager email address";
                 EstablishmentTypeLabel = "Establishment type";
+            }
+
+            if (IEBTDetail == null)
+            {
+                IEBTDetail = new IEBTDetailDisplayEditPolicy();
             }
 
             return this;

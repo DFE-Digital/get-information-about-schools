@@ -4,6 +4,27 @@
 @using Edubase.Web.UI.Helpers
 
 @model GovernorsGridViewModel
+
+@functions {
+
+    private static readonly string[] BannedTitles =
+    {
+        "Not applicable", "Not-applicable", "Not recorded"
+    };
+
+    private string CleanName(string fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName)) return fullName;
+
+        var match = BannedTitles.FirstOrDefault(x =>
+            fullName.StartsWith(x, StringComparison.OrdinalIgnoreCase));
+
+        return match == null
+            ? fullName
+            : fullName.Substring(match.Length).TrimStart();
+    }
+}
+
 @{
     Layout = Model.Layout;
 }
@@ -382,7 +403,7 @@ else
             foreach (var row in grid.Rows)
             {
                 <div id="gov-id-@row.Model.Id" class="governor-edit-panel govuk-!-margin-bottom-9 @Html.DuplicateCssClassFor(row.Model.Id)">
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@row.Cells[0].Text</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@CleanName(row.Cells[0].Text)</h3>
                     <dl class="govuk-summary-list govuk-!-margin-bottom-1">
                         @if (historic)
                         {

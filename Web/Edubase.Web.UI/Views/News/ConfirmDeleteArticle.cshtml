@@ -51,7 +51,7 @@
             @Model.Title<br />
             @if (Model.ShowDate)
             {
-                <span class="gias-news-heading--date">@(Model.ArticleDate.ToDateTime()?.ToString("d MMMM yyyy", CultureInfo.InvariantCulture))</span>
+                <span class="gias-news-heading--date">@(Model.ArticleDate.ToDateTime().ToString("d MMMM yyyy", CultureInfo.InvariantCulture))</span>
             }
         </h2>
 
