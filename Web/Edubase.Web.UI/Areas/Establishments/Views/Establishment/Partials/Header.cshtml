@@ -153,7 +153,7 @@
     </dd>
 </div>
 
-@if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
+@if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended && Html.FeatureEnabled("FeatureIEBTSuspended"))
 {
     <div class="govuk-summary-list__row">
         <dt id="registration-suspended-key" class="govuk-summary-list__key">Registration suspended</dt>
