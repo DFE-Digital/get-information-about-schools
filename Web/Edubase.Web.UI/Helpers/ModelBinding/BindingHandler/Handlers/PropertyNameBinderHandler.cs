@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Threading.Tasks;
+using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers.Extensions;
 using Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -13,20 +14,14 @@ namespace Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers;
 /// using the property name (or prefixed model name). If a value is found, it is converted
 /// using the provided <see cref="ITypeConverter"/> and assigned to the property.
 /// </remarks>
-public class PropertyNameBinderHandler : PropertyBinderHandler
+/// <remarks>
+/// Initializes a new instance of the <see cref="PropertyNameBinderHandler"/> class.
+/// </remarks>
+/// <param name="converter">
+/// The type converter used to convert raw string values into the target property type.
+/// </param>
+public class PropertyNameBinderHandler(ITypeConverter converter) : PropertyBinderHandler
 {
-    private readonly ITypeConverter _converter;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PropertyNameBinderHandler"/> class.
-    /// </summary>
-    /// <param name="converter">
-    /// The type converter used to convert raw string values into the target property type.
-    /// </param>
-    public PropertyNameBinderHandler(ITypeConverter converter)
-    {
-        _converter = converter;
-    }
 
     /// <summary>
     /// Attempts to bind a property by looking up its value in the <see cref="ModelBindingContext.ValueProvider"/>.
@@ -43,22 +38,21 @@ public class PropertyNameBinderHandler : PropertyBinderHandler
     {
         // Determine the property prefix (model name + property name)
         string propertyPrefix =
-            string.IsNullOrEmpty(context.ModelName)
-                ? property.Name
-                : $"{context.ModelName}.{property.Name}";
+            context.BuildPropertyPrefix(property);
 
         // Attempt to retrieve the value from the value provider
         ValueProviderResult valueResult =
             context.ValueProvider.GetValue(propertyPrefix);
 
-        if (valueResult == ValueProviderResult.None)
+        if (!valueResult.HasValues())
         {
             // No value found, delegate to the next handler
             return await base.HandleAsync(context, model, property);
         }
 
         // Convert the raw value to the target property type
-        object converted = _converter.Convert(valueResult.FirstValue, property.PropertyType);
+        object converted =
+            converter.Convert(valueResult.FirstValue, property.PropertyType);
 
         // Assign the converted value to the property
         property.SetValue(model, converted);

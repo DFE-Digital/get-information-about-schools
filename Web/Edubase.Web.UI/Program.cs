@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -60,6 +61,7 @@ using Edubase.Web.UI.Models.Notifications.Validators;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -479,20 +481,27 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-app.Use(async (context, next) =>
+var supportedCultures = new[] { new CultureInfo("en-GB") };
+app.UseRequestLocalization(new RequestLocalizationOptions
 {
-    try
-    {
-        await next();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("Unhandled exception:");
-        Console.WriteLine(ex.ToString());
-        throw;
-    }
+    DefaultRequestCulture = new RequestCulture("en-GB"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
 });
+
+//app.Use(async (context, next) =>
+//{
+//    try
+//    {
+//        await next();
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine("Unhandled exception:");
+//        Console.WriteLine(ex.ToString());
+//        throw;
+//    }
+//});
 
 app.UseRouting();
 app.UseSession();           // Enables session state
