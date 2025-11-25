@@ -383,6 +383,16 @@
                 </div>
             }
 
+            @if (Model.DisplayPolicy.SENIds)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt id="sen-type-key" class="govuk-summary-list__key">Type of SEN provision</dt>
+                    <dd id="sen-type-value" class="govuk-summary-list__value">
+                        @Model.SENNames
+                    </dd>
+                </div>
+            }
+
             @if (Model.DisplayPolicy.LastChangedDate)
             {
                 <div class="govuk-summary-list__row">
@@ -424,16 +434,6 @@
                 </div>
             }
             <!-- Online Provider content -->
-
-            @if (Model.DisplayPolicy.SENIds)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt id="sen-type-key" class="govuk-summary-list__key">Type of SEN provision</dt>
-                    <dd id="sen-type-value" class="govuk-summary-list__value">
-                        @Model.SENNames
-                    </dd>
-                </div>
-            }
 
             @if (Model.DisplayPolicy.TeenageMothersProvisionId)
             {
