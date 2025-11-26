@@ -1,12 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Edubase.Services.Domain;
-using Edubase.Services.Lookup;
 using Edubase.Web.UI.Mappers.Establishment;
-using Moq;
 using Xunit;
 
 namespace Edubase.Web.UIUnitTests.Mappers
@@ -17,9 +12,9 @@ namespace Edubase.Web.UIUnitTests.Mappers
         public void MapEstablishmentTypesToSingleGroupType()
         {
             var establishmentTypes = new List<EstablishmentLookupDto> {
-                new EstablishmentLookupDto() { GroupIds = new List<int> {10}, Id = 0, Name = "Establishment in Group 10"},
-                new EstablishmentLookupDto() { GroupIds = new List<int> {9}, Id = 1, Name = "Establishment in Group 9"},
-                new EstablishmentLookupDto() { GroupIds = new List<int> {10}, Id = 2, Name = "Establishment in Group 10"}
+                new EstablishmentLookupDto() { GroupIds = [10], Id = 0, Name = "Establishment in Group 10"},
+                new EstablishmentLookupDto() { GroupIds = [9], Id = 1, Name = "Establishment in Group 9"},
+                new EstablishmentLookupDto() { GroupIds = [10], Id = 2, Name = "Establishment in Group 10"}
             };
             var groupType = new LookupDto() { Id = 10, Name = "Group 10" };
 
@@ -35,7 +30,7 @@ namespace Edubase.Web.UIUnitTests.Mappers
         public void MapEstablishmentTypesToGroupTypes()
         {
             var establishmentTypes = new List<EstablishmentLookupDto> {
-                new EstablishmentLookupDto() { GroupIds = new List<int> {9, 10}, Id = 0, Name = "Establishment in Group 9 and 10"},
+                new EstablishmentLookupDto() { GroupIds = [9, 10], Id = 0, Name = "Establishment in Group 9 and 10"},
                 new EstablishmentLookupDto() { GroupIds = new List<int> {9, 11}, Id = 1, Name = "Establishment in Group 9"},
                 new EstablishmentLookupDto() { GroupIds = new List<int> {10}, Id = 2, Name = "Establishment in Group 10"}
             };

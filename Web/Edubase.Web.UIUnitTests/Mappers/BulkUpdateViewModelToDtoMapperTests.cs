@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Mappers;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using Xunit;
 
@@ -14,7 +10,7 @@ namespace Edubase.Web.UIUnitTests.Mappers
 {
     public class BulkUpdateViewModelToDtoMapperTests
     {
-        private readonly Mock<HttpPostedFileBase> _fileMock = new Mock<HttpPostedFileBase>();
+        private readonly Mock<IFormFile> _fileMock = new();
 
         public BulkUpdateViewModelToDtoMapperTests()
         {

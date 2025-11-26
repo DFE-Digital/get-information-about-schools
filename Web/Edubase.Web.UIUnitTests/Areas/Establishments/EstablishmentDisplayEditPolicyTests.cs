@@ -8,6 +8,7 @@ using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.EditPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Xunit;
 
 namespace Edubase.Web.UIUnitTests.Areas.Establishments

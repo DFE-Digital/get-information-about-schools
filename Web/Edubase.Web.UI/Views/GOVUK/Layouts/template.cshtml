@@ -1,24 +1,26 @@
 @using Edubase.Web.UI.Controllers
 @using Edubase.Web.UI.Helpers
 @using Microsoft.AspNet.Identity
-@using System.Web
+
+@inject IConfiguration Configuration
+
 @{
     ViewBag.assetsPath = "/public/govuk-frontend";
 
     var title = !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Get Information about Schools";
     var documentTitle = string.Format("{0} - {1}", title, "GOV.UK");
-    var gtmKey = System.Configuration.ConfigurationManager.AppSettings["GoogleTagManagerKey"];
 
-    var envHeader = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
+    // Access values from appsettings.json or environment variables
+    var gtmKey = Configuration["GoogleTagManagerKey"];
+    var envHeader = Configuration["Environment"] ?? string.Empty;
     var version = typeof(HomeController).Assembly.GetName().Version;
     var acceptsAnalytics = Context.Request.Cookies["analytics_preferences"];
-}
 
-    var clarityKey = System.Configuration.ConfigurationManager.AppSettings["ClarityKey"];
 }
 <!doctype html>
 <html lang="en" class="govuk-template govuk-template--rebranded">
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="blue">
@@ -28,7 +30,7 @@
 
     <!-- Clarity -->
     @{
-        var clarityKey = ViewData["clarityKey"]?.ToString();
+        var clarityKey = Configuration["ClarityKey"];
     }
 
     @if (!string.IsNullOrEmpty(clarityKey) && acceptsAnalytics == "True")

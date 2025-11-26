@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -15,10 +12,8 @@ using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas;
-using Edubase.Web.UI.Areas.Governors.Models;
 using Moq;
 using Xunit;
-using static Edubase.Web.UI.Areas.Governors.Models.CreateEditGovernorViewModel;
 
 namespace Edubase.Web.UIUnitTests.Areas
 {

@@ -454,20 +454,6 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     SupportedUICultures = supportedCultures
 });
 
-//app.Use(async (context, next) =>
-//{
-//    try
-//    {
-//        await next();
-//    }
-//    catch (Exception ex)
-//    {
-//        Console.WriteLine("Unhandled exception:");
-//        Console.WriteLine(ex.ToString());
-//        throw;
-//    }
-//});
-
 app.UseRouting();
 app.UseSession();           // Enables session state
 app.UseAuthorization();

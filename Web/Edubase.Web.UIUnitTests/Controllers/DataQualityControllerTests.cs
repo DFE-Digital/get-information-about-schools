@@ -1,19 +1,15 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Edubase.Data.Entity;
 using Edubase.Services.DataQuality;
 using Edubase.Web.UI.Controllers;
-using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.DataQuality;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 using static Edubase.Data.Entity.DataQualityStatus;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UIUnitTests.Controllers
 {
@@ -23,7 +19,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>();
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>();
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>();
-        private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>();
+        private readonly Mock<HttpContext> mockHttpContextBase = new Mock<HttpContext>();
         private readonly DataQualityController _controllerUnderTest;
 
         public DataQualityControllerTests()
