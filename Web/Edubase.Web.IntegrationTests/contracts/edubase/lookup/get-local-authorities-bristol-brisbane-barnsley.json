@@ -1,0 +1,39 @@
+{
+    "Request": {
+        "Path": {
+            "Matchers": [
+                {
+                    "Name": "WildcardMatcher",
+                    "Pattern": "/edubase/rest/lookup/local-authorities",
+                    "IgnoreCase": true
+                }
+            ]
+        }
+    },
+    "Response": {
+        "StatusCode": 200,
+        "Headers": {
+            "Content-Type": "application/json"
+        },
+        "BodyAsJson": [
+            {
+                "id": 1,
+                "name": "Bristol",
+                "displayOrder": 0,
+                "code": "NA"
+            },
+            {
+                "id": 2,
+                "name": "Brisbane",
+                "displayOrder": 10,
+                "code": "01"
+            },
+            {
+                "id": 3,
+                "name": "Barnsley",
+                "displayOrder": 20,
+                "code": "02"
+            }
+        ]
+    }
+}

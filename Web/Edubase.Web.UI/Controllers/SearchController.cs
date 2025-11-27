@@ -312,12 +312,18 @@ namespace Edubase.Web.UI.Controllers
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
             var localAuthority = localAuthorities.FirstOrDefault(x => x.Name.Equals(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase));
-            if (localAuthority != null) return Redirect("?SearchType=ByLocalAuthority&" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
-                model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
+            if (localAuthority != null)
+            {
+                return Redirect("?SearchType=ByLocalAuthority&" +
+                    QueryStringHelper.ToQueryString(
+                        SearchViewModel.BIND_ALIAS_LAIDS,
+                        model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
+            }
             else
             {
                 var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd ?? "",
                     localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd ?? "", StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList(), model.OpenOnly);
+
                 return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
             }
         }

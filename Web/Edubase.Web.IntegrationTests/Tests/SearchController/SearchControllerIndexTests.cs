@@ -1,6 +1,7 @@
 using System.Net;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
+using Edubase.Services.Domain;
 using Edubase.Web.IntegrationTests.Helpers;
 using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Request;
 using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Response;
@@ -121,6 +122,82 @@ public sealed class SearchControllerIndexTests
         Assert.Equal("/?d=2#la", redirectPath);
     }
 
+    // TODO EXTEND TO DEDUPLICATE-ADD e.g d=1 and add 1 wait for ModelBinding fix on d=
+    [Theory]
+    [InlineData("Bristol")]
+    [InlineData("bristol")]
+    public async Task Search_FindAnEstablishmentPage_LocalAuthorityDisambiguation_Finds_Matching_Identifier(string searchKeyword)
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-local-authorities-bristol.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=LocalAuthorityDisambiguation&LocalAuthorityToAdd={searchKeyword}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(302, (int) httpResponse.StatusCode);
+        httpResponse.Headers.TryGetValues("Location", out IEnumerable<string>? locations);
+        string redirectPath = Assert.Single(locations);
+        Assert.Equal("?SearchType=ByLocalAuthority&d=1#la", redirectPath);
+    }
+
+    [Theory]
+    [InlineData("bris")]
+    [InlineData("BrI")]
+    public async Task Search_FindAnEstablishmentPage_LocalAuthorityDisambiguation_No_Match_Found_Disambiguate(string keyWord)
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-local-authorities-bristol-brisbane-barnsley.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=LocalAuthorityDisambiguation&LocalAuthorityToAdd={keyWord}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(200, (int) httpResponse.StatusCode);
+
+        List<LookupDto> stubbedLocalAuthorities =
+            response.GetResponseById("1")
+            .GetResponseBody<List<LookupDto>>()
+            .Where(t => t.Name.Contains(keyWord, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        List<IElement> links = document.QuerySelectorAll("#search-localauthority-disambiguation-list a").ToList();
+
+        Assert.Equal(stubbedLocalAuthorities.Count, links.Count);
+
+        for (int index = 0; index < links.Count; index++)
+        {
+            IElement currentLink = links[index];
+            LookupDto currentStubbedLocalAuthority = stubbedLocalAuthorities[index];
+
+            string expectedLink = $"/Search/search?SearchType=ByLocalAuthority&OpenOnly=False&d={currentStubbedLocalAuthority.Id}#la";
+            Assert.Equal(expectedLink, currentLink.GetAttribute("href"));
+            Assert.Equal(currentStubbedLocalAuthority.Name, links[index].TextContent.Trim());
+        }
+    }
+    /*
+     *     [InlineData("abc")]
+    [InlineData("briz")]
+    [InlineData("Briz")]
+     */
+
+
     [Theory]
     [InlineData("Text", "checked", null, null, null)]
     [InlineData("Location", null, "checked", null, null)]
@@ -156,38 +233,6 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(locationChecked, document.QuerySelector("#searchtype-location").GetAttribute("checked"));
         Assert.Equal(laChecked, document.QuerySelector("#searchtype-la").GetAttribute("checked"));
         Assert.Equal(allChecked, document.QuerySelector("#searchtype-all").GetAttribute("checked"));
-    }
-
-    /// <summary>
-    /// TODO: Using the SearchType=LocalAuthorityDisambiguation on a deployed environment displays the LA matching page.
-    /// For some reason using it here I am getting a 500 error.
-    /// Error appears to be:
-    /// <pre style="word-wrap: break-word; white-space: pre-wrap;">System.InvalidOperationException: The partial view '_LocalAuthorityLink' was not found.
-    /// The following locations were searched:
-    /// /Views/Search/_LocalAuthorityLink.cshtml
-    /// /Views/Shared/_LocalAuthorityLink.cshtml
-    /// </summary>
-    /// <returns></returns>
-    [Fact]
-    public async Task Search_SearchType_LocalAuthorityDisambiguation_LocalAuthoritiesMatchingPage_IsDisplayed()
-    {
-        // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
-        ]);
-
-        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
-
-        // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
-        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=LocalAuthorityDisambiguation");
-        IHtmlDocument document = await httpResponse.GetDocumentAsync();
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
-        Assert.NotNull(httpResponse);
     }
 
     [Fact]
