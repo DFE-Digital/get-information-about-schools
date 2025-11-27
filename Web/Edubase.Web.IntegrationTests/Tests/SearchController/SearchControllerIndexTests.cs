@@ -191,11 +191,123 @@ public sealed class SearchControllerIndexTests
             Assert.Equal(currentStubbedLocalAuthority.Name, links[index].TextContent.Trim());
         }
     }
+
+    // TODO: test
     /*
      *     [InlineData("abc")]
     [InlineData("briz")]
     [InlineData("Briz")]
      */
+
+
+    [Fact]
+    public async Task Search_LocationDisambiguation_Returns_View_When_MultipleMatches()
+    {
+        // Arrange
+        string location = "Bristol";
+
+
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.Text={location}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Contains($"10 locations matching '{location}'", document.QuerySelector("h1 + p")?.TextContent);
+        Assert.True(document.QuerySelectorAll(".govuk-list li").Count() == 10);
+    }
+
+    /// <summary>
+    // When a Location search query is provided but no matching places are returned by the Places service (ProcessLocationDisambiguation returns null),
+    // the controller falls back to rendering the main Index view without adding any error messages.
+    /// </summary>
+    /// <returns></returns>
+    [Fact]
+    public async Task Search_LocationDisambiguation_NoMatches_Renders_Index_Without_ModelErrors()
+    {
+        // Arrange
+        string unknownLocation = "UnknownPlace";
+
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-empty-places.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.Text={unknownLocation}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        // Check the index is returned. Check no error is displayed at this point. Check the search term is preserved in the input field.
+        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
+        Assert.Null(document.QuerySelector(".govuk-error-summary"));
+        Assert.Equal(unknownLocation, document.QuerySelector("#LocationSearchModel_Text").GetAttribute("value"));
+    }
+
+
+
+    /// <summary>
+    /// Verifies that when a Location search includes a valid AutoSuggestValue (parsed as LatLon),
+    /// the controller skips the disambiguation logic and renders the main Index view.
+    /// Confirms that the AutoSuggestValue is preserved, no error summary is shown, and expected UI elements exist.
+    /// </summary>
+    [Fact]
+    public async Task Search_LocationSearch_With_Valid_AutoSuggestValue_Skips_Disambiguation()
+    {
+        // Arrange
+        string autoSuggestValue = "51.5074,-0.1278"; // Valid LatLon coordinates
+
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.AutoSuggestValue={autoSuggestValue}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        // Check the index is returned. Check no error is displayed at this point. Check the AutoSuggestValue is preserved.
+        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim()); 
+        Assert.Equal(autoSuggestValue, document.QuerySelector("#LocationSearchModel_AutoSuggestValue")?.GetAttribute("value"));
+        Assert.Null(document.QuerySelector(".govuk-error-summary"));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     [Theory]
