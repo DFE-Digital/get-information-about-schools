@@ -19,6 +19,27 @@ public sealed class SearchControllerIndexTests
         _webApplicationFactory = webApplicationFactory;
     }
 
+    /*
+     * Tackle when we do the form posting
+     * 
+     *         var nameOrRefNumRadio = document.QuerySelector("#searchtype-name");
+        Assert.Equal("radio", nameOrRefNumRadio.GetAttribute("type"));
+        Assert.Equal("#searchby-name-ref", nameOrRefNumRadio.GetAttribute("data-toggle-panel"));
+        Assert.Equal("Text", nameOrRefNumRadio.GetAttribute("value"));
+
+        var locationRadio = document.QuerySelector("#searchtype-location");
+        Assert.Equal("radio", locationRadio.GetAttribute("type"));
+        Assert.Equal("#searchby-location-ref", locationRadio.GetAttribute("data-toggle-panel"));
+        Assert.Equal("Location", locationRadio.GetAttribute("value"));
+
+        var laRadio = document.QuerySelector("#searchtype-la");
+        Assert.Equal("radio", laRadio.GetAttribute("type"));
+        Assert.Equal("#searchby-la-ref", laRadio.GetAttribute("data-toggle-panel"));
+        Assert.Equal("ByLocalAuthority", laRadio.GetAttribute("value"));
+     */
+
+    // &LocalAuthorityToRemove=72 - JsDisabled remove button after finding a local authorityId on the pills
+
     [Fact]
     public async Task Search_FindAnEstablishmentPage_IsDisplayed()
     {
@@ -43,21 +64,61 @@ public sealed class SearchControllerIndexTests
         Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name").Text().Trim());
         Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
         Assert.Equal("/Search/search?SelectedTab=Establishments", document.QuerySelector(".gias-tabs__list-item--selected a").GetAttribute("href"));
+    }
 
-        var nameOrRefNumRadio = document.QuerySelector("#searchtype-name");
-        Assert.Equal("radio", nameOrRefNumRadio.GetAttribute("type"));
-        Assert.Equal("#searchby-name-ref", nameOrRefNumRadio.GetAttribute("data-toggle-panel"));
-        Assert.Equal("Text", nameOrRefNumRadio.GetAttribute("value"));
+    [Fact]
+    public async Task Search_FindAnEstablishmentPage_Redirects_Back_With_EmptyEstablishments()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
 
-        var locationRadio = document.QuerySelector("#searchtype-location");
-        Assert.Equal("radio", locationRadio.GetAttribute("type"));
-        Assert.Equal("#searchby-location-ref", locationRadio.GetAttribute("data-toggle-panel"));
-        Assert.Equal("Location", locationRadio.GetAttribute("value"));
+        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
 
-        var laRadio = document.QuerySelector("#searchtype-la");
-        Assert.Equal("radio", laRadio.GetAttribute("type"));
-        Assert.Equal("#searchby-la-ref", laRadio.GetAttribute("data-toggle-panel"));
-        Assert.Equal("ByLocalAuthority", laRadio.GetAttribute("value"));
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?LocalAuthorityToRemove=100");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Found, httpResponse.StatusCode);
+        Assert.NotNull(httpResponse);
+
+        httpResponse.Headers.TryGetValues("Location", out IEnumerable<string>? locations);
+        string redirectPath = Assert.Single(locations);
+        // TODO why does it append an empty query string?
+        Assert.Equal("/?#la", redirectPath);
+    }
+
+
+    // FAILING MODEL BINDING: https://github.com/DFE-Digital/get-information-about-schools/pull/787#issuecomment-3584901280
+    [Fact]
+    public async Task Search_FindAnEstablishmentPage_Redirects_Back_With_RemainingSelectedEstablishments()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?LocalAuthorityToRemove=1&d=1&d=2");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Found, httpResponse.StatusCode);
+        Assert.NotNull(httpResponse);
+
+        httpResponse.Headers.TryGetValues("Location", out IEnumerable<string>? locations);
+        string redirectPath = Assert.Single(locations);
+        Assert.Equal("/?d=2#la", redirectPath);
     }
 
     [Theory]

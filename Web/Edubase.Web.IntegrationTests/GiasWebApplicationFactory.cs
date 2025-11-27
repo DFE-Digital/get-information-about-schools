@@ -14,6 +14,11 @@ namespace Edubase.Web.IntegrationTests;
 
 public sealed class GiasWebApplicationFactory : WebApplicationFactory<Program>
 {
+    public GiasWebApplicationFactory()
+    {
+        ClientOptions.AllowAutoRedirect = false;
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         // TODO WEBROOT CONTENT ISN'T BEING SET WITH BELOW FAILING TO RESOLVE CSS AND SCRIPTS, CURRENTLY RESOLVES TO TESTPROJECT/BIN/DEBUG... need to fix WebRoot to point at Web output dir OR copy assets on build
@@ -23,8 +28,6 @@ public sealed class GiasWebApplicationFactory : WebApplicationFactory<Program>
         builder.UseWebRoot(webProjectPath);
         
         var T = builder.GetSetting(WebHostDefaults.WebRootKey);*/
-
-        // TODO
 
         builder.ConfigureAppConfiguration((context, config) =>
         {
