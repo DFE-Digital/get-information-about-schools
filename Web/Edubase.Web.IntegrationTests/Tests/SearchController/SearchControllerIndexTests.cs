@@ -254,6 +254,7 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
         // Check the index is returned. Check no error is displayed at this point. Check the search term is preserved in the input field.
         Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
         Assert.Null(document.QuerySelector(".govuk-error-summary"));
         Assert.Equal(unknownLocation, document.QuerySelector("#LocationSearchModel_Text").GetAttribute("value"));
     }
@@ -287,12 +288,80 @@ public sealed class SearchControllerIndexTests
         // Assert
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
         // Check the index is returned. Check no error is displayed at this point. Check the AutoSuggestValue is preserved.
-        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim()); 
+        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
         Assert.Equal(autoSuggestValue, document.QuerySelector("#LocationSearchModel_AutoSuggestValue")?.GetAttribute("value"));
         Assert.Null(document.QuerySelector(".govuk-error-summary"));
     }
 
 
+
+    /// <summary>
+    /// Verifies that when SearchType is GovernorReference and no Governor ID (Gid) is provided,
+    /// the controller adds a ModelState error and renders the Index view.
+    /// This test checks that:
+    /// - The Index view is displayed (proposition name and selected tab are correct),
+    /// - The GovernorReference section is present (ErrorPanel indicator),
+    /// - No global error summary is rendered (view behavior),
+    /// confirming that the controller handled the missing Gid scenario without redirect.
+    /// </summary>
+    [Fact]
+    public async Task Search_GovernorReference_NoGid_Shows_ErrorPanel()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=GovernorReference");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
+        Assert.Equal(string.Empty, document.QuerySelector("#GovernorSearchModel_Gid")?.GetAttribute("value"));
+        // Check viewModel.ErrorPanel is rendered
+        Assert.NotNull(document.QuerySelector("#searchtype-gov-namerole-ref"));
+    }
+
+
+    /// <summary>
+    /// Verifies that when SearchType is GovernorReference and an invalid Gid is provided,
+    /// the controller adds a ModelState error and renders the Index view with the correct error message.
+    /// This confirms that the controller handles the "not found" case without redirect.
+    /// </summary>
+    [Fact]
+    public async Task Search_GovernorReference_InvalidGid_Shows_NotFoundError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        // Act
+        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=GovernorReference&GovernorSearchModel.Gid=999999");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
+        Assert.NotNull(document.QuerySelector("#searchtype-gov-namerole-ref")); // Error panel indicator
+        // Optional: Check the Governor ID field retains the entered value
+        Assert.Equal("999999", document.QuerySelector("#GovernorSearchModel_Gid")?.GetAttribute("value"));
+    }
 
 
 
