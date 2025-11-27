@@ -30,9 +30,12 @@ public sealed class AliasBinderHandler(ITypeConverter converter) : PropertyBinde
     public override async Task<bool> HandleAsync(
         ModelBindingContext context, object model, PropertyInfo property)
     {
-        foreach (BindAliasAttribute alias in property.GetBindAliases())
+        BindAliasAttribute[] bindAliasAttributes = property.GetBindAliases();
+
+        foreach (BindAliasAttribute alias in bindAliasAttributes)
         {
-            ValueProviderResult valueResult = context.ValueProvider.GetValue(alias.Alias);
+            ValueProviderResult valueResult =
+                context.ValueProvider.GetValue(alias.Alias);
 
             if (!valueResult.HasValues()) { continue; }
 
@@ -41,9 +44,11 @@ public sealed class AliasBinderHandler(ITypeConverter converter) : PropertyBinde
                 // Normalise multiple values into a single string
                 string combined = valueResult.ToCombinedString();
                 // Convert to the target property type
-                object converted = converter.Convert(combined, property.PropertyType);
+                object converted =
+                    converter.Convert(combined, property.PropertyType);
                 // Assign the converted value
                 property.SetValue(model, converted);
+
                 return true;
             }
             catch

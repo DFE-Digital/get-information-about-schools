@@ -48,7 +48,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(establishmentServiceResultNull);
 
-            mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsInRange<int>(100, 110, Range.Inclusive), It.IsAny<IPrincipal>()))
+            mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsInRange<int>(100, 110, Moq.Range.Inclusive), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(establishmentServiceResultTestEstablishement);
 
             mockEstablishmentWriteService.Setup(x => x.AmalgamateOrMergeAsync(It.IsAny<AmalgamateMergeRequest>(), It.IsAny<IPrincipal>()))

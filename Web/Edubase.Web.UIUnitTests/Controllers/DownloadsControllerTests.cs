@@ -7,6 +7,7 @@ using Edubase.Services.Downloads;
 using Edubase.Services.Establishments;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Web.UI.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -44,7 +45,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
                 .Setup(x => x.GenerateScheduledExtractAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(apiResultDtoJson);
 
-            var httpContextMock = new Mock<HttpContextBase>();
+            var httpContextMock = new Mock<HttpContext>();
             _controller.ControllerContext = new ControllerContext { HttpContext = httpContextMock.Object };
 
             var result = await _controller.RequestScheduledExtract(testEid);
@@ -67,7 +68,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
                 .Setup(x => x.GenerateScheduledExtractAsync(testEid, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(progressDtoJson);
 
-            var httpContextMock = new Mock<HttpContextBase>();
+            var httpContextMock = new Mock<HttpContext>();
             _controller.ControllerContext = new ControllerContext { HttpContext = httpContextMock.Object };
 
             var result = await _controller.RequestScheduledExtract(testEid);
