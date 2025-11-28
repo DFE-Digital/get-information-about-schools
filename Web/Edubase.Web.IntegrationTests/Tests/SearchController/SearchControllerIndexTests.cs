@@ -39,10 +39,10 @@ public sealed class SearchControllerIndexTests
         Assert.Equal("ByLocalAuthority", laRadio.GetAttribute("value"));
      */
 
-    // &LocalAuthorityToRemove=72 - JsDisabled remove button after finding a local authorityId on the pills
+    // TODO test redirects return page and contents of the redirected page
 
     [Fact]
-    public async Task Search_FindAnEstablishmentPage_IsDisplayed()
+    public async Task Search_FindAnEstablishment_Tab_IsSelected()
     {
         // Arrange
         HttpMappingRequest request = new(
@@ -68,7 +68,7 @@ public sealed class SearchControllerIndexTests
     }
 
     [Fact]
-    public async Task Search_FindAnEstablishmentPage_Redirects_Back_With_EmptyEstablishments()
+    public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_Back_With_EmptyEstablishments()
     {
         // Arrange
         HttpMappingRequest request = new(
