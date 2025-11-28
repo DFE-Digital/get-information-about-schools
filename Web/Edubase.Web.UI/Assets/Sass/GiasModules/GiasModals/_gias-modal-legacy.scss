@@ -1,5 +1,3 @@
-@include mq-add-breakpoint(dataStatusDeskTop, 960px);
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -102,12 +100,12 @@
   left: 5%;
   overflow: auto;
 
-  @include govuk-media-query($from: dataStatusDeskTop) {
+/*  @include govuk-media-query($from: dataStatusDeskTop) {
     width: 940px !important;
     left: 50% !important;
     margin-left: -470px !important;
   }
-
+*/
   .edubase-table {
     border-top: 0;
   }
