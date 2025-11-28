@@ -47,8 +47,8 @@ public sealed class SearchControllerIndexTests
         // Arrange
         HttpMappingRequest request = new(
         [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
         ]);
 
         HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
@@ -68,13 +68,13 @@ public sealed class SearchControllerIndexTests
     }
 
     [Fact]
-    public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_Back_With_EmptyEstablishments()
+    public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_BackToSearch_With_EmptyEstablishments()
     {
         // Arrange
         HttpMappingRequest request = new(
         [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
         ]);
 
         HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
@@ -96,13 +96,13 @@ public sealed class SearchControllerIndexTests
 
     // FAILING MODEL BINDING: https://github.com/DFE-Digital/get-information-about-schools/pull/787#issuecomment-3584901280
     [Fact]
-    public async Task Search_FindAnEstablishmentPage_Redirects_Back_With_RemainingSelectedEstablishments()
+    public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_BackToSearch_With_RemainingSelectedEstablishments()
     {
         // Arrange
         HttpMappingRequest request = new(
         [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
         ]);
 
         HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
@@ -130,8 +130,8 @@ public sealed class SearchControllerIndexTests
         // Arrange
         HttpMappingRequest request = new(
         [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities-bristol.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+            new HttpMappingFile("edubase/lookup/get-local-authorities-bristol.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
         ]);
 
         HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
@@ -151,16 +151,22 @@ public sealed class SearchControllerIndexTests
     [Theory]
     [InlineData("bris")]
     [InlineData("BrI")]
-    public async Task Search_FindAnEstablishmentPage_LocalAuthorityDisambiguation_No_Match_Found_Disambiguate(string keyWord)
+    public async Task Search_FindAnEstablishmentPage_LocalAuthorityDisambiguation_No_ExactMatchFound_Returns_DisambiguateView(string keyWord)
     {
         // Arrange
         HttpMappingRequest request = new(
         [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities-bristol-brisbane-barnsley.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+            new HttpMappingFile(id: "1", "edubase/lookup/get-local-authorities-bristol-brisbane-barnsley.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
         ]);
 
         HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        List<LookupDto> stubbedLocalAuthorities =
+            response.GetResponseById("1")
+                .GetResponseBody<List<LookupDto>>()
+                .Where(t => t.Name.Contains(keyWord, StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
         // Act
         HttpClient client = _webApplicationFactory.CreateClient();
@@ -169,12 +175,6 @@ public sealed class SearchControllerIndexTests
 
         // Assert
         Assert.Equal(200, (int) httpResponse.StatusCode);
-
-        List<LookupDto> stubbedLocalAuthorities =
-            response.GetResponseById("1")
-                .GetResponseBody<List<LookupDto>>()
-                .Where(t => t.Name.Contains(keyWord, StringComparison.OrdinalIgnoreCase))
-                .ToList();
 
         List<IElement> links = document.QuerySelectorAll("#search-localauthority-disambiguation-list a").ToList();
 
@@ -197,6 +197,7 @@ public sealed class SearchControllerIndexTests
     [InlineData("Briz")]
      */
 
+    // TODO what could make the ModelState invalid?
 
     [Fact]
     public async Task Search_LocationDisambiguation_Returns_View_When_MultipleMatches()
@@ -204,11 +205,10 @@ public sealed class SearchControllerIndexTests
         // Arrange
         string location = "Bristol";
 
-
         HttpMappingRequest request = new(
         [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
         ]);
 
         await _edubaseApiFixture.RegisterHttpMapping(request);
@@ -221,7 +221,7 @@ public sealed class SearchControllerIndexTests
         // Assert
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
         Assert.Contains($"10 locations matching '{location}'", document.QuerySelector("h1 + p")?.TextContent);
-        Assert.True(document.QuerySelectorAll(".govuk-list li").Count() == 10);
+        Assert.Equal(10, document.QuerySelectorAll(".govuk-list li").Count);
     }
 
     /// <summary>

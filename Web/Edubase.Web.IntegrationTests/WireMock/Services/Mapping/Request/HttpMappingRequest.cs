@@ -8,7 +8,7 @@ public record HttpMappingRequest
         // Check for duplicates by FileName
         var duplicateIds =
             httpMappingFiles
-                .GroupBy((mapping) => mapping.ClientId)
+                .GroupBy((mapping) => mapping.Id)
                 .Where(grouping => grouping.Count() > 1);
 
         if (duplicateIds.Any())

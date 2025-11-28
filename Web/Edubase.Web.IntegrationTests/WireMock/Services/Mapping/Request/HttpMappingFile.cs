@@ -4,13 +4,15 @@ public record HttpMappingFile
 {
     public HttpMappingFile(string? id, string fileName)
     {
-        ClientId = id?.Trim() ?? Guid.NewGuid().ToString();
+        Id = id?.Trim() ?? Guid.NewGuid().ToString();
 
         Guard.ThrowIfNullOrEmpty(fileName, nameof(fileName));
         FileName = fileName;
     }
 
-    public string ClientId { get; }
+    public HttpMappingFile(string fileName) : this(id: null, fileName) { }
+
+    public string Id { get; }
     public string FileName { get; }
 }
 
