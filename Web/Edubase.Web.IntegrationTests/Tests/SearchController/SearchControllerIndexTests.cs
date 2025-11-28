@@ -173,9 +173,9 @@ public sealed class SearchControllerIndexTests
 
         List<LookupDto> stubbedLocalAuthorities =
             response.GetResponseById("1")
-            .GetResponseBody<List<LookupDto>>()
-            .Where(t => t.Name.Contains(keyWord, StringComparison.OrdinalIgnoreCase))
-            .ToList();
+                .GetResponseBody<List<LookupDto>>()
+                .Where(t => t.Name.Contains(keyWord, StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
         List<IElement> links = document.QuerySelectorAll("#search-localauthority-disambiguation-list a").ToList();
 
@@ -188,7 +188,7 @@ public sealed class SearchControllerIndexTests
 
             string expectedLink = $"/Search/search?SearchType=ByLocalAuthority&OpenOnly=False&d={currentStubbedLocalAuthority.Id}#la";
             Assert.Equal(expectedLink, currentLink.GetAttribute("href"));
-            Assert.Equal(currentStubbedLocalAuthority.Name, links[index].TextContent.Trim());
+            Assert.Equal(currentStubbedLocalAuthority.Name, currentLink.TextContent.Trim());
         }
     }
 
@@ -452,7 +452,6 @@ public sealed class SearchControllerIndexTests
     public async Task Search_SearchType_Group()
     {
         // Arrange
-
         HttpMappingRequest request = new(
         [
             new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
