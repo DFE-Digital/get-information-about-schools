@@ -94,7 +94,6 @@ public sealed class SearchControllerIndexTests
         Assert.Equal("/?#la", redirectPath);
     }
 
-
     // FAILING MODEL BINDING: https://github.com/DFE-Digital/get-information-about-schools/pull/787#issuecomment-3584901280
     [Fact]
     public async Task Search_FindAnEstablishmentPage_Redirects_Back_With_RemainingSelectedEstablishments()
@@ -186,8 +185,7 @@ public sealed class SearchControllerIndexTests
             IElement currentLink = links[index];
             LookupDto currentStubbedLocalAuthority = stubbedLocalAuthorities[index];
 
-            string expectedLink = $"/Search/search?SearchType=ByLocalAuthority&OpenOnly=False&d={currentStubbedLocalAuthority.Id}#la";
-            Assert.Equal(expectedLink, currentLink.GetAttribute("href"));
+            Assert.Equal($"/Search/search?SearchType=ByLocalAuthority&OpenOnly=False&d={currentStubbedLocalAuthority.Id}#la", currentLink.GetAttribute("href"));
             Assert.Equal(currentStubbedLocalAuthority.Name, currentLink.TextContent.Trim());
         }
     }
