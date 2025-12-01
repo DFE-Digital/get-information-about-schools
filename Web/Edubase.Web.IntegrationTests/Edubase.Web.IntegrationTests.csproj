@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj" />
     <ProjectReference Include="..\Edubase.Web.UI\Edubase.Web.UI.csproj" />
   </ItemGroup>
 

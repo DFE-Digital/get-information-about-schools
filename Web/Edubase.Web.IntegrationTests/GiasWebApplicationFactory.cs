@@ -35,6 +35,8 @@ public sealed class GiasWebApplicationFactory : WebApplicationFactory<Program>
             config.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     { "AppSettings:LookupApiBaseAddress", "https://localhost:8443/edubase/rest/" },
+                    { "AppSettings:AzureMapsApiKey", "MAPS_API_KEY" },
+                    { "AppSettings:AzureMapsUrl", "https://localhost:8443/search/address/json/" },
                 });
         });
 

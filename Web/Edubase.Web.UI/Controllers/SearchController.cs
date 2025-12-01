@@ -226,6 +226,7 @@ namespace Edubase.Web.UI.Controllers
                             && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
                         {
                             var disambiguationResult = await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
+
                             if (disambiguationResult != null)
                             {
                                 return disambiguationResult;

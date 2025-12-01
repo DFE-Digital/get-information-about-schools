@@ -1,10 +1,14 @@
+using System.Collections.Generic;
 using System.Net;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
+using Edubase.Services.IntegrationEndPoints.AzureMaps.Models;
+using Edubase.Services.IntegrationEndPoints.OSPlaces.Models;
 using Edubase.Web.IntegrationTests.Helpers;
 using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Request;
 using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Response;
+using Result = Edubase.Services.IntegrationEndPoints.AzureMaps.Models.Result;
 
 namespace Edubase.Web.IntegrationTests.Tests.SearchController;
 
@@ -199,32 +203,56 @@ public sealed class SearchControllerIndexTests
 
     // TODO what could make the ModelState invalid?
 
-    // TODO fix placesService needs to be stubbed.
     // TODO extend to links?
-    // TODO         <h1 class="govuk-heading-xl">Search results for establishments</h1> shouldn't we grab header
     [Fact]
     public async Task Search_LocationDisambiguation_Returns_View_When_MultipleMatches()
     {
         // Arrange
-        string location = "Bristol";
+        const string searchLocationKeyword = "SEARCH_TEXT";
 
         HttpMappingRequest request = new(
         [
             new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
             new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+            new HttpMappingFile("maps", "azuremaps/get-azuremaps-addresses.json"),
         ]);
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        AzureMapsSearchResponseDto azureMapsAddressesResponse =
+            response.GetResponseById("maps")
+                .GetResponseBody<AzureMapsSearchResponseDto>();
 
         // Act
         HttpClient client = _webApplicationFactory.CreateClient();
-        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.Text={location}");
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.Text={searchLocationKeyword}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
-        Assert.Contains($"10 locations matching '{location}'", document.QuerySelector("h1 + p")?.TextContent);
-        Assert.Equal(10, document.QuerySelectorAll(".govuk-list li").Count);
+        Assert.Equal($"Search results for establishments", document.QuerySelector("h1")?.TextContent);
+
+        Assert.Contains($"3 locations matching '{searchLocationKeyword}'", document.QuerySelector("h1 + p")?.TextContent);
+        Assert.Equal(3, document.QuerySelectorAll(".govuk-list li").Count);
+
+        List<IElement> disambiguateLinks =
+            document.QuerySelectorAll("#search-location-matching-locations a").ToList();
+
+        for (int index = 0; index < azureMapsAddressesResponse.results.Count(); index++)
+        {
+            IElement currentLink = disambiguateLinks[index];
+
+            Result currentMapsResult = azureMapsAddressesResponse.results[index];
+
+            Assert.Equal(
+                $"?SearchType=Location&LocationSearchModel.Text={searchLocationKeyword}&LocationSearchModel.AutoSuggestValue={currentMapsResult.position.lat},{currentMapsResult.position.lon}",
+                currentLink.GetAttribute("href"));
+
+            Assert.Equal(
+                $"{currentMapsResult.address.freeformAddress}, {currentMapsResult.address.countrySecondarySubdivision}",
+                currentLink.TextContent.Trim());
+        }
+
     }
 
     // TODO fix placesService needs to be stubbed.
@@ -250,9 +278,10 @@ public sealed class SearchControllerIndexTests
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+
         // Check the index is returned. Check no error is displayed at this point. Check the search term is preserved in the input field.
         Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
-        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
         Assert.Null(document.QuerySelector(".govuk-error-summary"));
         Assert.Equal(unknownLocation, document.QuerySelector("#LocationSearchModel_Text").GetAttribute("value"));
     }
@@ -280,8 +309,8 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
         // Check the index is returned. Check no error is displayed at this point. Check the AutoSuggestValue is preserved.
         Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
-        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
-        Assert.Equal(autoSuggestValue, document.QuerySelector("#LocationSearchModel_AutoSuggestValue")?.GetAttribute("value"));
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Equal(autoSuggestValue, document.QuerySelector("#LocationSearchModel_AutoSuggestValue")!.GetAttribute("value"));
         Assert.Null(document.QuerySelector(".govuk-error-summary"));
     }
 
@@ -304,9 +333,9 @@ public sealed class SearchControllerIndexTests
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
-        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
-        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
-        Assert.Equal(string.Empty, document.QuerySelector("#GovernorSearchModel_Gid")?.GetAttribute("value"));
+        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")!.TextContent.Trim());
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Equal(string.Empty, document.QuerySelector("#GovernorSearchModel_Gid")!.GetAttribute("value"));
         // Check viewModel.ErrorPanel is rendered
         Assert.NotNull(document.QuerySelector("#searchtype-gov-namerole-ref"));
     }
@@ -330,8 +359,8 @@ public sealed class SearchControllerIndexTests
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
-        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
-        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
+        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")!.TextContent.Trim());
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
         Assert.NotNull(document.QuerySelector("#searchtype-gov-namerole-ref")); // Error panel indicator
         // Optional: Check the Governor ID field retains the entered value
         Assert.Equal("999999", document.QuerySelector("#GovernorSearchModel_Gid")?.GetAttribute("value"));
