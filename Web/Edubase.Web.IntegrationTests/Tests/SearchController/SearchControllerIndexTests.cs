@@ -199,6 +199,9 @@ public sealed class SearchControllerIndexTests
 
     // TODO what could make the ModelState invalid?
 
+    // TODO fix placesService needs to be stubbed.
+    // TODO extend to links?
+    // TODO         <h1 class="govuk-heading-xl">Search results for establishments</h1> shouldn't we grab header
     [Fact]
     public async Task Search_LocationDisambiguation_Returns_View_When_MultipleMatches()
     {
@@ -224,11 +227,8 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(10, document.QuerySelectorAll(".govuk-list li").Count);
     }
 
-    /// <summary>
-    // When a Location search query is provided but no matching places are returned by the Places service (ProcessLocationDisambiguation returns null),
-    // the controller falls back to rendering the main Index view without adding any error messages.
-    /// </summary>
-    /// <returns></returns>
+    // TODO fix placesService needs to be stubbed.
+    // TODO this seems like a bug, if there's no fuzzy match, shouldn't we display an error to the effect of "No suggestions available"
     [Fact]
     public async Task Search_LocationDisambiguation_NoMatches_Renders_Index_Without_ModelErrors()
     {
@@ -257,13 +257,6 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(unknownLocation, document.QuerySelector("#LocationSearchModel_Text").GetAttribute("value"));
     }
 
-
-
-    /// <summary>
-    /// Verifies that when a Location search includes a valid AutoSuggestValue (parsed as LatLon),
-    /// the controller skips the disambiguation logic and renders the main Index view.
-    /// Confirms that the AutoSuggestValue is preserved, no error summary is shown, and expected UI elements exist.
-    /// </summary>
     [Fact]
     public async Task Search_LocationSearch_With_Valid_AutoSuggestValue_Skips_Disambiguation()
     {
@@ -292,17 +285,6 @@ public sealed class SearchControllerIndexTests
         Assert.Null(document.QuerySelector(".govuk-error-summary"));
     }
 
-
-
-    /// <summary>
-    /// Verifies that when SearchType is GovernorReference and no Governor ID (Gid) is provided,
-    /// the controller adds a ModelState error and renders the Index view.
-    /// This test checks that:
-    /// - The Index view is displayed (proposition name and selected tab are correct),
-    /// - The GovernorReference section is present (ErrorPanel indicator),
-    /// - No global error summary is rendered (view behavior),
-    /// confirming that the controller handled the missing Gid scenario without redirect.
-    /// </summary>
     [Fact]
     public async Task Search_GovernorReference_NoGid_Shows_ErrorPanel()
     {
@@ -329,12 +311,6 @@ public sealed class SearchControllerIndexTests
         Assert.NotNull(document.QuerySelector("#searchtype-gov-namerole-ref"));
     }
 
-
-    /// <summary>
-    /// Verifies that when SearchType is GovernorReference and an invalid Gid is provided,
-    /// the controller adds a ModelState error and renders the Index view with the correct error message.
-    /// This confirms that the controller handles the "not found" case without redirect.
-    /// </summary>
     [Fact]
     public async Task Search_GovernorReference_InvalidGid_Shows_NotFoundError()
     {
