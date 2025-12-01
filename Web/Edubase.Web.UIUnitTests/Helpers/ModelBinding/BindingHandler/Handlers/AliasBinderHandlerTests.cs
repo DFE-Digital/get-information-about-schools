@@ -46,7 +46,7 @@ public class AliasBinderHandlerTests
                 response: new ValueProviderResult(input));
 
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .Stub(valueProviderMock.Object, typeof(TestModel));
 
         AliasBinderHandler handler =
@@ -80,7 +80,7 @@ public class AliasBinderHandlerTests
                 response: new ValueProviderResult("BadValue"));
 
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .Stub(valueProviderMock.Object, typeof(TestModel));
 
         AliasBinderHandler handler =
@@ -111,7 +111,7 @@ public class AliasBinderHandlerTests
                 response: ValueProviderResult.None);
 
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .Stub(valueProviderMock.Object, typeof(TestModel));
 
         AliasBinderHandler handler =

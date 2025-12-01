@@ -1,45 +1,74 @@
 using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Edubase.Web.UIUnitTests.Helpers.ModelBinding.BindingHandler.Handlers.TestDoubles;
 
 /// <summary>
-/// Provides reusable test doubles for creating <see cref="DefaultModelBindingContext"/> instances.
-/// This helper is intended for unit tests to avoid repeating boilerplate setup code
-/// when constructing a model binding context.
+/// Provides reusable helpers for constructing <see cref="ModelBindingContext"/> instances
+/// in unit tests. These helpers reduce boilerplate when simulating ASP.NET Core model binding
+/// scenarios.
 /// </summary>
 internal static class ModelBindingContextTestDoubles
 {
     /// <summary>
-    /// Creates a stubbed <see cref="DefaultModelBindingContext"/> for unit testing.
+    /// Creates a binding context using <see cref="DefaultModelBindingContext.CreateBindingContext"/>.
+    /// This method simulates the full ASP.NET Core pipeline by wiring up an <see cref="ActionContext"/>
+    /// with a fake <see cref="HttpContext"/> and service provider.
     /// </summary>
-    internal static DefaultModelBindingContext Stub(
-        IValueProvider valueProvider, Type type) =>
-        new()
-        {
-            ModelName = string.Empty,
-            ValueProvider = valueProvider,
-            ModelMetadata = new EmptyModelMetadataProvider().GetMetadataForType(type),
-            Result = ModelBindingResult.Success(null)
-        };
-
-    /// <summary>
-    /// Convenience stub: builds a <see cref="DefaultModelBindingContext"/> from a dictionary of values.
-    /// </summary>
-    /// <typeparam name="T">The model type for which metadata should be generated.</typeparam>
-    /// <param name="values">Dictionary of key → string[] values representing simulated request data.</param>
+    /// <param name="services">
+    /// The <see cref="IServiceProvider"/> to attach to the <see cref="HttpContext.RequestServices"/>.
+    /// Typically built from a test <see cref="ServiceCollection"/>.
+    /// </param>
+    /// <param name="valueProvider">
+    /// The <see cref="IValueProvider"/> that supplies simulated request values.
+    /// </param>
     /// <returns>
-    /// A <see cref="DefaultModelBindingContext"/> configured with a <see cref="ValueProviderTestDoubles.TestValueProvider"/>
-    /// and metadata for the specified model type.
+    /// A <see cref="ModelBindingContext"/> created via <see cref="DefaultModelBindingContext.CreateBindingContext"/>,
+    /// configured with metadata for <see cref="object"/> and a model name of "TestModel".
     /// </returns>
-    internal static DefaultModelBindingContext StubForDictionary<TObject>(
-        Dictionary<string, string[]> values) =>
-        new()
-        {
-            ModelName = string.Empty,
-            ValueProvider = new ValueProviderTestDoubles.TestValueProvider(values),
-            ModelMetadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(TObject)),
-            Result = ModelBindingResult.Success(Activator.CreateInstance<TObject>())
-        };
+    internal static ModelBindingContext CreateBindingContext(
+        string modelName,
+        IServiceProvider services,
+        IValueProvider valueProvider)
+    {
+        ActionContextMock actionContext = new(services);
+
+        ModelBindingContext context =
+            DefaultModelBindingContext
+                .CreateBindingContext(
+                    actionContext,
+                    valueProvider,
+                    new EmptyModelMetadataProvider()
+                        .GetMetadataForType(typeof(object)),
+                    bindingInfo: null,
+                    modelName);
+
+        return context;
+    }
 }
+
+/// <summary>
+/// Minimal <see cref="ActionContext"/> mock used to provide a fake <see cref="HttpContext"/>
+/// with a configured <see cref="IServiceProvider"/>. This allows unit tests to simulate
+/// the ASP.NET Core request pipeline without requiring a real server.
+/// </summary>
+internal class ActionContextMock : ActionContext
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ActionContextMock"/> class.
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceProvider"/> to assign to <see cref="HttpContext.RequestServices"/>.
+    /// </param>
+    public ActionContextMock(IServiceProvider services)
+    {
+        HttpContext =
+            new DefaultHttpContext
+            {
+                RequestServices = services
+            };
+    }
+}
+

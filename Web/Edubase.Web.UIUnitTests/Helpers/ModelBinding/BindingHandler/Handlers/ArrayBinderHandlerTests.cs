@@ -49,7 +49,7 @@ public class ArrayBinderHandlerTests
                 response: new ValueProviderResult(ResponseArray));
 
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .Stub(valueProviderMock.Object, typeof(TestModel));
 
         ArrayBinderHandler handler =
@@ -82,7 +82,7 @@ public class ArrayBinderHandlerTests
                 response: new ValueProviderResult(AgeValue));
 
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .Stub(valueProviderMock.Object, typeof(TestModel));
 
         ArrayBinderHandler handler =
@@ -115,7 +115,7 @@ public class ArrayBinderHandlerTests
                 response: ValueProviderResult.None);
 
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .Stub(valueProviderMock.Object, typeof(TestModel));
 
         ArrayBinderHandler handler =
@@ -151,7 +151,7 @@ public class ArrayBinderHandlerTests
                 response: new ValueProviderResult(BadValuesArray));
 
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
              .Stub(valueProviderMock.Object, typeof(TestModel));
 
         ArrayBinderHandler handler =

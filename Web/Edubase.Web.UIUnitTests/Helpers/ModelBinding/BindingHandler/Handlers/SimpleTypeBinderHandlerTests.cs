@@ -33,7 +33,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
             .StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>
                 {
@@ -63,7 +63,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<TestModel>(
                     new Dictionary<string, string[]>
                     {
@@ -94,7 +94,7 @@ public class SimpleTypeBinderHandlerTests
         Guid guid = Guid.NewGuid();
 
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<TestModel>(
                     new Dictionary<string, string[]>
                     {
@@ -123,7 +123,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<TestModel>(
                     new Dictionary<string, string[]>
                     {
@@ -153,7 +153,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<TestModel>(
                     new Dictionary<string, string[]>
                     {
@@ -183,7 +183,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<TestModel>(
                     new Dictionary<string, string[]>
                     {
@@ -219,7 +219,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<int>(
                     new Dictionary<string, string[]>
                     {
@@ -248,7 +248,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<int>(
                     new Dictionary<string, string[]>());
 
@@ -274,7 +274,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<int>(
                     new Dictionary<string, string[]>
                     {
@@ -303,7 +303,7 @@ public class SimpleTypeBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles
+            DefaultModelBindingContextTestDoubles
                 .StubForDictionary<TestModel>([]);
 
         context.ModelName = "Complex";

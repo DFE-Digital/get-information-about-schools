@@ -33,7 +33,7 @@ public class PropertyNameBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles.StubForDictionary<TestModel>(
+            DefaultModelBindingContextTestDoubles.StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>
                 {
                     { "Age", new[] { "42" } }
@@ -67,7 +67,7 @@ public class PropertyNameBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles.StubForDictionary<TestModel>(
+            DefaultModelBindingContextTestDoubles.StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>());
 
         PropertyInfo? property =
@@ -96,7 +96,7 @@ public class PropertyNameBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles.StubForDictionary<TestModel>(
+            DefaultModelBindingContextTestDoubles.StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>
                 {
                     { "Age", new[] { "bad" } }
@@ -127,7 +127,7 @@ public class PropertyNameBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles.StubForDictionary<TestModel>(
+            DefaultModelBindingContextTestDoubles.StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>
                 {
                     { "TestModel.Name", new[] { "Alice" } }

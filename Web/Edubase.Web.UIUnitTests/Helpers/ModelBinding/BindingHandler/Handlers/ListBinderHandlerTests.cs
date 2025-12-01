@@ -33,7 +33,7 @@ public class ListBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles.StubForDictionary<TestModel>(
+            DefaultModelBindingContextTestDoubles.StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>
                 {
                     { "Name", new[] { "John" } }
@@ -64,7 +64,7 @@ public class ListBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles.StubForDictionary<TestModel>(
+            DefaultModelBindingContextTestDoubles.StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>
                 {
                     { "Numbers", new[] { "1", "2", "3" } }
@@ -99,7 +99,7 @@ public class ListBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles.StubForDictionary<TestModel>(
+            DefaultModelBindingContextTestDoubles.StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>
                 {
                     { "Numbers", Array.Empty<string>() }
@@ -131,7 +131,7 @@ public class ListBinderHandlerTests
     {
         // Arrange
         DefaultModelBindingContext context =
-            ModelBindingContextTestDoubles.StubForDictionary<TestModel>(
+            DefaultModelBindingContextTestDoubles.StubForDictionary<TestModel>(
                 new Dictionary<string, string[]>
                 {
                     { "Numbers", new[] { "bad" } }
