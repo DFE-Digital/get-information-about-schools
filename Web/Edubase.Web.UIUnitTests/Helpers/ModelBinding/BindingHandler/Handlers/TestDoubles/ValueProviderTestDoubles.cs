@@ -1,15 +1,32 @@
+using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
 
 namespace Edubase.Web.UIUnitTests.Helpers.ModelBinding.BindingHandler.Handlers.TestDoubles;
 
 /// <summary>
-/// Provides reusable test doubles for IValueProvider.
+/// Provides reusable test doubles for <see cref="IValueProvider"/>.
 /// These helpers simplify unit test setup by creating mocks
-/// with common behaviors (default or keyed response).
+/// with common behaviors (default, keyed response, or array element values).
 /// </summary>
 internal static class ValueProviderTestDoubles
 {
+    /// <summary>
+    /// Minimal fake value provider for unit testing.
+    /// Accepts a dictionary of key → string[] values.
+    /// </summary>
+    internal sealed class TestValueProvider(
+        Dictionary<string, string[]> values) : IValueProvider
+    {
+        public ValueProviderResult GetValue(string key) =>
+            values.TryGetValue(key, out var vals) && vals.Length > 0
+                ? new ValueProviderResult(vals, CultureInfo.InvariantCulture)
+                : ValueProviderResult.None;
+
+        public bool ContainsPrefix(string prefix) => values.ContainsKey(prefix);
+    }
+
     /// <summary>
     /// Returns a blank mock of IValueProvider with no setup.
     /// Useful when you want to configure behavior manually in a test.
@@ -20,20 +37,37 @@ internal static class ValueProviderTestDoubles
     /// Creates a mock IValueProvider that will return a specific ValueProviderResult
     /// when GetValue is called with the given key.
     /// </summary>
-    /// <param name="key">The key to look up in the value provider (e.g., alias name).</param>
-    /// <param name="response">The ValueProviderResult to return for that key.</param>
-    /// <returns>A configured mock IValueProvider.</returns>
-    internal static Mock<IValueProvider> MockFor(string key, ValueProviderResult response)
+    internal static Mock<IValueProvider> MockFor(
+        string key,
+        ValueProviderResult response)
     {
-        Mock<IValueProvider> mock = Default();
-
-        // Setup the mock so that when GetValue(key) is called,
-        // it returns the provided response.
-        mock.Setup(
-            valueProvider =>
-                valueProvider.GetValue(key))
+        var mock = Default();
+        mock.Setup(valueProvider =>
+            valueProvider.GetValue(key))
             .Returns(response)
-            .Verifiable(); // marks this setup as verifiable in tests
+            .Verifiable();
+
+        return mock;
+    }
+
+    /// <summary>
+    /// Creates a mock IValueProvider that simulates values for array elements,
+    /// e.g. "PreviousAddresses[0]" and "PreviousAddresses[0].Street".
+    /// </summary>
+    internal static Mock<IValueProvider> ArrayElement(
+        string propertyPrefix,
+        int index,
+        string elementProperty,
+        string response)
+    {
+        var mock = Default();
+        string key = $"{propertyPrefix}[{index}].{elementProperty}";
+
+        mock.Setup(valueProvider =>
+            valueProvider.GetValue(key))
+            .Returns(new ValueProviderResult(
+                response, CultureInfo.InvariantCulture))
+            .Verifiable();
 
         return mock;
     }

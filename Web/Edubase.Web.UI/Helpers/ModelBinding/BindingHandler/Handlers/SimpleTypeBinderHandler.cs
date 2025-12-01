@@ -32,7 +32,8 @@ public class SimpleTypeBinderHandler : IPropertyBinderHandler
     /// <summary>
     /// Attempts to bind a simple type property on a complex model.
     /// </summary>
-    /// <param name="context">The current <see cref="ModelBindingContext"/> containing metadata, value providers, and binding state.</param>
+    /// <param name="context">The current <see cref="ModelBindingContext"/> containing metadata,
+    /// value providers, and binding state.</param>
     /// <param name="model">The parent model instance being bound.</param>
     /// <param name="property">The <see cref="PropertyInfo"/> representing the property to bind.</param>
     /// <returns>

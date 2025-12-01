@@ -51,7 +51,8 @@ public sealed class ArrayBinderHandler(ITypeConverter converter) : PropertyBinde
 
         string propertyPrefix = context.BuildPropertyPrefix(property);
 
-        ValueProviderResult valueResult = context.ValueProvider.GetValue(propertyPrefix);
+        ValueProviderResult valueResult =
+            context.ValueProvider.GetValue(propertyPrefix);
 
         if (!valueResult.HasValues())
         {
@@ -61,9 +62,13 @@ public sealed class ArrayBinderHandler(ITypeConverter converter) : PropertyBinde
         try
         {
             // Normalise multiple values into a single comma-delimited string
-            string combined = valueResult.ToCombinedString();
+            string combined =
+                valueResult.ToCombinedString();
+
             // Delegate conversion to DefaultTypeConverter
-            object converted = converter.Convert(combined, property.PropertyType);
+            object converted =
+                converter.Convert(
+                    combined, property.PropertyType);
 
             property.SetValue(model, converted);
             return true;
