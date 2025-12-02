@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Net;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
 using Edubase.Services.IntegrationEndPoints.AzureMaps.Models;
-using Edubase.Services.IntegrationEndPoints.OSPlaces.Models;
 using Edubase.Web.IntegrationTests.Helpers;
 using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Request;
 using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Response;
@@ -93,7 +91,7 @@ public sealed class SearchControllerIndexTests
         Assert.NotNull(httpResponse);
 
         httpResponse.Headers.TryGetValues("Location", out IEnumerable<string>? locations);
-        string redirectPath = Assert.Single(locations);
+        var redirectPath = Assert.Single(locations);
         // TODO why does it append an empty query string?
         Assert.Equal("/?#la", redirectPath);
     }
@@ -121,7 +119,7 @@ public sealed class SearchControllerIndexTests
         Assert.NotNull(httpResponse);
 
         httpResponse.Headers.TryGetValues("Location", out IEnumerable<string>? locations);
-        string redirectPath = Assert.Single(locations);
+        var redirectPath = Assert.Single(locations);
         Assert.Equal("/?d=2#la", redirectPath);
     }
 
@@ -148,7 +146,7 @@ public sealed class SearchControllerIndexTests
         // Assert
         Assert.Equal(302, (int) httpResponse.StatusCode);
         httpResponse.Headers.TryGetValues("Location", out IEnumerable<string>? locations);
-        string redirectPath = Assert.Single(locations);
+        var redirectPath = Assert.Single(locations);
         Assert.Equal("?SearchType=ByLocalAuthority&d=1#la", redirectPath);
     }
 
@@ -184,7 +182,7 @@ public sealed class SearchControllerIndexTests
 
         Assert.Equal(stubbedLocalAuthorities.Count, links.Count);
 
-        for (int index = 0; index < links.Count; index++)
+        for (var index = 0; index < links.Count; index++)
         {
             IElement currentLink = links[index];
             LookupDto currentStubbedLocalAuthority = stubbedLocalAuthorities[index];
@@ -238,7 +236,7 @@ public sealed class SearchControllerIndexTests
         List<IElement> disambiguateLinks =
             document.QuerySelectorAll("#search-location-matching-locations a").ToList();
 
-        for (int index = 0; index < azureMapsAddressesResponse.results.Count(); index++)
+        for (var index = 0; index < azureMapsAddressesResponse.results.Count(); index++)
         {
             IElement currentLink = disambiguateLinks[index];
 
@@ -261,7 +259,7 @@ public sealed class SearchControllerIndexTests
     public async Task Search_LocationDisambiguation_NoMatches_Renders_Index_Without_ModelErrors()
     {
         // Arrange
-        string unknownLocation = "UnknownPlace";
+        var unknownLocation = "UnknownPlace";
 
         HttpMappingRequest request = new(
         [
@@ -290,7 +288,7 @@ public sealed class SearchControllerIndexTests
     public async Task Search_LocationSearch_With_Valid_AutoSuggestValue_Skips_Disambiguation()
     {
         // Arrange
-        string autoSuggestValue = "51.5074,-0.1278"; // Valid LatLon coordinates
+        var autoSuggestValue = "51.5074,-0.1278"; // Valid LatLon coordinates
 
         HttpMappingRequest request = new(
         [
@@ -366,22 +364,281 @@ public sealed class SearchControllerIndexTests
         Assert.Equal("999999", document.QuerySelector("#GovernorSearchModel_Gid")?.GetAttribute("value"));
     }
 
+    [Fact]
+    public async Task Search_TextSearchType_NoResults_EmptyText_ShowsRequiredError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=Text&NoResults=True");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Contains("Please enter an establishment name, URN, LAESTAB or UKPRN to start a search",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+        Assert.Equal(string.Empty, document.QuerySelector("#TextSearchModel_Text")!.GetAttribute("value"));
+    }
+
+    [Fact]
+    public async Task Search_TextSearchType_NoResults_WithText_ShowsNotFoundError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+        var searchText = "Some School";
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Text&NoResults=True&TextSearchModel.Text={searchText}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Contains("We could not find any establishments matching your search criteria",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+        Assert.Equal(searchText, document.QuerySelector("#TextSearchModel_Text")!.GetAttribute("value"));
+    }
+
+    [Fact]
+    public async Task Search_LocationSearchType_NoResults_EmptyText_ShowsRequiredError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=Location&NoResults=True");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Contains("Please enter a postcode, town or city to start a search",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+        Assert.Equal(string.Empty, document.QuerySelector("#LocationSearchModel_Text")!.GetAttribute("value"));
+    }
+
+    [Fact]
+    public async Task Search_LocationSearchType_NoResults_WithText_ShowsNotFoundError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+        var locationText = "London";
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&NoResults=True&LocationSearchModel.Text={locationText}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Contains("We couldn't find any establishments at that location",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+        Assert.Equal(locationText, document.QuerySelector("#LocationSearchModel_Text")!.GetAttribute("value"));
+    }
+
+    [Fact]
+    public async Task Search_ByLocalAuthority_NoResults_NoSelectedIds_ShowsRequiredError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=ByLocalAuthority&NoResults=True");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+
+        // Check error summary contains correct message
+        Assert.Contains("Please enter a local authority to start a search",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+
+        // Check input field is empty
+        Assert.Equal(string.Empty, document.QuerySelector("#LocalAuthorityToAdd")!.GetAttribute("value"));
+    }
+
+    // TODO: the 'this la has no open schools' message is not displaying. Is there a binding issue?
+    [Fact]
+    public async Task Search_ByLocalAuthority_NoResults_WithSelectedIds_ShowsNoOpenSchoolsError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=ByLocalAuthority&NoResults=True&d=1");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Contains("This local authority has no open schools",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+        Assert.Equal("1", document.QuerySelector("input[name='d']")!.GetAttribute("value"));
+    }
+
+    [Fact]
+    public async Task Search_GroupSearchType_NoResults_EmptyText_ShowsRequiredError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SelectedTab=Groups&SearchType=Group&NoResults=True");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find an establishment group", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Contains("Please enter an establishment group to start a search",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+        Assert.Equal(string.Empty, document.QuerySelector("#GroupSearchModel_Text")!.GetAttribute("value"));
+    }
+
+    [Fact]
+    public async Task Search_GroupSearchType_NoResults_WithText_ShowsNotFoundError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+        var groupText = "Academy Trust";
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SelectedTab=Groups&SearchType=Group&NoResults=True&GroupSearchModel.Text={groupText}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find an establishment group", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+        Assert.Contains("We could not find any establishment groups matching your search criteria",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+        Assert.Equal(groupText, document.QuerySelector("#GroupSearchModel_Text")!.GetAttribute("value"));
+    }
+
+    [Fact]
+    public async Task Search_GovernorSearchType_NoResults_EmptyDetails_ShowsRequiredError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SelectedTab=Governors&SearchType=Governor&NoResults=True");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find a governor", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+
+        Assert.Contains("Please enter a governor to start a search",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+
+        Assert.Equal(string.Empty, document.QuerySelector("#GovernorSearchModel_Forename")!.GetAttribute("value"));
+        Assert.Equal(string.Empty, document.QuerySelector("#surname")!.GetAttribute("value"));
+    }
+
+    [Fact]
+    public async Task Search_GovernorSearchType_NoResults_WithDetails_ShowsNotFoundError()
+    {
+        // Arrange
+        HttpMappingRequest request = new(
+        [
+            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
+            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
+        ]);
+
+        await _edubaseApiFixture.RegisterHttpMapping(request);
+
+        HttpClient client = _webApplicationFactory.CreateClient();
+        var forename = "John";
+        var surname = "Smith";
+
+        // Act
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SelectedTab=Governors&SearchType=Governor&NoResults=True&GovernorSearchModel.Forename={forename}&GovernorSearchModel.Surname={surname}");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+        Assert.Equal("Find a governor", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
+
+        Assert.Contains("We could not find any governors matching your search criteria",
+            document.QuerySelector(".govuk-error-summary")?.TextContent);
+
+        Assert.Equal(forename, document.QuerySelector("#GovernorSearchModel_Forename")!.GetAttribute("value"));
+        Assert.Equal(surname, document.QuerySelector("#surname")!.GetAttribute("value"));
+    }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    // I assume we don't want this test but leaving it here for the time being?
     [Theory]
     [InlineData("Text", "checked", null, null, null)]
     [InlineData("Location", null, "checked", null, null)]
@@ -389,10 +646,10 @@ public sealed class SearchControllerIndexTests
     [InlineData("EstablishmentAll", null, null, null, "checked")]
     public async Task Search_SearchType_Checkbox_IsChecked(
         string searchType,
-        string textChecked,
-        string locationChecked,
-        string laChecked,
-        string allChecked
+        string? textChecked,
+        string? locationChecked,
+        string? laChecked,
+        string? allChecked
         )
     {
         // Arrange
@@ -418,63 +675,5 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(laChecked, document.QuerySelector("#searchtype-la").GetAttribute("checked"));
         Assert.Equal(allChecked, document.QuerySelector("#searchtype-all").GetAttribute("checked"));
     }
-
-    [Fact]
-    public async Task Search_SearchType_LocationSuggest_LatLong()
-    {
-        // Arrange
-        double latitude = 51.500152587890625;
-        double longitude = -0.1262362003326416;
-
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
-        ]);
-
-        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
-
-        // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
-        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.AutoSuggestValue={latitude}%2c+{longitude}");
-        IHtmlDocument document = await httpResponse.GetDocumentAsync();
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
-        Assert.NotNull(httpResponse);
-        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
-        Assert.Equal("checked", document.QuerySelector("#searchtype-location").GetAttribute("checked"));
-        Assert.Equal($"{latitude}, {longitude}", document.QuerySelector("#LocationSearchModel_AutoSuggestValue").GetAttribute("value"));
-    }
-
-    /// <summary>
-    /// Using SelectedTab=Groups and SearchType=Group to display the Find an establishment group page.
-    /// </summary>
-    /// <returns></returns>
-    [Fact]
-    public async Task Search_SearchType_Group()
-    {
-        // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
-        ]);
-
-        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
-
-        // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
-        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SelectedTab=Groups&SearchType=Group");
-        IHtmlDocument document = await httpResponse.GetDocumentAsync();
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
-        Assert.NotNull(httpResponse);
-        Assert.Equal("Find an establishment group", document.QuerySelector(".gias-tabs__list-item--selected").Text().Trim());
-        Assert.Equal("checked", document.QuerySelector("#searchtype-name-group").GetAttribute("checked"));
-    }
-
-    // TODO: as per eSearchType.cs - Governor, GovernorReference, GovernorAll, GroupAll
 
 }
