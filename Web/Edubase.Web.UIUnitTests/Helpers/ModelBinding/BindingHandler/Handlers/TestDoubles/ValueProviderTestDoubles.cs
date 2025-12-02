@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
 
@@ -70,5 +72,58 @@ internal static class ValueProviderTestDoubles
             .Verifiable();
 
         return mock;
+    }
+
+    /// <summary>
+    /// Minimal fake implementation of <see cref="IValueProvider"/> for unit testing.
+    /// Accepts a dictionary of key → string values and returns them when queried.
+    /// </summary>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="TestValueProvider"/> class.
+    /// </remarks>
+    /// <param name="values">
+    /// A dictionary of key → string values to be returned by the provider.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if <paramref name="values"/> is <c>null</c>.
+    /// </exception>
+    internal class FakeValueProvider(Dictionary<string, string> values) : IValueProvider
+    {
+        private readonly Dictionary<string, string> _values = values ??
+            throw new ArgumentNullException(nameof(values));
+
+        /// <summary>
+        /// Determines whether the provider contains the specified prefix.
+        /// </summary>
+        /// <param name="prefix">The prefix to check against the keys.</param>
+        /// <returns>
+        /// <c>true</c> if any key starts with the given prefix (case-insensitive);
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        public bool ContainsPrefix(string prefix) =>
+            _values.Keys.Any(str =>
+                str.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+
+        /// <summary>
+        /// Retrieves the value associated with the given key.
+        /// </summary>
+        /// <param name="key">The key to look up in the dictionary.</param>
+        /// <returns>
+        /// A <see cref="ValueProviderResult"/> containing the value if found;
+        /// otherwise, <see cref="ValueProviderResult.None"/>.
+        /// </returns>
+        public ValueProviderResult GetValue(string key) =>
+            _values.TryGetValue(key, out string? value)
+                ? new ValueProviderResult(value, CultureInfo.InvariantCulture)
+                : ValueProviderResult.None;
+
+        /// <summary>
+        /// Determines whether the provider contains an exact value for the given key.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>
+        /// <c>true</c> if the dictionary contains the key; otherwise, <c>false</c>.
+        /// </returns>
+        public bool HasValue(string key) => _values.ContainsKey(key);
     }
 }
