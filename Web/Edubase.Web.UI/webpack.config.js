@@ -54,7 +54,6 @@ const config = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     },
-    // ✅ removed "*" entry, only valid extensions
     extensions: ['.js', '.vue', '.json', '.scss']
   },
   module: {
@@ -94,7 +93,6 @@ const config = {
               },
             },
           },
-          // ✅ Sass first
           {
             loader: 'sass-loader',
             options: {
@@ -105,7 +103,6 @@ const config = {
               },
             },
           },
-          // ✅ PostCSS after Sass
           {
             loader: 'postcss-loader',
             options: {

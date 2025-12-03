@@ -1,9 +1,7 @@
 $govuk-global-styles: true;
 
 @import "GiasHelpers/all";
-
 @import "govuk-frontend/dist/govuk/base";
-
 @import "govuk-frontend/dist/govuk/core/all";
 @import "govuk-frontend/dist/govuk/objects/all";
 @import "govuk-frontend/dist/govuk/components/footer/index";
