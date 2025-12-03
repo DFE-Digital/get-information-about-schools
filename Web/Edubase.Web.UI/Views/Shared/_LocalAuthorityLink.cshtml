@@ -1,0 +1,22 @@
+@using Edubase.Common
+@using Edubase.Services.Domain
+@using Edubase.Services.Establishments.Models
+@using Edubase.Web.UI
+@using Edubase.Web.UI.Areas.Establishments.Models.Search
+@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models.Search
+@model (LookupDto Item, bool OpenOnly, List<int> SelectedLocalAuthorityIds)
+
+@{
+    var cleanQueryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+    cleanQueryString.Add(nameof(EstablishmentSearchViewModel.SearchType), eSearchType.ByLocalAuthority.ToString());
+    cleanQueryString.Add(nameof(Model.OpenOnly), Model.OpenOnly.ToString());
+
+    var updatedIds = Model.SelectedLocalAuthorityIds.AddUnique(Model.Item.Id).ToArray();
+    var queryString = $"{cleanQueryString}&{QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, updatedIds)}#la";
+
+    var url = Url.Action("Index", "Search", new { area = "" }) + "?" + queryString;
+}
+
+<a href="@url">@Model.Item.Name</a>

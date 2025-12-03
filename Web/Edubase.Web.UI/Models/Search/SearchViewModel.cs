@@ -27,11 +27,7 @@ namespace Edubase.Web.UI.Models.Search
         public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
 
         [BindAlias(BIND_ALIAS_LAIDS)]
-        public LocalAuthorityIdList SelectedLocalAuthorityIds
-        {
-            get { return new LocalAuthorityIdList(this.selectedLocalAuthorityIds.Distinct()); }
-            set { this.selectedLocalAuthorityIds = value; }
-        }
+        public List<int> SelectedLocalAuthorityIds { get; set; } = [];
 
         public Tab SelectedTab { get; set; }
 
