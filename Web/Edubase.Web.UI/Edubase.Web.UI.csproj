@@ -17,14 +17,16 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="wwwroot\css\**" />
+    <Content Remove="wwwroot\css\**" />
+    <EmbeddedResource Remove="wwwroot\css\**" />
+    <None Remove="wwwroot\css\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Remove="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
     <Content Remove="wwwroot\Assets\Scripts\Entry\news.js" />
     <Content Remove="wwwroot\Assets\Scripts\GiasLandingPages\GiasNewsFilters.js" />
     <Content Remove="wwwroot\Assets\Scripts\JSON\establishmentChanges.js" />
-    <Content Remove="wwwroot\css\govuk-core.css" />
-    <Content Remove="wwwroot\css\govuk-core.css.map" />
-    <Content Remove="wwwroot\css\main.css" />
-    <Content Remove="wwwroot\css\main.css.map" />
     <Content Remove="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js" />
     <Content Remove="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js.map" />
     <Content Remove="wwwroot\public\assets\scripts\build\approvals-tool.5e64faa6ade04b108103.js" />
@@ -100,10 +102,6 @@
     <None Include="wwwroot\Assets\Scripts\Entry\news.js" />
     <None Include="wwwroot\Assets\Scripts\GiasLandingPages\GiasNewsFilters.js" />
     <None Include="wwwroot\Assets\Scripts\JSON\establishmentChanges.js" />
-    <None Include="wwwroot\css\govuk-core.css" />
-    <None Include="wwwroot\css\govuk-core.css.map" />
-    <None Include="wwwroot\css\main.css" />
-    <None Include="wwwroot\css\main.css.map" />
     <None Include="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js" />
     <None Include="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js.map" />
     <None Include="wwwroot\public\assets\scripts\build\approvals-tool.5e64faa6ade04b108103.js" />
@@ -170,6 +168,7 @@
     <None Include="wwwroot\public\assets\scripts\build\search-bundle.98d35f7223259ace7370.js.map" />
     <None Include="wwwroot\public\assets\scripts\build\search-results-bundle.d90881f07bb0027aabeb.js" />
     <None Include="wwwroot\public\assets\scripts\build\search-results-bundle.d90881f07bb0027aabeb.js.map" />
+    <None Include="wwwroot\robots.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Data.OracleClient" />
