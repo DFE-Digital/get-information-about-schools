@@ -7,7 +7,7 @@ const entryDirPath = path.resolve('./Assets/Scripts/Entry/');
 const scssEntryPath = path.resolve('./Assets/Sass/');
 const entryFiles = path.join(entryDirPath, '**/*.js');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
@@ -44,7 +44,6 @@ const config = {
           comments: false,
         },
       },
-
     })],
   },
   output: {
@@ -55,7 +54,8 @@ const config = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['.*', '.js', '.vue', '.json', '.scss']
+    // ✅ removed "*" entry, only valid extensions
+    extensions: ['.js', '.vue', '.json', '.scss']
   },
   module: {
     rules: [
@@ -94,6 +94,18 @@ const config = {
               },
             },
           },
+          // ✅ Sass first
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                includePaths: [
+                  path.resolve(__dirname, 'node_modules')
+                ],
+              },
+            },
+          },
+          // ✅ PostCSS after Sass
           {
             loader: 'postcss-loader',
             options: {
@@ -107,16 +119,6 @@ const config = {
                 ]
               }
             }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sassOptions: {
-                includePaths: [
-                  path.resolve(__dirname, 'node_modules')
-                ],
-              },
-            },
           },
         ],
       },
@@ -167,7 +169,6 @@ module.exports = (env, argv) => {
         exclude: /node_modules/,
         test: /\.css?|\.js?$/,
       }),
-
     );
   } else {
     delete config.devtool;
@@ -175,4 +176,3 @@ module.exports = (env, argv) => {
 
   return config;
 };
-
