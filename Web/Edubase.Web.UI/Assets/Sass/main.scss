@@ -1,9 +1,8 @@
 $govuk-global-styles: true;
 
 @import "GiasHelpers/all";
-//@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/govuk-frontend/govuk/all";
 @import "govuk-frontend/dist/govuk/base";
-//
 @import "govuk-frontend/dist/govuk/core/all";
 @import "govuk-frontend/dist/govuk/objects/all";
 @import "govuk-frontend/dist/govuk/components/footer/index";
@@ -36,7 +35,7 @@ $govuk-global-styles: true;
 @import "govuk-frontend/dist/govuk/overrides/all";
 @import "govuk-frontend/dist/govuk/components/inset-text";
 @import "govuk-frontend/dist/govuk/settings/all";
-// GIAS specifics
+
 @import "GiasGovukOverrides/all";
 @import "GiasHelpers/gias-display";
 @import "GiasHelpers/gias-custom-padding";
