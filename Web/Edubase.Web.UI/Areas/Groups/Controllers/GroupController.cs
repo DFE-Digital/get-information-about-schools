@@ -572,7 +572,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
                 if (validationEnvelope.HasErrors)
                 {
-                    validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                    validationEnvelope.Errors.ForEach(x => AddModelErrorSafe(x.Fields, x.GetMessage()));
                 }
             }
 
@@ -585,7 +585,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
                 else
                 {
-                    apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                    apiResponse.Errors.ForEach(x => AddModelErrorSafe(x.Fields, x.GetMessage()));
                 }
             }
             else
@@ -955,7 +955,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var apiResponse = await SaveGroup(viewModel);
                 if (apiResponse.HasErrors)
                 {
-                    apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                    apiResponse.Errors.ForEach(x => AddModelErrorSafe(x.Fields, x.GetMessage()));
                 }
                 else
                 {
@@ -969,7 +969,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var apiResponse = await SaveGroup(viewModel);
                 if (apiResponse.HasErrors)
                 {
-                    apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                    apiResponse.Errors.ForEach(x => AddModelErrorSafe(x.Fields, x.GetMessage()));
                 }
                 else
                 {
@@ -1144,6 +1144,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             target.Clear();
             target.AddRange(snapshot);
+        }
+
+        private void AddModelErrorSafe(string field, string message)
+        {
+            ModelState.AddModelError(string.IsNullOrWhiteSpace(field) ? string.Empty : field,
+                message);
         }
 
     }
