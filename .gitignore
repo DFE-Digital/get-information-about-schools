@@ -211,3 +211,5 @@ Web/Web.UI/
 /Web/.nuget/NuGet.Config
 Web/packages
 /.vscode/launch.json
+/Web/Edubase.Web.UI/appsettings.Development.json
+/Web/Edubase.Web.UI/appsettings.Development.json
