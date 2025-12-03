@@ -13,8 +13,6 @@ namespace Edubase.Web.UI.Models.Search
             Governors
         }
 
-        private List<int> selectedLocalAuthorityIds = new List<int>();
-
         public const string BIND_ALIAS_GOONERES = Areas.Establishments.Models.Search.EstablishmentSearchViewModel
             .BIND_ALIAS_GOONERES;
 
@@ -48,18 +46,18 @@ namespace Edubase.Web.UI.Models.Search
 
         public SearchViewModel AddLocalAuthorityId(int id)
         {
-            if (!this.selectedLocalAuthorityIds.Contains(id))
+            if (!this.SelectedLocalAuthorityIds.Contains(id))
             {
-                this.selectedLocalAuthorityIds.Add(id);
+                this.SelectedLocalAuthorityIds.Add(id);
             }
             return this;
         }
 
         public SearchViewModel RemoveLocalAuthorityId(int id)
         {
-            if (this.selectedLocalAuthorityIds.Contains(id))
+            if (this.SelectedLocalAuthorityIds.Contains(id))
             {
-                this.selectedLocalAuthorityIds.RemoveAll(la => la == id);
+                this.SelectedLocalAuthorityIds.RemoveAll(la => la == id);
             }
 
             return this;
