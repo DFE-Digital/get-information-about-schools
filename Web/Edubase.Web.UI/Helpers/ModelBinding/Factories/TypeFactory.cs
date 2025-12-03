@@ -86,7 +86,7 @@ public sealed class TypeFactory : ITypeFactory
     /// <summary>
     /// Builds a delegate for parameterless constructors using IL.
     /// </summary>
-    private object BuildParameterlessCreator(ConstructorInfo ctor, Type type)
+    private static object BuildParameterlessCreator(ConstructorInfo ctor, Type type)
     {
         // Create a dynamic method that returns object
         DynamicMethod dynamicMethod =

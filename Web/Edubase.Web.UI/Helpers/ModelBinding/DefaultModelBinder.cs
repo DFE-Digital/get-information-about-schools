@@ -95,9 +95,9 @@ public class DefaultModelBinder : IModelBinder
                 await _handlerChain.HandleAsync(
                     bindingContext, modelInstance, property);
             }
-        }
 
-        bindingContext.Result =
+            bindingContext.Result =
             ModelBindingResult.Success(modelInstance);
+        }
     }
 }

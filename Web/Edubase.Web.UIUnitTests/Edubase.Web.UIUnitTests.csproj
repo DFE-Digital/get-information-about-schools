@@ -26,9 +26,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Web.UI\Edubase.Web.UI.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\ModelBinding\Extensions\" />
-    <Folder Include="Helpers\ModelBinding\Factories\" />
-    <Folder Include="Helpers\ModelBinding\TypeConverters\" />
-  </ItemGroup>
 </Project>

@@ -63,4 +63,9 @@
     <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj" />
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+  </PropertyGroup>
+
 </Project>
