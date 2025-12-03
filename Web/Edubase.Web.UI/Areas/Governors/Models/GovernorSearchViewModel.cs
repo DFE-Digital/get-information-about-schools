@@ -62,7 +62,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public List<int> SelectedGovernorTypeFlagIds { get; set; } = new List<int>();
 
         [BindAlias(BIND_ALIAS_LAIDS)]
-        public List<int> SelectedLocalAuthorityIds { get; set; } = new List<int>();
+        public List<int> SelectedLocalAuthorityIds { get; set; } = [];
 
         public string RoleNames => StringUtil.Sentenceify(SelectedRoleIds.Select(x => GovernorRoles.First(r => r.Id == x).Name).ToArray(), StringUtil.SentenceifyOptions.AND);
 

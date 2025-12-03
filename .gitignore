@@ -212,3 +212,5 @@ Web/Web.UI/
 Web/packages
 /certs
 /.vscode/launch.json
+/Web/Edubase.Web.UI/appsettings.Development.json
+/Web/Edubase.Web.UI/appsettings.Development.json

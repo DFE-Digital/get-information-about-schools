@@ -27,6 +27,8 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class HtmlHelperExtensions
     {
+        public static string WebRootPath { get; set; }
+
         public static HtmlString ValidationCssClassFor<TModel, TProperty>(
         this IHtmlHelper<TModel> htmlHelper,
         Expression<Func<TModel, TProperty>> expression)
@@ -240,7 +242,7 @@ namespace Edubase.Web.UI.Helpers
         {
             if (path == null)
             {
-                path = HttpRuntime.AppDomainAppPath;
+                path = WebRootPath;
             }
 
             var files = Directory.GetFiles(Path.Combine(path, AssetsPath), expression).Select(Path.GetFileName).ToList();

@@ -2,7 +2,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const glob = require('glob');
-const buildDir = path.resolve('./public/');
+const buildDir = path.resolve('./wwwroot/public/');
 const entryDirPath = path.resolve('./Assets/Scripts/Entry/');
 const scssEntryPath = path.resolve('./Assets/Sass/');
 const entryFiles = path.join(entryDirPath, '**/*.js');
@@ -55,7 +55,7 @@ const config = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['.js', '.vue', '.json']
+    extensions: ['.*', '.js', '.vue', '.json', '.scss']
   },
   module: {
     rules: [

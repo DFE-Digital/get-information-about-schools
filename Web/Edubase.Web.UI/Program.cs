@@ -498,6 +498,8 @@ app.MapControllers()
 
 app.UseDeveloperExceptionPage();
 
+HtmlHelperExtensions.WebRootPath = app.Environment.WebRootPath;
+
 app.Run();
 
 public partial class Program { }
