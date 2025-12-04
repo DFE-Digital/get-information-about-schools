@@ -229,24 +229,38 @@ namespace Edubase.Web.UI.Helpers
         public static string Field<TModel>(this IHtmlHelper<TModel> htmlHelper, object obj, string dateFormat = null)
             => (obj is DateTime? ? ((DateTime?) obj)?.ToString(dateFormat ?? "d MMMM yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
 
+        // Constant that defines the relative path (under wwwroot) where Webpack emits JS bundles.
+        // In this setup, Webpack outputs to wwwroot/assets/scripts/
+        private const string AssetsPath = "assets/scripts";
 
-        private const string AssetsPath = "public/assets/scripts/build";
         /// <summary>
-        /// Outputs the path to the requested js by name (ignoring file hash)
+        /// Finds the Webpack‑built JS file by name (ignoring the content hash) and returns its URL.
         /// </summary>
-        /// <param name="helper"></param>
-        /// <param name="expression"></param>
-        /// <param name="path"></param>
-        /// <returns>path to js file</returns>
+        /// <param name="helper">The Razor HTML helper instance.</param>
+        /// <param name="expression">
+        ///   A search pattern (e.g. "main.*.js") used to match the bundle filename.
+        ///   The wildcard allows you to ignore the hash part of the filename.
+        /// </param>
+        /// <param name="path">
+        ///   Optional override for the root path. Defaults to WebRootPath (wwwroot).
+        /// </param>
+        /// <returns>
+        ///   The URL to the matching JS file (e.g. "/assets/scripts/main.abc123.js"),
+        ///   or an empty string if no single match is found.
+        /// </returns>
         public static string GetWebpackScriptUrl(this IHtmlHelper helper, string expression, string path = null)
         {
-            if (path == null)
-            {
-                path = WebRootPath;
-            }
+            // If no path is provided, default to the web root (wwwroot).
+            path ??= WebRootPath;
 
-            var files = Directory.GetFiles(Path.Combine(path, AssetsPath), expression).Select(Path.GetFileName).ToList();
+            // Search the assets/scripts folder for files matching the given expression.
+            // Directory.GetFiles returns full paths; Select(Path.GetFileName) strips them down to just the filename.
+            List<string> files =
+                [.. Directory.GetFiles(Path.Combine(path, AssetsPath), expression)
+                     .Select(Path.GetFileName)];
 
+            // If exactly one file matches, return its URL relative to the site root.
+            // Otherwise (no match or multiple matches), return an empty string.
             return files.Count == 1 ? $"/{AssetsPath}/{files[0]}" : "";
         }
 

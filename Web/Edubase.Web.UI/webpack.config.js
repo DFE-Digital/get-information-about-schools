@@ -2,7 +2,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const glob = require('glob');
-const buildDir = path.resolve('./wwwroot/public/');
 const entryDirPath = path.resolve('./Assets/Scripts/Entry/');
 const scssEntryPath = path.resolve('./Assets/Sass/');
 const entryFiles = path.join(entryDirPath, '**/*.js');
@@ -13,7 +12,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 const base64 = require('postcss-base64');
 
-const { ProvidePlugin, DefinePlugin, SourceMapDevToolPlugin } = webpack;
+const { ProvidePlugin, SourceMapDevToolPlugin } = webpack;
 
 const config = {
   entry: () => {
@@ -47,8 +46,9 @@ const config = {
     })],
   },
   output: {
-    filename: '[name].[contenthash].js',
-    path: buildDir + '/assets/scripts/build/'
+    filename: 'assets/scripts/[name].[contenthash].js',
+    path: path.resolve(__dirname, 'wwwroot'),   // root is wwwroot
+    publicPath: '/',                            // ensures URLs resolve correctly
   },
   resolve: {
     alias: {
@@ -79,7 +79,7 @@ const config = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../../',
+              publicPath: '/',   // simpler publicPath
             },
           },
           {
@@ -98,6 +98,7 @@ const config = {
             options: {
               sassOptions: {
                 includePaths: [
+                  path.resolve(__dirname, 'Assets/Sass'),
                   path.resolve(__dirname, 'node_modules')
                 ],
               },
@@ -127,7 +128,7 @@ const config = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '../../stylesheets/[name].css',
+      filename: 'stylesheets/[name].css',   // emits to wwwroot/stylesheets/main.css
     }),
 
     new VueLoaderPlugin(),
