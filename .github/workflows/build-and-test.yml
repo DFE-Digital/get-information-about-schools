@@ -68,7 +68,7 @@ jobs:
 
       - name: Restore Packages
         working-directory: ./Web
-        run: nuget restore EdubaseWeb.sln
+        run: dotnet restore EdubaseWeb.sln
 
       - name: Restore Packages
         working-directory: ./Web
