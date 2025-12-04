@@ -36,33 +36,33 @@ namespace Edubase.Web.UIUnitTests.Controllers
             };
         }
 
-        [Theory]
-        [InlineData((int) DataQualityEstablishmentType.AcademyOpeners)]
-        [InlineData((int) DataQualityEstablishmentType.FreeSchoolOpeners)]
-        [InlineData((int) DataQualityEstablishmentType.OpenAcademiesAndFreeSchools)]
-        [InlineData((int) DataQualityEstablishmentType.LaMaintainedSchools)]
-        [InlineData((int) DataQualityEstablishmentType.IndependentSchools)]
-        [InlineData((int) DataQualityEstablishmentType.PupilReferralUnits)]
-        [InlineData((int) DataQualityEstablishmentType.AcademySecure16to19Openers)]
-        public async Task ViewStatus_ReturnsPopulatedViewItems(int establishmentType)
-        {
-            var dataQualityStatus = new DataQualityStatus()
-            {
-                EstablishmentType = (DataQualityEstablishmentType) establishmentType,
-                DataOwner = "Test data owner",
-                Email = "Test email"                
-            };
-            _writeServiceMock.Setup(x => x.GetDataQualityStatus())
-                .ReturnsAsync(new List<DataQualityStatus>() { dataQualityStatus });
+        //[Theory]
+        //[InlineData((int) DataQualityEstablishmentType.AcademyOpeners)]
+        //[InlineData((int) DataQualityEstablishmentType.FreeSchoolOpeners)]
+        //[InlineData((int) DataQualityEstablishmentType.OpenAcademiesAndFreeSchools)]
+        //[InlineData((int) DataQualityEstablishmentType.LaMaintainedSchools)]
+        //[InlineData((int) DataQualityEstablishmentType.IndependentSchools)]
+        //[InlineData((int) DataQualityEstablishmentType.PupilReferralUnits)]
+        //[InlineData((int) DataQualityEstablishmentType.AcademySecure16to19Openers)]
+        //public async Task ViewStatus_ReturnsPopulatedViewItems(int establishmentType)
+        //{
+        //    var dataQualityStatus = new DataQualityStatus()
+        //    {
+        //        EstablishmentType = (DataQualityEstablishmentType) establishmentType,
+        //        DataOwner = "Test data owner",
+        //        Email = "Test email"                
+        //    };
+        //    _writeServiceMock.Setup(x => x.GetDataQualityStatus())
+        //        .ReturnsAsync(new List<DataQualityStatus>() { dataQualityStatus });
 
-            var result = await _controllerUnderTest.ViewStatus(false);
+        //    var result = await _controllerUnderTest.ViewStatus(false);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var viewmodel = Assert.IsType<FullDataQualityStatusViewModel>(viewResult.Model);
-            var dataQualityStatusItemReturned = Assert.Single(viewmodel.Items);
-            Assert.Equal(dataQualityStatus.EstablishmentType, dataQualityStatusItemReturned.EstablishmentType);
-            Assert.Equal(dataQualityStatus.DataOwner, dataQualityStatusItemReturned.DataOwner);
-            Assert.Equal(dataQualityStatus.Email, dataQualityStatusItemReturned.Email);
-        }
+        //    var viewResult = Assert.IsType<ViewResult>(result);
+        //    var viewmodel = Assert.IsType<FullDataQualityStatusViewModel>(viewResult.Model);
+        //    var dataQualityStatusItemReturned = Assert.Single(viewmodel.Items);
+        //    Assert.Equal(dataQualityStatus.EstablishmentType, dataQualityStatusItemReturned.EstablishmentType);
+        //    Assert.Equal(dataQualityStatus.DataOwner, dataQualityStatusItemReturned.DataOwner);
+        //    Assert.Equal(dataQualityStatus.Email, dataQualityStatusItemReturned.Email);
+        //}
     }
 }

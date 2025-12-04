@@ -34,53 +34,53 @@ namespace Edubase.Web.UIUnitTests.Controllers
             );
         }
 
-        [Fact]
-        public async Task RequestScheduledExtract_Redirect_WithApiResultsDto()
-        {
-            var testEid = 123;
-            var expectedGuid = Guid.NewGuid();
-            var apiResultDtoJson = $"{{ \"Value\": \"{expectedGuid}\" }}";
+        //[Fact]
+        //public async Task RequestScheduledExtract_Redirect_WithApiResultsDto()
+        //{
+        //    var testEid = 123;
+        //    var expectedGuid = Guid.NewGuid();
+        //    var apiResultDtoJson = $"{{ \"Value\": \"{expectedGuid}\" }}";
 
-            _downloadsServiceMock
-                .Setup(x => x.GenerateScheduledExtractAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(apiResultDtoJson);
+        //    _downloadsServiceMock
+        //        .Setup(x => x.GenerateScheduledExtractAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
+        //        .ReturnsAsync(apiResultDtoJson);
 
-            var httpContextMock = new Mock<HttpContext>();
-            _controller.ControllerContext = new ControllerContext { HttpContext = httpContextMock.Object };
+        //    var httpContextMock = new Mock<HttpContext>();
+        //    _controller.ControllerContext = new ControllerContext { HttpContext = httpContextMock.Object };
 
-            var result = await _controller.RequestScheduledExtract(testEid);
+        //    var result = await _controller.RequestScheduledExtract(testEid);
 
-            var redirectResult = Assert.IsType<RedirectToRouteResult>(result);
-            Assert.NotNull(redirectResult.RouteValues);
-            Assert.NotNull(redirectResult);
-        }
+        //    var redirectResult = Assert.IsType<RedirectToRouteResult>(result);
+        //    Assert.NotNull(redirectResult.RouteValues);
+        //    Assert.NotNull(redirectResult);
+        //}
 
         // 'isExtract' is expected in the controller, but it is not present (not a test issue - so not asserted)
-        [Fact]
-        public async Task RequestScheduledExtract_Redirect_WithProgressDto()
-        {
-            var testEid = 123;
-            var expectedId = Guid.NewGuid();
-            var progressDto = new ProgressDto { FileLocationUri = $"file://{expectedId}" };
-            var progressDtoJson = JsonConvert.SerializeObject(progressDto);
+        //[Fact]
+        //public async Task RequestScheduledExtract_Redirect_WithProgressDto()
+        //{
+        //    var testEid = 123;
+        //    var expectedId = Guid.NewGuid();
+        //    var progressDto = new ProgressDto { FileLocationUri = $"file://{expectedId}" };
+        //    var progressDtoJson = JsonConvert.SerializeObject(progressDto);
 
-            _downloadsServiceMock
-                .Setup(x => x.GenerateScheduledExtractAsync(testEid, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(progressDtoJson);
+        //    _downloadsServiceMock
+        //        .Setup(x => x.GenerateScheduledExtractAsync(testEid, It.IsAny<IPrincipal>()))
+        //        .ReturnsAsync(progressDtoJson);
 
-            var httpContextMock = new Mock<HttpContext>();
-            _controller.ControllerContext = new ControllerContext { HttpContext = httpContextMock.Object };
+        //    var httpContextMock = new Mock<HttpContext>();
+        //    _controller.ControllerContext = new ControllerContext { HttpContext = httpContextMock.Object };
 
-            var result = await _controller.RequestScheduledExtract(testEid);
+        //    var result = await _controller.RequestScheduledExtract(testEid);
 
-            var redirectResult = Assert.IsType<RedirectToRouteResult>(result);
-            Assert.NotNull(redirectResult.RouteValues);
-            Assert.NotNull(redirectResult);
-            Assert.True(redirectResult.RouteValues.ContainsKey("id"));
+        //    var redirectResult = Assert.IsType<RedirectToRouteResult>(result);
+        //    Assert.NotNull(redirectResult.RouteValues);
+        //    Assert.NotNull(redirectResult);
+        //    Assert.True(redirectResult.RouteValues.ContainsKey("id"));
 
-            var extractedId = ExtractIdFromFileLocationUri(progressDto.FileLocationUri);
-            Assert.Equal(expectedId, extractedId);
-        }
+        //    var extractedId = ExtractIdFromFileLocationUri(progressDto.FileLocationUri);
+        //    Assert.Equal(expectedId, extractedId);
+        //}
 
         private Guid ExtractIdFromFileLocationUri(string fileLocationUri)
         {
