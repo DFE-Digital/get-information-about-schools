@@ -1,11 +1,9 @@
-@include mq-add-breakpoint('resultsBp', 835px);
-
 .search-results {
   .govuk-grid-column-one-third {
     position: relative;
   }
 
-  @include govuk-media-query($until: resultsBp) {
+  @include govuk-media-query($until: desktop) {
     .govuk-grid-column-one-third,
     .govuk-grid-column-two-thirds {
       width: 100%;

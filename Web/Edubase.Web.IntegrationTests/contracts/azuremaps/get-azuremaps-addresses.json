@@ -1,0 +1,92 @@
+{
+    "Request": {
+        "Path": {
+            "Matchers": [
+                {
+                    "Name": "WildcardMatcher",
+                    "Pattern": "/search/address/json",
+                    "IgnoreCase": true
+                }
+            ]
+        }
+    },
+    "Response": {
+        "StatusCode": 200,
+        "Headers": {
+            "Content-Type": "application/json"
+        },
+        "BodyAsJson": {
+            "results": [
+                {
+                    "type": "POI",
+                    "id": "1",
+                    "entityType": "Restaurant",
+                    "address": {
+                        "streetName": "High Street",
+                        "municipalitySubdivision": "City Centre",
+                        "municipality": "Leicester",
+                        "countrySecondarySubdivision": "Leicestershire",
+                        "countrySubdivision": "England",
+                        "postalCode": "LE1 4AB",
+                        "extendedPostalCode": "LE1 4AB-123",
+                        "countryCode": "GB",
+                        "country": "United Kingdom",
+                        "countryCodeISO3": "GBR",
+                        "freeformAddress": "High Street, Leicester, England",
+                        "countrySubdivisionName": "England"
+                    },
+                    "position": {
+                        "lat": 52.6369,
+                        "lon": -1.1398
+                    }
+                },
+                {
+                    "type": "POI",
+                    "id": "2",
+                    "entityType": "Cafe",
+                    "address": {
+                        "streetName": "Granby Street",
+                        "municipalitySubdivision": "City Centre",
+                        "municipality": "Leicester",
+                        "countrySecondarySubdivision": "Leicestershire",
+                        "countrySubdivision": "England",
+                        "postalCode": "LE1 6DE",
+                        "extendedPostalCode": "LE1 6DE-456",
+                        "countryCode": "GB",
+                        "country": "United Kingdom",
+                        "countryCodeISO3": "GBR",
+                        "freeformAddress": "Granby Street, Leicester, England",
+                        "countrySubdivisionName": "England"
+                    },
+                    "position": {
+                        "lat": 52.6375,
+                        "lon": -1.1332
+                    }
+                },
+                {
+                    "type": "POI",
+                    "id": "3",
+                    "entityType": "Hotel",
+                    "address": {
+                        "streetName": "London Road",
+                        "municipalitySubdivision": "City Centre",
+                        "municipality": "Leicester",
+                        "countrySecondarySubdivision": "Leicestershire",
+                        "countrySubdivision": "England",
+                        "postalCode": "LE2 0QR",
+                        "extendedPostalCode": "LE2 0QR-789",
+                        "countryCode": "GB",
+                        "country": "United Kingdom",
+                        "countryCodeISO3": "GBR",
+                        "freeformAddress": "London Road, Leicester, England",
+                        "countrySubdivisionName": "England"
+                    },
+                    "position": {
+                        "lat": 52.6290,
+                        "lon": -1.1200
+                    }
+                }
+            ]
+        }
+    }
+}

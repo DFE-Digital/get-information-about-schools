@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Web;
 using Autofac.Core;
@@ -320,15 +322,25 @@ builder.Services.AddControllers()
         options.SerializerSettings.Converters.Add(new DbGeographyConverter());
     });
 
-// Named HttpClient for Lookup Service
-builder.Services.AddHttpClient("LookupApiClient", client => CreateLookupClient(builder.Configuration));
-builder.Services.AddScoped<LookupApiService>(provider =>
+// Named HttpClient for LookupApiService
+// Bind LookupApiService with its own HttpClientWrapper
+builder.Services.AddScoped<ILookupService>(sp =>
 {
-    var wrapper = provider.GetRequiredService<HttpClientWrapper>();
-    var security = provider.GetRequiredService<ISecurityService>();
+    var formatter = sp.GetRequiredService<JsonMediaTypeFormatter>();
+    var clientStorage = sp.GetRequiredService<IClientStorage>();
+    var apiRecorderRepo = sp.GetRequiredService<ApiRecorderSessionItemRepository>();
+
+    var wrapper = new HttpClientWrapper(
+        CreateLookupClient(builder.Configuration),
+        formatter,
+        clientStorage,
+        apiRecorderRepo);
+
+    var security = sp.GetRequiredService<ISecurityService>();
+
     return new LookupApiService(wrapper, security);
 });
-builder.Services.AddScoped<ILookupService>(provider => provider.GetRequiredService<LookupApiService>());
+
 builder.Services.AddScoped<IUserDependentLookupService>(provider => provider.GetRequiredService<LookupApiService>());
 builder.Services.AddSingleton<HttpClient>(provider => CreateOSPlacesClient(builder.Configuration));
 builder.Services.AddSingleton<IOSPlacesApiService>(provider =>
@@ -407,10 +419,33 @@ builder.Services.AddScoped<IOfstedService>(provider =>
 // Governors Read Service
 builder.Services.AddScoped<IGovernorsReadService>(provider =>
 {
-    var defaultWrapper = provider.GetRequiredService<IHttpClientWrapper>() as HttpClientWrapper;
-    var governorWrapper = provider.GetServices<HttpClientWrapper>().Last();
-    var establishment = provider.GetRequiredService<IEstablishmentReadService>();
-    return new GovernorsReadApiService(defaultWrapper, governorWrapper, establishment);
+    HttpClientWrapper lookupClient = new(
+        httpClient: CreateLookupClient(builder.Configuration),
+        provider.GetRequiredService<JsonMediaTypeFormatter>(),
+        provider.GetRequiredService<IClientStorage>(),
+        provider.GetRequiredService<ApiRecorderSessionItemRepository>());
+
+    HttpClientWrapper governorSearchClientWrapper = new(
+        governorClient,
+        provider.GetRequiredService<JsonMediaTypeFormatter>(),
+        provider.GetRequiredService<IClientStorage>(),
+        provider.GetRequiredService<ApiRecorderSessionItemRepository>());
+
+    return new GovernorsReadApiService(
+        lookupClient,
+        governorSearchClientWrapper,
+        provider.GetRequiredService<IEstablishmentReadService>());
+});
+
+builder.Services.AddScoped<IGovernorsWriteService>(provider =>
+{
+    HttpClientWrapper wrapper = new(
+        httpClient: CreateLookupClient(builder.Configuration),
+        provider.GetRequiredService<JsonMediaTypeFormatter>(),
+        provider.GetRequiredService<IClientStorage>(),
+        provider.GetRequiredService<ApiRecorderSessionItemRepository>());
+
+    return new GovernorsWriteApiService(wrapper);
 });
 
 builder.Services.AddAuthentication("Saml2")
@@ -466,3 +501,5 @@ app.UseDeveloperExceptionPage();
 HtmlHelperExtensions.WebRootPath = app.Environment.WebRootPath;
 
 app.Run();
+
+public partial class Program { }

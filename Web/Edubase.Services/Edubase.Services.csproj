@@ -52,4 +52,9 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+
+    <!-- Contracts for AzureMaps  -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Edubase.Web.IntegrationTests"/>
+  </ItemGroup>
 </Project>

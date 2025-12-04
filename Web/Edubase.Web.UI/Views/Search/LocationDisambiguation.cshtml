@@ -20,7 +20,7 @@
         {
             <p class="govuk-body"><strong>Select the location you are interested in</strong></p>
 
-            <ul class="govuk-list">
+            <ul id="search-location-matching-locations" class="govuk-list">
                 @foreach (var item in Model.MatchingLocations)
                 {
                     <li>@await Html.PartialAsync("_LocationLink", item)</li>
