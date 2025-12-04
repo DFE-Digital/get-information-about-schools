@@ -9,12 +9,7 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-  </PropertyGroup>
+
   <ItemGroup>
     <Compile Update="Academy.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -37,6 +32,7 @@
       <DependentUpon>Public.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Update="Academy.resx">
       <Generator>ResXFileCodeGenerator</Generator>
