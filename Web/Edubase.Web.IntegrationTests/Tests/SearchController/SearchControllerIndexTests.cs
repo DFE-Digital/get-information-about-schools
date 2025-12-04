@@ -96,7 +96,6 @@ public sealed class SearchControllerIndexTests
         Assert.Equal("/?#la", redirectPath);
     }
 
-    // FAILING MODEL BINDING: https://github.com/DFE-Digital/get-information-about-schools/pull/787#issuecomment-3584901280
     [Fact]
     public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_BackToSearch_With_RemainingSelectedEstablishments()
     {
