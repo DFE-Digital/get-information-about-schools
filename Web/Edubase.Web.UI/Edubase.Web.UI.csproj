@@ -10,16 +10,6 @@
     <FileVersion>1.0.0.0</FileVersion>
     <UserSecretsId>ff3e3e81-e370-4078-91fb-b185b05958d7</UserSecretsId>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="Edubase.Web.IntegrationTests" />
-  </ItemGroup>
   
   <ItemGroup>
     <Compile Remove="wwwroot\css\**" />
@@ -27,6 +17,7 @@
     <EmbeddedResource Remove="wwwroot\css\**" />
     <None Remove="wwwroot\css\**" />
   </ItemGroup>
+  
   <ItemGroup>
     <Content Remove="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
     <Content Remove="wwwroot\public\assets\scripts\build\add-edit-governor.07a741dda48c538fe9c7.js" />
@@ -169,6 +160,7 @@
     <None Include="wwwroot\public\assets\scripts\build\search-results-bundle.d90881f07bb0027aabeb.js.map" />
     <None Include="wwwroot\robots.txt" />
   </ItemGroup>
+  
   <ItemGroup>
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.IO.Compression" />
@@ -267,24 +259,11 @@
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj" />
     <ProjectReference Include="..\Edubase.Web.Resources\Edubase.Web.Resources.csproj" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28QA%29|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;QA</DefineConstants>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+
+  <PropertyGroup>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-TexunaAPI|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;TEXAPI</DefineConstants>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseTexunaAPI|AnyCPU'">
-    <DefineConstants>TRACE;TEXAPI</DefineConstants>
-    <Optimize>true</Optimize>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-  </PropertyGroup>
+
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
@@ -303,11 +282,5 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild">
-    <ItemGroup>
-      <RoslynFiles Include="$(SolutionDir)packages\Microsoft.Net.Compilers.3.5.0\tools\*" />
-    </ItemGroup>
-    <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
-    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-  </Target>
+
 </Project>

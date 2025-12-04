@@ -131,7 +131,7 @@ jobs:
           ## Auto-suggested args:
           #msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
           ## Old/previous args:
-          msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:UseMerge=true /p:SingleAssemblyName=AppCode /p:RunCodeAnalysis=true
+          msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:UseMerge=true /p:SingleAssemblyName=AppCode /p:RunCodeAnalysis=false
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
 

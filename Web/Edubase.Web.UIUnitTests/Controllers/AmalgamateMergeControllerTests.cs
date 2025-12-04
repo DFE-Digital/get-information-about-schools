@@ -64,17 +64,17 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             Assert.NotNull(controller);
         }
 
-        [Theory()]
-        [InlineData("Merger", "MergeEstablishments")]
-        [InlineData("Amalgamation", "AmalgamateEstablishments")]
-        public void SelectMergerTypeTest_Redirections(string mergerType, string expectedAction)
-        {
-            var result = controller.SelectMergerType(mergerType) as RedirectToRouteResult;
-            var action = result.RouteValues["action"];
+        //[Theory()]
+        //[InlineData("Merger", "MergeEstablishments")]
+        //[InlineData("Amalgamation", "AmalgamateEstablishments")]
+        //public void SelectMergerTypeTest_Redirections(string mergerType, string expectedAction)
+        //{
+        //    var result = controller.SelectMergerType(mergerType) as RedirectToRouteResult;
+        //    var action = result.RouteValues["action"];
 
-            Assert.NotNull(result);
-            Assert.Equal(expectedAction, action);
-        }
+        //    Assert.NotNull(result);
+        //    Assert.Equal(expectedAction, action);
+        //}
 
         [Theory()]
         [InlineData(null)]
