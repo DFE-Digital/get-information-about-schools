@@ -32,7 +32,11 @@
       <DependentUpon>Public.resx</DependentUpon>
     </Compile>
   </ItemGroup>
-  
+
+  <PropertyGroup>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+
   <ItemGroup>
     <EmbeddedResource Update="Academy.resx">
       <Generator>ResXFileCodeGenerator</Generator>

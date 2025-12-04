@@ -9,6 +9,10 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Azure.Data.Tables" Version="12.11.0" />
