@@ -18,11 +18,10 @@ jobs:
     env:
       DOTNET_VERSION: '6.0.x'
 
-    ## Include all git history (fetch depth 0) for enhanced SonarCloud analysis (default is 1 for most recent commit)
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0   # full history for SonarCloud
 
       ## SonarCloud Setup
       - name: Set up JDK 17
@@ -30,12 +29,14 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+
       - name: Cache SonarCloud scanner
         id: cache-sonar-scanner
         uses: actions/cache@v3
@@ -43,6 +44,7 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
+
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
@@ -50,84 +52,30 @@ jobs:
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
-
-      ## C-Sharp Setup
+      ## .NET Setup
       - name: Setup .NET Core SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
-
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.1.1
-
-      - name: Setup VSTest
-        uses: darenm/Setup-VSTest@v1
-
-      - name: Restore Packages
-        working-directory: ./Web
-        run: dotnet restore EdubaseWeb.sln
-
-      - name: Restore Packages
-        working-directory: ./Web
+      - name: Install dotnet-coverage tool
         run: dotnet tool install --global dotnet-coverage
-      
-      ## Clean build and test
-      ## Currently manually specifying the tests to trigger -- unclear if these can be picked up automatically?
+
+      ## Restore, Build, Test, Analyse
       - name: Build, Test, and Analyse
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./Web
+        shell: powershell
         run: |
-          $env:EXIT_CODE=0
-          
           ..\.sonar\scanner\dotnet-sonarscanner begin /k:"DFE-Digital_get-information-about-schools" /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**\TestResults\**\*.xml"
-          
-          msbuild.exe EdubaseWeb.sln  /t:Rebuild /p:platform="Any CPU" /p:configuration="Release"
-          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
 
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.CommonUnitTests\bin\Release\Edubase.CommonUnitTests.dll              
-          if ($LASTEXITCODE -ne 0) { 
-            Write-Host "CommonUnitTests failed with exit code $LASTEXITCODE"
-            $env:EXIT_CODE=$LASTEXITCODE 
-          }
-          
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.DataUnitTests\bin\Release\Edubase.DataUnitTests.dll                  
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "DataUnitTests failed with exit code $LASTEXITCODE"
-            $env:EXIT_CODE=$LASTEXITCODE 
-          }
-          
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.ServicesUnitTests\bin\Release\Edubase.ServicesUnitTests.dll          
-          if ($LASTEXITCODE -ne 0) { 
-            Write-Host "ServicesUnitTests failed with exit code $LASTEXITCODE"
-            $env:EXIT_CODE=$LASTEXITCODE 
-          }
-          
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.ResourcesUnitTests\bin\Release\net48\Edubase.Web.ResourcesUnitTests.dll
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "Web.ResourcesUnitTests failed with exit code $LASTEXITCODE"
-            $env:EXIT_CODE=$LASTEXITCODE 
-          }
-          
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.UIUnitTests\bin\Release\net48\Edubase.Web.UIUnitTests.dll        
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "Web.UIUnitTests failed with exit code $LASTEXITCODE"
-            $env:EXIT_CODE=$LASTEXITCODE 
-          }
-          
+          dotnet restore EdubaseWeb.sln
+          dotnet build EdubaseWeb.sln --configuration Release
+          dotnet test EdubaseWeb.sln --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
           ..\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          
-          ## If any test errors, exit the job step and fail the build
-          ## Note each individual command doesn't seem to cause the job step to return with a non-zero exit code
-          ## Also note that if there are multiple errors returned from multiple test commands, only the last one will be stored in EXIT_CODE
-          if ($env:EXIT_CODE -ne 0) {
-            Write-Host "Test failures detected. Exiting with code $env:EXIT_CODE"
-            exit $env:EXIT_CODE
-          }
 
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v4
