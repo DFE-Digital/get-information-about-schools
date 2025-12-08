@@ -23,7 +23,7 @@ jobs:
     pool:
       vmImage: ${{ parameters.vmImage }}
     variables:
-      solution: 'Web/Edubase.sln'
+      solution: 'Web/EdubaseWeb.sln'
       buildPlatform: 'Any CPU'
       buildConfiguration: 'Release'
       BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
@@ -31,7 +31,6 @@ jobs:
 
     steps:
 
-      ## Debugging assistance task - display all variables and parameters
       - task: PowerShell@2
         displayName: Display variables
         inputs:
@@ -102,7 +101,7 @@ jobs:
       - task: VSBuild@1
         displayName: Build C# solution
         inputs:
-          solution: '$(solution)'
+          solution: '$(solution)'   # Corrected to Web/EdubaseWeb.sln
           msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:RunCodeAnalysis=false
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
@@ -127,7 +126,6 @@ jobs:
           reportDirectory: '$(Agent.TempDirectory)/**'
           failIfCoverageEmpty: true
 
-      ## Display content listing of the artifact staging directory
       - task: CmdLine@2
         displayName: File listing - artifact staging dir - $(build.artifactstagingdirectory)
         inputs:
@@ -135,7 +133,6 @@ jobs:
             tree $(build.artifactstagingdirectory)
             dir $(build.artifactstagingdirectory)
 
-      ## PACKAGE THE WEB UI READY FOR DEPLOYMENT
       - publish: '$(build.artifactstagingdirectory)/Edubase.Web.UI.zip'
         artifact: ${{ parameters.artifactReference }}
         displayName: Attach packaged Web UI to pipeline run
