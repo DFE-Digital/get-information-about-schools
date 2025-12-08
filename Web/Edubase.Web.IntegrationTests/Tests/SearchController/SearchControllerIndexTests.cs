@@ -410,9 +410,8 @@ public sealed class SearchControllerIndexTests
         }
     }
 
-    /*
+    
 
-    // TODO fix placesService needs to be stubbed.
     // TODO this seems like a bug, if there's no fuzzy match, shouldn't we display an error to the effect of "No suggestions available"
     [Fact]
     public async Task Search_LocationDisambiguation_NoMatches_Renders_Index_Without_ModelErrors()
@@ -420,16 +419,57 @@ public sealed class SearchControllerIndexTests
         // Arrange
         var unknownLocation = "UnknownPlace";
 
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("1", "edubase/lookup/get-empty-places.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
-        ]);
+        PlaceDto[] placesDtos = [
+            new()
+            {
+                Name = "High Street, Leicester, England",
+                Coords = new(52.6369, -1.1398)
+            },
+            new()
+            {
+                Name = "Granby Street, Leicester, England",
+                Coords = new(52.6375, -1.1332)
+            },
+            new()
+            {
+                Name = "London Road, Leicester, England",
+                Coords = new(52.6290, -1.1200)
+            }
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        ];
+
+        Mock<IPlacesLookupService> placesLookupServiceMock = new();
+
+        placesLookupServiceMock
+            .Setup(placesLookup => placesLookup.SearchAsync(It.IsAny<string>(), false))
+            .ReturnsAsync([]);
+
+        Mock<ICachedLookupService> lookupServiceMock = new();
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync([]);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+
+                            services.RemoveAll<IPlacesLookupService>();
+                            services.AddSingleton<IPlacesLookupService>(sp => placesLookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.Text={unknownLocation}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -447,30 +487,69 @@ public sealed class SearchControllerIndexTests
     public async Task Search_LocationSearch_With_Valid_AutoSuggestValue_Skips_Disambiguation()
     {
         // Arrange
-        var autoSuggestValue = "51.5074,-0.1278"; // Valid LatLon coordinates
+        var searchLocationKeyword = "any text"; // Valid LatLon coordinates
 
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
-        ]);
+        PlaceDto placesDtos = 
+            new()
+            {
+                Name = "High Street, Leicester, England",
+                Coords = new(52.6369, -1.1398)
+            };
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        Mock<IPlacesLookupService> placesLookupServiceMock = new();
+
+        placesLookupServiceMock
+            .Setup(placesLookup => placesLookup.SearchAsync(It.IsAny<string>(), false))
+            .ReturnsAsync([placesDtos]);
+
+        Mock<ICachedLookupService> lookupServiceMock = new();
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+
+                            services.RemoveAll<IPlacesLookupService>();
+                            services.AddSingleton<IPlacesLookupService>(sp => placesLookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
-        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.AutoSuggestValue={autoSuggestValue}");
+        HttpClient client = webAppFactory.CreateClient();
+
+        HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.Text={searchLocationKeyword}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
-        // Check the index is returned. Check no error is displayed at this point. Check the AutoSuggestValue is preserved.
-        Assert.Equal("Get Information about Schools", document.QuerySelector("#proposition-name")?.TextContent.Trim());
-        Assert.Equal("Find an establishment", document.QuerySelector(".gias-tabs__list-item--selected")!.Text().Trim());
-        Assert.Equal(autoSuggestValue, document.QuerySelector("#LocationSearchModel_AutoSuggestValue")!.GetAttribute("value"));
-        Assert.Null(document.QuerySelector(".govuk-error-summary"));
+        Assert.Equal($"Search results for establishments", document.QuerySelector("h1")?.TextContent);
+
+        Assert.Contains($"1 location matching '{searchLocationKeyword}'", document.QuerySelector("h1 + p")?.TextContent);
+        Assert.Equal(1, document.QuerySelectorAll(".govuk-list li").Count);
+
+        IElement link =
+            document.QuerySelectorAll("#search-location-matching-locations a").Single();
+        
+            Assert.Equal(
+                $"?SearchType=Location&LocationSearchModel.Text={searchLocationKeyword}&LocationSearchModel.AutoSuggestValue={placesDtos.Coords.Latitude},{placesDtos.Coords.Longitude}",
+                link.GetAttribute("href"));
+
+            Assert.Equal(placesDtos.Name, link.TextContent.Trim());  
     }
 
+    /*
     [Fact]
     public async Task Search_GovernorReference_NoGid_Shows_ErrorPanel()
     {
