@@ -92,6 +92,7 @@ jobs:
         inputs:
           command: restore
           projects: '$(solution)'
+          arguments: '--no-cache'
 
       - task: DotNetCoreCLI@2
         displayName: Build .NET solution
