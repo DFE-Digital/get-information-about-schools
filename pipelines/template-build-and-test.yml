@@ -101,28 +101,25 @@ jobs:
       - task: VSBuild@1
         displayName: Build C# solution
         inputs:
-          solution: '$(solution)'   # Corrected to Web/EdubaseWeb.sln
+          solution: '$(solution)'
           msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:RunCodeAnalysis=false
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
 
-      - task: VSTest@2
+      # Run tests using dotnet test (works with net8.0)
+      - task: DotNetCoreCLI@2
         displayName: Run C# tests with coverage
         inputs:
-          platform: '$(buildPlatform)'
-          configuration: '$(buildConfiguration)'
-          testAssemblyVer2: |
-            **\*UnitTests.dll
-            !**\obj\**
-          codeCoverageEnabled: true
-          diagnosticsEnabled: true
+          command: test
+          projects: '**/*UnitTests.csproj'
+          arguments: '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage"'
 
       - task: PublishCodeCoverageResults@1
         displayName: Publish coverage results
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
-          reportDirectory: '$(Agent.TempDirectory)/**'
+          summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+          reportDirectory: '$(Build.SourcesDirectory)/**/TestResults'
           failIfCoverageEmpty: true
 
       - task: CmdLine@2
