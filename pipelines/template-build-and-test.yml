@@ -4,7 +4,7 @@
   - name: enabled
     default: 'true'
   - name: vmImage
-    default: 'windows-latest'  ## Uses .NET Framework, therefore must use Windows runner
+    default: 'windows-latest'
 
   # Naming settings
   - name: thisJobName
@@ -43,16 +43,6 @@ jobs:
             Write-Host "- buildPlatform: $(buildPlatform)"
             Write-Host "- buildConfiguration: $(buildConfiguration)"
 
-      - task: PowerShell@2
-        displayName: Display parameters
-        inputs:
-          targetType: 'inline'
-          script: |
-            Write-Host "Parameters:"
-            Write-Host "- enabled: ${{ parameters.enabled }}"
-            Write-Host "- vmImage: ${{ parameters.vmImage }}"
-            Write-Host "- thisJobName: ${{ parameters.thisJobName }}"
-
       - checkout: self
         submodules: recursive
 
@@ -89,24 +79,20 @@ jobs:
           workingDir: 'Web/Edubase.Web.UI'
           customCommand: 'run buildCi'
 
-      ## BUILD AND TEST THE C# CODE
-      - task: NuGetToolInstaller@1
-        displayName: 'Install NuGet'
-
-      - task: NuGetCommand@2
-        displayName: Restore C# solution
+      ## BUILD AND TEST THE C# CODE USING DOTNET CLI
+      - task: DotNetCoreCLI@2
+        displayName: Restore .NET solution
         inputs:
-          restoreSolution: '$(solution)'
+          command: restore
+          projects: '$(solution)'
 
-      - task: VSBuild@1
-        displayName: Build C# solution
+      - task: DotNetCoreCLI@2
+        displayName: Build .NET solution
         inputs:
-          solution: '$(solution)'
-          msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:RunCodeAnalysis=false
-          platform: '$(buildPlatform)'
-          configuration: '$(buildConfiguration)'
+          command: build
+          projects: '$(solution)'
+          arguments: '--configuration $(buildConfiguration)'
 
-      # Run tests using dotnet test (works with net8.0)
       - task: DotNetCoreCLI@2
         displayName: Run C# tests with coverage
         inputs:
