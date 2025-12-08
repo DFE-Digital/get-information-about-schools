@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.UI;
 using Edubase.Services.Establishments;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors;
@@ -1052,7 +1053,39 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var snapshot = CloneEstablishments(viewModel.LinkedEstablishments.Establishments);
 
-                var dto = CreateSaveDto(viewModel);
+                SaveGroupDto dto;
+
+                if (viewModel.SaveMode == GroupEditorViewModel.eSaveMode.Links
+                    && viewModel.Action == ActionLinkedEstablishmentAdd
+                    && viewModel.LinkedEstablishments.LinkedEstablishmentSearch?.FoundUrn.HasValue == true
+                    && viewModel.GroupUId.HasValue)
+                {
+                    var linksForValidation = snapshot.Select(x => new LinkedEstablishmentGroup
+                    {
+                        Urn = x.Urn,
+                        Id = x.Id,
+                        JoinedDate = x.JoinedDate ?? x.JoinedDateEditable.ToDateTime(),
+                        CCIsLeadCentre = x.CCIsLeadCentre
+                    }).ToList();
+
+                    var candidateJoinedDate =
+                        viewModel.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.ToDateTime()
+                        ?? viewModel.OpenDate.ToDateTime();
+
+                    linksForValidation.Add(new LinkedEstablishmentGroup
+                    {
+                        Urn = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn.Value,
+                        JoinedDate = candidateJoinedDate,
+                        CCIsLeadCentre = !linksForValidation.Any(l => l.CCIsLeadCentre)
+                    });
+
+                    dto = new SaveGroupDto(viewModel.GroupUId.Value, linksForValidation);
+                }
+                else
+                {
+                    dto = CreateSaveDto(viewModel);
+                }
+
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
 
                 if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove)
@@ -1073,12 +1106,50 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     }
                 }
 
-                var hasGovernanceBlockingError = validationEnvelope.Errors.Any(x =>
+                var governanceErrors = validationEnvelope.Errors
+                    .Where(x =>
+                    {
+                        var msg = x.GetMessage() ?? string.Empty;
+                        return msg.IndexOf("governance professional - federation",
+                                   StringComparison.OrdinalIgnoreCase) >= 0
+                               || msg.IndexOf("governance professional - local authority maintained school",
+                                   StringComparison.OrdinalIgnoreCase) >= 0;
+                    })
+                    .ToList();
+
+                var hasGovernanceBlockingError = governanceErrors.Any();
+
+                if (hasGovernanceBlockingError && viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove,
+                        StringComparison.OrdinalIgnoreCase))
                 {
-                    var msg = x.GetMessage() ?? string.Empty;
-                    return msg.IndexOf("governance professional - federation", StringComparison.OrdinalIgnoreCase) >= 0
-                           || msg.IndexOf("governance professional - local authority maintained school", StringComparison.OrdinalIgnoreCase) >= 0;
-                });
+                    var problemUrn = viewModel.ActionUrn;
+                    var index = snapshot.FindIndex(x => x.Urn == problemUrn);
+                    if (index > 0)
+                    {
+                        foreach (var error in governanceErrors)
+                        {
+                            ModelState.AddModelError($"linkedEstablishments[{index}].id", error.GetMessage());
+                        }
+
+                        foreach (var error in governanceErrors)
+                        {
+                            validationEnvelope.Errors.Remove(error);
+                        }
+                    }
+                }
+                else if (hasGovernanceBlockingError && (viewModel.Action == ActionLinkedEstablishmentAdd ||
+                                                        viewModel.Action == ActionLinkedEstablishmentSearch))
+                {
+                    foreach (var error in governanceErrors)
+                    {
+                        ModelState.AddModelError("LinkedEstablishments.LinkedEstablishmentSearch.Urn", error.GetMessage());
+                    }
+
+                    foreach (var error in governanceErrors)
+                    {
+                        validationEnvelope.Errors.Remove(error);
+                    }
+                }
 
                 if (viewModel.Action == ActionSave || viewModel.Action == ActionDetails)
                 {
@@ -1123,7 +1194,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 HeadLastName = x.HeadLastName,
                 HeadTitleName = x.HeadTitleName,
                 JoinedDate = x.JoinedDate,
-                JoinedDateEditable = x.JoinedDateEditable,
+                JoinedDateEditable = new DateTimeViewModel(x.JoinedDateEditable.ToDateTime()),
                 Name = x.Name,
                 TypeName = x.TypeName,
                 Urn = x.Urn,
