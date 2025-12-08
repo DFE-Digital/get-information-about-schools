@@ -2,10 +2,9 @@ using System.Net;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
+using Edubase.Services.Geo;
 using Edubase.Services.Lookup;
 using Edubase.Web.IntegrationTests.Helpers;
-using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Request;
-using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Response;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -63,32 +62,7 @@ public sealed class SearchControllerIndexTests
         }
     ];
 
-    private static WebApplicationFactory<Program> CreateWebApplicationFactory(
-        IEnumerable<LookupDto> localAuthoritiesStub,
-        IEnumerable<LookupDto> governorRolesStub)
-    {
-        Mock<ICachedLookupService> lookupServiceMock = new();
-        lookupServiceMock
-            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
-            .ReturnsAsync(localAuthoritiesStub);
 
-        lookupServiceMock
-            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
-            .ReturnsAsync(governorRolesStub);
-
-        WebApplicationFactory<Program> webAppFactory =
-            new GiasWebApplicationFactory()
-                .WithWebHostBuilder(
-                (builder) =>
-                    builder.ConfigureServices(
-                        (services) =>
-                        {
-                            services.RemoveAll<ICachedLookupService>();
-                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
-                        }));
-
-        return webAppFactory;
-    }
     /*
      * Tackle when we do the form posting
      * 
@@ -114,11 +88,28 @@ public sealed class SearchControllerIndexTests
     public async Task Search_FindAnEstablishment_Tab_IsSelected()
     {
         // Arrange
+        Mock<ICachedLookupService> lookupServiceMock = new();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
 
-        using WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory(DefaultLocalAuthorities, DefaultGovernorRoles);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -135,10 +126,28 @@ public sealed class SearchControllerIndexTests
     public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_BackToSearch_With_EmptyEstablishments()
     {
         // Arrange
-        using WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory(DefaultLocalAuthorities, DefaultGovernorRoles);
+        Mock<ICachedLookupService> lookupServiceMock = new();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?LocalAuthorityToRemove=100");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -156,10 +165,28 @@ public sealed class SearchControllerIndexTests
     public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_BackToSearch_With_RemainingSelectedEstablishments()
     {
         // Arrange
-        using WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory(DefaultLocalAuthorities, DefaultGovernorRoles);
+        Mock<ICachedLookupService> lookupServiceMock = new();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?LocalAuthorityToRemove=1&d=1&d=2");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -180,10 +207,27 @@ public sealed class SearchControllerIndexTests
     public async Task Search_FindAnEstablishmentPage_LocalAuthorityDisambiguation_Finds_Matching_Identifier(string searchKeyword)
     {
         // Arrange
-        using WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory(DefaultLocalAuthorities, DefaultGovernorRoles);
+        Mock<ICachedLookupService> lookupServiceMock = new();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
 
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
         // Act
-        HttpClient client = webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=LocalAuthorityDisambiguation&LocalAuthorityToAdd={searchKeyword}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -224,11 +268,28 @@ public sealed class SearchControllerIndexTests
             }
         ];
 
-        using WebApplicationFactory<Program> webApplicationFactory =
-            CreateWebApplicationFactory(stubbedLookupLocalAuthorities, DefaultGovernorRoles);
+        Mock<ICachedLookupService> lookupServiceMock = new();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(stubbedLookupLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=LocalAuthorityDisambiguation&LocalAuthorityToAdd={keyWord}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -254,13 +315,13 @@ public sealed class SearchControllerIndexTests
         }
     }
     
-    /*
+    
     // TODO: test
-    *//*
+    /*
      *     [InlineData("abc")]
     [InlineData("briz")]
     [InlineData("Briz")]
-     *//*
+     */
 
     // TODO what could make the ModelState invalid?
 
@@ -269,23 +330,59 @@ public sealed class SearchControllerIndexTests
     public async Task Search_LocationDisambiguation_Returns_View_When_MultipleMatches()
     {
         // Arrange
-        const string searchLocationKeyword = "SEARCH_TEXT";
+        PlaceDto[] placesDtos = [
+            new()
+            {
+                Name = "High Street, Leicester, England",
+                Coords = new(52.6369, -1.1398)
+            },
+            new()
+            {
+                Name = "Granby Street, Leicester, England",
+                Coords = new(52.6375, -1.1332)
+            },
+            new()
+            {
+                Name = "London Road, Leicester, England",
+                Coords = new(52.6290, -1.1200)
+            }
 
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-            new HttpMappingFile("maps", "azuremaps/get-azuremaps-addresses.json"),
-        ]);
+        ];
 
-        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
+        Mock<IPlacesLookupService> placesLookupServiceMock = new();
 
-        AzureMapsSearchResponseDto azureMapsAddressesResponse =
-            response.GetResponseById("maps")
-                .GetResponseBody<AzureMapsSearchResponseDto>();
+        placesLookupServiceMock
+            .Setup(placesLookup => placesLookup.SearchAsync(It.IsAny<string>(), false))
+            .ReturnsAsync(placesDtos);
+
+        Mock<ICachedLookupService> lookupServiceMock = new();
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+
+                            services.RemoveAll<IPlacesLookupService>();
+                            services.AddSingleton<IPlacesLookupService>(sp => placesLookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
+
+        const string searchLocationKeyword = "SEARCH_TEXT";
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&LocationSearchModel.Text={searchLocationKeyword}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -299,22 +396,21 @@ public sealed class SearchControllerIndexTests
         List<IElement> disambiguateLinks =
             document.QuerySelectorAll("#search-location-matching-locations a").ToList();
 
-        for (var index = 0; index < azureMapsAddressesResponse.results.Count(); index++)
+        for (var index = 0; index < placesDtos.Length; index++)
         {
             IElement currentLink = disambiguateLinks[index];
 
-            Result currentMapsResult = azureMapsAddressesResponse.results[index];
+            PlaceDto currentResult = placesDtos[index];
 
             Assert.Equal(
-                $"?SearchType=Location&LocationSearchModel.Text={searchLocationKeyword}&LocationSearchModel.AutoSuggestValue={currentMapsResult.position.lat},{currentMapsResult.position.lon}",
+                $"?SearchType=Location&LocationSearchModel.Text={searchLocationKeyword}&LocationSearchModel.AutoSuggestValue={currentResult.Coords.Latitude},{currentResult.Coords.Longitude}",
                 currentLink.GetAttribute("href"));
 
-            Assert.Equal(
-                $"{currentMapsResult.address.freeformAddress}, {currentMapsResult.address.countrySecondarySubdivision}",
-                currentLink.TextContent.Trim());
+            Assert.Equal(currentResult.Name, currentLink.TextContent.Trim());
         }
-
     }
+
+    /*
 
     // TODO fix placesService needs to be stubbed.
     // TODO this seems like a bug, if there's no fuzzy match, shouldn't we display an error to the effect of "No suggestions available"
