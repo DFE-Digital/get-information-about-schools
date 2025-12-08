@@ -15,14 +15,17 @@
     default: 'BuiltAndPackagedWebUiZip'
 
 
-
-
 jobs:
 
   - job: ${{ parameters.thisJobName }}
     displayName: Build, Test, and Package - ${{ parameters.thisJobName }}
     condition: eq(${{ parameters.enabled }}, 'true')
+    pool:
+      vmImage: ${{ parameters.vmImage }}
     variables:
+      solution: 'Web/Edubase.sln'
+      buildPlatform: 'Any CPU'
+      buildConfiguration: 'Release'
       BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
       BRANCH_NAME_NORMALISED: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '_')]
 
@@ -34,75 +37,49 @@ jobs:
         inputs:
           targetType: 'inline'
           script: |
-            ## Log all variables
             Write-Host "Variables:"
-            #Write-Host "- BRANCH_NAME: $( BRANCH_NAME )"
-            #Write-Host "- BRANCH_NAME_NORMALISED: $( BRANCH_NAME_NORMALISED )"
+            Write-Host "- BRANCH_NAME: $(BRANCH_NAME)"
+            Write-Host "- BRANCH_NAME_NORMALISED: $(BRANCH_NAME_NORMALISED)"
+            Write-Host "- solution: $(solution)"
+            Write-Host "- buildPlatform: $(buildPlatform)"
+            Write-Host "- buildConfiguration: $(buildConfiguration)"
 
-      ## Debugging assistance task - display all variables and parameters
       - task: PowerShell@2
         displayName: Display parameters
         inputs:
           targetType: 'inline'
           script: |
-            ## Log all parameters
             Write-Host "Parameters:"
             Write-Host "- enabled: ${{ parameters.enabled }}"
             Write-Host "- vmImage: ${{ parameters.vmImage }}"
             Write-Host "- thisJobName: ${{ parameters.thisJobName }}"
 
-
-
-
       - checkout: self
         submodules: recursive
-          
-          
-          
-      ## The version number within the web footer is the assembly version.
-      ## This script applies the version number to the assemblies.
-      ## Requires environment variables to be configured for this to run (details TBC).
-      ## TODO: https://andrewlock.net/version-vs-versionsuffix-vs-packageversion-what-do-they-all-mean/
+
       - task: PowerShell@2
         displayName: Version assemblies
         inputs:
           targetType: 'inline'
           script: |
-            ## Version number supplied via job variable
             $version = "$(version)"
             Write-Host "Version: $version"
-            
-            ## PowerShell script requires environment variables to be specified - write relevant values as required. 
             $Env:BUILD_BUILDNUMBER="$version"
             $Env:BUILD_SOURCESDIRECTORY="$(Build.SourcesDirectory)"
-
-            ## Output environment variables for confirmation
             Write-Host "BUILD_BUILDNUMBER: $($Env:BUILD_BUILDNUMBER)"
             Write-Host "BUILD_SOURCESDIRECTORY: $($Env:BUILD_SOURCESDIRECTORY)"
-            
-            ## Run versioning script
-            ## Note that assembly file version must be `X.X.X.X` (where X values are converted to a UInt16 numbers and any padding with zeros is lost), 
-            ## but assembly product version may differ (e.g., include commit hash or branch name at end).
-            ## TODO: Consider updating this script to include additional details in the product version (e.g., branch name, commit hash)
             $(Build.SourcesDirectory)/ApplyVersionToAssemblies.ps1
-            
-            
-      ## BUILD THE WEB UI JAVASCRIPT/WEBPACK BITS
 
+      ## BUILD THE WEB UI JAVASCRIPT/WEBPACK BITS
       - task: NodeTool@0
         displayName: 'Install Node.js 18.x'
         inputs:
           versionSource: 'spec'
           versionSpec: '18.x'
-            
-            
-            
-      ## TODO: Caching of npm dependencies (specifically, npm's shared cache directory, NOT the `node_modules` directory)
-      ## https://learn.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops#nodejsnpm
+
       - task: Npm@1
         displayName: 'Install NPM dependencies (Web UI)'
         inputs:
-          ## Note: Specifically call `npm ci`, do not use `npm install` as this will update the `package-lock.json` file etc.
           command: 'ci'
           workingDir: 'Web/Edubase.Web.UI'
 
@@ -112,10 +89,8 @@ jobs:
           command: 'custom'
           workingDir: 'Web/Edubase.Web.UI'
           customCommand: 'run buildCi'
-      
-      
-      ## BUILD AND TEST THE C# CODE
 
+      ## BUILD AND TEST THE C# CODE
       - task: NuGetToolInstaller@1
         displayName: 'Install NuGet'
 
@@ -128,39 +103,31 @@ jobs:
         displayName: Build C# solution
         inputs:
           solution: '$(solution)'
-          ## Auto-suggested args:
-          #msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-          ## Old/previous args:
-          msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:UseMerge=true /p:SingleAssemblyName=AppCode /p:RunCodeAnalysis=false
+          msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:RunCodeAnalysis=false
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
 
       - task: VSTest@2
-        displayName: Run C# tests
+        displayName: Run C# tests with coverage
         inputs:
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
-          testAssemblyVer2: >-
-            **\*unittest*.dll
-            
+          testAssemblyVer2: |
+            **\*UnitTests.dll
             !**\obj\**
-          codeCoverageEnabled: false
+          codeCoverageEnabled: true
+          runSettingsFile: 'coverlet.runsettings'
           diagnosticsEnabled: true
-      
-      
-      ## Display content listing of the artifact staging directory for confirmation of output file names
+
+      ## Display content listing of the artifact staging directory
       - task: CmdLine@2
         displayName: File listing - artifact staging dir - $(build.artifactstagingdirectory)
         inputs:
           script: |
             tree $(build.artifactstagingdirectory)
             dir $(build.artifactstagingdirectory)
-      
-      
-      ## PACKAGE THE WEB UI (C# AND JAVASCRIPT/WEBPACK BITS) READY FOR DEPLOYMENT
-      
-      # This step gets the packaged deploy file and makes it available to future stages
-      - publish: '$(build.artifactstagingdirectory)/Edubase.Web.UI.zip'
-        artifact: BuiltAndPackagedWebUiZip
-        displayName: Attach packaged Web UI to pipeline run
 
+      ## PACKAGE THE WEB UI READY FOR DEPLOYMENT
+      - publish: '$(build.artifactstagingdirectory)/Edubase.Web.UI.zip'
+        artifact: ${{ parameters.artifactReference }}
+        displayName: Attach packaged Web UI to pipeline run
