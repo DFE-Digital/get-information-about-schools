@@ -59,6 +59,13 @@ jobs:
             Write-Host "BUILD_SOURCESDIRECTORY: $($Env:BUILD_SOURCESDIRECTORY)"
             $(Build.SourcesDirectory)/ApplyVersionToAssemblies.ps1
 
+      ## Ensure correct .NET SDK
+      - task: UseDotNet@2
+        displayName: 'Install .NET 8 SDK'
+        inputs:
+          packageType: 'sdk'
+          version: '8.0.x'
+
       ## BUILD THE WEB UI JAVASCRIPT/WEBPACK BITS
       - task: NodeTool@0
         displayName: 'Install Node.js 18.x'
