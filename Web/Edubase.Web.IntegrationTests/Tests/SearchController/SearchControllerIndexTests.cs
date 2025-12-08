@@ -2,7 +2,6 @@ using System.Net;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
-using Edubase.Services.IntegrationEndPoints.AzureMaps.Models;
 using Edubase.Services.Lookup;
 using Edubase.Web.IntegrationTests.Helpers;
 using Edubase.Web.IntegrationTests.WireMock.Mapping.Services.MappingService.Request;
@@ -11,13 +10,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
-using Result = Edubase.Services.IntegrationEndPoints.AzureMaps.Models.Result;
 
 namespace Edubase.Web.IntegrationTests.Tests.SearchController;
 
 public sealed class SearchControllerIndexTests
 {
-    private static LookupDto[] LocalAuthorities => [
+    private static LookupDto[] DefaultLocalAuthorities => [
         new()
         {
             Id = 1,
@@ -41,7 +39,7 @@ public sealed class SearchControllerIndexTests
         }
     ];
 
-    private static LookupDto[] GovernorRoles => [
+    private static LookupDto[] DefaultGovernorRoles => [
         new()
         {
             Id = 1,
@@ -65,16 +63,18 @@ public sealed class SearchControllerIndexTests
         }
     ];
 
-    private static WebApplicationFactory<Program> CreateWebApplicationFactory()
+    private static WebApplicationFactory<Program> CreateWebApplicationFactory(
+        IEnumerable<LookupDto> localAuthoritiesStub,
+        IEnumerable<LookupDto> governorRolesStub)
     {
         Mock<ICachedLookupService> lookupServiceMock = new();
         lookupServiceMock
             .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
-            .ReturnsAsync(LocalAuthorities);
+            .ReturnsAsync(localAuthoritiesStub);
 
         lookupServiceMock
             .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
-            .ReturnsAsync(GovernorRoles);
+            .ReturnsAsync(governorRolesStub);
 
         WebApplicationFactory<Program> webAppFactory =
             new GiasWebApplicationFactory()
@@ -115,7 +115,7 @@ public sealed class SearchControllerIndexTests
     {
         // Arrange
 
-        WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory();
+        using WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory(DefaultLocalAuthorities, DefaultGovernorRoles);
 
         // Act
         HttpClient client = webApplicationFactory.CreateClient();
@@ -135,7 +135,7 @@ public sealed class SearchControllerIndexTests
     public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_BackToSearch_With_EmptyEstablishments()
     {
         // Arrange
-        WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory();
+        using WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory(DefaultLocalAuthorities, DefaultGovernorRoles);
 
         // Act
         HttpClient client = webApplicationFactory.CreateClient();
@@ -156,7 +156,8 @@ public sealed class SearchControllerIndexTests
     public async Task Search_FindAnEstablishment_Remove_A_LocalAuthority_Redirects_BackToSearch_With_RemainingSelectedEstablishments()
     {
         // Arrange
-        WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory();
+        using WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory(DefaultLocalAuthorities, DefaultGovernorRoles);
+
         // Act
         HttpClient client = webApplicationFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?LocalAuthorityToRemove=1&d=1&d=2");
@@ -171,7 +172,7 @@ public sealed class SearchControllerIndexTests
         Assert.Equal("/?d=2#la", redirectPath);
     }
 
-    /*
+    
     // TODO EXTEND TO DEDUPLICATE-ADD e.g d=1 and add 1 wait for ModelBinding fix on d=
     [Theory]
     [InlineData("Bristol")]
@@ -179,16 +180,10 @@ public sealed class SearchControllerIndexTests
     public async Task Search_FindAnEstablishmentPage_LocalAuthorityDisambiguation_Finds_Matching_Identifier(string searchKeyword)
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities-bristol.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
-
-        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
+        using WebApplicationFactory<Program> webApplicationFactory = CreateWebApplicationFactory(DefaultLocalAuthorities, DefaultGovernorRoles);
 
         // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpClient client = webApplicationFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=LocalAuthorityDisambiguation&LocalAuthorityToAdd={searchKeyword}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -205,22 +200,35 @@ public sealed class SearchControllerIndexTests
     public async Task Search_FindAnEstablishmentPage_LocalAuthorityDisambiguation_No_ExactMatchFound_Returns_DisambiguateView(string keyWord)
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile(id: "1", "edubase/lookup/get-local-authorities-bristol-brisbane-barnsley.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
+        LookupDto[] stubbedLookupLocalAuthorities = [
+            new()
+            {
+                Id = 1,
+                Name = "Bristol",
+                DisplayOrder = 0,
+                Code = "NA"
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Brisbane",
+                DisplayOrder = 10,
+                Code = "01"
+            },
+            new()
+            {
+                Id = 3,
+                Name = "Barnsley",
+                DisplayOrder = 20,
+                Code = "02"
+            }
+        ];
 
-        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
-
-        List<LookupDto> stubbedLocalAuthorities =
-            response.GetResponseById("1")
-                .GetResponseBody<List<LookupDto>>()
-                .Where(t => t.Name.Contains(keyWord, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+        using WebApplicationFactory<Program> webApplicationFactory =
+            CreateWebApplicationFactory(stubbedLookupLocalAuthorities, DefaultGovernorRoles);
 
         // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpClient client = webApplicationFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=LocalAuthorityDisambiguation&LocalAuthorityToAdd={keyWord}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -229,18 +237,23 @@ public sealed class SearchControllerIndexTests
 
         List<IElement> links = document.QuerySelectorAll("#search-localauthority-disambiguation-list a").ToList();
 
-        Assert.Equal(stubbedLocalAuthorities.Count, links.Count);
+        List<LookupDto> disambiguatedLookupDtos =
+            stubbedLookupLocalAuthorities
+                .Where(la => la.Name.Contains(keyWord, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+        Assert.Equal(disambiguatedLookupDtos.Count, links.Count);
 
         for (var index = 0; index < links.Count; index++)
         {
             IElement currentLink = links[index];
-            LookupDto currentStubbedLocalAuthority = stubbedLocalAuthorities[index];
+            LookupDto currentStubbedLocalAuthority = disambiguatedLookupDtos[index];
 
             Assert.Equal($"/Search/search?SearchType=ByLocalAuthority&OpenOnly=False&d={currentStubbedLocalAuthority.Id}#la", currentLink.GetAttribute("href"));
             Assert.Equal(currentStubbedLocalAuthority.Name, currentLink.TextContent.Trim());
         }
     }
-    */
+    
     /*
     // TODO: test
     *//*
