@@ -119,6 +119,14 @@ jobs:
           runSettingsFile: 'coverlet.runsettings'
           diagnosticsEnabled: true
 
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish coverage results
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+          reportDirectory: '$(Agent.TempDirectory)/**'
+          failIfCoverageEmpty: true
+
       ## Display content listing of the artifact staging directory
       - task: CmdLine@2
         displayName: File listing - artifact staging dir - $(build.artifactstagingdirectory)
