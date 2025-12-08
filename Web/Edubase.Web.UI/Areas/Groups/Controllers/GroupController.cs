@@ -1096,14 +1096,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     || viewModel.Action == ActionLinkedEstablishmentCancelEdit)
                 {
                     // ignore the message about the number of establishments in the group, as per JS behaviour
-                    for (var i = 0; i < validationEnvelope.Errors.Count; i++)
-                    {
-                        if (validationEnvelope.Errors[i].Code.Equals("error.validation.link.cc.one.linked.school"))
-                        {
-                            validationEnvelope.Errors.RemoveAt(i);
-                            i--;
-                        }
-                    }
+                    validationEnvelope.Errors.RemoveAll(x =>
+                                x.Code.Equals("error.validation.link.cc.one.linked.school"));
                 }
 
                 var governanceErrors = validationEnvelope.Errors
