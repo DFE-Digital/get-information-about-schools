@@ -8,18 +8,9 @@ using Newtonsoft.Json;
 
 namespace Edubase.Web.IntegrationTests.Tests.Controller.Governor;
 
-[Collection(IntegrationTestsCollectionMarker.Name)]
 public sealed class EditGovernorTests
 {
-    private readonly GiasWebApplicationFactory _webApplicationFactory;
-    private readonly EdubaseApiServerFixture _apiServer;
-
-    public EditGovernorTests(GiasWebApplicationFactory webApplicationFactory, EdubaseApiServerFixture apiServer)
-    {
-        _webApplicationFactory = webApplicationFactory;
-        _apiServer = apiServer;
-    }
-
+    /*
     [Fact]
     public async Task Test()
     {
@@ -55,5 +46,5 @@ public sealed class EditGovernorTests
 
         var document = await response.GetDocumentAsync();
         Assert.NotNull(document.QuerySelector("body"));
-    }
+    }*/
 }

@@ -2,7 +2,7 @@ using Edubase.Web.IntegrationTests.Helpers;
 
 namespace Edubase.Web.IntegrationTests.Tests;
 
-[Collection(IntegrationTestsCollectionMarker.Name)]
+
 public class ExampleTest
 {
     private readonly GiasWebApplicationFactory _webApplicationFactory;
