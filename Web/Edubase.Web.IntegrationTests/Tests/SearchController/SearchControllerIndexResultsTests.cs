@@ -4,15 +4,16 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
+using Edubase.Services.Enums;
 using Edubase.Services.Geo;
 using Edubase.Services.Governors.Factories;
 using Edubase.Services.Lookup;
 using Edubase.Web.IntegrationTests.Helpers;
+using Edubase.Web.UI.Models.Search;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
-using Edubase.Services.Enums;
 
 namespace Edubase.Web.IntegrationTests.Tests.SearchController
 {
@@ -414,8 +415,12 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
         }
 
 
-        [Fact]
-        public async Task IndexResults_EstablishmentSearch_Redirects_WithOpenOnlyStatuses()
+        [Theory]
+        [InlineData(eSearchType.Text)]
+        [InlineData(eSearchType.Location)]
+        [InlineData(eSearchType.ByLocalAuthority)]
+        [InlineData(eSearchType.EstablishmentAll)]
+        public async Task IndexResults_EstablishmentSearch_Redirects_WithOpenOnlyTrue(eSearchType searchType)
         {
             // Arrange
             Mock<ICachedLookupService> lookupServiceMock = new();
@@ -443,7 +448,7 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
             HttpClient client = webAppFactory.CreateClient();
 
             // Act
-            var response = await client.GetAsync("/Search/Results?SearchType=Text&TextSearchModel.Text=Academy&OpenOnly=true");
+            var response = await client.GetAsync($"/Search/Results?SearchType={searchType}&TextSearchModel.Text=Academy&OpenOnly=true");
 
             // Assert
             Assert.Equal(HttpStatusCode.Found, response.StatusCode);
@@ -451,13 +456,17 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
             var redirectPath = Assert.Single(locations);
 
             Assert.StartsWith("/Establishments/Search/index?", redirectPath);
-            Assert.Contains("SearchType=Text", redirectPath);
+            Assert.Contains($"SearchType={searchType}", redirectPath);
             Assert.Contains("TextSearchModel.Text=Academy", redirectPath);
             Assert.Contains($"b={(int) eLookupEstablishmentStatus.Open},{(int) eLookupEstablishmentStatus.OpenButProposedToClose}", redirectPath);
         }
 
-        [Fact]
-        public async Task IndexResults_EstablishmentSearch_Redirects_WithOpenOnlyFalse()
+        [Theory]
+        [InlineData(eSearchType.Text)]
+        [InlineData(eSearchType.Location)]
+        [InlineData(eSearchType.ByLocalAuthority)]
+        [InlineData(eSearchType.EstablishmentAll)]
+        public async Task IndexResults_EstablishmentSearch_Redirects_WithOpenOnlyFalse(eSearchType searchType)
         {
             // Arrange
             Mock<ICachedLookupService> lookupServiceMock = new();
@@ -485,7 +494,7 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
             HttpClient client = webAppFactory.CreateClient();
 
             // Act
-            var response = await client.GetAsync("/Search/Results?SearchType=Text&TextSearchModel.Text=Academy&OpenOnly=false");
+            var response = await client.GetAsync($"/Search/Results?SearchType={searchType}&TextSearchModel.Text=Academy&OpenOnly=false");
 
             // Assert
             Assert.Equal(HttpStatusCode.Found, response.StatusCode);
@@ -493,7 +502,7 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
             var redirectPath = Assert.Single(locations);
 
             Assert.StartsWith("/Establishments/Search/index?", redirectPath);
-            Assert.Contains("SearchType=Text", redirectPath);
+            Assert.Contains($"SearchType={searchType}", redirectPath);
             Assert.Contains("TextSearchModel.Text=Academy", redirectPath);
             Assert.Contains($"OpenOnly=false", redirectPath);
         }
