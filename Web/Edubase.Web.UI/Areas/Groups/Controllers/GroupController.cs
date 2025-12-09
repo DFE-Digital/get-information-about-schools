@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.UI;
 using Edubase.Services.Establishments;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors;
@@ -572,7 +573,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
                 if (validationEnvelope.HasErrors)
                 {
-                    validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                    validationEnvelope.Errors.ForEach(x => AddModelErrorSafe(x.Fields, x.GetMessage()));
                 }
             }
 
@@ -585,7 +586,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
                 else
                 {
-                    apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                    apiResponse.Errors.ForEach(x => AddModelErrorSafe(x.Fields, x.GetMessage()));
                 }
             }
             else
@@ -894,6 +895,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private async Task<ActionResult> ProcessCreateEditGroup(GroupEditorViewModel viewModel)
         {
+            if (ModelState.Values.Any(x => x.Errors.Any(e =>
+                    (e.ErrorMessage?.IndexOf("governance professional - federation",
+                        StringComparison.OrdinalIgnoreCase) ?? -1) >= 0
+                    || (e.ErrorMessage?.IndexOf("governance professional - local authority maintained school",
+                        StringComparison.OrdinalIgnoreCase) ?? -1) >= 0)))
+            {
+                return null;
+            }
             var suppressClearModelState = false;
 
             if (viewModel.Action == ActionLinkedEstablishmentAdd)
@@ -947,7 +956,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var apiResponse = await SaveGroup(viewModel);
                 if (apiResponse.HasErrors)
                 {
-                    apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                    apiResponse.Errors.ForEach(x => AddModelErrorSafe(x.Fields, x.GetMessage()));
                 }
                 else
                 {
@@ -961,7 +970,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var apiResponse = await SaveGroup(viewModel);
                 if (apiResponse.HasErrors)
                 {
-                    apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                    apiResponse.Errors.ForEach(x => AddModelErrorSafe(x.Fields, x.GetMessage()));
                 }
                 else
                 {
@@ -1030,7 +1039,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        private async Task  ValidateAsync(GroupEditorViewModel viewModel)
+        private async Task ValidateAsync(GroupEditorViewModel viewModel)
         {
             if ((viewModel.Action == ActionSave
                  || viewModel.Action == ActionDetails
@@ -1039,26 +1048,100 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                  || viewModel.Action == ActionLinkedEstablishmentAdd
                  || viewModel.Action == ActionLinkedEstablishmentCancelAdd
                  || viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit)
-                 || viewModel.Action == ActionLinkedEstablishmentCancelEdit
-                ) && ModelState.IsValid)
+                 || viewModel.Action == ActionLinkedEstablishmentCancelEdit)
+                && ModelState.IsValid)
             {
-                var dto = CreateSaveDto(viewModel);
+                var snapshot = CloneEstablishments(viewModel.LinkedEstablishments.Establishments);
+
+                SaveGroupDto dto;
+
+                if (viewModel.SaveMode == GroupEditorViewModel.eSaveMode.Links
+                    && viewModel.Action == ActionLinkedEstablishmentAdd
+                    && viewModel.LinkedEstablishments.LinkedEstablishmentSearch?.FoundUrn.HasValue == true
+                    && viewModel.GroupUId.HasValue)
+                {
+                    var linksForValidation = snapshot.Select(x => new LinkedEstablishmentGroup
+                    {
+                        Urn = x.Urn,
+                        Id = x.Id,
+                        JoinedDate = x.JoinedDate ?? x.JoinedDateEditable.ToDateTime(),
+                        CCIsLeadCentre = x.CCIsLeadCentre
+                    }).ToList();
+
+                    var candidateJoinedDate =
+                        viewModel.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.ToDateTime()
+                        ?? viewModel.OpenDate.ToDateTime();
+
+                    linksForValidation.Add(new LinkedEstablishmentGroup
+                    {
+                        Urn = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn.Value,
+                        JoinedDate = candidateJoinedDate,
+                        CCIsLeadCentre = !linksForValidation.Any(l => l.CCIsLeadCentre)
+                    });
+
+                    dto = new SaveGroupDto(viewModel.GroupUId.Value, linksForValidation);
+                }
+                else
+                {
+                    dto = CreateSaveDto(viewModel);
+                }
+
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
 
-                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove) ||
-                    viewModel.Action == ActionLinkedEstablishmentSearch ||
-                    viewModel.Action == ActionLinkedEstablishmentAdd ||
-                    viewModel.Action == ActionLinkedEstablishmentCancelAdd ||
-                    viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit) ||
-                    viewModel.Action == ActionLinkedEstablishmentCancelEdit)
+                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove)
+                    || viewModel.Action == ActionLinkedEstablishmentSearch
+                    || viewModel.Action == ActionLinkedEstablishmentAdd
+                    || viewModel.Action == ActionLinkedEstablishmentCancelAdd
+                    || viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit)
+                    || viewModel.Action == ActionLinkedEstablishmentCancelEdit)
                 {
                     // ignore the message about the number of establishments in the group, as per JS behaviour
-                    for (var i = 0; i < validationEnvelope.Errors.Count; i++)
+                    validationEnvelope.Errors.RemoveAll(x =>
+                                x.Code.Equals("error.validation.link.cc.one.linked.school"));
+                }
+
+                var governanceErrors = validationEnvelope.Errors
+                    .Where(x =>
                     {
-                        if (validationEnvelope.Errors[i].Code.Equals("error.validation.link.cc.one.linked.school"))
+                        var msg = x.GetMessage() ?? string.Empty;
+                        return msg.IndexOf("governance professional - federation",
+                                   StringComparison.OrdinalIgnoreCase) >= 0
+                               || msg.IndexOf("governance professional - local authority maintained school",
+                                   StringComparison.OrdinalIgnoreCase) >= 0;
+                    })
+                    .ToList();
+
+                var hasGovernanceBlockingError = governanceErrors.Any();
+
+                if (hasGovernanceBlockingError && viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    var problemUrn = viewModel.ActionUrn;
+                    var index = snapshot.FindIndex(x => x.Urn == problemUrn);
+                    if (index > 0)
+                    {
+                        foreach (var error in governanceErrors)
                         {
-                            validationEnvelope.Errors.RemoveAt(i);
+                            ModelState.AddModelError($"linkedEstablishments[{index}].id", error.GetMessage());
                         }
+
+                        foreach (var error in governanceErrors)
+                        {
+                            validationEnvelope.Errors.Remove(error);
+                        }
+                    }
+                }
+                else if (hasGovernanceBlockingError && (viewModel.Action == ActionLinkedEstablishmentAdd ||
+                                                        viewModel.Action == ActionLinkedEstablishmentSearch))
+                {
+                    foreach (var error in governanceErrors)
+                    {
+                        ModelState.AddModelError("LinkedEstablishments.LinkedEstablishmentSearch.Urn", error.GetMessage());
+                    }
+
+                    foreach (var error in governanceErrors)
+                    {
+                        validationEnvelope.Errors.Remove(error);
                     }
                 }
 
@@ -1068,17 +1151,71 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.ClearWarnings();
                 }
 
-                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove) || viewModel.Action == ActionLinkedEstablishmentCancelEdit || viewModel.Action == ActionLinkedEstablishmentCancelAdd)
+                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove)
+                    || viewModel.Action == ActionLinkedEstablishmentCancelEdit
+                    || viewModel.Action == ActionLinkedEstablishmentCancelAdd)
                 {
                     // we want to rebuild the screen once the removal has completed, so set the viewstate back to default
                     viewModel.ClearWarnings();
                     viewModel.ProcessedWarnings = false;
                 }
 
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields?.Replace("Unmapped field: group.closedDate", nameof(viewModel.ClosedDate)) ?? string.Empty, x.GetMessage()));
+                validationEnvelope.Errors.ForEach(x =>
+                    ModelState.AddModelError(
+                        x.Fields?.Replace("Unmapped field: group.closedDate", nameof(viewModel.ClosedDate)) ?? string.Empty,
+                        x.GetMessage()
+                    ));
+
                 viewModel.SetWarnings(validationEnvelope);
                 ModelState.Remove(nameof(viewModel.ProcessedWarnings));
+
+                RestoreEstablishments(viewModel.LinkedEstablishments.Establishments, snapshot);
+
+                if (hasGovernanceBlockingError)
+                {
+                    return;
+                }
             }
         }
+
+        private static List<EstablishmentGroupViewModel> CloneEstablishments(List<EstablishmentGroupViewModel> source)
+        {
+            return source.Select(x => new EstablishmentGroupViewModel
+            {
+                Id = x.Id,
+                Address = x.Address,
+                HeadFirstName = x.HeadFirstName,
+                HeadLastName = x.HeadLastName,
+                HeadTitleName = x.HeadTitleName,
+                JoinedDate = x.JoinedDate,
+                JoinedDateEditable = new DateTimeViewModel(x.JoinedDateEditable.ToDateTime()),
+                Name = x.Name,
+                TypeName = x.TypeName,
+                Urn = x.Urn,
+                CCIsLeadCentre = x.CCIsLeadCentre,
+                LAESTAB = x.LAESTAB,
+                LocalAuthorityName = x.LocalAuthorityName,
+                PhaseName = x.PhaseName,
+                StatusName = x.StatusName,
+                Location = x.Location,
+                UKPRN = x.UKPRN,
+                EditMode = x.EditMode
+            }).ToList();
+        }
+
+        private static void RestoreEstablishments(
+            List<EstablishmentGroupViewModel> target,
+            List<EstablishmentGroupViewModel> snapshot)
+        {
+            target.Clear();
+            target.AddRange(snapshot);
+        }
+
+        private void AddModelErrorSafe(string field, string message)
+        {
+            ModelState.AddModelError(string.IsNullOrWhiteSpace(field) ? string.Empty : field,
+                message);
+        }
+
     }
 }
