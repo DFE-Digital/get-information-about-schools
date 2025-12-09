@@ -25,8 +25,8 @@ variables:
   buildConfiguration: 'Release'
 
   ## These variables distinguish between "dev" (incl. AFD/custom domain) and sandboxes
-  # isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
-  # isSandbox1: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
+  isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
+  isSandbox1: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
   isSandbox2: true   # currently unused
   # isHolding:  false    # currently unused
   
