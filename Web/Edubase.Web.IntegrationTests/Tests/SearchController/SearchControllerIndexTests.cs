@@ -2,7 +2,9 @@ using System.Net;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
+using Edubase.Services.Enums;
 using Edubase.Services.Geo;
+using Edubase.Services.Governors.Factories;
 using Edubase.Services.Lookup;
 using Edubase.Web.IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -946,7 +948,90 @@ public sealed class SearchControllerIndexTests
             document.QuerySelector(".govuk-error-summary")?.TextContent);
         Assert.Equal(groupText, document.QuerySelector("#GroupSearchModel_Text")!.GetAttribute("value"));
     }
-    
+
+    [Fact]
+    public async Task Search_Index_Renders_SelectedLocalAuthorities()
+    {
+        // Arrange
+        Mock<ICachedLookupService> lookupServiceMock = new();
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
+
+        // Act
+        HttpClient client = webAppFactory.CreateClient();
+        HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=ByLocalAuthority&d=1&d=2");
+        IHtmlDocument document = await httpResponse.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
+
+        var selectedLAs = document.QuerySelectorAll(".user-selected-la")
+                              .Select(i => i.GetAttribute("value"))
+                              .ToList();
+
+        Assert.Equal(new[] { "Bristol", "City of London" }, selectedLAs);
+    }
+
+
+    [Fact]
+    public async Task Search_Index_Renders_GovernorRoles_With_OverriddenNames()
+    {
+        // Arrange
+        var governorRoles = new[]
+        {
+        new LookupDto { Id = (int)eLookupGovernorRole.ChairOfGovernors, Name = "Old Name" }, // Should be overridden
+        new LookupDto { Id = 99, Name = "Custom Role" } // Should remain unchanged
+        };
+
+        var lookupServiceMock = new Mock<ICachedLookupService>();
+
+        lookupServiceMock.Setup(s => s.LocalAuthorityGetAllAsync()).ReturnsAsync(DefaultLocalAuthorities);
+        lookupServiceMock.Setup(s => s.GovernorRolesGetAllAsync()).ReturnsAsync(governorRoles);
+
+        using var webAppFactory = new GiasWebApplicationFactory()
+            .WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                {
+                    services.RemoveAll<ICachedLookupService>();
+                    services.AddSingleton(lookupServiceMock.Object);
+                });
+            });
+
+        var client = webAppFactory.CreateClient();
+
+        // Act
+        var response = await client.GetAsync("/Search/search?SelectedTab=Governors");
+        var document = await response.GetDocumentAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var roleOptions = document.QuerySelectorAll("#governor-roles .govuk-checkboxes__label")
+                                  .Select(o => o.TextContent.Trim())
+                                  .ToList();
+
+        Assert.Contains(GovernorRoleNameFactory.Create(eLookupGovernorRole.ChairOfGovernors), roleOptions);
+        Assert.Contains("Custom Role", roleOptions);
+    }
+
     [Fact]
     public async Task Search_GovernorSearchType_NoResults_EmptyDetails_ShowsRequiredError()
     {
