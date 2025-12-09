@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.NetworkInformation;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.IntegrationTests.Tests.SearchController
 {
@@ -284,6 +286,216 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
                 Assert.Equal(expectedMatches[i].Name, links[i].TextContent.Trim());
                 Assert.Equal($"/Search/search?SearchType=ByLocalAuthority&OpenOnly=False&d={expectedMatches[i].Id}#la", links[i].GetAttribute("href"));
             }
+        }
+
+
+        [Fact]
+        public async Task IndexResults_LocationSearch_DisambiguationView_WhenMultipleMatches()
+        {
+            // Arrange
+            PlaceDto[] placesDtos = [
+            new()
+            {
+                Name = "High Street, Leicester, England",
+                Coords = new(52.6369, -1.1398)
+            },
+            new()
+            {
+                Name = "Granby Street, Leicester, England",
+                Coords = new(52.6375, -1.1332)
+            },
+            new()
+            {
+                Name = "London Road, Leicester, England",
+                Coords = new(52.6290, -1.1200)
+            }
+
+        ];
+
+            Mock<IPlacesLookupService> placesLookupServiceMock = new();
+
+            placesLookupServiceMock
+                .Setup(placesLookup => placesLookup.SearchAsync(It.IsAny<string>(), false))
+                .ReturnsAsync(placesDtos);
+
+            Mock<ICachedLookupService> lookupServiceMock = new();
+
+            lookupServiceMock
+                .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+                .ReturnsAsync(DefaultLocalAuthorities);
+
+            lookupServiceMock
+                .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+                .ReturnsAsync(DefaultGovernorRoles);
+
+            using WebApplicationFactory<Program> webAppFactory =
+                new GiasWebApplicationFactory()
+                    .WithWebHostBuilder(
+                    (builder) =>
+                        builder.ConfigureServices(
+                            (services) =>
+                            {
+                                services.RemoveAll<ICachedLookupService>();
+                                services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+
+                                services.RemoveAll<IPlacesLookupService>();
+                                services.AddSingleton<IPlacesLookupService>(sp => placesLookupServiceMock.Object);
+                            }));
+
+            // Act
+            HttpClient client = webAppFactory.CreateClient();
+
+            const string searchText = "Leicester";
+            var response = await client.GetAsync($"/Search/Results?SearchType=Location&LocationSearchModel.Text={searchText}");
+            var document = await response.GetDocumentAsync();
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Contains($"3 locations matching '{searchText}'", document.QuerySelector("h1 + p")?.TextContent);
+            var links = document.QuerySelectorAll("#search-location-matching-locations a").ToList();
+            Assert.Equal(placesDtos.Length, links.Count);
+
+            for (int i = 0; i < links.Count; i++)
+            {
+                Assert.Equal(placesDtos[i].Name, links[i].TextContent.Trim());
+                Assert.Contains($"LocationSearchModel.AutoSuggestValue={placesDtos[i].Coords.Latitude},{placesDtos[i].Coords.Longitude}", links[i].GetAttribute("href"));
+            }
+        }
+
+        [Fact]
+        public async Task IndexResults_LocationSearch_NoMatches_RedirectsToEstablishmentsSearch()
+        {
+            // Arrange
+            Mock<IPlacesLookupService> placesLookupServiceMock = new();
+
+            placesLookupServiceMock
+                .Setup(placesLookup => placesLookup.SearchAsync(It.IsAny<string>(), false))
+                .ReturnsAsync([]);
+
+            Mock<ICachedLookupService> lookupServiceMock = new();
+
+            lookupServiceMock
+                .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+                .ReturnsAsync(DefaultLocalAuthorities);
+
+            lookupServiceMock
+                .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+                .ReturnsAsync(DefaultGovernorRoles);
+
+            using WebApplicationFactory<Program> webAppFactory =
+                new GiasWebApplicationFactory()
+                    .WithWebHostBuilder(
+                    (builder) =>
+                        builder.ConfigureServices(
+                            (services) =>
+                            {
+                                services.RemoveAll<ICachedLookupService>();
+                                services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+
+                                services.RemoveAll<IPlacesLookupService>();
+                                services.AddSingleton<IPlacesLookupService>(sp => placesLookupServiceMock.Object);
+                            }));
+
+            // Act
+            HttpClient client = webAppFactory.CreateClient();
+
+            const string searchText = "UnknownPlace";
+            var response = await client.GetAsync($"/Search/Results?SearchType=Location&LocationSearchModel.Text={searchText}");
+            var document = await response.GetDocumentAsync();
+
+            // Assert
+
+            Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+            response.Headers.TryGetValues("Location", out var locations);
+            var redirectPath = Assert.Single(locations);
+            Assert.StartsWith("/Establishments/Search/index?", redirectPath);
+            Assert.Contains("SearchType=Location", redirectPath);
+            Assert.Contains("LocationSearchModel.Text=UnknownPlace", redirectPath);
+        }
+
+
+        [Fact]
+        public async Task IndexResults_EstablishmentSearch_Redirects_WithOpenOnlyStatuses()
+        {
+            // Arrange
+            Mock<ICachedLookupService> lookupServiceMock = new();
+
+            lookupServiceMock
+                .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+                .ReturnsAsync(DefaultLocalAuthorities);
+
+            lookupServiceMock
+                .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+                .ReturnsAsync(DefaultGovernorRoles);
+
+            using WebApplicationFactory<Program> webAppFactory =
+                new GiasWebApplicationFactory()
+                    .WithWebHostBuilder(
+                    (builder) =>
+                        builder.ConfigureServices(
+                            (services) =>
+                            {
+                                services.RemoveAll<ICachedLookupService>();
+                                services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                            }));
+
+            // Act
+            HttpClient client = webAppFactory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync("/Search/Results?SearchType=Text&TextSearchModel.Text=Academy&OpenOnly=true");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+            response.Headers.TryGetValues("Location", out var locations);
+            var redirectPath = Assert.Single(locations);
+
+            Assert.StartsWith("/Establishments/Search/index?", redirectPath);
+            Assert.Contains("SearchType=Text", redirectPath);
+            Assert.Contains("TextSearchModel.Text=Academy", redirectPath);
+            Assert.Contains($"b={(int) eLookupEstablishmentStatus.Open},{(int) eLookupEstablishmentStatus.OpenButProposedToClose}", redirectPath);
+        }
+
+        [Fact]
+        public async Task IndexResults_EstablishmentSearch_Redirects_WithOpenOnlyFalse()
+        {
+            // Arrange
+            Mock<ICachedLookupService> lookupServiceMock = new();
+
+            lookupServiceMock
+                .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+                .ReturnsAsync(DefaultLocalAuthorities);
+
+            lookupServiceMock
+                .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+                .ReturnsAsync(DefaultGovernorRoles);
+
+            using WebApplicationFactory<Program> webAppFactory =
+                new GiasWebApplicationFactory()
+                    .WithWebHostBuilder(
+                    (builder) =>
+                        builder.ConfigureServices(
+                            (services) =>
+                            {
+                                services.RemoveAll<ICachedLookupService>();
+                                services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                            }));
+
+            // Act
+            HttpClient client = webAppFactory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync("/Search/Results?SearchType=Text&TextSearchModel.Text=Academy&OpenOnly=false");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+            response.Headers.TryGetValues("Location", out var locations);
+            var redirectPath = Assert.Single(locations);
+
+            Assert.StartsWith("/Establishments/Search/index?", redirectPath);
+            Assert.Contains("SearchType=Text", redirectPath);
+            Assert.Contains("TextSearchModel.Text=Academy", redirectPath);
+            Assert.Contains($"OpenOnly=false", redirectPath);
         }
     }
 }
