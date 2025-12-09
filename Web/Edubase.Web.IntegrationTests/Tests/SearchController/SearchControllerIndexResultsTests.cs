@@ -405,7 +405,6 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
             var document = await response.GetDocumentAsync();
 
             // Assert
-
             Assert.Equal(HttpStatusCode.Found, response.StatusCode);
             response.Headers.TryGetValues("Location", out var locations);
             var redirectPath = Assert.Single(locations);
@@ -446,8 +445,6 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
 
             // Act
             HttpClient client = webAppFactory.CreateClient();
-
-            // Act
             var response = await client.GetAsync($"/Search/Results?SearchType={searchType}&TextSearchModel.Text=Academy&OpenOnly=true");
 
             // Assert
@@ -492,8 +489,6 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
 
             // Act
             HttpClient client = webAppFactory.CreateClient();
-
-            // Act
             var response = await client.GetAsync($"/Search/Results?SearchType={searchType}&TextSearchModel.Text=Academy&OpenOnly=false");
 
             // Assert
