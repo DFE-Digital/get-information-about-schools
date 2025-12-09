@@ -27,7 +27,7 @@ variables:
   ## These variables distinguish between "dev" (incl. AFD/custom domain) and sandboxes
   isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
   isSandbox1: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
-  isSandbox2: false   # currently unused
+  isSandbox2: true   # currently unused
   # isHolding:  false    # currently unused
   
   ## If this is part of a release, then we can deploy to higher environments
@@ -353,12 +353,12 @@ stages:
       versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
     jobs:
       
-      Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
       - deployment: devDeploymentEnvironmentCheck
         environment: 'gias-dev'
         displayName: 'ADO Environment: `gias-dev` - Slot Sandbox2'
 
-      Debugging assistance job - display variables
+      ## Debugging assistance job - display variables
       - job: DisplayVariablesJob
         steps:
           - task: PowerShell@2
@@ -369,7 +369,7 @@ stages:
                 Write-Host "version: $(version)"
                 Write-Host "versionNoPadding: $(versionNoPadding)"
 
-      Deploy the packaged and tested code
+      ## Deploy the packaged and tested code
       - template: 'pipelines/template-deployment-stage.yml'
         parameters:
           enabled: 'true'
@@ -384,7 +384,7 @@ stages:
           destinationDeployToSlotFlag: true
           destinationSlotName: 'dev-sandbox2'
       
-      Smoke test the base URL to prove that the code has been deployed
+      ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
         parameters:
           enabled: 'true'
@@ -400,7 +400,7 @@ stages:
           smokeTestDurationBetweenRequestsSeconds: 5
           smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately)
       
-      Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
+      ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
       - template: 'pipelines/template-smoke-test-deployment.yml'
         parameters:
           enabled: 'true'
