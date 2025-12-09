@@ -277,7 +277,7 @@ public sealed class SearchControllerIndexTests
             .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
             .ReturnsAsync(DefaultGovernorRoles);
 
-        WebApplicationFactory<Program> webAppFactory =
+        using WebApplicationFactory<Program> webAppFactory =
             new GiasWebApplicationFactory()
                 .WithWebHostBuilder(
                 (builder) =>
@@ -365,7 +365,7 @@ public sealed class SearchControllerIndexTests
             .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
             .ReturnsAsync(DefaultGovernorRoles);
 
-        WebApplicationFactory<Program> webAppFactory =
+        using WebApplicationFactory<Program> webAppFactory =
             new GiasWebApplicationFactory()
                 .WithWebHostBuilder(
                 (builder) =>
@@ -454,7 +454,7 @@ public sealed class SearchControllerIndexTests
             .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
             .ReturnsAsync(DefaultGovernorRoles);
 
-        WebApplicationFactory<Program> webAppFactory =
+        using WebApplicationFactory<Program> webAppFactory =
             new GiasWebApplicationFactory()
                 .WithWebHostBuilder(
                 (builder) =>
@@ -512,7 +512,7 @@ public sealed class SearchControllerIndexTests
             .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
             .ReturnsAsync(DefaultGovernorRoles);
 
-        WebApplicationFactory<Program> webAppFactory =
+        using WebApplicationFactory<Program> webAppFactory =
             new GiasWebApplicationFactory()
                 .WithWebHostBuilder(
                 (builder) =>
@@ -537,10 +537,10 @@ public sealed class SearchControllerIndexTests
         Assert.Equal($"Search results for establishments", document.QuerySelector("h1")?.TextContent);
 
         Assert.Contains($"1 location matching '{searchLocationKeyword}'", document.QuerySelector("h1 + p")?.TextContent);
-        Assert.Equal(1, document.QuerySelectorAll(".govuk-list li").Count);
+        Assert.Contains("Did you mean", document.QuerySelector("#search-location-matching-location").Text());
 
         IElement link =
-            document.QuerySelectorAll("#search-location-matching-locations a").Single();
+            document.QuerySelectorAll("#search-location-matching-location a").Single();
         
             Assert.Equal(
                 $"?SearchType=Location&LocationSearchModel.Text={searchLocationKeyword}&LocationSearchModel.AutoSuggestValue={placesDtos.Coords.Latitude},{placesDtos.Coords.Longitude}",
@@ -549,21 +549,34 @@ public sealed class SearchControllerIndexTests
             Assert.Equal(placesDtos.Name, link.TextContent.Trim());  
     }
 
-    /*
+
     [Fact]
     public async Task Search_GovernorReference_NoGid_Shows_ErrorPanel()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
-        ]);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=GovernorReference");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -580,16 +593,29 @@ public sealed class SearchControllerIndexTests
     public async Task Search_GovernorReference_InvalidGid_Shows_NotFoundError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
-        ]);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=GovernorReference&GovernorSearchModel.Gid=999999");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -602,21 +628,34 @@ public sealed class SearchControllerIndexTests
         Assert.Equal("999999", document.QuerySelector("#GovernorSearchModel_Gid")?.GetAttribute("value"));
     }
 
+
     [Fact]
     public async Task Search_TextSearchType_NoResults_EmptyText_ShowsRequiredError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
 
-        HttpClient client = _webApplicationFactory.CreateClient();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=Text&NoResults=True");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -628,22 +667,36 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(string.Empty, document.QuerySelector("#TextSearchModel_Text")!.GetAttribute("value"));
     }
 
+
     [Fact]
     public async Task Search_TextSearchType_NoResults_WithText_ShowsNotFoundError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
 
-        HttpClient client = _webApplicationFactory.CreateClient();
-        var searchText = "Some School";
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
+        var searchText = "Some School";
+
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Text&NoResults=True&TextSearchModel.Text={searchText}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -655,21 +708,34 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(searchText, document.QuerySelector("#TextSearchModel_Text")!.GetAttribute("value"));
     }
 
+
     [Fact]
     public async Task Search_LocationSearchType_NoResults_EmptyText_ShowsRequiredError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
 
-        HttpClient client = _webApplicationFactory.CreateClient();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=Location&NoResults=True");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -681,21 +747,36 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(string.Empty, document.QuerySelector("#LocationSearchModel_Text")!.GetAttribute("value"));
     }
 
+    
     [Fact]
     public async Task Search_LocationSearchType_NoResults_WithText_ShowsNotFoundError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        HttpClient client = _webApplicationFactory.CreateClient();
-        var locationText = "London";
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
+        var locationText = "London";
+
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType=Location&NoResults=True&LocationSearchModel.Text={locationText}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -707,20 +788,34 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(locationText, document.QuerySelector("#LocationSearchModel_Text")!.GetAttribute("value"));
     }
 
+    
     [Fact]
     public async Task Search_ByLocalAuthority_NoResults_NoSelectedIds_ShowsRequiredError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        HttpClient client = _webApplicationFactory.CreateClient();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=ByLocalAuthority&NoResults=True");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -736,21 +831,33 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(string.Empty, document.QuerySelector("#LocalAuthorityToAdd")!.GetAttribute("value"));
     }
 
-    // TODO: the 'this la has no open schools' message is not displaying. Is there a binding issue?
     [Fact]
     public async Task Search_ByLocalAuthority_NoResults_WithSelectedIds_ShowsNoOpenSchoolsError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        HttpClient client = _webApplicationFactory.CreateClient();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SearchType=ByLocalAuthority&NoResults=True&d=1");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -761,22 +868,34 @@ public sealed class SearchControllerIndexTests
             document.QuerySelector(".govuk-error-summary")?.TextContent);
         Assert.Equal("1", document.QuerySelector("input[name='d']")!.GetAttribute("value"));
     }
-
+    
     [Fact]
     public async Task Search_GroupSearchType_NoResults_EmptyText_ShowsRequiredError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
 
-        HttpClient client = _webApplicationFactory.CreateClient();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SelectedTab=Groups&SearchType=Group&NoResults=True");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -787,22 +906,36 @@ public sealed class SearchControllerIndexTests
             document.QuerySelector(".govuk-error-summary")?.TextContent);
         Assert.Equal(string.Empty, document.QuerySelector("#GroupSearchModel_Text")!.GetAttribute("value"));
     }
-
+    
     [Fact]
     public async Task Search_GroupSearchType_NoResults_WithText_ShowsNotFoundError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        HttpClient client = _webApplicationFactory.CreateClient();
-        var groupText = "Academy Trust";
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
+        var groupText = "Academy Trust";
+
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SelectedTab=Groups&SearchType=Group&NoResults=True&GroupSearchModel.Text={groupText}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -813,21 +946,34 @@ public sealed class SearchControllerIndexTests
             document.QuerySelector(".govuk-error-summary")?.TextContent);
         Assert.Equal(groupText, document.QuerySelector("#GroupSearchModel_Text")!.GetAttribute("value"));
     }
-
+    
     [Fact]
     public async Task Search_GovernorSearchType_NoResults_EmptyDetails_ShowsRequiredError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        HttpClient client = _webApplicationFactory.CreateClient();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync("/Search/search?SelectedTab=Governors&SearchType=Governor&NoResults=True");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -846,19 +992,32 @@ public sealed class SearchControllerIndexTests
     public async Task Search_GovernorSearchType_NoResults_WithDetails_ShowsNotFoundError()
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("edubase/lookup/get-governor-roles.json"),
-        ]);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        await _edubaseApiFixture.RegisterHttpMapping(request);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
 
-        HttpClient client = _webApplicationFactory.CreateClient();
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
+
+        // Act
+        HttpClient client = webAppFactory.CreateClient();
         var forename = "John";
         var surname = "Smith";
 
-        // Act
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SelectedTab=Governors&SearchType=Governor&NoResults=True&GovernorSearchModel.Forename={forename}&GovernorSearchModel.Surname={surname}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -891,16 +1050,29 @@ public sealed class SearchControllerIndexTests
         )
     {
         // Arrange
-        HttpMappingRequest request = new(
-        [
-            new HttpMappingFile("1", "edubase/lookup/get-local-authorities.json"),
-            new HttpMappingFile("2", "edubase/lookup/get-governor-roles.json"),
-        ]);
+        Mock<ICachedLookupService> lookupServiceMock = new();
 
-        HttpMappedResponses response = await _edubaseApiFixture.RegisterHttpMapping(request);
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.LocalAuthorityGetAllAsync())
+            .ReturnsAsync(DefaultLocalAuthorities);
+
+        lookupServiceMock
+            .Setup((lookupService) => lookupService.GovernorRolesGetAllAsync())
+            .ReturnsAsync(DefaultGovernorRoles);
+
+        using WebApplicationFactory<Program> webAppFactory =
+            new GiasWebApplicationFactory()
+                .WithWebHostBuilder(
+                (builder) =>
+                    builder.ConfigureServices(
+                        (services) =>
+                        {
+                            services.RemoveAll<ICachedLookupService>();
+                            services.AddSingleton<ICachedLookupService>(sp => lookupServiceMock.Object);
+                        }));
 
         // Act
-        HttpClient client = _webApplicationFactory.CreateClient();
+        HttpClient client = webAppFactory.CreateClient();
         HttpResponseMessage httpResponse = await client.GetAsync($"/Search/search?SearchType={searchType}");
         IHtmlDocument document = await httpResponse.GetDocumentAsync();
 
@@ -913,5 +1085,5 @@ public sealed class SearchControllerIndexTests
         Assert.Equal(laChecked, document.QuerySelector("#searchtype-la").GetAttribute("checked"));
         Assert.Equal(allChecked, document.QuerySelector("#searchtype-all").GetAttribute("checked"));
     }
-*/
+
 }

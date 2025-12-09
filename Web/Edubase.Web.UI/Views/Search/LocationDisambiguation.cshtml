@@ -32,7 +32,7 @@
         }
         else if (Model.MatchingLocations.Count == 1)
         {
-            <p>Did you mean @await Html.PartialAsync("_LocationLink", Model.MatchingLocations[0])?</p>
+            <p id="search-location-matching-location">Did you mean @await Html.PartialAsync("_LocationLink", Model.MatchingLocations[0])?</p>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments, SearchType = eSearchType.Location})" class="govuk-button govuk-button--secondary">Back to search</a>
         }
         else
