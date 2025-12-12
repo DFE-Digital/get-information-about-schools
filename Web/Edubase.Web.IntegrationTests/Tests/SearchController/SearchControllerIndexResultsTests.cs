@@ -1,12 +1,7 @@
 using System.Net;
-using System.Net.NetworkInformation;
-using AngleSharp.Dom;
-using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
-using Edubase.Services.Enums;
 using Edubase.Services.Geo;
-using Edubase.Services.Governors.Factories;
 using Edubase.Services.Lookup;
 using Edubase.Web.IntegrationTests.Helpers;
 using Edubase.Web.UI.Models.Search;
