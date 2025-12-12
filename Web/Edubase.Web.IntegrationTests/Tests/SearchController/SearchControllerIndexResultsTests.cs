@@ -501,5 +501,63 @@ namespace Edubase.Web.IntegrationTests.Tests.SearchController
             Assert.Contains("TextSearchModel.Text=Academy", redirectPath);
             Assert.Contains($"OpenOnly=false", redirectPath);
         }
+
+        [Theory]
+        [InlineData(eSearchType.Group)]
+        [InlineData(eSearchType.GroupAll)]
+        public async Task IndexResults_GroupSearch_RedirectsToGroupsSearch(eSearchType searchType)
+        {
+            // Arrange
+            using var webAppFactory = new GiasWebApplicationFactory();
+            var client = webAppFactory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync($"/Search/Results?SearchType={searchType}&GroupSearchModel.Text=AcademyTrust");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+            response.Headers.TryGetValues("Location", out var locations);
+            var redirectPath = Assert.Single(locations);
+            Assert.StartsWith("/Groups/Search?", redirectPath);
+            Assert.Contains($"SearchType={searchType}", redirectPath);
+            Assert.Contains("GroupSearchModel.Text=AcademyTrust", redirectPath);
+        }
+
+        [Theory]
+        [InlineData(eSearchType.Governor)]
+        [InlineData(eSearchType.GovernorReference)]
+        [InlineData(eSearchType.GovernorAll)]
+        public async Task IndexResults_GovernorSearch_RedirectsToGovernorSearchPage(eSearchType searchType)
+        {
+            // Arrange
+            using var webAppFactory = new GiasWebApplicationFactory();
+            var client = webAppFactory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync($"/Search/Results?SearchType={searchType}&GovernorSearchModel.RoleId=1&GovernorSearchModel.RoleId=2");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+            response.Headers.TryGetValues("Location", out var locations);
+            var redirectPath = Assert.Single(locations);
+
+            Assert.StartsWith("?Microsoft.AspNetCore.Http.QueryCollectionInternal", redirectPath);
+            Assert.Contains("t=1", redirectPath);
+            Assert.Contains("t=2", redirectPath);
+        }
+
+        [Fact]
+        public async Task IndexResults_UnsupportedSearchType_ReturnsInternalServerError()
+        {
+            // Arrange
+            using var webAppFactory = new GiasWebApplicationFactory();
+            var client = webAppFactory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync("/Search/Results?SearchType=InvalidType");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
     }
 }
