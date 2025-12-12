@@ -210,6 +210,9 @@ Web/Web.UI/
 
 /Web/.nuget/NuGet.Config
 Web/packages
+/certs
 /.vscode/launch.json
 /Web/Edubase.Web.UI/appsettings.Development.json
 /Web/Edubase.Web.UI/appsettings.Development.json
+/Web/Edubase.Web.UI/wwwroot/assets/scripts
+/Web/Edubase.Web.UI/appsettings.json

@@ -1,0 +1,8 @@
+services:
+  certgenerator:
+      image: wiremock-certgenerator
+      build:
+        context: .
+        dockerfile: Dockerfile.CertGenerator
+      volumes:
+        - ./certs:/certs
