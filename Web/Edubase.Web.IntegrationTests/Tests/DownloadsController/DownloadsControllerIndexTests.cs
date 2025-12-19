@@ -267,7 +267,7 @@ namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
             bool includeScheduledExtracts = true,
             int scheduledExtractCount = 1)
         {
-            var downloadsServiceMock = new Mock<IDownloadsService>();
+            Mock<IDownloadsService> downloadsServiceMock = new ();
 
             // Mock downloads
             downloadsServiceMock
@@ -303,7 +303,7 @@ namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
                     });
             }
 
-            var factory = new GiasWebApplicationFactory()
+            WebApplicationFactory<Program> factory = new GiasWebApplicationFactory()
                 .WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureServices(services =>

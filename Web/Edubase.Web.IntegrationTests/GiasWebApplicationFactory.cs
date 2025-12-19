@@ -48,6 +48,12 @@ public sealed class GiasWebApplicationFactory : WebApplicationFactory<Program>
 
             // Replace real policy handler with a fake one
             services.AddSingleton<IAuthorizationHandler, AllowAllEdubaseRequirementHandler>();
+
+            // Disable AntiForgery token validation
+            services.PostConfigure<Microsoft.AspNetCore.Mvc.MvcOptions>(options =>
+            {
+                options.Filters.Remove(new Microsoft.AspNetCore.Mvc.ValidateAntiForgeryTokenAttribute());
+            });
         });
     }
 
