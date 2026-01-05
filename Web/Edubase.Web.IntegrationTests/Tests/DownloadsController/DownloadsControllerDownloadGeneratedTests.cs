@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Edubase.Services.Domain;
@@ -185,7 +179,6 @@ namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
             Assert.Equal("Please return to the downloads page and repeat your request.", document.QuerySelector("#main-content h2.govuk-heading-m + p").Text());
         }
 
-        // TODO
         [Fact]
         public async Task DownloadGenerated_RendersErrorView_WhenApiThrows404()
         {
@@ -209,6 +202,28 @@ namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
             Assert.Equal("Something went wrong", document.QuerySelector("h1").Text());
             Assert.Equal("The requested file is no longer available for download.", document.QuerySelector("#main-content h2.govuk-heading-m").Text());
             Assert.Equal("Please return to the downloads page and repeat your request.", document.QuerySelector("#main-content h2.govuk-heading-m + p").Text());
+        }
+
+
+        [Fact]
+        public async Task DownloadGenerated_ThrowsException_WhenUnexpectedErrorOccurs()
+        {
+            // Arrange
+            var guid = Guid.NewGuid();
+            var mockService = new Mock<IDownloadsService>();
+            mockService.Setup(s => s.GetProgressOfGeneratedExtractAsync(It.IsAny<Guid>(), It.IsAny<IPrincipal>()))
+                       .ThrowsAsync(new Exception("Some random error"));
+
+            using var factory = CreateFactory(mockService);
+            var client = factory.CreateClient();
+
+            // Act
+            var response  = await client.GetAsync($"/Downloads/Generated/{guid}");
+            IHtmlDocument document = await response.GetDocumentAsync();
+
+            // Assert
+            Assert.Equal(response.StatusCode, System.Net.HttpStatusCode.InternalServerError);
+            Assert.Contains("Download generation failed; Underlying error: '", document.Body.InnerHtml);
         }
 
         private WebApplicationFactory<Program> CreateFactory(Mock<IDownloadsService> mockService)
