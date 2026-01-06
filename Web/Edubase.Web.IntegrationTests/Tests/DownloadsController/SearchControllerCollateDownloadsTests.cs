@@ -45,7 +45,6 @@ namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
             Assert.Equal(System.Net.HttpStatusCode.Redirect, response.StatusCode);
             Assert.Contains("/Downloads", response.Headers.Location.ToString());
             Assert.Contains("Skip=0", response.Headers.Location.Query);
-
         }
 
         public static WebApplicationFactory<Program> CreateFactoryWithMockedDownloadsAndExtracts(
