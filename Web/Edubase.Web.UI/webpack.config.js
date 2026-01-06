@@ -110,7 +110,7 @@ const config = {
               postcssOptions: {
                 plugins: [
                   base64({
-                    excludeAtFontFace: false,
+                    excludeAtFontFace: true,
                     replaceValues: true,
                     extensions: ['.woff2', '.woff']
                   }),

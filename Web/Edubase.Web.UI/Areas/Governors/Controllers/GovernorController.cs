@@ -537,13 +537,15 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [HttpPost(GROUP_REPLACE_GOVERNOR)]
         [HttpPost(ESTAB_REPLACE_GOVERNOR)]
         [Authorize(Policy = "EdubasePolicy")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> AddEditOrReplace(CreateEditGovernorViewModel viewModel)
         {
             await PopulateSelectLists(viewModel);
             viewModel.DisplayPolicy =
-                await _governorsReadService.GetEditorDisplayPolicyAsync(viewModel.GovernorRole,
-                    viewModel.GroupUId.HasValue, User);
+                await _governorsReadService.GetEditorDisplayPolicyAsync(
+                    viewModel.GovernorRole,
+                    viewModel.GroupUId.HasValue,
+                    User);
 
             if (viewModel.GroupTypeId != 11)
             {
@@ -1113,7 +1115,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private void ErrorsToModelState<TModel>(IEnumerable<ApiError> errors)
         {
-            var type = typeof(TModel);
+            var type = typeof(TModel);  
             var properties = type.GetProperties();
             foreach (var error in errors)
             {

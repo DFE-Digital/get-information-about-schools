@@ -23,7 +23,7 @@
         {
             <p><strong>Select the local authority you are interested in</strong></p>
 
-            <ul class="govuk-list">
+            <ul id="search-localauthority-disambiguation-list" class="govuk-list">
                 @foreach (var item in Model.MatchingLocalAuthorities)
                 {
                     <li>@await Html.PartialAsync("_LocalAuthorityLink", (item, Model.OpenOnly, Model.SelectedLocalAuthorityIds))</li>

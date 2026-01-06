@@ -1,0 +1,34 @@
+{
+    "Request": {
+        "Path": {
+            "Matchers": [
+                {
+                    "Name": "WildcardMatcher",
+                    "Pattern": "/edubase/rest/governor/0/edit-policy",
+                    "IgnoreCase": true
+                }
+            ]
+        }
+    },
+    "Response": {
+        "StatusCode": 200,
+        "Headers": {
+            "Content-Type": "application/json"
+        },
+        "BodyAsJson": {
+            "Id": true,
+            "FullName": true,
+            "IsOriginalSignatoryMember": false,
+            "IsOriginalChairOfTrustees": false,
+            "AppointmentStartDate": true,
+            "AppointmentEndDate": false,
+            "RoleId": true,
+            "AppointingBodyId": true,
+            "EmailAddress": true,
+            "DOB": false,
+            "PostCode": true,
+            "PreviousFullName": false,
+            "TelephoneNumber": true
+        }
+    }
+}

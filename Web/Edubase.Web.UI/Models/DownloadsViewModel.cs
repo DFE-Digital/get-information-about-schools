@@ -87,7 +87,7 @@ namespace Edubase.Web.UI.Models
                 {
                     section.SubSections.Add(new Section
                     {
-                        Heading = "Open children's centres data ",
+                        Heading = "Open children's centres data",
                         Files = openChildrensCentresData.Select(x => new Tuple<string, FileDownload>(FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
                     });
                 }
