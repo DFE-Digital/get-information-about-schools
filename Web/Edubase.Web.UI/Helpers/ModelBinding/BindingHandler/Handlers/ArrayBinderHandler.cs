@@ -43,7 +43,7 @@ public sealed class ArrayBinderHandler(ITypeConverter converter) : PropertyBinde
     public override async Task<bool> HandleAsync(
         ModelBindingContext context, object model, PropertyInfo property)
     {
-        // Only handle array properties
+        // Only handle array properties.
         if (!property.PropertyType.IsArray)
         {
             return await base.HandleAsync(context, model, property);
@@ -61,11 +61,11 @@ public sealed class ArrayBinderHandler(ITypeConverter converter) : PropertyBinde
 
         try
         {
-            // Normalise multiple values into a single comma-delimited string
+            // Normalise multiple values into a single comma-delimited string.
             string combined =
                 valueResult.ToCombinedString();
 
-            // Delegate conversion to DefaultTypeConverter
+            // Delegate conversion to DefaultTypeConverter.
             object converted =
                 converter.Convert(
                     combined, property.PropertyType);

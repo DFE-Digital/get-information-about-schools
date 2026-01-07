@@ -56,7 +56,7 @@
         @Html.HiddenFor(x => x.OriginalStatusId)
         @Html.HiddenFor(x => x.LocalAuthorityId)
 
-        if (Model.ChangesSummary != null)
+        if (Model.ChangesSummary != null && Model.ChangesSummary.Count > 0)
         {
             @Html.HiddenFor(x => x.CloseAndMarkAsCreatedInError)
             <div class="govuk-grid-row">
@@ -66,18 +66,18 @@
 
                     <div class="button-row govuk-!-padding-top-8">
                         <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">Accept and save</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                        @Html.ActionLink("Cancel", "Details", "Group", new { id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                     </div>
                 </div>
             </div>
         }
 
-        <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
+        <div class="@Html.Conditional(Model.ChangesSummary != null && Model.ChangesSummary.Count > 0, "hidden")">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-margin-bottom-4">
                         <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@buttonSaveText</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                        @Html.ActionLink("Cancel", "Details", "Group", new { id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                     </div>
                 </div>
             </div>
@@ -273,7 +273,7 @@
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-padding-top-4">
                         <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@buttonSaveText</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                        @Html.ActionLink("Cancel", "Details", "Group", new { id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                     </div>
 
                 </div>

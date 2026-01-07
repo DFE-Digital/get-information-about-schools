@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
 using Edubase.Services.Enums;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
@@ -36,6 +37,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             Step4
         }
 
+        [BindNever]
         public eGroupTypeMode GroupTypeMode
         {
             get

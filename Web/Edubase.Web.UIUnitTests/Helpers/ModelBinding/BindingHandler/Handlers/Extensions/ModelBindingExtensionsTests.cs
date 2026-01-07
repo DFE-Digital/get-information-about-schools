@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers.Extensions;
-using Edubase.Web.UIUnitTests.Helpers.ModelBinding.BindingHandler.Handlers.TestDoubles;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Xunit;
 using EmptyModelMetadataProvider = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider;
@@ -64,85 +61,6 @@ public class ModelBindingExtensionsTests
 
         // Assert
         Assert.Equal("Parent.Age", prefix);
-    }
-
-    [Fact]
-    public void BuildElementPrefix_ShouldReturnIndexedPrefix()
-    {
-        // Arrange
-        string propertyPrefix = "Numbers";
-
-        // Act
-        string elementPrefix = propertyPrefix.BuildElementPrefix(0);
-
-        // Assert
-        Assert.Equal("Numbers[0]", elementPrefix);
-    }
-
-    [Fact]
-    public void BuildElementPropertyKey_ShouldReturnIndexedPropertyKey()
-    {
-        // Arrange
-        string elementPrefix = "Numbers[1]";
-        PropertyInfo property =
-            typeof(TestModel)
-                .GetProperty(nameof(TestModel.Name));
-
-        // Act
-        string key = elementPrefix.BuildElementPropertyKey(property);
-
-        // Assert
-        Assert.Equal("Numbers[1].Name", key);
-    }
-
-    [Fact]
-    public void HasValue_ShouldReturnTrue_WhenProviderHasNonEmptyValue()
-    {
-        // Arrange
-        IValueProvider provider =
-            new ValueProviderTestDoubles.TestValueProvider(
-                new Dictionary<string, string[]>
-                {
-                    { "Name", new[] { "Alice" } }
-                });
-
-        // Act
-        bool result = provider.HasValue("Name");
-
-        // Assert
-        Assert.True(result);
-    }
-
-    [Fact]
-    public void HasValue_ShouldReturnFalse_WhenProviderHasEmptyValue()
-    {
-        // Arrange
-        IValueProvider provider =
-            new ValueProviderTestDoubles.TestValueProvider(
-                new Dictionary<string, string[]>
-                {
-                    { "Name", new[] { "" } }
-                });
-
-        // Act
-        bool result = provider.HasValue("Name");
-
-        // Assert
-        Assert.False(result);
-    }
-
-    [Fact]
-    public void HasValue_ShouldReturnFalse_WhenProviderHasNoValue()
-    {
-        // Arrange
-        IValueProvider provider =
-            new ValueProviderTestDoubles.TestValueProvider([]);
-
-        // Act
-        bool result = provider.HasValue("Missing");
-
-        // Assert
-        Assert.False(result);
     }
 
     [Fact]

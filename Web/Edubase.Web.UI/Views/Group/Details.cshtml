@@ -167,7 +167,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @id= "edit-details-button", @class = "govuk-button govuk-button--secondary" })
+                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId }, new { @id= "edit-details-button", @class = "govuk-button govuk-button--secondary" })
                     }
                     <div class="detail-summary">
                         @* <dl class="gias-summary-list gias-summary-list--70 @Html.Conditional(Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.SchoolSponsor, eLookupGroupType.Federation, eLookupGroupType.Trust), "gias-summary-list--40")"> *@
@@ -204,7 +204,7 @@
                         {
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-full">
-                                    @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @id = $"edit-{StringUtils.ElementIdFormat(Model.EstablishmentsPluralName)}-button", @class = "govuk-button govuk-button--secondary" })
+                                    @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId }, new { @id = $"edit-{StringUtils.ElementIdFormat(Model.EstablishmentsPluralName)}-button", @class = "govuk-button govuk-button--secondary" })
                                 </div>
                             </div>
                         }
@@ -290,7 +290,7 @@
                             {
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-full">
-                                        @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary lower" })
+                                        @Html.ActionLink($"Edit  {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId }, new { @class = "govuk-button govuk-button--secondary lower" })
                                     </div>
                                 </div>
                             }
@@ -305,7 +305,7 @@
                                 {
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-full">
-                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
+                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
                                         </div>
                                     </div>
                                 }
@@ -316,7 +316,7 @@
                                 {
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-full">
-                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
+                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
                                         </div>
                                     </div>
                                 }
@@ -437,33 +437,33 @@
                                             <dd class="gias-summary-list__value">@(item.LinkType?.ToString() ?? "Not recorded")</dd>
                                         </div>
                                     }
-                                                            </dl>
-                                                            </td>
-                                                            <td data-label="Suggested by" class="govuk-table__cell">
-                                                                @item.OriginatorUserName
-                                                            </td>
-                                                            </tr>
-                                                        }
-                                            </tbody>
-                                            </table>
+                                    </dl>
+                                    </td>
+                                    <td data-label="Suggested by" class="govuk-table__cell">
+                                        @item.OriginatorUserName
+                                    </td>
+                                    </tr>
+                                }
+                                </tbody>
+                                </table>
 
-                                            if (Model.ChangeHistory.PageCount > 1)
-                                            {
-                                                <div class="lower-pagination push--bottom">
-                                                    @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
-                                                </div>
-                                                <back-to-top-link />
-                                            }
-                                        }
+                                if (Model.ChangeHistory.PageCount > 1)
+                                {
+                                    <div class="lower-pagination push--bottom">
+                                        @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+                                    </div>
+                                    <back-to-top-link />
+                                }
+                            }
                             </div>
                         }
                     </div>
-                    </div>
-                    </div>
-                    </div>
+            </div>
+        </div>
+    </div>
 
-                    @section ViewScripts
-                    {
-                        <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
-                        <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
-                    }
+    @section ViewScripts
+    {
+        <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
+        <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
+    }

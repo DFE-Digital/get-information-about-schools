@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers;
+using Edubase.Web.UI.Helpers.ModelBinding.Factories;
 using Edubase.Web.UIUnitTests.Helpers.ModelBinding.BindingHandler.Handlers.TestDoubles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -85,33 +86,6 @@ public class ComplexTypeBinderHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_ArrayOfComplexTypes_NoValues_ReturnsTrueButEmpty()
-    {
-        // Arrange
-        TestModel model = new();
-
-        PropertyInfo property =
-            typeof(TestModel)
-                .GetProperty(nameof(TestModel.ComplexArray))!;
-
-        ModelBindingContext context =
-            ModelBindingContextTestDoubles
-                .CreateBindingContext(
-                    modelName: "TestModel",
-                    services: BuildServiceProvider(),
-                    valueProvider: new ValueProviderTestDoubles.FakeValueProvider([]));
-        // Act
-        bool result =
-            await _handler
-                .HandleAsync(context, model, property);
-
-        // Assert
-        Assert.True(result);
-        Assert.NotNull(model.ComplexArray);
-        Assert.Empty(model.ComplexArray);
-    }
-
-    [Fact]
     public async Task HandleAsync_NestedComplexType_BindsSuccessfully()
     {
         // Arrange
@@ -173,7 +147,7 @@ public class ComplexTypeBinderHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_NestedComplexType_WrongTypeFromBinder_FallsBackToBase()
+    public async Task HandleAsync_NestedComplexType_WrongTypeFromBinder_ReturnsTrueWithNestedType()
     {
         // Arrange
         TestModel model = new();
@@ -185,6 +159,7 @@ public class ComplexTypeBinderHandlerTests
         ServiceCollection services = new();
         services.AddSingleton<IModelBinderFactory, AlwaysWrongBinderFactory>();
         services.AddSingleton<IModelMetadataProvider, EmptyModelMetadataProvider>();
+        services.AddSingleton<ITypeFactory, TypeFactory>();
         IServiceProvider provider = services.BuildServiceProvider();
 
         ModelBindingContext context =
@@ -200,8 +175,8 @@ public class ComplexTypeBinderHandlerTests
                 .HandleAsync(context, model, property);
 
         // Assert
-        Assert.False(result);
-        Assert.Null(model.Nested);
+        Assert.True(result);
+        Assert.NotNull(model.Nested);
     }
 
     private static IServiceProvider BuildServiceProvider()

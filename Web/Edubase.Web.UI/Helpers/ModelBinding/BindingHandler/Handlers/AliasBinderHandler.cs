@@ -41,12 +41,12 @@ public sealed class AliasBinderHandler(ITypeConverter converter) : PropertyBinde
 
             try
             {
-                // Normalise multiple values into a single string
+                // Normalise multiple values into a single string.
                 string combined = valueResult.ToCombinedString();
-                // Convert to the target property type
+                // Convert to the target property type.
                 object converted =
                     converter.Convert(combined, property.PropertyType);
-                // Assign the converted value
+                // Assign the converted value.
                 property.SetValue(model, converted);
 
                 return true;
@@ -57,7 +57,7 @@ public sealed class AliasBinderHandler(ITypeConverter converter) : PropertyBinde
             }
         }
 
-        // Pass to next handler in the chain (ArrayBinderHandler, ListBinderHandler, etc.)
+        // Pass to next handler in the chain (ArrayBinderHandler, ListBinderHandler, etc.).
         return await base.HandleAsync(context, model, property);
     }
 }

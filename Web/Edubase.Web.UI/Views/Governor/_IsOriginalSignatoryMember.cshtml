@@ -1,0 +1,13 @@
+@using Edubase.Web.UI.Helpers
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.IsOriginalSignatoryMember)
+{
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalSignatoryMember)">
+        @Html.LabelFor(model => model.IsOriginalSignatoryMember, "Original signatory member", new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(model => model.IsOriginalSignatoryMember, null, new { @class = "govuk-error-message" })
+        @Html.DropDownListFor(model => model.IsOriginalSignatoryMember, Model.YesNoSelect, new {
+            @class = $"govuk-select {Html.TextBoxValidationClass(x => x.IsOriginalSignatoryMember)}"
+        })
+    </div>
+}

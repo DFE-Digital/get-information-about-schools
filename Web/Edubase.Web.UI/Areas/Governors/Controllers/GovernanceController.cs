@@ -20,13 +20,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IEstablishmentWriteService _establishmentWriteService;
         private readonly IGroupsWriteService _groupWriteService;
-        private readonly LayoutHelper _layoutHelper;
+        private readonly ILayoutHelper _layoutHelper;
 
         public GovernanceController(
             IEstablishmentReadService establishmentReadService,
             IEstablishmentWriteService establishmentWriteService,
             IGroupsWriteService groupWriteService,
-            LayoutHelper layoutHelper)
+            ILayoutHelper layoutHelper)
         {
             _establishmentReadService = establishmentReadService;
             _establishmentWriteService = establishmentWriteService;

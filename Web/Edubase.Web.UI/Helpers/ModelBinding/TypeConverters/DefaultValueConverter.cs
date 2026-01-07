@@ -44,11 +44,11 @@ public class DefaultValueConverter : IValueConverter
             return null;
         }
 
-        // Unwrap nullable types
+        // Unwrap nullable types.
         Type underlyingType =
             Nullable.GetUnderlyingType(targetType) ?? targetType;
 
-        // Reject comma-separated values for single primitive types
+        // Reject comma-separated values for single primitive types.
         if (value.Contains(',') &&
             (underlyingType.IsPrimitive ||
             underlyingType == typeof(decimal)))
@@ -57,16 +57,16 @@ public class DefaultValueConverter : IValueConverter
                 $"Cannot bind comma-separated value '{value}' to single type {targetType.Name}");
         }
 
-        // Handle enums
+        // Handle enums.
         if (underlyingType.IsEnum)
         {
             return Enum.Parse(underlyingType, value, ignoreCase: true);
         }
 
-        // Special handling for DateTime
+        // Special handling for DateTime.
         if (underlyingType == typeof(DateTime))
         {
-            // Try UK format first
+            // Try UK format first.
             if (DateTime.TryParseExact(value,
                 UkDateTimeFormat,
                 CultureInfo.InvariantCulture,
@@ -76,7 +76,7 @@ public class DefaultValueConverter : IValueConverter
                 return parsed;
             }
 
-            // Try en-GB culture
+            // Try en-GB culture.
             if (DateTime.TryParse(value,
                 CultureInfo.GetCultureInfo(EnGbCultureName),
                 DateTimeStyles.None,
@@ -85,11 +85,11 @@ public class DefaultValueConverter : IValueConverter
                 return parsed;
             }
 
-            // Fallback to invariant
+            // Fallback to invariant.
             return DateTime.Parse(value, CultureInfo.InvariantCulture);
         }
 
-        // Use TypeDescriptor converter for other types
+        // Use TypeDescriptor converter for other types.
         TypeConverter converter =
             TypeDescriptor.GetConverter(underlyingType);
 

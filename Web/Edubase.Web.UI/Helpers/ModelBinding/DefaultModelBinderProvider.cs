@@ -36,14 +36,14 @@ public class DefaultModelBinderProvider : IModelBinderProvider
     /// </returns>
     public IModelBinder GetBinder(ModelBinderProviderContext context)
     {
-        // Resolve a scope factory from the root service provider
+        // Resolve a scope factory from the root service provider.
         IServiceScopeFactory scopeFactory =
             _services.GetRequiredService<IServiceScopeFactory>();
 
-        // Create a new service scope for resolving scoped services
+        // Create a new service scope for resolving scoped services.
         IServiceScope scope = scopeFactory.CreateScope();
 
-        // Resolve the required services from the scoped provider
+        // Resolve the required services from the scoped provider.
         IEnumerable<IPropertyBinderHandler> handlers =
             scope.ServiceProvider
                 .GetRequiredService<IEnumerable<IPropertyBinderHandler>>();
@@ -52,7 +52,7 @@ public class DefaultModelBinderProvider : IModelBinderProvider
             scope.ServiceProvider
                 .GetRequiredService<ITypeFactory>();
 
-        // Construct the model binder with injected handlers and factory
+        // Construct the model binder with injected handlers and factory.
         DefaultModelBinder binder = new(handlers, factory);
 
         return binder;

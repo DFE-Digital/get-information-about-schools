@@ -25,13 +25,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IGovernorsWriteService _governorsWriteService;
-        private readonly LayoutHelper _layoutHelper;
+        private readonly ILayoutHelper _layoutHelper;
 
         public SharedGovernorController(
             ICachedLookupService cachedLookupService,
             IGovernorsReadService governorsReadService,
             IGovernorsWriteService governorsWriteService,
-            LayoutHelper layoutHelper)
+            ILayoutHelper layoutHelper)
         {
             _cachedLookupService = cachedLookupService;
             _governorsReadService = governorsReadService;

@@ -9,6 +9,7 @@ using Castle.Components.DictionaryAdapter;
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
     using Edubase.Services.Domain;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using GT = eLookupGroupType;
 

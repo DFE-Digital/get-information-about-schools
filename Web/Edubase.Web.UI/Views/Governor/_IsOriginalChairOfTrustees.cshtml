@@ -1,0 +1,13 @@
+@using Edubase.Web.UI.Helpers
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.IsOriginalChairOfTrustees)
+{
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalChairOfTrustees)">
+        @Html.LabelFor(model => model.IsOriginalChairOfTrustees, "Original chair of trustees", new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(x => x.IsOriginalChairOfTrustees, null, new { @class = "govuk-error-message" })
+        @Html.DropDownListFor(x => x.IsOriginalChairOfTrustees, Model.YesNoSelect, new {
+            @class = $"govuk-select {Html.TextBoxValidationClass(x => x.IsOriginalChairOfTrustees)}"
+        })
+    </div>
+}

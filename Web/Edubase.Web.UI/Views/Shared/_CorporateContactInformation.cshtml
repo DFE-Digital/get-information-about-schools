@@ -1,0 +1,29 @@
+@using Edubase.Web.UI.Models
+@model CorporateContactViewModel
+
+<h2 class="govuk-heading-s">Corporate contact</h2>
+
+<details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+            More details
+        </span>
+    </summary>
+    <div class="govuk-details__text">
+        <p class="govuk-body-s">
+            This only applies to organisations (most often a diocese or higher education institution) which are a corporate member or director/trustee of an academy trust. They should provide contact details here for someone in their organisation who can provide information on which members of their organisation have acted in the capacity of corporate member or corporate director/trustee.
+        </p>
+    </div>
+</details>
+
+<p class="govuk-body-s">@(!string.IsNullOrWhiteSpace(Model.CorporateContact) ? Model.CorporateContact : "Not recorded")</p>
+
+@if (Model.EditMode)
+{
+    @Html.RouteLink(
+    "Edit corporate contact",
+        "GroupEditCorporateContact",
+        new { groupUId = Model.GroupUId },
+        new { @class = "govuk-button govuk-button--secondary" }
+    )
+}

@@ -23,7 +23,7 @@ public class CollectionFactory(
     /// </exception>
     public object CreateListInstance(Type listType, Type elementType, object[] items)
     {
-        // Handle array types (e.g., int[], string[])
+        // Handle array types (e.g., int[], string[]).
         if (listType.IsArray)
         {
             Array array = Array.CreateInstance(elementType, items.Length);
@@ -31,21 +31,21 @@ public class CollectionFactory(
             return array;
         }
 
-        // Handle abstract or interface types by falling back to List<T>
+        // Handle abstract or interface types by falling back to List<T>.
         if (listType.IsInterface || listType.IsAbstract)
         {
             return CreateAndPopulateList(
                 concreteType: typeof(List<>).MakeGenericType(elementType), items);
         }
 
-        // Handle concrete types that implement IList
+        // Handle concrete types that implement IList.
         if (typeof(IList).IsAssignableFrom(listType))
         {
             return CreateAndPopulateList(
                 concreteType: listType, items);
         }
 
-        // If none of the above, the type is unsupported
+        // If none of the above, the type is unsupported.
         throw new InvalidOperationException(
             $"Unable to create a list instance for type {listType.FullName}");
     }

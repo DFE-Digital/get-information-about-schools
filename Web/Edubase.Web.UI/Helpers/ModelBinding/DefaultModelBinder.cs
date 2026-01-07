@@ -74,7 +74,7 @@ public class DefaultModelBinder : IModelBinder
             return;
         }
 
-        // Complex type binding
+        // Complex type binding.
         object modelInstance = null!;
 
         try

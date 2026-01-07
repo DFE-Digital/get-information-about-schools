@@ -4,9 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using System.Web;
-using Autofac.Core;
 using AzureTableLogger;
 using AzureTableLogger.Services;
 using Edubase.Common.Cache;
@@ -45,6 +43,7 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Areas.Groups.Models.Validators;
+using Edubase.Web.UI.Authentication;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler;
@@ -59,6 +58,7 @@ using Edubase.Web.UI.Models.Notifications.Validators;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
@@ -66,7 +66,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
-
+using Sustainsys.Saml2.AspNetCore2;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -227,7 +227,7 @@ builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
 builder.Services.AddSingleton<IUserPreferenceRepository, UserPreferenceRepository>();
 builder.Services.AddTransient<IBlobService, BlobService>();
 builder.Services.AddTransient<ILayoutHelper, LayoutHelper>();
-builder.Services.AddScoped<HttpContextBase>(_ => new HttpContextWrapper(HttpContext.Current));
+builder.Services.AddScoped<HttpContextBase>(_ => new HttpContextWrapper(System.Web.HttpContext.Current));
 builder.Services.AddScoped<IClientStorage, BrowserClientStorage>();
 builder.Services.AddSingleton<ApiRecorderSessionItemRepository>();
 builder.Services.AddSingleton<WebLogItemRepository>();
@@ -413,17 +413,79 @@ builder.Services.AddScoped<IGovernorsReadService>(provider =>
     return new GovernorsReadApiService(defaultWrapper, governorWrapper, establishment);
 });
 
-builder.Services.AddAuthentication("Saml2")
-    .AddCookie("Saml2", options =>
+// Governors Write Service
+builder.Services.AddScoped<IGovernorsWriteService>(provider =>
+{
+    var defaultWrapper = provider.GetRequiredService<IHttpClientWrapper>() as HttpClientWrapper;
+    return new GovernorsWriteApiService(defaultWrapper);
+});
+
+// -------------------- Authentication --------------------
+//
+// Determines whether the simulator SAML2 authentication flow should be used.
+// Controlled by the AppSettings:UseSimulatorAuth configuration flag.
+bool useSimulator = builder.Configuration.GetValue<bool>("AppSettings:UseSimulatorAuth");
+
+/// <summary>
+/// Configures the authentication schemes for the application.
+/// Sets up the default cookie schemes and toggles between real and simulator SAML2 flows.
+/// </summary>
+var authBuilder = builder.Services.AddAuthentication(options =>
+{
+    // Cookies handle sign-in/out and forbid
+    options.DefaultScheme = "ApplicationCookie";
+
+    // SAML is used only when we need to challenge (redirect to IdP)
+    options.DefaultChallengeScheme = Saml2Defaults.Scheme;
+
+    // Important: forbid should go to cookies, not SAML
+    options.DefaultForbidScheme = "ApplicationCookie";
+})
+.AddCookie("ApplicationCookie", options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+
+    // Critical for SAML state cookies to survive IdP redirects
+    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+})
+.AddCookie("ExternalCookie", options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+    // SameSite/Secure here too
+    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
+/// <summary>
+/// Registers either the simulator or real SAML2 authentication flow
+/// depending on the configuration flag.
+/// </summary>
+if (useSimulator)
+{
+    authBuilder.AddSaml2SimulatorAuthenticationFlow(builder.Configuration);
+}
+else
+{
+    authBuilder.AddSaml2AuthenticationFlow(builder.Configuration);
+}
+//
+// -------------------- End of Authentication --------------------
+
+// ---------------------- Authorization ------------------------
+//
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("EdubasePolicy", policy =>
     {
-        options.Events.OnRedirectToLogin = context =>
-        {
-            var returnUrl = context.Request.Path + context.Request.QueryString;
-            var redirectUrl = $"/Account/ExternalLoginCallback?ReturnUrl={Uri.EscapeDataString(returnUrl)}";
-            context.Response.Redirect(redirectUrl);
-            return Task.CompletedTask;
-        };
+        policy.RequireAuthenticatedUser();
     });
+});
+//
+// -------------------- End of Authorization --------------------
+
 
 builder.Services.AddHttpContextAccessor();
 

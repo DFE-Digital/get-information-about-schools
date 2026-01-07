@@ -34,23 +34,23 @@ public class DefaultTypeConverter(
     /// </exception>
     public object Convert(string value, Type targetType)
     {
-        // Return null for empty or whitespace input
+        // Return null for empty or whitespace input.
         if (string.IsNullOrWhiteSpace(value))
         {
             return null;
         }
 
-        // Unwrap nullable types to get the actual underlying type
+        // Unwrap nullable types to get the actual underlying type.
         Type underlyingType =
             Nullable.GetUnderlyingType(targetType) ?? targetType;
 
-        // If the type is not a collection, delegate to the value converter
+        // If the type is not a collection, delegate to the value converter.
         if (!underlyingType.IsCollectionType())
         {
             return valueConverter.Convert(value, underlyingType);
         }
 
-        // Determine the element type of the collection
+        // Determine the element type of the collection.
         Type elementType =
             underlyingType.GetElementType()
             ?? (underlyingType.IsGenericType
@@ -59,11 +59,12 @@ public class DefaultTypeConverter(
             ?? throw new InvalidCastException(
                 $"Cannot determine element type for {targetType.Name}");
 
-        // Parse and convert the collection items
+        // Parse and convert the collection items.
         object[] items = ParseCollectionItems(value, elementType);
 
-        // Create and return the populated collection instance
-        return collectionFactory.CreateListInstance(underlyingType, elementType, items);
+        // Create and return the populated collection instance.
+        return collectionFactory
+            .CreateListInstance(underlyingType, elementType, items);
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ public class DefaultTypeConverter(
     /// <returns>An array of converted items.</returns>
     private object[] ParseCollectionItems(string value, Type elementType)
     {
-        // If the element type is primitive or enum, split and convert each segment
+        // If the element type is primitive or enum, split and convert each segment.
         if (elementType.IsPrimitiveType() || elementType.IsEnum || elementType == typeof(string))
         {
             return [.. value
@@ -85,14 +86,14 @@ public class DefaultTypeConverter(
                         return valueConverter.Convert(str.Trim(), elementType);
                     }
                     catch{
-                        // Skip invalid entries
+                        // Skip invalid entries.
                         return null;
                     }
                 })
                 .Where(obj => obj != null)];
         }
 
-        // For non-primitive types, treat the entire string as a single item
+        // For non-primitive types, treat the entire string as a single item.
         return [valueConverter.Convert(value, elementType)];
     }
 }

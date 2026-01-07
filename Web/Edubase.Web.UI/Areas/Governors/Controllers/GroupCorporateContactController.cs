@@ -15,12 +15,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
     {
         private readonly IGroupReadService _groupReadService;
         private readonly IGroupsWriteService _groupWriteService;
-        private readonly LayoutHelper _layoutHelper;
+        private readonly ILayoutHelper _layoutHelper;
 
         public GroupCorporateContactController(
             IGroupReadService groupReadService,
             IGroupsWriteService groupWriteService,
-            LayoutHelper layoutHelper)
+            ILayoutHelper layoutHelper)
         {
             _groupReadService = groupReadService;
             _groupWriteService = groupWriteService;

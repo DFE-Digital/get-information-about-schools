@@ -226,12 +226,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <param name="gid"></param>
         /// <returns></returns>
         [Authorize(Policy = "EdubasePolicy")]
-        [Route("Group/AddGovernor")]
-        [Route("Estab/AddGovernor")]
-        [Route("Group/EditGovernor")]
-        [Route("Estab/EditGovernor")]
-        [Route("Group/ReplaceGovernor")]
-        [Route("Estab/ReplaceGovernor")]
+        [Route(GROUP_ADD_GOVERNOR, Name = "GroupAddGovernor"),
+         Route(ESTAB_ADD_GOVERNOR, Name = "EstabAddGovernor"),
+         Route(GROUP_EDIT_GOVERNOR, Name = "GroupEditGovernor"),
+         Route(ESTAB_EDIT_GOVERNOR, Name = "EstabEditGovernor"),
+         Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"),
+         Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
+         HttpGet,
+         EdubaseAuthorize]
         public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn,
             eLookupGovernorRole? role, int? gid)
         {

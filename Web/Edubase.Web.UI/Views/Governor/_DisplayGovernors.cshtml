@@ -1,5 +1,6 @@
 @using Edubase.Services.Enums
 @using Edubase.Web.UI.Areas.Governors.Models
+@using Edubase.Web.UI.Models
 @model GovernorsGridViewModel
 
 <div class="govuk-grid-row">
@@ -10,7 +11,19 @@
             {
                 if (grid.Rows.Any())
                 {
-                    @await Html.PartialAsync("_GovernorEditor", grid)
+                    @* @await Html.PartialAsync("_GovernorEditor", grid) *@
+                    @await Html.PartialAsync("_GovernorEditor", new GovernorEditorViewModel
+                    {
+                        Grid = grid,
+                        Historic = false,
+                        EditMode = Model.EditMode,
+                        RemovalGid = Model.RemovalGid,
+                        EstablishmentUrn = Model.EstablishmentUrn,
+                        GroupUId = Model.GroupUId,
+                        GovernorShared = Model.GovernorShared,
+                        GovernorPermissions = Model.GovernorPermissions,
+                        RemovalAppointmentEndDate = Model.RemovalAppointmentEndDate.ToDateTime()
+                    })
                 }
             }
 
@@ -29,7 +42,19 @@
                         {
                             if (grid.Rows.Any())
                             {
-                                @await Html.PartialAsync("_GovernorEditor", grid)
+                                @* @await Html.PartialAsync("_GovernorEditor", grid) *@
+                                @await Html.PartialAsync("_GovernorEditor", new GovernorEditorViewModel
+                                {
+                                    Grid = grid,
+                                    Historic = false,
+                                    EditMode = Model.EditMode,
+                                    RemovalGid = Model.RemovalGid,
+                                    EstablishmentUrn = Model.EstablishmentUrn,
+                                    GroupUId = Model.GroupUId,
+                                    GovernorShared = Model.GovernorShared,
+                                    GovernorPermissions = Model.GovernorPermissions,
+                                    RemovalAppointmentEndDate = Model.RemovalAppointmentEndDate.ToDateTime()
+                                })
                             }
                         }
                     </div>

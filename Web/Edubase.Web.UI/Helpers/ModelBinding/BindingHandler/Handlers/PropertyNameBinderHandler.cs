@@ -22,7 +22,6 @@ namespace Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers;
 /// </param>
 public class PropertyNameBinderHandler(ITypeConverter converter) : PropertyBinderHandler
 {
-
     /// <summary>
     /// Attempts to bind a property by looking up its value in the <see cref="ModelBindingContext.ValueProvider"/>.
     /// </summary>
@@ -36,25 +35,40 @@ public class PropertyNameBinderHandler(ITypeConverter converter) : PropertyBinde
     public override async Task<bool> HandleAsync(
         ModelBindingContext context, object model, PropertyInfo property)
     {
-        // Determine the property prefix (model name + property name)
-        string propertyPrefix =
-            context.BuildPropertyPrefix(property);
-
-        // Attempt to retrieve the value from the value provider
-        ValueProviderResult valueResult =
-            context.ValueProvider.GetValue(propertyPrefix);
-
-        if (!valueResult.HasValues())
+        // Skip properties that cannot or should not be bound:
+        // - Properties marked with [BindNever]
+        // - Read-only properties (no setter)
+        // - Indexers
+        if (property.IsDefined(typeof(BindNeverAttribute), inherit: true)
+            || !property.CanWrite
+            || property.GetIndexParameters().Length > 0)
         {
-            // No value found, delegate to the next handler
             return await base.HandleAsync(context, model, property);
         }
 
-        // Convert the raw value to the target property type
-        object converted =
-            converter.Convert(valueResult.FirstValue, property.PropertyType);
+        // Always build an exact key: ModelName.PropertyName.
+        // This avoids prefix-matching issues where unrelated values bind to the wrong property.
+        string key =
+            string.IsNullOrEmpty(context.ModelName)
+                ? property.Name
+                : $"{context.ModelName}.{property.Name}";
 
-        // Assign the converted value to the property
+        // Try to get the value from the ValueProvider using the exact key.
+        ValueProviderResult valueResult =
+            context.ValueProvider.GetValue(key);
+
+        if (!valueResult.HasValues())
+        {
+            // No value found — pass to next handler.
+            return await base.HandleAsync(context, model, property);
+        }
+
+        // Convert the raw string to the target type.
+        object converted =
+            converter.Convert(
+                valueResult.FirstValue, property.PropertyType);
+
+        // Assign the converted value.
         property.SetValue(model, converted);
 
         return true;

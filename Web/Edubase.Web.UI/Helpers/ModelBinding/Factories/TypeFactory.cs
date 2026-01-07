@@ -21,7 +21,7 @@ public sealed class TypeFactory : ITypeFactory
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        // Retrieve or build a delegate for parameterless constructor
+        // Retrieve or build a delegate for parameterless constructor.
         Func<object> creator =
             (Func<object>) GetOrAddCreator(
                 type, argTypes: Type.EmptyTypes);
@@ -37,13 +37,13 @@ public sealed class TypeFactory : ITypeFactory
         ArgumentNullException.ThrowIfNull(type);
         args ??= [];
 
-        // Determine argument types from provided values
+        // Determine argument types from provided values.
         Type[] argTypes =
             Array.ConvertAll(
                 array: args,
                 converter: obj => obj?.GetType() ?? typeof(object));
 
-        // Retrieve or build a delegate for parameterized constructor
+        // Retrieve or build a delegate for parameterized constructor.
         Func<object[], object> creator =
             (Func<object[], object>) GetOrAddCreator(type, argTypes);
 
@@ -62,20 +62,20 @@ public sealed class TypeFactory : ITypeFactory
     /// </summary>
     private Delegate GetOrAddCreator(Type type, Type[] argTypes)
     {
-        // Build a signature key string from argument types
+        // Build a signature key string from argument types. 
         string sigKey =
             string.Join(",", Array.ConvertAll(
                 argTypes, type => type.FullName ?? "null"));
 
         return Cache.GetOrAdd((type, sigKey), _ =>
         {
-            // Find matching constructor
+            // Find matching constructor.
             ConstructorInfo ctor =
                 type.GetConstructor(argTypes)
                     ?? throw new InvalidOperationException(
                         $"No matching constructor found for {type.FullName}.");
 
-            // Choose appropriate delegate builder
+            // Choose appropriate delegate builder.
             return (Delegate) (
                 argTypes.Length == 0
                     ? BuildParameterlessCreator(ctor, type)
@@ -88,7 +88,7 @@ public sealed class TypeFactory : ITypeFactory
     /// </summary>
     private static object BuildParameterlessCreator(ConstructorInfo ctor, Type type)
     {
-        // Create a dynamic method that returns object
+        // Create a dynamic method that returns object.
         DynamicMethod dynamicMethod =
             new DynamicMethod(
                 name: $"{type.Name}Ctor",
@@ -96,15 +96,15 @@ public sealed class TypeFactory : ITypeFactory
                 parameterTypes: Type.EmptyTypes,
                 m: typeof(object).Module);
 
-        // Get IL generator
+        // Get IL generator.
         ILGenerator intermediateLanguageGenerator =
             dynamicMethod.GetILGenerator();
 
-        // Emit IL: newobj ctor → ret
+        // Emit IL: newobj ctor → ret.
         intermediateLanguageGenerator.Emit(OpCodes.Newobj, ctor);
         intermediateLanguageGenerator.Emit(OpCodes.Ret);
 
-        // Return compiled delegate
+        // Return compiled delegate.
         return dynamicMethod.CreateDelegate(
             delegateType: typeof(Func<object>));
     }
@@ -115,7 +115,7 @@ public sealed class TypeFactory : ITypeFactory
     private object BuildParameterizedCreator(
         ConstructorInfo ctor, Type[] argTypes)
     {
-        // Create a dynamic method that takes object[] and returns object
+        // Create a dynamic method that takes object[] and returns object.
         DynamicMethod dynamicMethod =
             new DynamicMethod(
                  name: "${type.Name}CtorArgs",
@@ -126,7 +126,7 @@ public sealed class TypeFactory : ITypeFactory
         // Get IL generator
         ILGenerator intermediateLanguageGenerator = dynamicMethod.GetILGenerator();
 
-        // Emit IL to load each argument from object[] and cast/unbox
+        // Emit IL to load each argument from object[] and cast/unbox.
         for (int i = 0; i < argTypes.Length; i++)
         {
             EmitArgumentLoad(
@@ -149,9 +149,9 @@ public sealed class TypeFactory : ITypeFactory
         ILGenerator intermediateLanguageGenerator, int index, Type argType)
     {
         // Load object[] argument
-        intermediateLanguageGenerator.Emit(opcode: OpCodes.Ldarg_0);        // push object[] onto stack
-        intermediateLanguageGenerator.Emit(opcode: OpCodes.Ldc_I4, index);  // push index
-        intermediateLanguageGenerator.Emit(opcode: OpCodes.Ldelem_Ref);     // load element at index
+        intermediateLanguageGenerator.Emit(opcode: OpCodes.Ldarg_0);        // push object[] onto stack.
+        intermediateLanguageGenerator.Emit(opcode: OpCodes.Ldc_I4, index);  // push index.
+        intermediateLanguageGenerator.Emit(opcode: OpCodes.Ldelem_Ref);     // load element at index.
 
         // Cast or unbox depending on type
         if (argType.IsValueType){
