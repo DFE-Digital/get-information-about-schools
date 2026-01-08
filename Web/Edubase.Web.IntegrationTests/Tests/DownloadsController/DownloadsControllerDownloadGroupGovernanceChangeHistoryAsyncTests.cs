@@ -13,52 +13,54 @@ using Moq;
 
 namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
 {
-    public sealed class DownloadsControllerDownloadGovernanceChangeHistoryAsyncTests
+    public sealed class DownloadsControllerDownloadGroupGovernanceChangeHistoryAsyncTests
     {
         [Fact]
-        public async Task DownloadGovernanceChangeHistoryAsync_RedirectsToExpectedUrl()
+        public async Task DownloadGroupGovernanceChangeHistoryAsync_RedirectsToExpectedUrl()
         {
             // Arrange
-            Mock<IEstablishmentReadService> establishmentReadServiceMock = new();
-            establishmentReadServiceMock
+            Mock<IGroupDownloadService> groupDownloadServiceMock = new();
+            groupDownloadServiceMock
                 .Setup(s => s.GetGovernanceChangeHistoryDownloadAsync(It.IsAny<int>(), It.IsAny<DownloadType>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(new FileDownloadDto { Url = "/mock-governance-history-url" });
+                .ReturnsAsync(new DownloadDto { Url = "/mock-group-governance-history-url" });
 
             using WebApplicationFactory<Program> factory = CreateFactoryWithMockedDownloadsAndExtracts(
                 configureAdditionalServices: services =>
                 {
-                    services.AddSingleton(establishmentReadServiceMock.Object);
+                    services.RemoveAll<IGroupDownloadService>();
+                    services.AddSingleton(groupDownloadServiceMock.Object);
                 });
 
             HttpClient client = factory.CreateClient();
 
             // Act
-            HttpResponseMessage response = await client.GetAsync("/Downloads/Download/Establishment/123/1");
+            HttpResponseMessage response = await client.GetAsync("/Downloads/Download/Group/456/Governance/1");
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.Equal("/mock-governance-history-url", response.Headers.Location.ToString());
+            Assert.Equal("/mock-group-governance-history-url", response.Headers.Location.ToString());
         }
 
         [Fact]
-        public async Task DownloadGovernanceChangeHistoryAsync_ReturnsError_WhenServiceReturnsNull()
+        public async Task DownloadGroupGovernanceChangeHistoryAsync_ReturnsError_WhenServiceReturnsNull()
         {
             // Arrange
-            Mock<IEstablishmentReadService> establishmentReadServiceMock = new();
-            establishmentReadServiceMock
+            Mock<IGroupDownloadService> groupDownloadServiceMock = new();
+            groupDownloadServiceMock
                 .Setup(s => s.GetGovernanceChangeHistoryDownloadAsync(It.IsAny<int>(), It.IsAny<DownloadType>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync((FileDownloadDto) null);
+                .ReturnsAsync((DownloadDto)null);
 
             using WebApplicationFactory<Program> factory = CreateFactoryWithMockedDownloadsAndExtracts(
                 configureAdditionalServices: services =>
                 {
-                    services.AddSingleton(establishmentReadServiceMock.Object);
+                    services.RemoveAll<IGroupDownloadService>();
+                    services.AddSingleton(groupDownloadServiceMock.Object);
                 });
 
-            var client = factory.CreateClient();
+            HttpClient client = factory.CreateClient();
 
             // Act
-            var response = await client.GetAsync("/Downloads/Download/Establishment/123/1");
+            HttpResponseMessage response = await client.GetAsync("/Downloads/Download/Group/456/Governance/1");
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);

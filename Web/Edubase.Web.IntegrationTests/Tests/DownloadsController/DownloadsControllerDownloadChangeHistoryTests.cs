@@ -15,7 +15,6 @@ namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
 {
     public sealed class DownloadsControllerDownloadChangeHistoryTests
     {
-
         [Fact]
         public async Task DownloadChangeHistory_RedirectsToGroupHistory_WhenGroupIdProvided()
         {
@@ -67,7 +66,7 @@ namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
         }
 
         [Fact]
-        public async Task DownloadChangeHistory_ReturnsNull_WhenNoParametersProvided()
+        public async Task DownloadChangeHistory_ReturnsError_WhenNoParametersProvided()
         {
             // Arrange
             using WebApplicationFactory<Program> factory = CreateFactoryWithMockedDownloadsAndExtracts();
@@ -76,6 +75,54 @@ namespace Edubase.Web.IntegrationTests.Tests.DownloadsController
 
             // Act
             HttpResponseMessage response = await client.GetAsync("/Downloads/Download/ChangeHistory/1");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task DownloadChangeHistory_ReturnsError_WhenDownloadChangeHistoryServiceReturnsNull()
+        {
+            // Arrange
+            Mock<IGroupDownloadService> groupReadServiceMock = new();
+            groupReadServiceMock
+                .Setup(s => s.DownloadGroupHistory(It.IsAny<int>(), It.IsAny<DownloadType>(), null, null, null, It.IsAny<IPrincipal>()))
+                .ReturnsAsync((DownloadDto)null);
+
+            using WebApplicationFactory<Program> factory = CreateFactoryWithMockedDownloadsAndExtracts(
+                configureAdditionalServices: services =>
+                {
+                    services.AddSingleton(groupReadServiceMock.Object);
+                });
+
+            HttpClient client = factory.CreateClient();
+
+            // Act
+            HttpResponseMessage response = await client.GetAsync("/Downloads/Download/ChangeHistory/1?establishmentUrn=456");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task DownloadChangeHistory_ReturnsError_WhenGetChangeHistoryDownloadServiceReturnsNull()
+        {
+            // Arrange
+            Mock<IEstablishmentReadService> establishmentReadServiceMock = new();
+            establishmentReadServiceMock
+                .Setup(s => s.GetChangeHistoryDownloadAsync(It.IsAny<int>(), It.IsAny<DownloadType>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync((FileDownloadDto)null);
+
+            using WebApplicationFactory<Program> factory = CreateFactoryWithMockedDownloadsAndExtracts(
+                configureAdditionalServices: services =>
+                {
+                    services.AddSingleton(establishmentReadServiceMock.Object);
+                });
+
+            HttpClient client = factory.CreateClient();
+
+            // Act
+            HttpResponseMessage response = await client.GetAsync("/Downloads/Download/ChangeHistory/1?establishmentUrn=456");
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
