@@ -169,3 +169,22 @@ $govuk-global-styles: true;
     margin-left: 0 !important;
   }
 }
+.no-js {
+  .additional-search-critera.hidden {
+    display: block !important;
+  }
+
+  .additional-search-critera .options-container {
+    display: block !important;
+  }
+
+  .additional-search-critera .js-auto-height-inner {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  #option-select-additional-filters {
+    display: none !important;
+  }
+}

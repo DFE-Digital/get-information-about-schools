@@ -262,7 +262,15 @@
                             @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                         }
 
-                        <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
+                        <input type="hidden"
+                               id="selected-search-filters"
+                               value="@Model.SelectedExtraSearchFilters"/>
+
+                        <noscript>
+                            <input type="hidden"
+                                   name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS"
+                                   value="13468ghijklmnopqrstuvw" />
+                        </noscript>
 
                         @Html.HiddenFor(x => x.SearchType)
                     </div>
