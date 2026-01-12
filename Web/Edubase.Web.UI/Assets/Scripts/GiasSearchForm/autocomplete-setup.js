@@ -258,9 +258,12 @@ const autocompleteSetup = (function (){
 
       $('#la-id-target').on('click', '.remove-suggest-la', function (e) {
         e.preventDefault();
-        $('#' + $(this).text().toLowerCase().replace(/\s/g, '-')).remove();
+
+        const idToRemove = $(this).data('remove');
+        selectedLocalAuthorities = selectedLocalAuthorities.filter(x => x !== idToRemove);
+
+        $("input[name='d'][value ='" + idToRemove + "']").remove();
         $(this).remove();
-        $("input[value='" + $(this).val() +"'][name='d']").remove();
       });
 
       $('#LocalAuthorityToAdd').on('focus', function () {
