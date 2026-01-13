@@ -138,14 +138,14 @@ stages:
           # enabled: 'true'
           # vmImage: 'windows-latest'
           # thisJobName: 'DeployWebUiDevSlotDevJob'
-          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          # keyVaultName: 'kv-t1dv-edubase'
-          # deploymentServiceConnectionName: 'rg-t1dv-gias'
+          # keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          # keyVaultName: 's158d01-gias-kv-01'
+          # deploymentServiceConnectionName: 's158d.bsvc.cip.azdo'
           # artifactReference: 'BuiltAndPackagedWebUiZip'
-          # destinationResourceGroupName: 'rg-t1dv-gias'
-          # destinationWebAppName: 'gias'
+          # destinationResourceGroupName: 's158d01-rg-gias-dev'
+          # destinationWebAppName: 's158d01-gias'
           # destinationDeployToSlotFlag: true
-          # destinationSlotName: 'dev'
+          # destinationSlotName: 'slot'
       
       # ## Smoke test the base URL to prove that the code has been deployed
       # - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -154,8 +154,8 @@ stages:
           # vmImage: 'ubuntu-latest'
           # thisJobName: 'smokeTestGiasWebUiDevSlotDevJobWebRoot'
           # previousDeploymentJobName: 'DeployWebUiDevSlotDevJob'
-          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          # keyVaultName: 'kv-t1dv-edubase'
+          # keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          # keyVaultName: 's158d01-gias-kv-01'
           # smokeTestUrl: '/'                                                     # Relative to the root of the web app
           # smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           # smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -170,8 +170,8 @@ stages:
           # vmImage: 'ubuntu-latest'
           # thisJobName: 'smokeTestGiasWebUiDevSlotDevJobDownloadsPage'
           # previousDeploymentJobName: 'DeployWebUiDevSlotDevJob'
-          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          # keyVaultName: 'kv-t1dv-edubase'
+          # keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          # keyVaultName: 's158d01-gias-kv-01'
           # smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
           # smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           # smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -216,12 +216,12 @@ stages:
           enabled: 'true'
           vmImage: 'windows-latest'
           thisJobName: 'DeployWebUiDevSlotMainJob'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
-          deploymentServiceConnectionName: 'rg-t1dv-gias'
+          keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          keyVaultName: 's158d01-gias-kv-01'
+          deploymentServiceConnectionName: 's158d.bsvc.cip.azdo'
           artifactReference: 'BuiltAndPackagedWebUiZip'
-          destinationResourceGroupName: 'rg-t1dv-gias'
-          destinationWebAppName: 'gias'
+          destinationResourceGroupName: 's158d01-rg-gias-dev'
+          destinationWebAppName: 's158d01-gias'
           destinationDeployToSlotFlag: false
           #destinationSlotName: 'dev'
       
@@ -232,8 +232,8 @@ stages:
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiDevSlotMainJobWebRoot'
           previousDeploymentJobName: 'DeployWebUiDevSlotMainJob'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
+          keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          keyVaultName: 's158d01-gias-kv-01'
           #smokeTestUrl: '/'                                                        # Relative to the root of the web app
           smokeTestFullUrl: 'https://dev.get-information-schools.service.gov.uk/'   ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
@@ -249,8 +249,8 @@ stages:
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiDevSlotMainJobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiDevSlotMainJob'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
+          keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          keyVaultName: 's158d01-gias-kv-01'
           #smokeTestUrl: '/'                                                        # Relative to the root of the web app
           smokeTestFullUrl: 'https://dev.get-information-schools.service.gov.uk/Downloads'  ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
@@ -296,14 +296,14 @@ stages:
           enabled: 'true'
           vmImage: 'windows-latest'
           thisJobName: 'DeployWebUiDevSandbox1Job'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
-          deploymentServiceConnectionName: 'rg-t1dv-gias'
+          keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          keyVaultName: 's158d01-gias-kv-01'
+          deploymentServiceConnectionName: 's158d.bsvc.cip.azdo'
           artifactReference: 'BuiltAndPackagedWebUiZip'
-          destinationResourceGroupName: 'rg-t1dv-gias'
-          destinationWebAppName: 'gias'
+          destinationResourceGroupName: 's158d01-rg-gias-dev'
+          destinationWebAppName: 's158d01-gias'
           destinationDeployToSlotFlag: true
-          destinationSlotName: 'dev-sandbox1'
+          destinationSlotName: 'sandbox1'
       
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -312,8 +312,8 @@ stages:
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiSandbox1JobWebRoot'
           previousDeploymentJobName: 'DeployWebUiDevSandbox1Job'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
+          keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          keyVaultName: 's158d01-gias-kv-01'
           smokeTestUrl: '/'                                                     # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -328,8 +328,8 @@ stages:
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiSandbox1JobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiDevSandbox1Job'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
+          keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          keyVaultName: 's158d01-gias-kv-01'
           smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -374,14 +374,14 @@ stages:
         enabled: 'true'
         vmImage: 'windows-latest'
         thisJobName: 'DeployWebUiDevSandbox2Job'
-        keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-        keyVaultName: 'kv-t1dv-edubase'
-        deploymentServiceConnectionName: 'rg-t1dv-gias'
+        keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+        keyVaultName: 's158d01-gias-kv-01'
+        deploymentServiceConnectionName: 's158d.bsvc.cip.azdo'
         artifactReference: 'BuiltAndPackagedWebUiZip'
-        destinationResourceGroupName: 'rg-t1dv-gias'
-        destinationWebAppName: 'gias'
+        destinationResourceGroupName: 's158d01-rg-gias-dev'
+        destinationWebAppName: 's158d01-gias'
         destinationDeployToSlotFlag: true
-        destinationSlotName: 'dev-sandbox2'
+        destinationSlotName: 'sandbox2'
     
     #   # Smoke test the base URL to prove that the code has been deployed
     #   # - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -390,8 +390,8 @@ stages:
     #        vmImage: 'ubuntu-latest'
     #        thisJobName: 'smokeTestGiasWebUiSandbox2JobWebRoot'
     #        previousDeploymentJobName: 'DeployWebUiDevSandbox2Job'
-    #        keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-    #        keyVaultName: 'kv-t1dv-edubase'
+    #        keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+    #        keyVaultName: 's158d01-gias-kv-01'
     #        smokeTestUrl: '/'                                                     # Relative to the root of the web app
     #        smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
     #        smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -405,8 +405,8 @@ stages:
     #     vmImage: 'ubuntu-latest'
     #     thisJobName: 'smokeTestGiasWebUiSandbox2JobDownloadsPage'
     #     previousDeploymentJobName: 'DeployWebUiDevSandbox2Job'
-    #     keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-    #     keyVaultName: 'kv-t1dv-edubase'
+    #     keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+    #     keyVaultName: 's158d01-gias-kv-01'
     #     smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
     #     smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
     #     smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -449,14 +449,14 @@ stages:
           # enabled: 'true'
           # vmImage: 'windows-latest'
           # thisJobName: 'DeployWebUiDevSandboxHoldingJob'
-          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          # keyVaultName: 'kv-t1dv-edubase'
-          # deploymentServiceConnectionName: 'rg-t1dv-gias'
+          # keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          # keyVaultName: 's158d01-gias-kv-01'
+          # deploymentServiceConnectionName: 's158d.bsvc.cip.azdo'
           # artifactReference: 'BuiltAndPackagedWebUiZip'
-          # destinationResourceGroupName: 'rg-t1dv-gias'
-          # destinationWebAppName: 'gias'
+          # destinationResourceGroupName: 's158d01-rg-gias-dev'
+          # destinationWebAppName: 's158d01-gias'
           # destinationDeployToSlotFlag: true
-          # destinationSlotName: 'dev-sandbox-holding'
+          # destinationSlotName: 'staging'
       
       # ## Smoke test the base URL to prove that the code has been deployed
       # - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -465,8 +465,8 @@ stages:
           # vmImage: 'ubuntu-latest'
           # thisJobName: 'smokeTestGiasWebUiSandboxHoldingJobWebRoot'
           # previousDeploymentJobName: 'DeployWebUiDevSandboxHoldingJob'
-          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          # keyVaultName: 'kv-t1dv-edubase'
+          # keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          # keyVaultName: 's158d01-gias-kv-01'
           # smokeTestUrl: '/'                                                     # Relative to the root of the web app
           # smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           # smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -481,8 +481,8 @@ stages:
           # vmImage: 'ubuntu-latest'
           # thisJobName: 'smokeTestGiasWebUiSandboxHoldingJobDownloadsPage'
           # previousDeploymentJobName: 'DeployWebUiDevSandboxHoldingJob'
-          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          # keyVaultName: 'kv-t1dv-edubase'
+          # keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+          # keyVaultName: 's158d01-gias-kv-01'
           # smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
           # smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           # smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
