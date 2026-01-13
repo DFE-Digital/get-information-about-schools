@@ -28,6 +28,7 @@ variables:
   isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
   isSandbox1: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
   isSandbox2: $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
+  isMigration: $[eq(variables['Build.SourceBranch'], 'refs/heads/am/t1-cip-migration')]
   # isHolding:  false    # currently unused
   
   ## If this is part of a release, then we can deploy to higher environments
@@ -185,7 +186,7 @@ stages:
   ## Deploy to dev "main" slot, which integrates with Azure Front Door (ADF) and Web Application Firewall (WAF)
   - stage: 'DeployDevSlotMain'
     displayName: 'Deploy to Dev (main slot with AFD/WAF)'
-    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
+    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true'), eq(variables.isMigration, 'true')))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
