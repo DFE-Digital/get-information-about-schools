@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Edubase.Data.Repositories;
+using Edubase.Services.Establishments.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
@@ -469,22 +471,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 return NoResults(model);
             }
-            else
+
+            PopulateSelectList(payload); // select only fields we use in this context
+
+            var results = await _establishmentReadService.SearchAsync(payload, User);
+
+            if (payload.Skip == 0) model.Count = results.Count;
+            model.Results = results.Items ?? new List<EstablishmentSearchResultModel>();
+            if (results.Count > 0)
             {
-                PopulateSelectList(payload); // select only fields we use in this context
-
-                var results = await _establishmentReadService.SearchAsync(payload, User);
-
-                if (payload.Skip == 0) model.Count = results.Count;
-                model.Results = results.Items;
-
-                if (results.Count == 0)
-                {
-                    return NoResults(model);
-                }
-
                 var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
-
                 foreach (var item in model.Results)
                 {
                     model.Addresses.Add(item, await item.GetAddressAsync(_lookupService));
@@ -494,7 +490,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         var code = localAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)?.Code;
                         if (code != null) laEstab = string.Concat(code, "/", item.EstablishmentNumber?.ToString("D4"));
                     }
-
                     model.LAESTABs.Add(item, laEstab);
                 }
             }
