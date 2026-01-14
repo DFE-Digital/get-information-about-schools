@@ -72,6 +72,6 @@ namespace Edubase.Services.Governors.Models
         public IEnumerable<GovernorAppointment> Appointments { get; set; }
 
         [JsonProperty("editable", NullValueHandling = NullValueHandling.Ignore)]
-        public bool IsEditable { get; set; } = true;
+        public bool IsEditable { get; set; } = false;
     }
 }
