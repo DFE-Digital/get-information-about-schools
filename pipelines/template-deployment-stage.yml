@@ -32,6 +32,7 @@ jobs:
     displayName: Deploy - ${{ parameters.thisJobName }}
     condition: eq(${{ parameters.enabled }}, 'true')
     variables:
+      DeploymentKeyVaultName: ${{ parameters.keyVaultName }}
       BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
       BRANCH_NAME_NORMALISED: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '_')]
 
