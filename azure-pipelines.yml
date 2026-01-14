@@ -357,7 +357,7 @@ stages:
   ## Run this deploy stage only if conditions met to deploy to this environment
   - stage: 'DeployDevSandbox1'
     displayName: 'Deploy to Slot Sandbox1'
-    condition: and(succeeded(), eq(variables.isSandbox1, 'true'))
+    condition: and(succeeded(), or(eq(variables.isSandbox1, 'true'), eq(variables.isMigration, 'true')))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
@@ -437,7 +437,7 @@ stages:
   ## Run this deploy stage only if conditions met to deploy to this environment
   - stage: 'DeployDevSandbox2'
     displayName: 'Deploy to Slot Sandbox2'
-    condition: and(succeeded(), eq(variables.isSandbox2, 'true'))
+    condition: and(succeeded(), or(eq(variables.isSandbox2, 'true'), eq(variables.isMigration, 'true')))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
