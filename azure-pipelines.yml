@@ -36,6 +36,96 @@ variables:
   ## - need condition to allow promotion of dev branch into test? but no higher?
   isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
 
+  ## Common App Settings (Key Vault References)
+  commonAppSettings: >-
+    -AllowedForwardedHostNames "@Microsoft.KeyVault(SecretName=AllowedForwardedHostNames)"
+    -api:Password "@Microsoft.KeyVault(SecretName=api-Password)"
+    -APPINSIGHTS_INSTRUMENTATIONKEY "@Microsoft.KeyVault(SecretName=APPINSIGHTS-INSTRUMENTATIONKEY)"
+    -AzureMapsApiKey "@Microsoft.KeyVault(SecretName=AzureMapsApiKey)"
+    -CompaniesHouseApiKey "@Microsoft.KeyVault(SecretName=CompaniesHouseApiKey)"
+    -EnableApiLogging "@Microsoft.KeyVault(SecretName=EnableApiLogging)"
+    -Environment "@Microsoft.KeyVault(SecretName=Environment)"
+    -ExternalAuthDefaultCallbackUrl "@Microsoft.KeyVault(SecretName=ExternalAuthDefaultCallbackUrl)"
+    -FinancialBenchmarkingApiURL "@Microsoft.KeyVault(SecretName=FinancialBenchmarkingApiURL)"
+    -FinancialBenchmarkingURL "@Microsoft.KeyVault(SecretName=FinancialBenchmarkingURL)"
+    -GoogleApiKeyClientSide "@Microsoft.KeyVault(SecretName=GoogleApiKey)"
+    -GoogleTagManagerKey "@Microsoft.KeyVault(SecretName=GoogleTagManagerKey)"
+    -HttpAuthModule.Credentials "@Microsoft.KeyVault(SecretName=HttpAuthModule.Credentials)"
+    -LoginProviderName "@Microsoft.KeyVault(SecretName=LoginProviderName)"
+    -LookupApiBaseAddress "@Microsoft.KeyVault(SecretName=LookupApiBaseAddress)"
+    -LookupApiPassword "@Microsoft.KeyVault(SecretName=LookupApiPassword)"
+    -LookupApiUsername "@Microsoft.KeyVault(SecretName=LookupApiUsername)"
+    -OSPlacesApiKey "@Microsoft.KeyVault(SecretName=OSPlacesApiKey)"
+    -owin:appStartup "@Microsoft.KeyVault(SecretName=owin-appStartup)"
+    -SASimulatorGuid "@Microsoft.KeyVault(SecretName=SASimulatorGuid)"
+    -TexunaApiBaseAddress "@Microsoft.KeyVault(SecretName=TexunaApiBaseAddress)"
+    -WEBSITE_APPINSIGHTS_ENCRYPTEDAPIKEY "@Microsoft.KeyVault(SecretName=WEBSITE-APPINSIGHTS-ENCRYPTEDAPIKEY)"
+    -WEBSITE_DAAS_STORAGE_CONNECTIONSTRING "@Microsoft.KeyVault(SecretName=WEBSITE-DAAS-STORAGE-CONNECTIONSTRING)"
+
+  sandbox1AppSettings: >-
+    -AllowedForwardedHostNames "@Microsoft.KeyVault(SecretName=AllowedForwardedHostNames)"
+    -api:Password "@Microsoft.KeyVault(SecretName=api-Password)"
+    -APPINSIGHTS_INSTRUMENTATIONKEY "@Microsoft.KeyVault(SecretName=APPINSIGHTS-INSTRUMENTATIONKEY)"
+    -AzureMapsApiKey "@Microsoft.KeyVault(SecretName=AzureMapsApiKey)"
+    -CompaniesHouseApiKey "@Microsoft.KeyVault(SecretName=CompaniesHouseApiKey)"
+    -EnableApiLogging "@Microsoft.KeyVault(SecretName=Sandbox1-EnableApiLogging)"
+    -Environment "@Microsoft.KeyVault(SecretName=Environment)"
+    -ExternalAuthDefaultCallbackUrl "@Microsoft.KeyVault(SecretName=Sandbox1-ExternalAuthDefaultCallbackUrl)"
+    -FinancialBenchmarkingApiURL "@Microsoft.KeyVault(SecretName=FinancialBenchmarkingApiURL)"
+    -FinancialBenchmarkingURL "@Microsoft.KeyVault(SecretName=FinancialBenchmarkingURL)"
+    -GoogleApiKeyClientSide "@Microsoft.KeyVault(SecretName=GoogleApiKey)"
+    -GoogleTagManagerKey "@Microsoft.KeyVault(SecretName=GoogleTagManagerKey)"
+    -HttpAuthModule.Credentials "@Microsoft.KeyVault(SecretName=HttpAuthModule.Credentials)"
+    -LoginProviderName "@Microsoft.KeyVault(SecretName=LoginProviderName)"
+    -LookupApiBaseAddress "@Microsoft.KeyVault(SecretName=Sandbox1-LookupApiBaseAddress)"
+    -LookupApiPassword "@Microsoft.KeyVault(SecretName=LookupApiPassword)"
+    -LookupApiUsername "@Microsoft.KeyVault(SecretName=LookupApiUsername)"
+    -OSPlacesApiKey "@Microsoft.KeyVault(SecretName=OSPlacesApiKey)"
+    -owin:appStartup "@Microsoft.KeyVault(SecretName=owin-appStartup)"
+    -SASimulatorGuid "@Microsoft.KeyVault(SecretName=SASimulatorGuid)"
+    -TexunaApiBaseAddress "@Microsoft.KeyVault(SecretName=Sandbox1-TexunaApiBaseAddress)"
+    -WEBSITE_APPINSIGHTS_ENCRYPTEDAPIKEY "@Microsoft.KeyVault(SecretName=Sandbox1-WEBSITE-APPINSIGHTS-ENCRYPTEDAPIKEY)"
+    -WEBSITE_DAAS_STORAGE_CONNECTIONSTRING "@Microsoft.KeyVault(SecretName=WEBSITE-DAAS-STORAGE-CONNECTIONSTRING)"
+    -HttpClient_Timeout "@Microsoft.KeyVault(SecretName=Sandbox1-HttpClient-Timeout)"
+
+  sandbox2AppSettings: >-
+    -AllowedForwardedHostNames "@Microsoft.KeyVault(SecretName=AllowedForwardedHostNames)"
+    -api:Password "@Microsoft.KeyVault(SecretName=api-Password)"
+    -APPINSIGHTS_INSTRUMENTATIONKEY "@Microsoft.KeyVault(SecretName=APPINSIGHTS-INSTRUMENTATIONKEY)"
+    -AzureMapsApiKey "@Microsoft.KeyVault(SecretName=AzureMapsApiKey)"
+    -CompaniesHouseApiKey "@Microsoft.KeyVault(SecretName=CompaniesHouseApiKey)"
+    -EnableApiLogging "@Microsoft.KeyVault(SecretName=EnableApiLogging)"
+    -Environment "@Microsoft.KeyVault(SecretName=Environment)"
+    -ExternalAuthDefaultCallbackUrl "@Microsoft.KeyVault(SecretName=ExternalAuthDefaultCallbackUrl)"
+    -FinancialBenchmarkingApiURL "@Microsoft.KeyVault(SecretName=FinancialBenchmarkingApiURL)"
+    -FinancialBenchmarkingURL "@Microsoft.KeyVault(SecretName=FinancialBenchmarkingURL)"
+    -GoogleApiKeyClientSide "@Microsoft.KeyVault(SecretName=GoogleApiKey)"
+    -GoogleTagManagerKey "@Microsoft.KeyVault(SecretName=GoogleTagManagerKey)"
+    -HttpAuthModule.Credentials "@Microsoft.KeyVault(SecretName=HttpAuthModule.Credentials)"
+    -LoginProviderName "@Microsoft.KeyVault(SecretName=LoginProviderName)"
+    -LookupApiBaseAddress "@Microsoft.KeyVault(SecretName=LookupApiBaseAddress)"
+    -LookupApiPassword "@Microsoft.KeyVault(SecretName=LookupApiPassword)"
+    -LookupApiUsername "@Microsoft.KeyVault(SecretName=LookupApiUsername)"
+    -OSPlacesApiKey "@Microsoft.KeyVault(SecretName=OSPlacesApiKey)"
+    -owin:appStartup "@Microsoft.KeyVault(SecretName=owin-appStartup)"
+    -SASimulatorGuid "@Microsoft.KeyVault(SecretName=SASimulatorGuid)"
+    -TexunaApiBaseAddress "@Microsoft.KeyVault(SecretName=TexunaApiBaseAddress)"
+    -WEBSITE_APPINSIGHTS_ENCRYPTEDAPIKEY "@Microsoft.KeyVault(SecretName=WEBSITE-APPINSIGHTS-ENCRYPTEDAPIKEY)"
+    -WEBSITE_DAAS_STORAGE_CONNECTIONSTRING "@Microsoft.KeyVault(SecretName=WEBSITE-DAAS-STORAGE-CONNECTIONSTRING)"
+    -AppSettings__AzureMapService_RetryIntervals "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-AzureMapService-RetryIntervals)"
+    -AppSettings__AzureMapService_Timeout "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-AzureMapService-Timeout)"
+    -AppSettings__AzureMapsUrl "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-AzureMapsUrl)"
+    -AppSettings__CscpPassword "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-CscpPassword)"
+    -AppSettings__CscpUsername "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-CscpUsername)"
+    -AppSettings__FscpdURL "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-FscpdURL)"
+    -AppSettings__GetGroupByIdFAKey "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-GetGroupByIdFAKey)"
+    -AppSettings__GovernorSearchApiBaseAddress "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-GovernorSearchApiBaseAddress)"
+    -AppSettings__GovernorSearchApiPassword "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-GovernorSearchApiPassword)"
+    -AppSettings__GovernorSearchApiUsername "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-GovernorSearchApiUsername)"
+    -AppSettings__GovernorSearchClient_Timeout "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-GovernorSearchClient-Timeout)"
+    -AppSettings__LookupClient_Timeout "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-LookupClient-Timeout)"
+    -AppSettings__OfstedService_BaseAddress "@Microsoft.KeyVault(SecretName=Sandbox2-AppSettings-OfstedService-BaseAddress)"
+
 
 stages:
   
@@ -225,6 +315,7 @@ stages:
           destinationWebAppName: 's158d01-gias'
           destinationDeployToSlotFlag: false
           #destinationSlotName: 'dev'
+          appSettings: $(commonAppSettings)
       
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -305,6 +396,7 @@ stages:
           destinationWebAppName: 's158d01-gias'
           destinationDeployToSlotFlag: true
           destinationSlotName: 'sandbox1'
+          appSettings: $(sandbox1AppSettings)
       
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -383,6 +475,7 @@ stages:
         destinationWebAppName: 's158d01-gias'
         destinationDeployToSlotFlag: true
         destinationSlotName: 'sandbox2'
+        appSettings: $(sandbox2AppSettings)
     
     #   # Smoke test the base URL to prove that the code has been deployed
     #   # - template: 'pipelines/template-smoke-test-deployment.yml'

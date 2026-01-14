@@ -22,6 +22,8 @@
   - name: destinationDeployToSlotFlag
   - name: destinationSlotName
     default: ''
+  - name: appSettings
+    default: ''
 
 
 jobs:
@@ -120,6 +122,9 @@ jobs:
           enableCustomDeployment: true
           DeploymentType: 'webDeploy'
           
+          ## App Settings (Key Vault References)
+          AppSettings: ${{ parameters.appSettings }}
+
           ## Additional deployment options
           RemoveAdditionalFilesFlag: true
           TakeAppOfflineFlag: true
