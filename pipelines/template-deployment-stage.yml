@@ -140,7 +140,7 @@ jobs:
         inputs:
           azureSubscription: ${{ parameters.deploymentServiceConnectionName }}
           scriptType: 'pscore'
-          scriptLocation: 'inline'
+          scriptLocation: 'inlineScript'
           inlineScript: |
             $slotParams = @{}
             if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') {
