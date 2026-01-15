@@ -126,6 +126,15 @@ variables:
     -LookupClient_Timeout "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--LookupClient-Timeout)"
     -OfstedService_BaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--OfstedService-BaseAddress)"
 
+  commonDataConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=DataConnectionString)"
+  commonRedisConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Redis)"
+  
+  sandbox1DataConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=DataConnectionString)"
+  sandbox1RedisConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Redis)"
+
+  sandbox2DataConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=DataConnectionString)"
+  sandbox2RedisConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Redis)"
+
 
 stages:
   
@@ -316,6 +325,8 @@ stages:
           destinationDeployToSlotFlag: false
           #destinationSlotName: 'dev'
           appSettings: $(commonAppSettings)
+          dataConnectionString: $(commonDataConnectionString)
+          redisConnectionString: $(commonRedisConnectionString)
       
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -397,6 +408,8 @@ stages:
           destinationDeployToSlotFlag: true
           destinationSlotName: 'sandbox1'
           appSettings: $(sandbox1AppSettings)
+          dataConnectionString: $(sandbox1DataConnectionString)
+          redisConnectionString: $(sandbox1RedisConnectionString)
       
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -476,6 +489,8 @@ stages:
         destinationDeployToSlotFlag: true
         destinationSlotName: 'sandbox2'
         appSettings: $(sandbox2AppSettings)
+        dataConnectionString: $(sandbox2DataConnectionString)
+        redisConnectionString: $(sandbox2RedisConnectionString)
     
     #   # Smoke test the base URL to prove that the code has been deployed
     #   # - template: 'pipelines/template-smoke-test-deployment.yml'

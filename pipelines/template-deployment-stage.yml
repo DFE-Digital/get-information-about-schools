@@ -24,6 +24,10 @@
     default: ''
   - name: appSettings
     default: ''
+  - name: dataConnectionString
+    default: ''
+  - name: redisConnectionString
+    default: ''
 
 
 jobs:
@@ -129,4 +133,32 @@ jobs:
           ## Additional deployment options
           RemoveAdditionalFilesFlag: true
           TakeAppOfflineFlag: true
+
+      - task: AzureCLI@2
+        displayName: 'Update Connection Strings'
+        condition: and(succeeded(), or(ne('${{ parameters.dataConnectionString }}', ''), ne('${{ parameters.redisConnectionString }}', '')))
+        inputs:
+          azureSubscription: ${{ parameters.deploymentServiceConnectionName }}
+          scriptType: 'pscore'
+          scriptLocation: 'inline'
+          inlineScript: |
+            $slotParams = @{}
+            if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') {
+                $slotParams['--slot'] = '${{ parameters.destinationSlotName }}'
+            }
+
+            $settings = @()
+            if (-not [string]::IsNullOrEmpty($env:DATA_CONN_STR)) {
+                $settings += "DataConnectionString=$env:DATA_CONN_STR"
+            }
+            if (-not [string]::IsNullOrEmpty($env:REDIS_CONN_STR)) {
+                $settings += "Redis=$env:REDIS_CONN_STR"
+            }
+            
+            if ($settings.Count -gt 0) {
+                 az webapp config connection-string set --resource-group ${{ parameters.destinationResourceGroupName }} --name ${{ parameters.destinationWebAppName }} --connection-string-type Custom --settings $settings @slotParams
+            }
+        env:
+          DATA_CONN_STR: ${{ parameters.dataConnectionString }}
+          REDIS_CONN_STR: ${{ parameters.redisConnectionString }}
 
