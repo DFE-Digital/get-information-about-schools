@@ -142,11 +142,6 @@ jobs:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            $slotParams = @{}
-            if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') {
-                $slotParams['--slot'] = '${{ parameters.destinationSlotName }}'
-            }
-
             $settings = @()
             if (-not [string]::IsNullOrEmpty($env:DATA_CONN_STR)) {
                 $settings += "DataConnectionString=""$env:DATA_CONN_STR"""
@@ -156,7 +151,11 @@ jobs:
             }
             
             if ($settings.Count -gt 0) {
-                 az webapp config connection-string set --resource-group ${{ parameters.destinationResourceGroupName }} --name ${{ parameters.destinationWebAppName }} --connection-string-type Custom --settings $settings @slotParams
+                $cmd = "az webapp config connection-string set --resource-group ${{ parameters.destinationResourceGroupName }} --name ${{ parameters.destinationWebAppName }} --connection-string-type Custom --settings $($settings -join ' ')"
+                if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') {
+                    $cmd += " --slot ${{ parameters.destinationSlotName }}"
+                }
+                Invoke-Expression $cmd
             }
         env:
           DATA_CONN_STR: ${{ parameters.dataConnectionString }}
