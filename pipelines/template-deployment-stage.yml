@@ -134,28 +134,38 @@ jobs:
           RemoveAdditionalFilesFlag: true
           TakeAppOfflineFlag: true
 
-      - task: AzureCLI@2
+      - task: PowerShell@2
+        displayName: 'Prepare Connection Strings'
+        condition: and(succeeded(), or(ne('${{ parameters.dataConnectionString }}', ''), ne('${{ parameters.redisConnectionString }}', '')))
+        inputs:
+          targetType: 'inline'
+          script: |
+            $conns = @()
+            if ($env:DATA_CONN_STR) {
+                $conns += @{ name='DataConnectionString'; value=$env:DATA_CONN_STR; type='Custom'; slotSetting=$false }
+            }
+            if ($env:REDIS_CONN_STR) {
+                $conns += @{ name='Redis'; value=$env:REDIS_CONN_STR; type='Custom'; slotSetting=$false }
+            }
+            $json = ConvertTo-Json -InputObject $conns -Compress -Depth 5
+            Write-Host "##vso[task.setvariable variable=connectionStringsJson]$json"
+            
+            $slotName = 'production'
+            if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') {
+                $slotName = '${{ parameters.destinationSlotName }}'
+            }
+            Write-Host "##vso[task.setvariable variable=targetSlotName]$slotName"
+        env:
+          DATA_CONN_STR: ${{ parameters.dataConnectionString }}
+          REDIS_CONN_STR: ${{ parameters.redisConnectionString }}
+
+      - task: AzureAppServiceSettings@1
         displayName: 'Update Connection Strings'
         condition: and(succeeded(), or(ne('${{ parameters.dataConnectionString }}', ''), ne('${{ parameters.redisConnectionString }}', '')))
         inputs:
           azureSubscription: ${{ parameters.deploymentServiceConnectionName }}
-          scriptType: 'pscore'
-          scriptLocation: 'inlineScript'
-          inlineScript: |
-            # Escape parentheses for cmd.exe
-            $dataConn = $env:DATA_CONN_STR -replace '\(', '^(' -replace '\)', '^)'
-            $redisConn = $env:REDIS_CONN_STR -replace '\(', '^(' -replace '\)', '^)'
-            
-            $slotArg = if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') { "--slot ${{ parameters.destinationSlotName }}" } else { "" }
-            
-            $settings = @()
-            if ($dataConn) { $settings += "DataConnectionString=$dataConn" }
-            if ($redisConn) { $settings += "Redis=$redisConn" }
-            
-            if ($settings.Count -gt 0) {
-                az webapp config connection-string set --resource-group ${{ parameters.destinationResourceGroupName }} --name ${{ parameters.destinationWebAppName }} --connection-string-type Custom --settings $settings $slotArg
-            }
-        env:
-          DATA_CONN_STR: ${{ parameters.dataConnectionString }}
-          REDIS_CONN_STR: ${{ parameters.redisConnectionString }}
+          resourceGroupName: ${{ parameters.destinationResourceGroupName }}
+          appName: ${{ parameters.destinationWebAppName }}
+          slotName: $(targetSlotName)
+          connectionStrings: $(connectionStringsJson)
 
