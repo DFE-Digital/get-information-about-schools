@@ -123,12 +123,15 @@
 
                             @foreach (var id in Model.SelectedLocalAuthorityIds)
                             {
-                                var la = Model.LocalAuthorities.First(x => x.Id == id);
-                                <input value="@la.Name" type="hidden" class="form-control user-selected-la"/>
-                                <button type="submit" class="remove-suggest-la" name="LocalAuthorityToRemove" data-remove="@id" value="@id">@la.Name</button>
+                                var la = Model.LocalAuthorities.FirstOrDefault(x => x.Id == id);
+                                if (la != null)
+                                {
+                                    <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
+                                    <button type="submit" class="remove-suggest-la" name="LocalAuthorityToRemove" data-remove="@id" value="@id">@la.Name</button>
+                                }
                             }
                             <div class="floating-text-field-wrap">
-                                @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new {@class = "govuk-input govuk-input--width-20 floating-text-field", autocomplete = "off"})
+                                @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "govuk-input govuk-input--width-20 floating-text-field", autocomplete = "off" })
                             </div>
                         </div>
                         <button type="submit" class="govuk-button--secondary govuk-button no-js-remove"

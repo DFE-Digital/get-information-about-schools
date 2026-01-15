@@ -202,7 +202,10 @@
 
                         @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true, true)
 
-                        @Selector("Registration suspended", M.BIND_ALIAS_REGSUSPENDED, Model.RegistrationStatuses.OrderBy(x => x.Name), Model.SelectedRegistrationStatusIds, "additional-search-critera hidden", true, true)
+                        @if(Html.FeatureEnabled("FeatureIEBTSuspended"))
+                        {
+                            @Selector("Registration suspended", M.BIND_ALIAS_REGSUSPENDED, Model.RegistrationStatuses.OrderBy(x => x.Name), Model.SelectedRegistrationStatusIds, "additional-search-critera hidden", true, true)
+                        }
 
                         @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true, true)
 
@@ -259,7 +262,15 @@
                             @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                         }
 
-                        <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
+                        <input type="hidden"
+                               id="selected-search-filters"
+                               value="@Model.SelectedExtraSearchFilters"/>
+
+                        <noscript>
+                            <input type="hidden"
+                                   name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS"
+                                   value="13468ghijklmnopqrstuvw" />
+                        </noscript>
 
                         @Html.HiddenFor(x => x.SearchType)
                     </div>

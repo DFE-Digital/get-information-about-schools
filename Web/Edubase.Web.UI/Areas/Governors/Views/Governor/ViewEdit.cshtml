@@ -428,11 +428,11 @@ else
                             if (Model.RemovalGid != row.Model.Id)
                             {
                                 <div class="button-row govuk-!-margin-bottom-9">
-                                    @if (Model.GovernorPermissions.Update)
+                                    @if (Model.GovernorPermissions.Update && row.IsEditable)
                                     {
                                         if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
                                         {
-                                            @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })
+                                            @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })                                            
                                         }
                                         else
                                         {
@@ -524,7 +524,7 @@ else
                         }
                         else //historic governor
                         {
-                            if (Model.GovernorPermissions.Update)
+                            if (Model.GovernorPermissions.Update && row.IsEditable)
                             {
                                 <div class="button-wrapper">
                                     @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody))

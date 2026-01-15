@@ -77,7 +77,7 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, EstablishmentChangeHistoryDownloadFilters filters, IPrincipal principal)
             => (await _httpClient.PostAsync<FileDownloadDto>($"establishment/{urn}/changes/download", filters, principal)).GetResponse();
-        
+
         public async Task<PaginatedResult<EstablishmentChangeDto>> GetGovernanceChangeHistoryAsync(int urn, int skip, int take, string sortBy, IPrincipal user)
         {
             var changes = (await _httpClient.GetAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/governance/changes?skip={skip}&take={take}&sortby={sortBy}", user)).GetResponse();
@@ -86,7 +86,7 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<FileDownloadDto> GetGovernanceChangeHistoryDownloadAsync(int urn, DownloadType format, IPrincipal principal)
             => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/governance/changes/download?format={format.ToString().ToLower()}", principal)).GetResponse();
-        
+
         public async Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user)
                             => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/display-policy", user)).GetResponse().Initialise(establishment);
 
@@ -208,7 +208,7 @@ namespace Edubase.Services.Texuna.Establishments
                 });
             }
 
-            await DetectSENChanges(original, model, retVal);
+            await DetectSENChanges(original, model, approvalsPolicy, retVal);
 
             return retVal;
         }
@@ -548,7 +548,7 @@ namespace Edubase.Services.Texuna.Establishments
             return retVal;
         }
 
-        private async Task DetectSENChanges(EstablishmentModel original, EstablishmentModel model, List<ChangeDescriptorDto> retVal)
+        private async Task DetectSENChanges(EstablishmentModel original, EstablishmentModel model, EstablishmentApprovalsPolicy approvalsPolicy,  List<ChangeDescriptorDto> retVal)
         {
             var originalSenIds = (original.SENIds ?? new int[0]).OrderBy(x => x);
             var newSenIds = (model.SENIds ?? new int[0]).OrderBy(x => x);
@@ -557,13 +557,18 @@ namespace Edubase.Services.Texuna.Establishments
                 var sens = await _cachedLookupService.SpecialEducationNeedsGetAllAsync();
                 var originalSenNames = StringUtil.SentencifyNoFormating(originalSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
                 var newSenNames = StringUtil.SentencifyNoFormating(newSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
+                var id = "SENIds";
                 retVal.Add(new ChangeDescriptorDto
                 {
-                    Id = "Type of SEN provision",
+                    Id = id,
                     Name = "Type of SEN provision",
                     NewValue = newSenNames,
                     OldValue = originalSenNames,
-                    RequiresApproval = true
+                    RequiresApproval = approvalsPolicy
+                        .GetFieldsRequiringApproval()
+                        .Contains(id, StringComparer.OrdinalIgnoreCase),
+
+                    ApproverName = approvalsPolicy.GetApproverName(id)
                 });
             }
         }

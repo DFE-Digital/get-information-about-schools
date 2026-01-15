@@ -15,6 +15,8 @@ namespace Edubase.Web.UI.Models.Grid
 
         public object SortValue { get; set; }
 
+        public bool IsEditable { get; set; }
+
         public GridRowViewModel<T> AddCell(object content)
         {
             var cell = new GridCellViewModel(content?.ToString());
