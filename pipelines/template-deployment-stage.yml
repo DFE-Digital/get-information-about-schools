@@ -142,20 +142,18 @@ jobs:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
+            # Escape parentheses for cmd.exe
+            $dataConn = $env:DATA_CONN_STR -replace '\(', '^(' -replace '\)', '^)'
+            $redisConn = $env:REDIS_CONN_STR -replace '\(', '^(' -replace '\)', '^)'
+            
+            $slotArg = if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') { "--slot ${{ parameters.destinationSlotName }}" } else { "" }
+            
             $settings = @()
-            if (-not [string]::IsNullOrEmpty($env:DATA_CONN_STR)) {
-                $settings += "DataConnectionString=""$env:DATA_CONN_STR"""
-            }
-            if (-not [string]::IsNullOrEmpty($env:REDIS_CONN_STR)) {
-                $settings += "Redis=""$env:REDIS_CONN_STR"""
-            }
+            if ($dataConn) { $settings += "DataConnectionString=$dataConn" }
+            if ($redisConn) { $settings += "Redis=$redisConn" }
             
             if ($settings.Count -gt 0) {
-                $cmd = "az webapp config connection-string set --resource-group ${{ parameters.destinationResourceGroupName }} --name ${{ parameters.destinationWebAppName }} --connection-string-type Custom --settings $($settings -join ' ')"
-                if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') {
-                    $cmd += " --slot ${{ parameters.destinationSlotName }}"
-                }
-                Invoke-Expression $cmd
+                az webapp config connection-string set --resource-group ${{ parameters.destinationResourceGroupName }} --name ${{ parameters.destinationWebAppName }} --connection-string-type Custom --settings $settings $slotArg
             }
         env:
           DATA_CONN_STR: ${{ parameters.dataConnectionString }}
