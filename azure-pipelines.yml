@@ -20,120 +20,32 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  - name: solution
+    value: '**/*.sln'
+  - name: buildPlatform
+    value: 'Any CPU'
+  - name: buildConfiguration
+    value: 'Release'
 
   ## These variables distinguish between "dev" (incl. AFD/custom domain) and sandboxes
-  isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-  isSandbox1: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
-  isSandbox2: $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
-  isMigration: $[eq(variables['Build.SourceBranch'], 'refs/heads/am/t1-cip-migration')]
+  - name: isDev
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: isSandbox1
+    value: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
+  - name: isSandbox2
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
+  - name: isMigration
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/am/t1-cip-migration')]
   # isHolding:  false    # currently unused
   
   ## If this is part of a release, then we can deploy to higher environments
   ## - could consider this being done by tag instead? or `release/v1.11` format branch?
   ## - need condition to allow promotion of dev branch into test? but no higher?
-  isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
+  - name: isRelease
+    value: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
 
-  ## Common App Settings (Key Vault References)
-  commonAppSettings: >-
-    -AllowedForwardedHostNames "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=AllowedForwardedHostNames)"
-    -api:Password "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=api-Password)"
-    -APPINSIGHTS_INSTRUMENTATIONKEY "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=APPINSIGHTS-INSTRUMENTATIONKEY)"
-    -AzureMapsApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=AzureMapsApiKey)"
-    -CompaniesHouseApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=CompaniesHouseApiKey)"
-    -EnableApiLogging "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=EnableApiLogging)"
-    -Environment "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Environment)"
-    -ExternalAuthDefaultCallbackUrl "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=ExternalAuthDefaultCallbackUrl)"
-    -FinancialBenchmarkingApiURL "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=FinancialBenchmarkingApiURL)"
-    -FinancialBenchmarkingURL "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=FinancialBenchmarkingURL)"
-    -GoogleApiKeyClientSide "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=GoogleApiKey)"
-    -GoogleTagManagerKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=GoogleTagManagerKey)"
-    -HttpAuthModule.Credentials "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=HttpAuthModule-Credentials)"
-    -LoginProviderName "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LoginProviderName)"
-    -LookupApiBaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LookupApiBaseAddress)"
-    -LookupApiPassword "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LookupApiPassword)"
-    -LookupApiUsername "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LookupApiUsername)"
-    -OSPlacesApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=OSPlacesApiKey)"
-    -owin:appStartup "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=owin-appStartup)"
-    -SASimulatorGuid "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=SASimulatorGuid)"
-    -TexunaApiBaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=TexunaApiBaseAddress)"
-    -WEBSITE_APPINSIGHTS_ENCRYPTEDAPIKEY "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=WEBSITE-APPINSIGHTS-ENCRYPTEDAPIKEY)"
-    -WEBSITE_DAAS_STORAGE_CONNECTIONSTRING "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=WEBSITE-DAAS-STORAGE-CONNECTIONSTRING)"
-
-  sandbox1AppSettings: >-
-    -AllowedForwardedHostNames "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=AllowedForwardedHostNames)"
-    -api:Password "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=api-Password)"
-    -APPINSIGHTS_INSTRUMENTATIONKEY "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=APPINSIGHTS-INSTRUMENTATIONKEY)"
-    -AzureMapsApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=AzureMapsApiKey)"
-    -CompaniesHouseApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=CompaniesHouseApiKey)"
-    -EnableApiLogging "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox1-EnableApiLogging)"
-    -Environment "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Environment)"
-    -ExternalAuthDefaultCallbackUrl "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox1-ExternalAuthDefaultCallbackUrl)"
-    -FinancialBenchmarkingApiURL "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=FinancialBenchmarkingApiURL)"
-    -FinancialBenchmarkingURL "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=FinancialBenchmarkingURL)"
-    -GoogleApiKeyClientSide "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=GoogleApiKey)"
-    -GoogleTagManagerKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=GoogleTagManagerKey)"
-    -HttpAuthModule.Credentials "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=HttpAuthModule-Credentials)"
-    -LoginProviderName "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LoginProviderName)"
-    -LookupApiBaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox1-LookupApiBaseAddress)"
-    -LookupApiPassword "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LookupApiPassword)"
-    -LookupApiUsername "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LookupApiUsername)"
-    -OSPlacesApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=OSPlacesApiKey)"
-    -owin:appStartup "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=owin-appStartup)"
-    -SASimulatorGuid "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=SASimulatorGuid)"
-    -TexunaApiBaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox1-TexunaApiBaseAddress)"
-    -WEBSITE_APPINSIGHTS_ENCRYPTEDAPIKEY "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox1-WEBSITE-APPINSIGHTS-ENCRYPTEDAPIKEY)"
-    -WEBSITE_DAAS_STORAGE_CONNECTIONSTRING "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=WEBSITE-DAAS-STORAGE-CONNECTIONSTRING)"
-    -HttpClient_Timeout "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox1-HttpClient-Timeout)"
-
-  sandbox2AppSettings: >-
-    -AllowedForwardedHostNames "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=AllowedForwardedHostNames)"
-    -api:Password "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=api-Password)"
-    -APPINSIGHTS_INSTRUMENTATIONKEY "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=APPINSIGHTS-INSTRUMENTATIONKEY)"
-    -AzureMapsApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=AzureMapsApiKey)"
-    -CompaniesHouseApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=CompaniesHouseApiKey)"
-    -EnableApiLogging "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=EnableApiLogging)"
-    -Environment "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Environment)"
-    -ExternalAuthDefaultCallbackUrl "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=ExternalAuthDefaultCallbackUrl)"
-    -FinancialBenchmarkingApiURL "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=FinancialBenchmarkingApiURL)"
-    -FinancialBenchmarkingURL "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=FinancialBenchmarkingURL)"
-    -GoogleApiKeyClientSide "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=GoogleApiKey)"
-    -GoogleTagManagerKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=GoogleTagManagerKey)"
-    -HttpAuthModule.Credentials "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=HttpAuthModule-Credentials)"
-    -LoginProviderName "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LoginProviderName)"
-    -LookupApiBaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LookupApiBaseAddress)"
-    -LookupApiPassword "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LookupApiPassword)"
-    -LookupApiUsername "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=LookupApiUsername)"
-    -OSPlacesApiKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=OSPlacesApiKey)"
-    -owin:appStartup "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=owin-appStartup)"
-    -SASimulatorGuid "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=SASimulatorGuid)"
-    -TexunaApiBaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=TexunaApiBaseAddress)"
-    -WEBSITE_APPINSIGHTS_ENCRYPTEDAPIKEY "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=WEBSITE-APPINSIGHTS-ENCRYPTEDAPIKEY)"
-    -WEBSITE_DAAS_STORAGE_CONNECTIONSTRING "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=WEBSITE-DAAS-STORAGE-CONNECTIONSTRING)"
-    -AzureMapService_RetryIntervals "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--AzureMapService-RetryIntervals)"
-    -AzureMapService_Timeout "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--AzureMapService-Timeout)"
-    -AzureMapsUrl "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--AzureMapsUrl)"
-    -CscpPassword "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--CscpPassword)"
-    -CscpUsername "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--CscpUsername)"
-    -FscpdURL "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--FscpdURL)"
-    -GetGroupByIdFAKey "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--GetGroupByIdFAKey)"
-    -GovernorSearchApiBaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--GovernorSearchApiBaseAddress)"
-    -GovernorSearchApiPassword "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--GovernorSearchApiPassword)"
-    -GovernorSearchApiUsername "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--GovernorSearchApiUsername)"
-    -GovernorSearchClient_Timeout "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--GovernorSearchClient-Timeout)"
-    -LookupClient_Timeout "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--LookupClient-Timeout)"
-    -OfstedService_BaseAddress "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Sandbox2-AppSettings--OfstedService-BaseAddress)"
-
-  commonDataConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=DataConnectionString)"
-  commonRedisConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Redis)"
-  
-  sandbox1DataConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=DataConnectionString)"
-  sandbox1RedisConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Redis)"
-
-  sandbox2DataConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=DataConnectionString)"
-  sandbox2RedisConnectionString: "@Microsoft.KeyVault(VaultName=$(DeploymentKeyVaultName);SecretName=Redis)"
+  ## Import externally defined app settings variables (Key Vault references)
+  - template: 'pipelines/variables/app-settings.yml'
 
 
 stages:
