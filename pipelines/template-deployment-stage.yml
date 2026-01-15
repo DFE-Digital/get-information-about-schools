@@ -149,10 +149,10 @@ jobs:
 
             $settings = @()
             if (-not [string]::IsNullOrEmpty($env:DATA_CONN_STR)) {
-                $settings += "DataConnectionString=$env:DATA_CONN_STR"
+                $settings += "DataConnectionString=""$env:DATA_CONN_STR"""
             }
             if (-not [string]::IsNullOrEmpty($env:REDIS_CONN_STR)) {
-                $settings += "Redis=$env:REDIS_CONN_STR"
+                $settings += "Redis=""$env:REDIS_CONN_STR"""
             }
             
             if ($settings.Count -gt 0) {
