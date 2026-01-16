@@ -79,7 +79,7 @@ class GiasSearchMap {
         window.setTimeout(function () {
           $('.map-header').removeClass('loading');
           const count = $('#map-count').text();
-          self.$resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in map view.');
+          self.$resultsNotification.text('Search results loaded. Showing ' + count + ' establishments in map view.');
         }, 1500);
       }
 
