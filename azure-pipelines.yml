@@ -235,10 +235,7 @@ stages:
           destinationResourceGroupName: 's158d01-rg-gias-dev'
           destinationWebAppName: 's158d01-gias'
           destinationDeployToSlotFlag: false
-          #destinationSlotName: 'dev'
-          appSettings: $(commonAppSettings)
-          dataConnectionString: $(commonDataConnectionString)
-          redisConnectionString: $(commonRedisConnectionString)
+          destinationSlotName: 'dev'
       
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -319,9 +316,6 @@ stages:
           destinationWebAppName: 's158d01-gias'
           destinationDeployToSlotFlag: true
           destinationSlotName: 'sandbox1'
-          appSettings: $(sandbox1AppSettings)
-          dataConnectionString: $(sandbox1DataConnectionString)
-          redisConnectionString: $(sandbox1RedisConnectionString)
       
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -400,10 +394,7 @@ stages:
         destinationWebAppName: 's158d01-gias'
         destinationDeployToSlotFlag: true
         destinationSlotName: 'sandbox2'
-        appSettings: $(sandbox2AppSettings)
-        dataConnectionString: $(sandbox2DataConnectionString)
-        redisConnectionString: $(sandbox2RedisConnectionString)
-    
+
     #   # Smoke test the base URL to prove that the code has been deployed
     #   # - template: 'pipelines/template-smoke-test-deployment.yml'
     #     parameters:

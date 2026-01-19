@@ -22,12 +22,7 @@
   - name: destinationDeployToSlotFlag
   - name: destinationSlotName
     default: ''
-  - name: appSettings
-    default: ''
-  - name: dataConnectionString
-    default: ''
-  - name: redisConnectionString
-    default: ''
+
 
 
 jobs:
@@ -126,46 +121,9 @@ jobs:
           ### Explicitly opt in for web deployment (as opposed to auto-detect)
           enableCustomDeployment: true
           DeploymentType: 'webDeploy'
-          
-          ## App Settings (Key Vault References)
-          AppSettings: ${{ parameters.appSettings }}
 
           ## Additional deployment options
           RemoveAdditionalFilesFlag: true
           TakeAppOfflineFlag: true
 
-      - task: PowerShell@2
-        displayName: 'Prepare Connection Strings'
-        condition: and(succeeded(), or(ne('${{ parameters.dataConnectionString }}', ''), ne('${{ parameters.redisConnectionString }}', '')))
-        inputs:
-          targetType: 'inline'
-          script: |
-            $conns = @()
-            if ($env:DATA_CONN_STR) {
-                $conns += @{ name='DataConnectionString'; value=$env:DATA_CONN_STR; type='Custom'; slotSetting=$false }
-            }
-            if ($env:REDIS_CONN_STR) {
-                $conns += @{ name='Redis'; value=$env:REDIS_CONN_STR; type='Custom'; slotSetting=$false }
-            }
-            $json = ConvertTo-Json -InputObject $conns -Compress -Depth 5
-            Write-Host "##vso[task.setvariable variable=connectionStringsJson]$json"
-            
-            $slotName = 'production'
-            if ('${{ parameters.destinationDeployToSlotFlag }}' -eq 'true') {
-                $slotName = '${{ parameters.destinationSlotName }}'
-            }
-            Write-Host "##vso[task.setvariable variable=targetSlotName]$slotName"
-        env:
-          DATA_CONN_STR: ${{ parameters.dataConnectionString }}
-          REDIS_CONN_STR: ${{ parameters.redisConnectionString }}
-
-      - task: AzureAppServiceSettings@1
-        displayName: 'Update Connection Strings'
-        condition: and(succeeded(), or(ne('${{ parameters.dataConnectionString }}', ''), ne('${{ parameters.redisConnectionString }}', '')))
-        inputs:
-          azureSubscription: ${{ parameters.deploymentServiceConnectionName }}
-          resourceGroupName: ${{ parameters.destinationResourceGroupName }}
-          appName: ${{ parameters.destinationWebAppName }}
-          slotName: $(targetSlotName)
-          connectionStrings: $(connectionStringsJson)
 
