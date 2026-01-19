@@ -247,7 +247,7 @@ stages:
           keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
           keyVaultName: 's158d01-gias-kv-01'
           #smokeTestUrl: '/'                                                        # Relative to the root of the web app
-          smokeTestFullUrl: 'https://dev.get-information-schools.service.gov.uk/'   ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
+          smokeTestFullUrl: 'https://s158d01-gias.azurewebsites.net/'   ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
@@ -264,7 +264,7 @@ stages:
           keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
           keyVaultName: 's158d01-gias-kv-01'
           #smokeTestUrl: '/'                                                        # Relative to the root of the web app
-          smokeTestFullUrl: 'https://dev.get-information-schools.service.gov.uk/Downloads'  ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
+          smokeTestFullUrl: 'https://s158d01-gias.azurewebsites.net/Downloads'  ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
@@ -326,7 +326,8 @@ stages:
           previousDeploymentJobName: 'DeployWebUiDevSandbox1Job'
           keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
           keyVaultName: 's158d01-gias-kv-01'
-          smokeTestUrl: '/'                                                     # Relative to the root of the web app
+          #smokeTestUrl: '/'                                                     # Relative to the root of the web app
+          smokeTestFullUrl: 'https://s158d01-gias-sandbox1.azurewebsites.net/'
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
@@ -342,7 +343,8 @@ stages:
           previousDeploymentJobName: 'DeployWebUiDevSandbox1Job'
           keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
           keyVaultName: 's158d01-gias-kv-01'
-          smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
+          #smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
+          smokeTestFullUrl: 'https://s158d01-gias-sandbox1.azurewebsites.net/Downloads'
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
@@ -393,36 +395,38 @@ stages:
         destinationResourceGroupName: 's158d01-rg-gias-dev'
         destinationWebAppName: 's158d01-gias'
         destinationDeployToSlotFlag: true
-        destinationSlotName: 'sandbox2'
-
-    #   # Smoke test the base URL to prove that the code has been deployed
-    #   # - template: 'pipelines/template-smoke-test-deployment.yml'
-    #     parameters:
-    #        enabled: 'true'
-    #        vmImage: 'ubuntu-latest'
-    #        thisJobName: 'smokeTestGiasWebUiSandbox2JobWebRoot'
-    #        previousDeploymentJobName: 'DeployWebUiDevSandbox2Job'
-    #        keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
-    #        keyVaultName: 's158d01-gias-kv-01'
-    #        smokeTestUrl: '/'                                                     # Relative to the root of the web app
-    #        smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
-    #        smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
-    #        smokeTestNeedleString: $(versionNoPadding)
-    #        smokeTestDurationBetweenRequestsSeconds: 5
-    #        smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately)
-    #   # Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
-    # - template: 'pipelines/template-smoke-test-deployment.yml'
-    #   parameters:
-    #     enabled: 'true'
-    #     vmImage: 'ubuntu-latest'
-    #     thisJobName: 'smokeTestGiasWebUiSandbox2JobDownloadsPage'
-    #     previousDeploymentJobName: 'DeployWebUiDevSandbox2Job'
-    #     keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
-    #     keyVaultName: 's158d01-gias-kv-01'
-    #     smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
-    #     smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
-    #     smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
-    #     smokeTestNeedleString: $(versionNoPadding)
+     # Smoke test the base URL to prove that the code has been deployed
+    - template: 'pipelines/template-smoke-test-deployment.yml'
+      parameters:
+        enabled: 'true'
+        vmImage: 'ubuntu-latest'
+        thisJobName: 'smokeTestGiasWebUiSandbox2JobWebRoot'
+        previousDeploymentJobName: 'DeployWebUiDevSandbox2Job'
+        keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+        keyVaultName: 's158d01-gias-kv-01'
+        #smokeTestUrl: '/'                                                     # Relative to the root of the web app
+        smokeTestFullUrl: 'https://s158d01-gias-sandbox2.azurewebsites.net/'
+        smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
+        smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
+        smokeTestNeedleString: $(versionNoPadding)
+        smokeTestDurationBetweenRequestsSeconds: 5
+        smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately)
+    ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
+    - template: 'pipelines/template-smoke-test-deployment.yml'
+      parameters:
+        enabled: 'true'
+        vmImage: 'ubuntu-latest'
+        thisJobName: 'smokeTestGiasWebUiSandbox2JobDownloadsPage'
+        previousDeploymentJobName: 'DeployWebUiDevSandbox2Job'
+        keyVaultServiceConnectionName: 's158d.bsvc.cip.azdo'
+        keyVaultName: 's158d01-gias-kv-01'
+        #smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
+        smokeTestFullUrl: 'https://s158d01-gias-sandbox2.azurewebsites.net/Downloads'
+        smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
+        smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
+        smokeTestNeedleString: $(versionNoPadding)
+        smokeTestDurationBetweenRequestsSeconds: 5
+        smokeTestMaximumDurationMinutes: 5       
     #     smokeTestDurationBetweenRequestsSeconds: 5
     #     smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately) 
 
