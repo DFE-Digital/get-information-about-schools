@@ -1,0 +1,40 @@
+@using Edubase.Web.UI.Models.Establishments.Establishment
+@model WarningBoxViewModel
+
+<div class="govuk-notification-banner govuk-notification-banner--warning"
+	 role="region"
+	 aria-labelledby="govuk-notification-banner-title"
+	 data-module="govuk-notification-banner">
+	<div class="govuk-notification-banner__header">
+		<h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+			Very important
+		</h2>
+	</div>
+	<div class="govuk-notification-banner__content">
+		@using (Html.BeginRouteForm(Model.Route, new { Urn = Model.Urn }, FormMethod.Post))
+		{
+			@Html.AntiForgeryToken()
+			<div class="govuk-grid-row">
+				<div class="govuk-grid-column-three-quarters">
+					<p id="@Model.Type.ToLower()-details-confirmation-heading"
+					   class="govuk-notification-banner__heading govuk-!-margin-bottom-1">
+						<label for="estab-data-confirm">
+							Review and confirm if the @Model.Type.ToLower() details are correct
+						</label>
+					</p>
+					<p id="@Model.Type.ToLower()-details-confirmation-body"
+					   class="govuk-!-margin-bottom-1">
+						If they are not correct, edit your @Model.Type.ToLower() details below.<br />
+					</p>
+					<p id="@Model.Type.ToLower()-details-confirmation-date"
+					   class="govuk-hint govuk-!-font-size-14 govuk-!-margin-bottom-1">
+						Date record last confirmed or updated: @Model.Date
+					</p>
+				</div>
+				<div class="govuk-grid-column-one-quarter">
+					<button class="govuk-button" data-module="govuk-button" id="estab-data-confirm">Confirm</button>
+				</div>
+			</div>
+		}
+	</div>
+</div>
