@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using M = EstablishmentSearchResultModel;
 
-    [Area("Establishments")]
+    //[Area("Establishments")]
     [Route("Establishments/manage")]
     [Authorize(Policy = "CanManageAcademyOpeningsOrSecureAcademy16To19")]
     public class AcademyOpeningsController : Controller

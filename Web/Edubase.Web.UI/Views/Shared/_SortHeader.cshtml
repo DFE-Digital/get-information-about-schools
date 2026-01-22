@@ -1,0 +1,23 @@
+@model (Dictionary<string, string> HeaderDictionary, bool SortedAscending, string SortBy)
+
+@foreach (var hd in Model.HeaderDictionary)
+{
+    var sortKey = hd.Key;
+    var sortLabel = hd.Value;
+    var isAscending = Model.SortedAscending;
+    var sortModifier = isAscending ? "-desc" : "-asc";
+    var isSelectedSort = Model.SortBy.Contains(sortKey);
+    var sortDescription = isAscending ? "ascending" : "descending";
+
+    var url = $"/Approvals?skip=0&sortBy={sortKey}{sortModifier}";
+    var className = isSelectedSort ? "selected-sort" : string.Empty;
+    className += isAscending ? " sorted-asc" : " sorted-desc";
+
+    var label = isSelectedSort
+        ? $"{sortLabel} is sorted in a {sortDescription} order. Use this link to change the order. All other columns are sortable"
+        : $"Sort the data by {sortLabel}";
+
+    <th class="govuk-table__header cell-@sortKey">
+        <a href="@url" class="@className" aria-label="@label">@sortLabel</a>
+    </th>
+}

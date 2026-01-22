@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [Area("Establishments")]
+    //[Area("Establishments")]
     [Authorize(Policy = "CanBulkCreateFreeSchools")]
     public class BulkCreateFreeSchoolsController : EduBaseController
     {
@@ -26,13 +26,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _establishmentWriteService = establishmentWriteService;
         }
 
-        [Route("bulk-create-free-schools", Name = "BulkCreateFreeSchools"), HttpGet]
+        [Route("BulkCreateFreeSchools", Name = "BulkCreateFreeSchools"), HttpGet]
         public ActionResult Index()
         {
             return View(ViewName);
         }
 
-        [Route("bulk-create-free-schools", Name = "BulkCreateFreeSchoolsPost"), HttpPost, ValidateAntiForgeryToken]
+        [Route("BulkCreateFreeSchools", Name = "BulkCreateFreeSchoolsPost"), HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkCreateFreeSchoolsAsync(BulkCreateFreeSchoolsViewModel viewModel)
         {
             if (ModelState.IsValid)

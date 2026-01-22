@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [Area("Establishments")]
+    //[Area("Establishments")]
     [Route("Establishments/BulkUpdate")]
     [Authorize(Policy = "CanBulkUpdateEstablishments")]
     public class BulkUpdateController : Controller

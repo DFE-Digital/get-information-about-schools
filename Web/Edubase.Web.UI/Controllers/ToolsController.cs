@@ -341,7 +341,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments)]
+        [HttpGet("Mergers"), MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments)]
         public async Task<ActionResult> MergersTool()
         {
             var settings =

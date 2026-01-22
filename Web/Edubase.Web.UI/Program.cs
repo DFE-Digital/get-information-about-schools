@@ -11,6 +11,7 @@ using Edubase.Common.Cache;
 using Edubase.Data;
 using Edubase.Data.Repositories;
 using Edubase.Services;
+using Edubase.Services.Approvals;
 using Edubase.Services.Core;
 using Edubase.Services.DataQuality;
 using Edubase.Services.Downloads;
@@ -28,6 +29,8 @@ using Edubase.Services.IntegrationEndPoints.OSPlaces;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
+using Edubase.Services.Texuna.Approvals;
+using Edubase.Services.Texuna.ChangeHistory;
 using Edubase.Services.Texuna.Downloads;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Governors;
@@ -178,14 +181,15 @@ builder.Services.AddSession(options =>
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("CanManageAcademyOpeningsOrSecureAcademy16To19", policy =>
         policy.RequireRole(
-            AuthorizedRoles.CanManageAcademyOpenings,
-            AuthorizedRoles.CanManageSecureAcademy16To19Openings))
+            string.Join(
+                AuthorizedRoles.CanManageAcademyOpenings,
+                AuthorizedRoles.CanManageSecureAcademy16To19Openings).Split(",")))
     .AddPolicy("CanBulkAssociateEstabs2Groups", policy =>
-        policy.RequireRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups))
+        policy.RequireRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups.Split(",")))
     .AddPolicy("CanBulkCreateFreeSchools", policy =>
-        policy.RequireRole(AuthorizedRoles.CanBulkCreateFreeSchools))
-    .AddPolicy("EdubasePolicy", policy =>
-        policy.Requirements.Add(new EdubaseRequirement()))
+        policy.RequireRole(AuthorizedRoles.CanBulkCreateFreeSchools.Split(",")))
+    .AddPolicy("CanBulkUpdateEstablishments", policy =>
+        policy.RequireRole(AuthorizedRoles.CanBulkUpdateEstablishments.Split(",")))
     .AddPolicy("EdubasePolicy", policy =>
         policy.Requirements.Add(new EdubaseRequirement("Admin")));
 
@@ -297,13 +301,14 @@ builder.Services.AddSingleton(new LoggingServicePolicy
 builder.Services.AddSingleton<ILoggingService>(provider =>
 {
     var policy = provider.GetRequiredService<LoggingServicePolicy>();
-    var account = provider.GetRequiredService<CloudStorageAccount>();
-    var tableName = "AZTLoggerMessages"; // or pull from config if needed
+    var config = provider.GetRequiredService<IConfiguration>();
 
-    return new LoggingService(policy, account, tableName);
+    string connectionString = config.GetConnectionString("StorageAccount");
+    string tableName = "AZTLoggerMessages";
+
+    return new LoggingService(policy, cloudStorageAccount, tableName);
 });
 
-builder.Services.AddSingleton(cloudStorageAccount);
 
 builder.Services.AddSingleton<ICacheAccessor>(provider =>
 {
@@ -337,6 +342,8 @@ builder.Services.AddSingleton<IOSPlacesApiService>(provider =>
     return new OSPlacesApiService(osPlacesClient);
 });
 builder.Services.AddTransient<IPlacesLookupService, PlacesLookupService>();
+builder.Services.AddTransient<IApprovalService, ApprovalService>();
+builder.Services.AddTransient<IChangeHistoryService, ChangeHistoryService>();
 
 JsonMediaTypeFormatter jsonFormatter = CreateJsonMediaTypeFormatter();
 builder.Services.AddSingleton(jsonFormatter);

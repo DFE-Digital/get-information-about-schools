@@ -8,7 +8,7 @@ namespace Edubase.Web.UI.Models
     {
         public class LinkAction
         {
-            public HtmlString Link { get; set; }
+            public IHtmlContent Link { get; set; }
             public string Description { get; set; }
         }
 
@@ -44,7 +44,7 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Create new establishments", "CreateEstablishment"),
+                    Link = htmlHelper.RouteLink("Create new establishments", "CreateEstablishment"),
                     Description = "Set up a new establishment record."
                 });
             }
@@ -53,7 +53,7 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("Bulk create new academies", "BulkAcademies", "Tools"),
+                    Link = htmlHelper.ActionLink("Bulk create new academies", "BulkAcademies", "Tools"),
                     Description = "Bulk set up new academy records collectively and not individually."
                 });
             }
@@ -62,7 +62,7 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools"),
+                    Link = htmlHelper.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools"),
                     Description = "Bulk set up new free school records collectively and not individually."
                 });
             }
@@ -71,7 +71,7 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("Amalgamate or merge establishments", "MergersTool", "Tools"),
+                    Link = htmlHelper.ActionLink("Amalgamate or merge establishments", "MergersTool", "Tools"),
                     Description = "Carry out an amalgamation or merger for establishments."
                 });
             }
@@ -80,9 +80,12 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink(
-                        "Create new children's centre groups or children's centre collaborations", "CreateNewGroup",
-                        "Group", new { area = "Groups", type = "ChildrensCentre" }, null),
+                    Link = htmlHelper.ActionLink(
+                        "Create new children's centre groups or children's centre collaborations",
+                        "CreateNewGroup",
+                        "Group",
+                        new { type = "ChildrensCentre" },
+                        null),
                     Description = "Set up a new children's centre group or children's centre collaboration record."
                 });
             }
@@ -91,8 +94,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("Create new federations", "CreateNewGroup", "Group",
-                        new { area = "Groups", type = "Federation" }, null),
+                    Link = htmlHelper.ActionLink("Create new federations", "CreateNewGroup", "Group",
+                        new { type = "Federation" }, null),
                     Description = "Set up a new federation record."
                 });
             }
@@ -101,8 +104,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("Create new foundation trusts", "CreateNewGroup", "Group",
-                        new { area = "Groups", type = "Trust" }, null),
+                    Link = htmlHelper.ActionLink("Create new foundation trusts", "CreateNewGroup", "Group",
+                        new { type = "Trust" }, null),
                     Description = "Set up a new foundation trust record."
                 });
             }
@@ -111,8 +114,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("Create new academy sponsors", "CreateNewGroup", "Group",
-                        new { area = "Groups", type = "Sponsor" }, null),
+                    Link = htmlHelper.ActionLink("Create new academy sponsors", "CreateNewGroup", "Group",
+                        new { type = "Sponsor" }, null),
                     Description = "Set up a new academy sponsor record."
                 });
             }
@@ -121,8 +124,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("Create new academy trusts", "SearchCompaniesHouse", "Group",
-                        new { area = "Groups", academyTrustRoute = "academy-trust" }, null),
+                    Link = htmlHelper.ActionLink("Create new academy trusts", "SearchCompaniesHouse", "Group",
+                        new { academyTrustRoute = "academy-trust" }, null),
                     Description = "Set up a new academy trust record."
                 });
             }
@@ -131,9 +134,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Convert single-academy trusts (SATs)", "GroupConvertSAT2MAT"),
-                    Description =
-                        "Convert a single-academy trust (SAT) record to a multi-academy trust (MAT) record."
+                    Link = htmlHelper.RouteLink("Convert single-academy trusts (SATs)", "GroupConvertSAT2MAT"),
+                    Description = "Convert a single-academy trust (SAT) record to a multi-academy trust (MAT) record."
                 });
             }
 
@@ -141,8 +143,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("Create new Secure Single-academy trust", "SearchCompaniesHouse",
-                        "Group", new { area = "Groups", academyTrustRoute = "secure-academy-trust" }, null),
+                    Link = htmlHelper.ActionLink("Create new Secure Single-academy trust", "SearchCompaniesHouse",
+                        "Group", new { academyTrustRoute = "secure-academy-trust" }, null),
                     Description = "Set up a new secure single-academy trust record."
                 });
             }
@@ -153,11 +155,12 @@ namespace Edubase.Web.UI.Models
         public List<LinkAction> GetUpdateActions(IHtmlHelper htmlHelper)
         {
             var retVal = new List<LinkAction>();
+
             if (UserCanBulkUpdateEstablishments)
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Bulk update establishments", "EstabBulkUpdate"),
+                    Link = htmlHelper.ActionLink("Bulk update establishments", "Index", "BulkUpdate"),
                     Description = "Bulk update establishment data collectively rather than individually."
                 });
             }
@@ -166,7 +169,7 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Bulk update governance information", "GovernorsBulkUpdate"),
+                    Link = htmlHelper.ActionLink("Bulk update governance information", "Index", "GovernorsBulkUpdate"),
                     Description = "Bulk update governance information collectively rather than individually."
                 });
             }
@@ -175,11 +178,11 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink(
-                        "Bulk upload academies to academy sponsors and<span class=\"govuk-visually-hidden\">&nbsp;</span>/<span class=\"govuk-visually-hidden\">&nbsp;</span>or academy trusts",
-                        "BulkAssociateEstabs2Groups"),
+                    Link = htmlHelper.ActionLink(
+                        "Bulk upload academies to academy sponsors and / or academy trusts",
+                        "Index", "BulkAssociateEstabs2Groups"),
                     Description =
-                        "Bulk upload academies to academy sponsors and<span class=\"govuk-visually-hidden\">&nbsp;</span>/<span class=\"govuk-visually-hidden\">&nbsp;</span>or academy trusts collectively rather than individually."
+                        "Bulk upload academies to academy sponsors and / or academy trusts collectively rather than individually."
                 });
             }
 
@@ -191,13 +194,17 @@ namespace Edubase.Web.UI.Models
             var retVal = new List<LinkAction>();
 
             // Link is shown to all users with access to the tools page
-            retVal.Add(new LinkAction { Link = (HtmlString) htmlHelper.ActionLink("View data owner teams' data status", "ViewStatus", "DataQuality"), Description = "See when each data owner team's data was last updated.<br />Data owner teams should use this to confirm when their team's data is up to date." });
+            retVal.Add(new LinkAction
+            {
+                Link = htmlHelper.ActionLink("View data owner teams' data status", "ViewStatus", "DataQuality"),
+                Description = "See when each data owner team's data was last updated.<br />Data owner teams should use this to confirm when their team's data is up to date."
+            });
 
             if (UserCanApprove)
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Manage change requests", "PendingApprovals"),
+                    Link = htmlHelper.RouteLink("Manage change requests", "PendingApprovals"),
                     Description = "Review your pending change requests and approve or reject."
                 });
             }
@@ -206,20 +213,17 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"),
-                    Description =
-                        "View details of proposed-to-open academies.<br />Edit academy names and opening dates."
+                    Link = htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"),
+                    Description = "View details of proposed-to-open academies.<br />Edit academy names and opening dates."
                 });
             }
 
-            if ( UserCanManageSecureAcademy16To19Openings)
+            if (UserCanManageSecureAcademy16To19Openings)
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Manage secure academy 16-19 openings",
-                        "ManageSecureAcademy16To19Openings"),
-                    Description =
-                        "View details of proposed-to-open secure academies 16-19.<br />Edit academy names and opening dates."
+                    Link = htmlHelper.RouteLink("Manage secure academy 16-19 openings", "ManageSecureAcademy16To19Openings"),
+                    Description = "View details of proposed-to-open secure academies 16-19.<br />Edit academy names and opening dates."
                 });
             }
 
@@ -227,10 +231,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("View independent schools' next significant action dates",
-                        "IndSchSearch"),
-                    Description =
-                        "View independent schools' next general action required dates and next action required by welfare dates."
+                    Link = htmlHelper.RouteLink("View independent schools' next significant action dates", "IndSchSearch"),
+                    Description = "View independent schools' next general action required dates and next action required by welfare dates."
                 });
             }
 
@@ -238,17 +240,16 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink(
+                    Link = htmlHelper.RouteLink(
                         "View closed Companies House single-academy trusts (SATs), secure single-academy trusts (SSATs) and multi-academy trusts (MATs)",
                         "DownloadClosedTrustsInformation"),
-                    Description =
-                        "View a list of closed single-academy trusts (SATs), secure single-academy trusts (SSATs) and multi-academy trusts (MATs) currently open on GIAS but reported closed by Companies House."
+                    Description = "View a list of closed single-academy trusts (SATs), secure single-academy trusts (SSATs) and multi-academy trusts (MATs) currently open on GIAS but reported closed by Companies House."
                 });
             }
 
             retVal.Add(new LinkAction
             {
-                Link = (HtmlString) htmlHelper.RouteLink("View establishment and group change history", "ChangeHistoryCriteria"),
+                Link = htmlHelper.RouteLink("View establishment and group change history", "ChangeHistoryCriteria"),
                 Description = "View establishment and group data changes."
             });
 
@@ -256,9 +257,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Manage notification banners", "Notifications"),
-                    Description =
-                        "Create a notification banner, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling. Add, edit or delete templated messages for notification banners. View the full change history audit of the notification banner messages."
+                    Link = htmlHelper.RouteLink("Manage notification banners", "Notifications"),
+                    Description = "Create a notification banner, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling. Add, edit or delete templated messages for notification banners. View the full change history audit of the notification banner messages."
                 });
             }
 
@@ -266,9 +266,8 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.RouteLink("Manage news", "ManageNews"),
-                    Description =
-                        "Create a news article, preview upcoming articles and/or edit one or more articles. View the full change history audit of the news articles."
+                    Link = htmlHelper.RouteLink("Manage news", "ManageNews"),
+                    Description = "Create a news article, preview upcoming articles and/or edit one or more articles. View the full change history audit of the news articles."
                 });
             }
 
@@ -283,7 +282,7 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("View logs", "ViewLogs", "Admin"),
+                    Link = htmlHelper.ActionLink("View logs", "ViewLogs", "Admin"),
                     Description = "View logs, including those linked to a user-facing error code."
                 });
             }
@@ -292,7 +291,7 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = (HtmlString) htmlHelper.ActionLink("Clear cache", "ClearCache", "Admin"),
+                    Link = htmlHelper.ActionLink("Clear cache", "ClearCache", "Admin"),
                     Description = "Clear the Redis cache and C# memory cache."
                 });
             }

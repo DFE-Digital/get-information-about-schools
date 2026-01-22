@@ -23,7 +23,7 @@
         <th class="cell-checkbox govuk-table__header">
             <span class="govuk-visually-hidden">Checkbox</span>
         </th>
-            @await Html.PartialAsync("_SortHeader", sortTypes)
+            @await Html.PartialAsync("_SortHeader", (sortTypes, Model.SortedAscending, Model.SortBy))
     </tr>
     </thead>
 

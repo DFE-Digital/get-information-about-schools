@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [Area("Establishments")]
     [Authorize(Policy = "CanBulkAssociateEstabs2Groups")]
     public class BulkAssociateEstabs2GroupsController : EduBaseController
     {

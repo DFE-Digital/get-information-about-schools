@@ -160,7 +160,7 @@
     <None Include="wwwroot\public\assets\scripts\build\search-results-bundle.d90881f07bb0027aabeb.js.map" />
     <None Include="wwwroot\robots.txt" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.IO.Compression" />
@@ -244,9 +244,17 @@
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="WebGrease" Version="1.6.0" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <NoWarn>NU1605</NoWarn>
+  </PropertyGroup>
+
+
+
   <!--<ItemGroup>
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

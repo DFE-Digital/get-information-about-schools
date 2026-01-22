@@ -1,11 +1,13 @@
 @using Edubase.Web.UI.Helpers
-@using System.Web
 @using Edubase.Web.UI.Models
 @model ToolsViewModel
+
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.bodyClasses = "tools-landing";
     ViewBag.SiteSection = "tools";
+
+    // These now return List<LinkAction> with IHtmlContent inside
     var creationActions = Model.GetCreateActions(Html);
     var updateActions = Model.GetUpdateActions(Html);
     var adminActions = Model.GetAdminActions(Html);
@@ -39,6 +41,6 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-            <back-to-top-link />
+        <back-to-top-link />
     </div>
 </div>

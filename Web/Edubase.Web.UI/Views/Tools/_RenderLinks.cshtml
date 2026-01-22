@@ -23,7 +23,7 @@
                     <li>
                         <h3 class="govuk-heading-s">
                             <span id="tool-link-@Model.Label.ToLower()-@itemCounter">
-                                @Html.Raw(System.Net.WebUtility.HtmlDecode(Model.List[itemCounter].Link.ToString()))
+                                @Model.List[itemCounter].Link
                             </span>
                         </h3>
                         <p class="@(Model.List.Count == 1 ? "govuk-!-padding-right-6" : "")">
