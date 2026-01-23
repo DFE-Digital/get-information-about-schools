@@ -24,10 +24,12 @@ class GiasFilterToggle {
             <div class="gias-mobile-filters__footer">
                 <button class="govuk-button gias-mobile-filters__close" id="gias-mobile-filter-submit">
                     View results
-                    <span class="mobile-count">(${startingCount})</span>
+                    <span class="mobile-count"></span>
                 </button>
             </div>
         </div>`);
+
+    mobileFiltersContainer.find('.mobile-count').text(`(${startingCount})`);
 
     mobileFilters.detach().appendTo(mobileFiltersContainer.find('.gias-mobile-filters__panel'));
 
