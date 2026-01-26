@@ -65,15 +65,14 @@ namespace Edubase.Web.UI.Controllers
 
             try
             {
-                var blob = _blobService.GetBlobReference(GUIDANCE_CONTAINER, blobName);
+                var blob = _blobService.GetBlobClient(GUIDANCE_CONTAINER, blobName);
 
-                blob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
+                await blob.DownloadToAsync(memoryStream);
                 memoryStream.Position = 0;
 
                 TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(memoryStream, blobName);
 
                 return View("ReadyToDownload");
-
             }
             catch (Exception)
             {
@@ -90,30 +89,24 @@ namespace Edubase.Web.UI.Controllers
             };
         }
 
-
         private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
         {
-            var blob = _blobService.GetBlobReference(container, file);
+            var blob = _blobService.GetBlobClient(container, file);
 
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = false,
             };
 
-            using (var memoryStream = new MemoryStream())
-            {
-                await blob.DownloadToStreamAsync(memoryStream);
-                memoryStream.Position = 0;
-                using (var reader = new StreamReader(memoryStream))
-                using (var csv = new CsvReader(reader, config))
-                {
-                    csv.Read();
-                    var records = csv.GetRecords<LaNameCodes>().ToList();
+            using var memoryStream = new MemoryStream();
+            await blob.DownloadToAsync(memoryStream);
+            memoryStream.Position = 0;
 
-                    return records;
-                }
-            }
+            using var reader = new StreamReader(memoryStream);
+            using var csv = new CsvReader(reader, config);
+            csv.Read();
+            var records = csv.GetRecords<LaNameCodes>().ToList();
+            return records;
         }
     }
 }
-

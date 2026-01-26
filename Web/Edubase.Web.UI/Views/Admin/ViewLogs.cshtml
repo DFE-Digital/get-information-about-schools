@@ -6,7 +6,7 @@
     ViewBag.SiteSection = "tools";
 
     var sortedMessages = Model.Messages
-        .OrderByDescending(m => m.Timestamp)
+        .OrderByDescending(m => m.TimestampUtc)
         .ToList();
 }
 
@@ -109,7 +109,7 @@
                     @foreach (var message in sortedMessages)
                     {
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" style="overflow: auto;">@message.Timestamp</td>
+                            <td class="govuk-table__cell" style="overflow: auto;">@message.TimestampUtc</td>
                             <td class="govuk-table__cell" style="max-width: 7.5em; overflow: auto;">
                                 <div class="govuk-inset-text">
                                     Reference: <strong class="govuk-tag govuk-tag--grey">@message.Id</strong>

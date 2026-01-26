@@ -30,17 +30,27 @@ namespace Edubase.Common.Cache
         private readonly CacheConfig _config;
 
         private readonly IExceptionLogger _exceptionLogger;
-        private readonly List<string> _keysSetInSession = new List<string>(); // log of keys set in this instance
-        private readonly object _mutex = new object();
-        private readonly object _mutex2 = new object();
+        private readonly List<string> _keysSetInSession = []; // log of keys set in this instance
+        private readonly object _mutex = new();
+        private readonly object _mutex2 = new();
         private IDatabase _cacheDatabase;
         private Task _connectingTask;
-        private ConnectionMultiplexer _connection;
+        private IConnectionMultiplexer _connection;
         private MemoryCache _fastMemcache;
         private volatile bool _isPendingSetOperation;
         private JsonConverterCollection _jsonConverterCollection;
         private MemoryCache _memoryCache;
         private ISubscriber _subscriber; // subscription to key-updates
+
+        public CacheAccessor(JsonConverterCollection converters, IConnectionMultiplexer connection)
+            : this(converters)
+        {
+            _jsonConverterCollection = converters;
+
+            _connection = connection;
+            _subscriber = _connection.GetSubscriber();
+            _cacheDatabase = _connection.GetDatabase();
+        }
 
         public CacheAccessor(JsonConverterCollection jsonConverterCollection) : this(new CacheConfig(), null)
         {

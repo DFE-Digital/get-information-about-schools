@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Net;
-using AzureTableLogger;
-using AzureTableLogger.LogMessages;
 using Edubase.Common;
+using Edubase.Common.Logging;
+using Edubase.Services;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Texuna;
 using Edubase.Web.UI.Helpers;
@@ -22,18 +22,18 @@ namespace Edubase.Web.UI.Filters
 {
     public class ExceptionHandler : IExceptionFilter
     {
-        private readonly IAzLogger _logger;
+        private readonly ILoggingService _loggingService;
         private readonly IConfiguration _config;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IModelMetadataProvider _modelMetadataProvider;
 
         public ExceptionHandler(
-            IAzLogger logger,
+            ILoggingService loggingService,
             IConfiguration config,
             IUrlHelperFactory urlHelperFactory,
             IModelMetadataProvider modelMetadataProvider)
         {
-            _logger = logger;
+            _loggingService = loggingService;
             _config = config;
             _urlHelperFactory = urlHelperFactory;
             _modelMetadataProvider = modelMetadataProvider;
@@ -41,10 +41,11 @@ namespace Edubase.Web.UI.Filters
 
         private bool EnableFriendlyErrorPage =>
             StringUtil.Boolify(_config["EnableFriendlyErrorPage"], true);
+        private static readonly string[] sourceArray = ["", "POST", "GET"];
 
         public void OnException(ExceptionContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             var httpContext = context.HttpContext;
 
@@ -54,10 +55,10 @@ namespace Edubase.Web.UI.Filters
                 {
                     ViewName = "~/Views/Shared/DomainError.cshtml",
                     ViewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState)
-                {
-                    { "PublicErrorMessage", domainException.Message },
-                    { "ExTypeName", domainException.GetType().Name }
-                }
+                    {
+                        { "PublicErrorMessage", domainException.Message },
+                        { "ExTypeName", domainException.GetType().Name }
+                    }
                 };
                 context.ExceptionHandled = true;
             }
@@ -123,22 +124,27 @@ namespace Edubase.Web.UI.Filters
                 Environment = _config["Environment"],
                 Exception = exception?.ToString(),
                 HttpMethod = httpMethod,
-                Level = LogMessage.LogLevel.ERROR,
+                Level = "ERROR",
                 ReferrerUrl = ctx?.Request?.Headers["Referer"].ToString(),
                 Message = exception?.GetBaseException().Message,
                 Url = $"{ctx?.Request?.Scheme}://{ctx?.Request?.Host}{ctx?.Request?.Path}{ctx?.Request?.QueryString}",
-                UserAgent = ctx?.Request?.Headers["User-Agent"].ToString(),
+                UserAgent = ctx?.Request?.Headers.UserAgent.ToString(),
                 UserId = userId,
                 UserName = userName,
                 RequestJsonBody = (exception as TexunaApiSystemException)?.ApiRequestJsonPayload ?? string.Empty
             };
 
-            if (!new[] { "", "POST", "GET" }.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase)))
-                return msg;
-
-            if ((msg.UserAgent ?? "").IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
+            // Only log GET/POST/empty
+            if (!sourceArray.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase)))
             {
-                _logger.Log(msg);
+                return msg;
+            }
+
+            // Skip bots
+            if (!(msg.UserAgent ?? "").Contains("bot", StringComparison.OrdinalIgnoreCase))
+            {
+                // NEW: async logging
+                _ = _loggingService.LogAsync(msg.Message, "Error");
             }
 
             return msg;

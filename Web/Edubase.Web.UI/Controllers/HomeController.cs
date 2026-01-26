@@ -68,17 +68,22 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<ActionResult> GetFileFromContainer(string container, string file)
         {
-            var blob = _blobService.GetBlobReference(container, file);
+            var blob = _blobService.GetBlobClient(container, file);
+
             if (await blob.ExistsAsync())
             {
+                var props = await blob.GetPropertiesAsync();
                 var stream = await blob.OpenReadAsync();
-                return new FileStreamResult(stream, blob.Properties.ContentType)
+
+                return new FileStreamResult(stream, props.Value.ContentType)
                 {
                     FileDownloadName = blob.Name
                 };
             }
+
             throw new Exception("File not available");
         }
+
 
         [Route("~/cookies")]
         public ActionResult Cookies() => View();

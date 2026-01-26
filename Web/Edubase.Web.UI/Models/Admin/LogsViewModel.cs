@@ -1,23 +1,43 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Edubase.Data.Entity;
+using Edubase.Common.Logging;
 
-namespace Edubase.Web.UI.Models.Admin
+namespace Edubase.Web.UI.Models.Admin;
+
+/// <summary>
+/// Represents the data required to display and filter log messages
+/// within the Admin UI, including date range, search query, and
+/// optional filtering of purge‑related log entries.
+/// </summary>
+public class LogsViewModel
 {
-    public class LogsViewModel
-    {
-        public List<AZTLoggerMessages> Messages { get; set; }
+    /// <summary>
+    /// The collection of log messages returned for the current query and filters.
+    /// </summary>
+    public List<WebLogMessage> Messages { get; set; }
 
-        public string Query { get; set; }
+    /// <summary>
+    /// A free‑text search query used to filter log messages across multiple fields.
+    /// </summary>
+    public string Query { get; set; }
 
-        public DateTimeViewModel StartDate { get; set; } = new DateTimeViewModel(DateTime.Today.AddDays(-28)); // Default to 28 days ago
+    /// <summary>
+    /// The start date used to filter log messages. Defaults to 28 days ago.
+    /// </summary>
+    public DateTimeViewModel StartDate { get; set; } =
+        new DateTimeViewModel(DateTime.Today.AddDays(-28));
 
-        public DateTimeViewModel EndDate { get; set; } = new DateTimeViewModel(DateTime.Today);
+    /// <summary>
+    /// The end date used to filter log messages. Defaults to today.
+    /// </summary>
+    public DateTimeViewModel EndDate { get; set; } =
+        new DateTimeViewModel(DateTime.Today);
 
-
-        [DisplayName("Include log messages about purging zero logs?")]
-        public bool IncludePurgeZeroLogsMessage { get; set; }
-
-    }
+    /// <summary>
+    /// Indicates whether log messages related to "zero logs purged" events
+    /// should be included in the results.
+    /// </summary>
+    [DisplayName("Include log messages about purging zero logs?")]
+    public bool IncludePurgeZeroLogsMessage { get; set; }
 }

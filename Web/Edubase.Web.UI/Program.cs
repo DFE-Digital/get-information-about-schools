@@ -5,8 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web;
-using AzureTableLogger;
-using AzureTableLogger.Services;
+using Azure.Data.Tables;
 using Edubase.Common.Cache;
 using Edubase.Data;
 using Edubase.Data.Repositories;
@@ -67,8 +66,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 using Sustainsys.Saml2.AspNetCore2;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -145,7 +144,6 @@ static HttpClient CreateGovernorSearchClient(IConfiguration configuration) =>
         "AppSettings:GovernorSearchApiUsername",
         "AppSettings:GovernorSearchApiPassword"
     );
-
 
 static HttpClient CreateOSPlacesClient(IConfiguration configuration)
 {
@@ -229,7 +227,6 @@ builder.Services.AddTransient<IDataQualityStatusRepository, DataQualityStatusRep
 builder.Services.AddTransient<ILocalAuthoritySetRepository, LocalAuthoritySetRepository>();
 builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
 builder.Services.AddSingleton<IUserPreferenceRepository, UserPreferenceRepository>();
-builder.Services.AddTransient<IBlobService, BlobService>();
 builder.Services.AddTransient<ILayoutHelper, LayoutHelper>();
 builder.Services.AddScoped<HttpContextBase>(_ => new HttpContextWrapper(System.Web.HttpContext.Current));
 builder.Services.AddScoped<IClientStorage, BrowserClientStorage>();
@@ -244,7 +241,6 @@ builder.Services.AddSingleton<NewsArticleRepository>();
 builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IGovernorsGridViewModelFactory, GovernorsGridViewModelFactory>();
 builder.Services.AddTransient<ISmtpEndPoint, MockSmtpEndPoint>();
-builder.Services.AddSingleton<IAzLogger, AzLogger>();
 builder.Services.AddScoped<ICachedLookupService, CachedLookupService>();
 builder.Services.AddScoped<IPlacesLookupService, PlacesLookupService>();
 builder.Services.AddScoped<IExternalLookupService, ExternalLookupService>();
@@ -267,11 +263,38 @@ builder.Services.AddTransient<IPropertyBinderHandler, ComplexTypeBinderHandler>(
 builder.Services.AddTransient<IPropertyBinderHandler, PropertyNameBinderHandler>();
 builder.Services.AddTransient<IPropertyBinderHandler, SimpleTypeBinderHandler>();
 
+const string DataConnectionString = "DataConnectionString";
+const string RedisConnectionString = "Redis";
+var dataConnectionString =
+    builder.Configuration.GetConnectionString(DataConnectionString);
+var redisConnectionString =
+    builder.Configuration.GetConnectionString(RedisConnectionString);
+
+builder.Services.AddTransient<IBlobService>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var connectionString = config.GetConnectionString(dataConnectionString);
+    return new BlobService(connectionString);
+});
+
+var tableServiceClient =
+    new TableServiceClient(dataConnectionString);
+
+// Register the TableServiceClient instead of CloudStorageAccount
+builder.Services.AddSingleton(tableServiceClient);
+builder.Services.AddSingleton<ILoggingService>(provider =>
+{
+    var tableService = provider.GetRequiredService<TableServiceClient>();
+    const string tableName = "AZTLoggerMessages";
+    return new LoggingService(tableService, tableName);
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
 {
     ServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
-    options.ValueProviderFactories.Add(new TokenValueProviderFactory(serviceProvider.GetRequiredService<ITokenRepository>()));
+    options.ValueProviderFactories.Add(
+        new TokenValueProviderFactory(serviceProvider.GetRequiredService<ITokenRepository>()));
     options.ModelBinderProviders.Insert(0, new DefaultModelBinderProvider(serviceProvider));
 });
 
@@ -283,37 +306,17 @@ builder.Services.AddTransient<IHttpClientWrapper, HttpClientWrapper>();
 builder.Services.AddTransient<HttpClientWrapper>();
 builder.Services.AddScoped<ISecurityService, SecurityApiService>();
 
-var dataConnectionString = builder.Configuration.GetConnectionString("DataConnectionString");
-var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-
-var cloudStorageAccount = CloudStorageAccount.Parse(dataConnectionString);
-builder.Services.AddTransient<IBlobService, BlobService>();
-builder.Services.AddSingleton(cloudStorageAccount);
-
-builder.Services.AddSingleton(new LoggingServicePolicy
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    FlushInterval = TimeSpan.FromSeconds(30),
-    RetentionCheckInterval = TimeSpan.FromDays(1),
-    RetentionCutoffAge = 90,
-    UsagePolicy = UsagePolicy.SCHEDULED
+    var config = sp.GetRequiredService<IConfiguration>();
+    return ConnectionMultiplexer.Connect(redisConnectionString);
 });
-
-builder.Services.AddSingleton<ILoggingService>(provider =>
-{
-    var policy = provider.GetRequiredService<LoggingServicePolicy>();
-    var config = provider.GetRequiredService<IConfiguration>();
-
-    string connectionString = config.GetConnectionString("StorageAccount");
-    string tableName = "AZTLoggerMessages";
-
-    return new LoggingService(policy, cloudStorageAccount, tableName);
-});
-
 
 builder.Services.AddSingleton<ICacheAccessor>(provider =>
 {
     var converters = provider.GetRequiredService<JsonConverterCollection>();
-    return new CacheAccessor(converters);
+    var redis = provider.GetRequiredService<IConnectionMultiplexer>();
+    return new CacheAccessor(converters, redis);
 });
 
 DbGeographyConverter dbGeographyConverter = new();

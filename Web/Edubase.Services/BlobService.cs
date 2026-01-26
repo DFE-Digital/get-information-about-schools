@@ -1,7 +1,7 @@
-using Edubase.Common;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.WindowsAzure.Storage.RetryPolicies;
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -9,154 +9,156 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services;
 
+/// <summary>
+/// Provides helper methods for interacting with Azure Blob Storage,
+/// including uploading, archiving, existence checks, and generating SAS URLs.
+/// </summary>
 public class BlobService : IBlobService
 {
-    private readonly CloudBlobClient _client;
-    
-    public class Base64String
+    private readonly BlobServiceClient _client;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BlobService"/> class.
+    /// </summary>
+    /// <param name="connectionString">
+    /// The Azure Storage connection string used to create the underlying <see cref="BlobServiceClient"/>.
+    /// </param>
+    public BlobService(string connectionString)
     {
-        public string Data { get; set; }
-
-        public Base64String(string data)
-        {
-            Data = data;
-        }
-
-        public override string ToString()
-        {
-            return Data;
-        }
-    }
-
-    private struct PathComponents
-    {
-        public string ContainerName { get; set; }
-        public string Path { get; set; }
-    }
-
-    public BlobService(CloudStorageAccount account)
-    {
-        _client = account.CreateCloudBlobClient();
-        _client.DefaultRequestOptions.RetryPolicy = new ExponentialRetry();
+        _client = new BlobServiceClient(connectionString);
     }
 
     /// <summary>
-    /// Adds a blob as a memory stream to a zip archive 
+    /// Retrieves a <see cref="BlobClient"/> for the specified container and blob name.
     /// </summary>
-    /// <param name="blobStream"></param>
-    /// <param name="blobName"></param>
-    /// <returns></returns>
+    /// <param name="containerName">The name of the blob container.</param>
+    /// <param name="blobName">The name of the blob.</param>
+    /// <returns>A <see cref="BlobClient"/> instance for the specified blob.</returns>
+    public BlobClient GetBlobClient(string containerName, string blobName)
+    {
+        BlobContainerClient containerClient =
+            _client.GetBlobContainerClient(containerName);
+
+        BlobClient blobClient =
+            containerClient.GetBlobClient(blobName);
+
+        return blobClient;
+    }
+
+    /// <summary>
+    /// Creates a ZIP archive containing the provided blob stream.
+    /// </summary>
+    /// <param name="blobStream">The stream representing the blob content.</param>
+    /// <param name="blobName">The name of the blob to use inside the archive.</param>
+    /// <returns>A <see cref="MemoryStream"/> containing the ZIP archive.</returns>
     public async Task<MemoryStream> ArchiveBlobAsync(MemoryStream blobStream, string blobName)
     {
-        var archiveStream = new MemoryStream();
+        MemoryStream archiveStream = new();
 
-        using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Create, true))
+        using (ZipArchive archive =
+            new(archiveStream, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var blobToArchive = archive.CreateEntry(blobName);
+            ZipArchiveEntry entry = archive.CreateEntry(blobName);
 
-            using (var entryStream = blobToArchive.Open())
+            using (Stream entryStream = entry.Open())
             {
-              await blobStream.CopyToAsync(entryStream);
+                blobStream.Position = 0;
+                await blobStream.CopyToAsync(entryStream);
             }
         }
 
         archiveStream.Position = 0;
-        
         return archiveStream;
     }
 
     /// <summary>
-    /// Uploads a blob from a byte array
+    /// Uploads a blob to Azure Blob Storage.
     /// </summary>
-    /// <param name="sourceBytes"></param>
-    /// <param name="mimeType"></param>
-    /// <param name="destinationContainerName"></param>
-    /// <param name="destinationBlobName"></param>
-    /// <returns></returns>
-    public async Task<string> UploadAsync(byte[] sourceBytes, string mimeType, string destinationContainerName, string destinationBlobName)
+    /// <param name="sourceBytes">The byte array containing the blob content.</param>
+    /// <param name="mimeType">The MIME type of the blob.</param>
+    /// <param name="containerName">The name of the container to upload to.</param>
+    /// <param name="blobName">The name of the blob to create.</param>
+    /// <returns>The absolute URI of the uploaded blob.</returns>
+    public async Task<string> UploadAsync(byte[] sourceBytes, string mimeType, string containerName, string blobName)
     {
-        var blob = GetBlobReference(destinationContainerName, destinationBlobName);
-        await blob.UploadFromByteArrayAsync(sourceBytes, 0, sourceBytes.Length);
-        await SetContentMimeType(mimeType, blob);
-        return blob.Uri.ToString();
+        BlobContainerClient containerClient =
+            _client.GetBlobContainerClient(containerName);
+
+        await containerClient.CreateIfNotExistsAsync();
+
+        BlobClient blobClient =
+            containerClient.GetBlobClient(blobName);
+
+        using (MemoryStream ms = new(sourceBytes))
+        {
+            BlobHttpHeaders headers = new() { ContentType = mimeType };
+            await blobClient.UploadAsync(ms, headers);
+        }
+
+        return blobClient.Uri.ToString();
     }
 
     /// <summary>
-    /// Checks whether a given blob in a given container exists
+    /// Determines whether a blob exists in the specified container.
     /// </summary>
-    /// <param name="containerName"></param>
-    /// <param name="blobName"></param>
-    /// <returns></returns>
+    /// <param name="containerName">The name of the blob container.</param>
+    /// <param name="blobName">The name of the blob.</param>
+    /// <returns><c>true</c> if the blob exists; otherwise, <c>false</c>.</returns>
     public async Task<bool> ExistsAsync(string containerName, string blobName)
     {
-        var reference = GetBlobReference(containerName, blobName);
-        return await reference.ExistsAsync();
+        BlobContainerClient containerClient = _client.GetBlobContainerClient(containerName);
+        BlobClient blobClient = containerClient.GetBlobClient(blobName);
+        Response<bool> exists = await blobClient.ExistsAsync();
+        return exists.Value;
     }
 
     /// <summary>
-    /// Creates a random blob name.  Optionally appending an extension, e.g., a file extension.
-    /// Returns a blob name which is a lower-cased guid with no hyphens
+    /// Generates a random blob name, optionally appending a file extension.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="extensionToAppend">The file extension to append (with or without a leading dot).</param>
+    /// <returns>A unique blob name.</returns>
     public string CreateRandomBlobName(string extensionToAppend = null)
     {
-        if (extensionToAppend.Clean() != null && !extensionToAppend.StartsWith(".")) extensionToAppend = "." + extensionToAppend;
+        if (!string.IsNullOrWhiteSpace(extensionToAppend) && !extensionToAppend.StartsWith("."))
+        {
+            extensionToAppend = "." + extensionToAppend;
+        }
+
         return Guid.NewGuid().ToString("N").ToLower() + (extensionToAppend ?? string.Empty);
     }
 
-    #region Helper methods
-
-    private async Task SetContentMimeType(string mimeType, CloudBlockBlob blob)
-    {
-        blob.Properties.ContentType = mimeType;
-        await blob.SetPropertiesAsync();
-    }
-
-    public CloudBlockBlob GetBlobReference(string destinationContainerName, string destinationBlobName)
-    {
-        var container = _client.GetContainerReference(destinationContainerName);
-        var blob = container.GetBlockBlobReference(destinationBlobName);
-        return blob;
-    }
-
     /// <summary>
-    /// Returns path components from an absolute path
+    /// Generates a read-only Shared Access Signature (SAS) URL for a blob.
     /// </summary>
-    /// <param name="absolutePathWithContainerNameAndPrependingSlash"></param>
-    /// <returns></returns>
-    private PathComponents ExtractPathComponents(string absolutePathWithContainerNameAndPrependingSlash)
-    {
-        var path = absolutePathWithContainerNameAndPrependingSlash.Clean();
-        var argName = nameof(absolutePathWithContainerNameAndPrependingSlash);
-        const string FORWARD_SLASH = "/";
-        
-        if (path == null) throw new ArgumentNullException(argName);
-        if (!path.StartsWith(FORWARD_SLASH)) throw new ArgumentException($"The argument '{argName}' does not have a prepending slash.  Are you sure this is an absolute path?");
-
-        path = path.Substring(1);
-
-        if (path.Length == 0) throw new ArgumentException($"Argument '{argName}' is not valid");
-        if (path.Split(new[] { FORWARD_SLASH }, StringSplitOptions.RemoveEmptyEntries).Length <= 1)
-            throw new ArgumentException($"Argument '{argName}' doesn't have a path component after the container name component");
-
-        string containerName = path.Substring(0, path.IndexOf(FORWARD_SLASH));
-        string blobName = path.Substring(path.IndexOf(FORWARD_SLASH) + 1);
-
-        return new PathComponents { Path = blobName, ContainerName = containerName };
-    }
-
+    /// <param name="containerName">The name of the blob container.</param>
+    /// <param name="blobName">The name of the blob.</param>
+    /// <param name="expirationUtc">The UTC expiration time for the SAS token.</param>
+    /// <returns>A read-only SAS URL granting temporary access to the blob.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the <see cref="BlobClient"/> cannot generate a SAS URI.
+    /// </exception>
     public string GetReadOnlySharedAccessUrl(string containerName, string blobName, DateTimeOffset expirationUtc)
     {
-        var blob = GetBlobReference(containerName, blobName);
-        var signature = blob.GetSharedAccessSignature(new SharedAccessBlobPolicy()
+        BlobContainerClient containerClient = _client.GetBlobContainerClient(containerName);
+        BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+        if (!blobClient.CanGenerateSasUri)
         {
-            Permissions = SharedAccessBlobPermissions.Read,
-            SharedAccessExpiryTime = expirationUtc
-        });
+            throw new InvalidOperationException(
+                "BlobClient cannot generate SAS. Ensure the client was created with a connection string.");
+        }
 
-        return blob.Uri + signature;
+        BlobSasBuilder sasBuilder = new()
+        {
+            BlobContainerName = containerName,
+            BlobName = blobName,
+            Resource = "b",
+            ExpiresOn = expirationUtc
+        };
+
+        sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+        Uri sasUri = blobClient.GenerateSasUri(sasBuilder);
+        return sasUri.ToString();
     }
-
-    #endregion
-
 }

@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AzureTableLogger.Services;
 using Edubase.Common.Cache;
-using Edubase.Data.Entity;
+using Edubase.Common.Logging;
 using Edubase.Data.Repositories;
+using Edubase.Services;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
@@ -28,12 +28,15 @@ namespace Edubase.Web.UI.Controllers
         {
             _loggingService = loggingService;
             _webLogItemRepository = webLogItemRepository;
+            _cacheAccessor = cacheAccessor;
         }
 
         [HttpGet("GetPendingErrors")]
         public IActionResult GetPendingErrors(string pwd)
         {
-            return pwd == "c7634" ? Json(_loggingService.GetPending()) : new EmptyResult();
+            return pwd == "c7634"
+                ? Json(_loggingService.GetPending())
+                : new EmptyResult();
         }
 
         [HttpGet("GetPendingErrorsId")]
@@ -57,24 +60,30 @@ namespace Edubase.Web.UI.Controllers
             var queryString = model.Query ?? "";
             var includePurgeZeroLogsMessage = model.IncludePurgeZeroLogsMessage;
 
-            var webLogMessages = new List<AZTLoggerMessages>();
+            var webLogMessages = new List<WebLogMessage>();
 
+            // Search by ID
             if (!string.IsNullOrWhiteSpace(model.Query))
             {
                 var searchByIdResults = await _webLogItemRepository.GetById(model.Query.ToLowerInvariant());
                 if (searchByIdResults.Count() == 1)
                 {
-                    webLogMessages = searchByIdResults.ToList();
+                    webLogMessages = [.. searchByIdResults];
                 }
             }
 
-            if (!webLogMessages.Any())
+            // Search by date range
+            if (webLogMessages.Count == 0)
             {
                 var startDate = model.StartDate.ToDateTime();
                 var endDate = model.EndDate.ToDateTime();
-                if (model.StartDate.IsValid() && model.EndDate.IsValid() && startDate.HasValue && endDate.HasValue)
+
+                if (model.StartDate.IsValid() && model.EndDate.IsValid() &&
+                    startDate.HasValue && endDate.HasValue)
                 {
-                    webLogMessages = (List<AZTLoggerMessages>) await _webLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value.AddDays(1));
+                    webLogMessages = [.. await _webLogItemRepository
+                        .GetWithinDateRange(startDate.Value, endDate.Value.AddDays(1))];
+
                     webLogMessages = WebLogItemRepository.FilterByAllTextColumns(webLogMessages, queryString);
                     webLogMessages = WebLogItemRepository.FilterPurgeZeroLogsMessage(webLogMessages, includePurgeZeroLogsMessage);
                 }
