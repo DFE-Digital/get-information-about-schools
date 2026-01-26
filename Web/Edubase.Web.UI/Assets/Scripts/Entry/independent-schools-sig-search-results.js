@@ -114,7 +114,8 @@ const _throttle = require('lodash.throttle');
   $('#set-saver').on('click',
     function(e) {
       e.preventDefault();
-      const params = $('#option-select-local-authority').find(':input').serialize() + '&referrer=results&Mode=' + document.getElementById('Mode').value;
+      const modeValue = encodeURIComponent(document.getElementById('Mode').value);
+      const params = $('#option-select-local-authority').find(':input').serialize() + '&referrer=results&Mode=' + modeValue;
       window.location = '/independent-schools/predefined-local-authority-sets/create?' + params;
 
     });
