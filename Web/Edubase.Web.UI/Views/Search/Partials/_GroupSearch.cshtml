@@ -46,14 +46,13 @@
                                     <dialog-hidden-prompt />
                                 </a>
                             </label>
-                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "govuk-input govuk-input--width-20", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200", aria_describedby = "group-reference"})
+                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "govuk-input govuk-input--width-20", autocomplete = "off", data_suggestion_url = "/Search/SuggestGroup?text=", maxlength = "200", aria_describedby = "group-reference"})
                             </div>
                         </div>
                         <div class="govuk-form-group">
-                            <a href="@Url.Action("Details", "Group", new { id = 19865 })"
-                               class="govuk-button search-button">
-                                Search
-                            </a>
+                            <div class="govuk-form-group">
+                                <button type="submit" id="group-search-submit" class="govuk-button  search-button" name="searchtype" value="@eSearchType.Group">Search</button>
+                            </div>
                         </div>
                     </div>
                 </fieldset>

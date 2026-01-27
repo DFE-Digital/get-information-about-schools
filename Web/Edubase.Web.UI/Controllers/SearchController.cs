@@ -301,7 +301,7 @@ namespace Edubase.Web.UI.Controllers
             return await Index(viewModel);
         }
 
-        [Route("Suggest"), HttpGet]
+        [HttpGet("search/suggest")]
         public async Task<ActionResult> Suggest(string text)
         {
             var suggestions = (await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User)).ToArray();
@@ -321,11 +321,11 @@ namespace Edubase.Web.UI.Controllers
             return Json(suggestions);
         }
 
-        [Route("SuggestGroup"), HttpGet]
+        [HttpGet("search/suggestgroup")]
         public async Task<ActionResult> SuggestGroup(string text) =>
             Json(await _groupReadService.SuggestAsync(text.Distill(), User));
 
-        [Route("SuggestPlace"), HttpGet]
+        [HttpGet("search/suggestplace")]
         public async Task<ActionResult> SuggestPlace([FromQuery] string text)
         {
             return QueryValidator.ValidatePlaceSuggestionQuery(text)

@@ -207,7 +207,7 @@
                                         </a>
                                     </label>
                                     <div class="govuk-form-group">
-                                        @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "govuk-input govuk-!-width-one-half", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", aria_describedby = "group-reference"})
+                                        @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "govuk-input govuk-!-width-one-half", autocomplete = "off", data_suggestion_url = "/Search/SuggestGroup?text=", aria_describedby = "group-reference"})
                                     </div>
 
                                     @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
