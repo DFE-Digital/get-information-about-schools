@@ -19,7 +19,6 @@ namespace Edubase.Web.UI.Controllers
     using Edubase.Services.Geo;
     using eStatus = eLookupEstablishmentStatus;
 
-    [Route("Search")]
     public class SearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -40,7 +39,7 @@ namespace Edubase.Web.UI.Controllers
             _groupReadService = groupReadService;
         }
 
-        [HttpGet("search", Name = "Search")]
+        [HttpGet("Search", Name = "Search")]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
             if (!viewModel.NoResults)

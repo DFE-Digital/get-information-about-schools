@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [Route("Faq")]
     public class FaqController : Controller
     {
         private readonly FaqItemRepository _FaqItemRepository;

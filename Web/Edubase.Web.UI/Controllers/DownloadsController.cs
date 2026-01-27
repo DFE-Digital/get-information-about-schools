@@ -116,25 +116,54 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [Route("Generate", Name = "GenerateDownload")]
+        [Route("Generate/{id}", Name = "GenerateDownload")]
         public async Task<ActionResult> GenerateDownload(string id)
         {
-            var response = await _downloadsService.GenerateExtractAsync(id, User);
-
-            if (response.Contains(
-                    "fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
+            if (!Guid.TryParse(id, out _))
             {
-                return RedirectToAction(nameof(DownloadGenerated),
-                    new
-                    {
-                        id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)),
-                        isExtract = true
-                    });
+                return InvalidGuidResult(isExtract: false);
             }
-            else
+
+            string? response = await TryGenerateExtractAsync(id);
+            if (string.IsNullOrWhiteSpace(response))
             {
-                return RedirectToAction(nameof(DownloadGenerated),
-                    new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+                return InvalidGuidResult(isExtract: false);
+            }
+
+            // API sometimes returns ProgressDto and sometimes ApiResultDto<Guid>
+            if (response.Contains("fileLocationUri", StringComparison.OrdinalIgnoreCase))
+            {
+                var progress = JsonConvert.DeserializeObject<ProgressDto>(response);
+                var generatedId = getIdFromFileLocationUri(progress);
+
+                return RedirectToAction(
+                    nameof(DownloadGenerated),
+                    new { id = generatedId, isExtract = true });
+            }
+
+            var apiResult = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response);
+
+            return RedirectToAction(
+                nameof(DownloadGenerated),
+                new { id = apiResult.Value });
+        }
+
+        private async Task<string?> TryGenerateExtractAsync(string id)
+        {
+            try
+            {
+                return await _downloadsService.GenerateExtractAsync(id, User);
+            }
+            catch (Exception ex)
+            {
+                // The API uses exception messages to signal known failure states
+                if (ex.Message.StartsWith("The API returned 404 Not Found", StringComparison.OrdinalIgnoreCase) ||
+                    ex.Message.StartsWith("The API returned an 'Internal Server Error'", StringComparison.OrdinalIgnoreCase))
+                {
+                    return null;
+                }
+
+                throw; // Unexpected error — let it bubble up
             }
         }
 
@@ -143,11 +172,7 @@ namespace Edubase.Web.UI.Controllers
         {
             if (!Guid.TryParse(id, out Guid parsedId))
             {
-                return View("Downloads/DownloadError", new DownloadErrorViewModel
-                {
-                    NeedsRegenerating = false,
-                    ReturnSource = isExtract ? eDownloadReturnSource.Extracts : eDownloadReturnSource.Downloads,
-                });
+                return InvalidGuidResult(isExtract);
             }
 
             var model = new ProgressDto();
@@ -184,6 +209,31 @@ namespace Edubase.Web.UI.Controllers
                 return View("PreparingFilePleaseWait", model);
 
             return View("ReadyToDownload", model);
+        }
+
+        /// <summary>
+        /// Generates a standard error response when a supplied identifier
+        /// cannot be parsed into a valid <see cref="Guid"/>.
+        /// </summary>
+        /// <param name="isExtract">
+        /// Indicates whether the request originated from the extracts area
+        /// or the general downloads area. This determines the value of
+        /// <see cref="eDownloadReturnSource"/> used in the returned view model.
+        /// </param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> rendering the download error view,
+        /// populated with a <see cref="DownloadErrorViewModel"/> describing
+        /// the failure and the appropriate return source.
+        /// </returns>
+        private ViewResult InvalidGuidResult(bool isExtract)
+        {
+            return View("Downloads/DownloadError", new DownloadErrorViewModel
+            {
+                NeedsRegenerating = false,
+                ReturnSource = isExtract
+                    ? eDownloadReturnSource.Extracts
+                    : eDownloadReturnSource.Downloads
+            });
         }
 
         [Route("RequestScheduledExtract/{eid}", Name = "RequestScheduledExtract")]

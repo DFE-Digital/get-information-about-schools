@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Common;
@@ -18,7 +17,6 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Mappers.Establishment;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
@@ -29,7 +27,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     [ApiController]
     [Route("establishments/search")]
-    //[Authorize]
     public class EstablishmentsSearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -137,7 +134,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return new JsonResult(filtered);
         }
 
-        [HttpGet("prepare-download")]
+        [HttpGet("PrepareDownload")]
         public async Task<IActionResult> PrepareDownload([FromQuery] EstablishmentSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Establishments;

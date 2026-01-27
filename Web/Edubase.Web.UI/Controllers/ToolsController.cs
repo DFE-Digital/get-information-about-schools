@@ -1,6 +1,5 @@
 using Edubase.Services.Domain;
 using Microsoft.AspNetCore.Mvc;
-using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -29,7 +28,6 @@ namespace Edubase.Web.UI.Controllers
     using Services.Security;
     using GT = Services.Enums.eLookupGroupType;
 
-    [Route("Tools")]
     [Authorize(Policy = "EdubasePolicy")]
     public class ToolsController : Controller
     {
@@ -55,7 +53,7 @@ namespace Edubase.Web.UI.Controllers
             _establishmentDownloadService = establishmentDownloadService;
         }
 
-        [HttpGet("tools", Name = "Tools")]
+        [HttpGet("Tools", Name = "Tools")]
         public async Task<ActionResult> Index()
         {
             var createGroupPermission = await _securityService.GetCreateGroupPermissionAsync(User);
