@@ -85,16 +85,16 @@ do
     $requestTimer = [Diagnostics.Stopwatch]::StartNew()
     $response = try
     {
-        if ($username -eq '')
+        if ($basicAuthUsername -eq '')
         {
             Write-Host 'Username not provided. Doing smoke test without basic auth.'
-            Invoke-WebRequest -Uri $url
+            Invoke-WebRequest -Uri $url -UseBasicParsing
         }
         else
         {
             Write-Host 'Username provided. Doing smoke test with basic auth.'
             $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $basicAuthUsername, $basicAuthPassword)))
-            Invoke-WebRequest -Uri $url -Headers @{ Authorization = ("Basic {0}" -f $base64AuthInfo) }
+            Invoke-WebRequest -Uri $url -UseBasicParsing -Headers @{ Authorization = ("Basic {0}" -f $base64AuthInfo) }
         }
     }
     catch [System.Net.WebException]
