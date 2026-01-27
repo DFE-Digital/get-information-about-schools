@@ -26,7 +26,7 @@ using R = Edubase.Services.Security.EdubaseRoles;
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     [ApiController]
-    [Route("establishments/search")]
+    [Route("Establishments/Search")]
     public class EstablishmentsSearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
