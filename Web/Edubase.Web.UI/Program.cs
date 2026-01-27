@@ -272,9 +272,7 @@ var redisConnectionString =
 
 builder.Services.AddTransient<IBlobService>(sp =>
 {
-    var config = sp.GetRequiredService<IConfiguration>();
-    var connectionString = config.GetConnectionString(dataConnectionString);
-    return new BlobService(connectionString);
+    return new BlobService(dataConnectionString);
 });
 
 var tableServiceClient =
