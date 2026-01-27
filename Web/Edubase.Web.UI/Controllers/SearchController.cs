@@ -15,8 +15,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using System.Collections.Generic;
     using Common.Spatial;
     using Edubase.Services.Geo;
+    using Microsoft.AspNetCore.WebUtilities;
     using eStatus = eLookupEstablishmentStatus;
 
     public class SearchController : EduBaseController
@@ -263,11 +265,33 @@ namespace Edubase.Web.UI.Controllers
                             return Redirect(urlWithQuery);
                         }
 
-                        if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
+                        if (viewModel.SearchType.OneOfThese(
+                                eSearchType.Governor,
+                                eSearchType.GovernorReference,
+                                eSearchType.GovernorAll))
                         {
-                            return Redirect(
-                                $"{Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" })}?{Request.Query}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");
+                            var baseUrl = Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" });
+
+                            // Start with existing query parameters
+                            var query = new Dictionary<string, string?>();
+                            foreach (var kvp in Request.Query)
+                            {
+                                query[kvp.Key] = kvp.Value;
+                            }
+
+                            // Add multiple role IDs
+                            foreach (var roleId in viewModel.GovernorSearchModel.RoleId)
+                            {
+                                query.Add(
+                                    Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID,
+                                    roleId.ToString());
+                            }
+
+                            var finalUrl = QueryHelpers.AddQueryString(baseUrl!, query);
+
+                            return Redirect(finalUrl);
                         }
+
 
                         throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
                     }
