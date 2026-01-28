@@ -112,6 +112,7 @@
         <Compile Include="Core\HttpClientWrapperTests.cs" />
         <Compile Include="Core\MockHttpMessageHandler.cs" />
         <Compile Include="Establishments\EstablishmentReadApiServiceTests.cs" />
+        <Compile Include="Establishments\EstablishmentWriteApiServiceTests.cs" />
         <Compile Include="Lookup\LookupApiServiceTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
