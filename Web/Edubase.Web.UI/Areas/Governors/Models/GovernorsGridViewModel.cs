@@ -206,7 +206,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         if (role == (GR) governor.RoleId)
                         {
                             var shouldDisplaySharedWith = role.OneOfThese(GR.Establishment_SharedGovernanceProfessional, GR.Group_SharedGovernanceProfessional);
-                            grid.AddRow(governor, endDate)
+                            grid.AddRow(governor, governor.IsEditable, endDate)
                                 .AddCell(getFullnameWithTitle, displayPolicy.FullName)
                                 .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, shouldDisplaySharedWith)
                                 .AddCell(governor.Id, displayPolicy.Id)
@@ -220,7 +220,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     }
                     else
                     {
-                        grid.AddRow(governor, endDate)
+                        grid.AddRow(governor, governor.IsEditable, endDate)
                             .AddCell(getFullnameWithTitle, displayPolicy.FullName)
                             .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments,
                                 role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
