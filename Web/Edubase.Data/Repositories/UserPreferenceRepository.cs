@@ -1,26 +1,28 @@
 using System;
 using System.Threading.Tasks;
 using Azure;
+using Azure.Data.Tables;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Data.Repositories;
 
-public class UserPreferenceRepository : TableStorageBase<UserPreference>, IUserPreferenceRepository
+public class UserPreferenceRepository : IUserPreferenceRepository
 {
     private const string PartitionKey = "UserPreference";
+    private const string TableNameKey = "UserPreferences";
 
-    public UserPreferenceRepository(IConfiguration configuration)
-        : base(configuration, "DataConnectionString", "UserPreferences")
+    private readonly TableClient _userPreferenceTableClient;
+
+    public UserPreferenceRepository(TableServiceClient tableServiceClient)
     {
+        _userPreferenceTableClient = tableServiceClient.GetTableClient(TableNameKey);
     }
 
     public async Task<UserPreference?> GetAsync(string userId)
     {
         try
         {
-            var response = await Table.GetEntityAsync<UserPreference>(PartitionKey, userId);
+            var response = await _userPreferenceTableClient.GetEntityAsync<UserPreference>(PartitionKey, userId);
             return response.Value;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
@@ -33,7 +35,7 @@ public class UserPreferenceRepository : TableStorageBase<UserPreference>, IUserP
     {
         try
         {
-            var response = Table.GetEntity<UserPreference>(PartitionKey, userId);
+            var response = _userPreferenceTableClient.GetEntity<UserPreference>(PartitionKey, userId);
             return response.Value;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
@@ -46,6 +48,6 @@ public class UserPreferenceRepository : TableStorageBase<UserPreference>, IUserP
     {
         item.PartitionKey = PartitionKey;
         item.RowKey ??= item.UserId ?? Guid.NewGuid().ToString("N").Substring(0, 8);
-        await Table.UpsertEntityAsync(item);
+        await _userPreferenceTableClient.UpsertEntityAsync(item);
     }
 }

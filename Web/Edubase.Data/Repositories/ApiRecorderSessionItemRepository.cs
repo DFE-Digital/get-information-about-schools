@@ -1,21 +1,23 @@
 using System.Threading.Tasks;
+using Azure.Data.Tables;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.Extensions.Configuration;
-
 
 namespace Edubase.Data.Repositories;
 
-public class ApiRecorderSessionItemRepository : TableStorageBase<ApiRecorderSessionItem>
+public class ApiRecorderSessionItemRepository
 {
-    public ApiRecorderSessionItemRepository(IConfiguration configuration)
-        : base(configuration, "DataConnectionString", "ApiRecorderSessionItems")
+    private const string TableNameKey = "ApiRecorderSessionItems";
+
+    private readonly TableClient _apiRecorderSessionTableClient;
+
+    public ApiRecorderSessionItemRepository(TableServiceClient tableServiceClient)
     {
+        _apiRecorderSessionTableClient = tableServiceClient.GetTableClient(TableNameKey);
     }
 
     public async Task CreateAsync(ApiRecorderSessionItem message)
     {
-        await Table.AddEntityAsync(message);
+        await _apiRecorderSessionTableClient.AddEntityAsync(message);
     }
 }
 

@@ -4,31 +4,33 @@ using System.Threading.Tasks;
 using Azure;
 using Azure.Data.Tables;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Data.Repositories;
 
-public class FaqGroupRepository : TableStorageBase<FaqGroup>
+public class FaqGroupRepository
 {
     private const string PartitionKey = "FaqGroup";
+    private const string TableNameKey = "FaqGroups";
 
-    public FaqGroupRepository(IConfiguration configuration)
-        : base(configuration, "DataConnectionString", "FaqGroups")
+    private readonly TableClient _faqGroupTableClient;
+
+    public FaqGroupRepository(TableServiceClient tableServiceClient)
     {
+        _faqGroupTableClient = tableServiceClient.GetTableClient(TableNameKey);
     }
 
     public async Task CreateAsync(FaqGroup entity)
     {
         entity.PartitionKey = PartitionKey;
         entity.RowKey ??= Guid.NewGuid().ToString();
-        await Table.AddEntityAsync(entity);
+        await _faqGroupTableClient.AddEntityAsync(entity);
     }
 
     public async Task<IEnumerable<FaqGroup>> GetAllAsync(int take)
     {
         var results = new List<FaqGroup>();
-        await foreach (var item in Table.QueryAsync<FaqGroup>(x => x.PartitionKey == PartitionKey))
+        await foreach (var item in
+            _faqGroupTableClient.QueryAsync<FaqGroup>(x => x.PartitionKey == PartitionKey))
         {
             results.Add(item);
             if (results.Count >= take)
@@ -44,7 +46,7 @@ public class FaqGroupRepository : TableStorageBase<FaqGroup>
     {
         try
         {
-            var response = await Table.GetEntityAsync<FaqGroup>(PartitionKey, id);
+            var response = await _faqGroupTableClient.GetEntityAsync<FaqGroup>(PartitionKey, id);
             return response.Value;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
@@ -58,13 +60,13 @@ public class FaqGroupRepository : TableStorageBase<FaqGroup>
         var item = await GetAsync(id);
         if (item is not null)
         {
-            await Table.DeleteEntityAsync(item.PartitionKey, item.RowKey);
+            await _faqGroupTableClient.DeleteEntityAsync(item.PartitionKey, item.RowKey);
         }
     }
 
     public async Task UpdateAsync(FaqGroup item)
     {
         item.PartitionKey = PartitionKey;
-        await Table.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
+        await _faqGroupTableClient.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
     }
 }

@@ -1,17 +1,20 @@
 using System;
 using System.Threading.Tasks;
 using Azure;
+using Azure.Data.Tables;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Data.Repositories;
 
-public class TokenRepository : TableStorageBase<Token>, ITokenRepository
+public class TokenRepository : ITokenRepository
 {
-    public TokenRepository(IConfiguration configuration)
-        : base(configuration, "DataConnectionString", "Tokens")
+    private const string TableNameKey = "Tokens";
+
+    private readonly TableClient _tokenRepositoryTableClient;
+
+    public TokenRepository(TableServiceClient tableServiceClient)
     {
+        _tokenRepositoryTableClient = tableServiceClient.GetTableClient(TableNameKey);
     }
 
     public async Task CreateAsync(Token message)
@@ -21,7 +24,7 @@ public class TokenRepository : TableStorageBase<Token>, ITokenRepository
             throw new ArgumentException("PartitionKey and RowKey must be set on the Token entity.");
         }
 
-        await Table.AddEntityAsync(message);
+        await _tokenRepositoryTableClient.AddEntityAsync(message);
     }
 
     public async Task<Token?> GetAsync(string id)
@@ -36,7 +39,7 @@ public class TokenRepository : TableStorageBase<Token>, ITokenRepository
 
         try
         {
-            var response = await Table.GetEntityAsync<Token>(partitionKey, rowKey);
+            var response = await _tokenRepositoryTableClient.GetEntityAsync<Token>(partitionKey, rowKey);
             return response.Value;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)

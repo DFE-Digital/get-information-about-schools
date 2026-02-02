@@ -6,28 +6,28 @@ using System.Threading.Tasks;
 using Azure;
 using Azure.Data.Tables;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Data.Repositories;
 
-public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
+public class NotificationBannerRepository
 {
     private const string CurrentNotificationBannersCacheKey = "currentNotificationBanners";
     private readonly MemoryCache _cache = MemoryCache.Default;
     private readonly int _notificationBannerCacheExpirationInSeconds;
+    private const string TableNameKey = "NotificationBanners";
 
-    public NotificationBannerRepository(IConfiguration configuration)
-        : base(configuration, "DataConnectionString", "NotificationBanners")
+    private readonly TableClient _NotificationBannerTableClient;
+
+    public NotificationBannerRepository(TableServiceClient tableServiceClient)
     {
-        _notificationBannerCacheExpirationInSeconds = configuration.GetValue<int?>("NotificationBannerCacheExpirationInSeconds") ?? 300;
+        _NotificationBannerTableClient = tableServiceClient.GetTableClient(TableNameKey);
     }
 
     public async Task CreateAsync(NotificationBanner entity)
     {
         entity.PartitionKey = eNotificationBannerPartition.Current.ToString();
         entity.RowKey ??= Guid.NewGuid().ToString("N").Substring(0, 8);
-        await Table.AddEntityAsync(entity);
+        await _NotificationBannerTableClient.AddEntityAsync(entity);
         _cache.Remove(CurrentNotificationBannersCacheKey);
     }
 
@@ -52,7 +52,7 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
     {
         var expirationWindow = forDateTime.AddSeconds(_notificationBannerCacheExpirationInSeconds);
 
-        var queryResults = Table.Query<NotificationBanner>(banner =>
+        var queryResults = _NotificationBannerTableClient.Query<NotificationBanner>(banner =>
             banner.PartitionKey == eNotificationBannerPartition.Current.ToString()
             && banner.Start <= expirationWindow
             && banner.End >= forDateTime
@@ -68,7 +68,8 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
     {
         var results = new List<NotificationBanner>();
 
-        await foreach (var banner in Table.QueryAsync<NotificationBanner>(b =>
+        await foreach (var banner
+            in _NotificationBannerTableClient.QueryAsync<NotificationBanner>(b =>
             b.PartitionKey == partitionKey.ToString() &&
             (!excludeExpired || b.End >= DateTime.UtcNow)))
         {
@@ -88,7 +89,7 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
     {
         try
         {
-            var response = await Table.GetEntityAsync<NotificationBanner>(partitionKey.ToString(), id);
+            var response = await _NotificationBannerTableClient.GetEntityAsync<NotificationBanner>(partitionKey.ToString(), id);
             return response.Value;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
@@ -104,7 +105,7 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
         var item = await GetAsync(id);
         if (item is not null)
         {
-            await Table.DeleteEntityAsync(item.PartitionKey, item.RowKey);
+            await _NotificationBannerTableClient.DeleteEntityAsync(item.PartitionKey, item.RowKey);
         }
 
         _cache.Remove(CurrentNotificationBannersCacheKey);
@@ -114,7 +115,7 @@ public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
     {
         await ArchiveAsync(item.RowKey);
         item.Version++;
-        await Table.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
+        await _NotificationBannerTableClient.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
         _cache.Remove(CurrentNotificationBannersCacheKey);
     }
 

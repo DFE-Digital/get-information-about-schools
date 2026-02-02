@@ -21,7 +21,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Index()
         {
             var result = await _glossaryRepository.GetAllAsync(1000);
-            return View(new GlossaryViewModel(result) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
+            return View(new GlossaryViewModel(result.Items) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
         }
 
         [Route("Create", Name = "CreateGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]

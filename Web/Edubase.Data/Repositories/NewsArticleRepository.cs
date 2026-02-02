@@ -1,27 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Data.Tables;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Data.Repositories;
 
-public class NewsArticleRepository : TableStorageBase<NewsArticle>
+public class NewsArticleRepository
 {
-    public NewsArticleRepository(IConfiguration configuration)
-        : base(configuration, "DataConnectionString", "NewsArticles")
+    private const string TableNameKey = "NewsArticles";
+
+    private readonly TableClient _newsArticleRepositoryTableClient;
+
+    public NewsArticleRepository(TableServiceClient tableServiceClient)
     {
+        _newsArticleRepositoryTableClient = tableServiceClient.GetTableClient(TableNameKey);
     }
 
     public async Task CreateAsync(NewsArticle entity)
     {
         entity.PartitionKey ??= eNewsArticlePartition.Current.ToString();
         entity.RowKey ??= Guid.NewGuid().ToString("N").Substring(0, 8);
-        await Table.AddEntityAsync(entity);
+        await _newsArticleRepositoryTableClient.AddEntityAsync(entity);
     }
 
     public async Task<IEnumerable<NewsArticle>> GetAllAsync(
@@ -33,7 +34,7 @@ public class NewsArticleRepository : TableStorageBase<NewsArticle>
         var results = new List<NewsArticle>();
 
         // Query only by PartitionKey to avoid complex expression evaluation
-        var query = Table.QueryAsync<NewsArticle>(a =>
+        var query = _newsArticleRepositoryTableClient.QueryAsync<NewsArticle>(a =>
             a.PartitionKey == partitionKey.ToString());
 
         await foreach (var article in query)
@@ -46,7 +47,9 @@ public class NewsArticleRepository : TableStorageBase<NewsArticle>
             {
                 results.Add(article);
                 if (results.Count >= take)
+                {
                     break;
+                }
             }
         }
 
@@ -57,7 +60,7 @@ public class NewsArticleRepository : TableStorageBase<NewsArticle>
     {
         try
         {
-            var response = await Table.GetEntityAsync<NewsArticle>(partitionKey.ToString(), id);
+            var response = await _newsArticleRepositoryTableClient.GetEntityAsync<NewsArticle>(partitionKey.ToString(), id);
             return response.Value;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
@@ -99,7 +102,7 @@ public class NewsArticleRepository : TableStorageBase<NewsArticle>
         var item = await GetAsync(id);
         if (item is not null)
         {
-            await Table.DeleteEntityAsync(item.PartitionKey, item.RowKey);
+            await _newsArticleRepositoryTableClient.DeleteEntityAsync(item.PartitionKey, item.RowKey);
         }
     }
 
@@ -108,6 +111,6 @@ public class NewsArticleRepository : TableStorageBase<NewsArticle>
         await ArchiveAsync(item.RowKey);
 
         item.Version++;
-        await Table.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
+        await _newsArticleRepositoryTableClient.UpdateEntityAsync(item, item.ETag, TableUpdateMode.Replace);
     }
 }
