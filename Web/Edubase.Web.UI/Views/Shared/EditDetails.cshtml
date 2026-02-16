@@ -40,7 +40,19 @@
 
 @using (Html.BeginForm())
 {
-    <div class="tab-content">
+    if (Model.ShowNoEstablishmentFoundError)
+    {
+        <div
+            class="govuk-error-summary"
+            aria-labelledby="error-summary-title"
+            data-module="govuk-error-summary"
+            tabindex="-1">
+            <span>No establishment record found with URN provided.</span>
+        </div>
+    }
+    else
+    {
+        <div class="tab-content">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.Urn)
     @Html.HiddenFor(x => x.SelectedTab)
@@ -966,23 +978,24 @@
         }
     }
     </div>
+    }
 }
 
 @if (Model.ShowDuplicateRecordError)
 {
-@section validation {
-    <div class="validation-summary-errors error-summary">
-        <span>Duplicate record found</span>
-        <ul>
-            <li>An establishment is already registered with this name, local authority and postcode. To complete the record:</li>
-            <li>
-                <a href="#Name">Please enter a different establishment name</a>
-                or
-                <a href="#LocalAuthorityId">Please enter a different local authority </a>
-                or
-                <a href="#Address_PostCode">Please enter a different postcode</a>
-            </li>
-        </ul>
-    </div>
-}
+    @section validation {
+        <div class="validation-summary-errors error-summary">
+            <span>Duplicate record found</span>
+            <ul>
+                <li>An establishment is already registered with this name, local authority and postcode. To complete the record:</li>
+                <li>
+                    <a href="#Name">Please enter a different establishment name</a>
+                    or
+                    <a href="#LocalAuthorityId">Please enter a different local authority </a>
+                    or
+                    <a href="#Address_PostCode">Please enter a different postcode</a>
+                </li>
+            </ul>
+        </div>
+    }
 }

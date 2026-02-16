@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -788,6 +789,24 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
+
+            if (domainModel == null || viewModel == null)
+            {
+                return new ViewModel() {
+                    Urn = id,
+                    ShowNoEstablishmentFoundError = true,
+                    TabDisplayPolicy =
+                        new TabDisplayPolicy()
+                        {
+                            Governance = false,
+                            IEBT = false,
+                            Links = false,
+                            Location = false,
+                            Helpdesk = false
+                        }
+                }; ;
+            }
+
             _mapper.Map(domainModel.IEBTModel, viewModel);
 
             viewModel.EditPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;

@@ -509,7 +509,10 @@ namespace Edubase.Web.UI.Models
         /// </summary>
         public bool ShowDuplicateRecordWarning { get; set; }
 
-
+        /// <summary>
+        /// When the establishment cannot be found for the provided URN.
+        /// </summary>
+        public bool ShowNoEstablishmentFoundError { get; set; }
 
         public EditEstablishmentModel()
         {
