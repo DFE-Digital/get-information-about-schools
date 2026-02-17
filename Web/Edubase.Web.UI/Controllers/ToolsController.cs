@@ -97,7 +97,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
-        [Route("DownloadClosedTrustsInformation", Name = "DownloadClosedTrustsInformation")]
+        [Route("Tools/DownloadClosedTrustsInformation", Name = "DownloadClosedTrustsInformation")]
         public ActionResult DownloadClosedTrustsInformation() => View();
 
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
