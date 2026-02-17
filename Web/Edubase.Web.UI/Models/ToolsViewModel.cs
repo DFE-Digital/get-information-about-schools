@@ -53,7 +53,7 @@ namespace Edubase.Web.UI.Models
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = htmlHelper.ActionLink("Bulk create new academies", "BulkAcademies", "Tools"),
+                    Link = htmlHelper.RouteLink("Bulk create new academies", "BulkAcademies"),
                     Description = "Bulk set up new academy records collectively and not individually."
                 });
             }

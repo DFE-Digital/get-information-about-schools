@@ -101,6 +101,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult DownloadClosedTrustsInformation() => View();
 
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
+        [Route("BulkAcademies", Name = "BulkAcademies")]
         public ActionResult BulkAcademies() => View();
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies), ValidateAntiForgeryToken]
