@@ -13,7 +13,7 @@ const clientErrorSummary = new Vue({
     errorSummary,
   },
   data: {
-      errors: []
+    errors: []
   },
   methods: {
     updateErrors: function (errObj) {
@@ -26,49 +26,49 @@ const clientErrorSummary = new Vue({
 });
 
 const GiasDownloadResults = {
-	init: function () {
-		$('#select-all').on('click', (e)=> {
-			e.preventDefault();
-			check(true);
-		});
+  init: function () {
+    $('#select-all').on('click', (e) => {
+      e.preventDefault();
+      check(true);
+    });
 
-		$('#clear-all').on('click', (e)=> {
-			e.preventDefault();
-			check(false);
-		});
+    $('#clear-all').on('click', (e) => {
+      e.preventDefault();
+      check(false);
+    });
 
-		$('#downloadSelected').on('click', (e)=> {
-			var anyChecked = false;
-			$('input:checkbox').each(function(){
-			  if (this.checked) {
-				anyChecked = true;
-			  }
-			});
+    $('#downloadSelected').on('click', (e) => {
+      var anyChecked = false;
+      $('input:checkbox').each(function () {
+        if (this.checked) {
+          anyChecked = true;
+        }
+      });
 
-			if (anyChecked == false) {
-			  e.preventDefault();
-			  $(this).okCancel({
-				ok: function(){
-				  this.closeModal();
-				},
-				cancel: null,
-				title: 'No files selected',
-				content: 'Please select at least one file to download.',
-				immediate: true
-			  });
-			  $(this).removeData('okCancel');
-			}
-		});
+      if (anyChecked == false) {
+        e.preventDefault();
+        $(this).okCancel({
+          ok: function () {
+            this.closeModal();
+          },
+          cancel: null,
+          title: 'No files selected',
+          content: 'Please select at least one file to download.',
+          immediate: true
+        });
+        $(this).removeData('okCancel');
+      }
+    });
 
-		function check(source) {
-		  $('input:checkbox').prop('checked',source);
-		}
-	},
+    function check(source) {
+      $('input:checkbox').prop('checked', source);
+    }
+  },
 
-	reload: function() {
-		const $updatedSection = document.getElementById('results-container');
-		initAll({scope: $updatedSection });
-	}
+  reload: function () {
+    const $updatedSection = document.getElementById('results-container');
+    initAll({ scope: $updatedSection });
+  }
 }
 
 const GiasDownloadFilters = {
@@ -115,8 +115,9 @@ const GiasDownloadFilters = {
 
         resultsContainer.removeClass('pending-results-update');
         resultsNotification.html('');
-		GiasDownloadResults.init();
-		GiasDownloadResults.reload();
+
+        GiasDownloadResults.init();
+        GiasDownloadResults.reload();
       },
       error: function () {
         $('#ajax-error-message').removeClass('hidden');
@@ -126,6 +127,7 @@ const GiasDownloadFilters = {
     });
 
   },
+
   init: function () {
     const $radios = $('#download-radios').find('.govuk-radios__input');
 
@@ -142,8 +144,13 @@ const GiasDownloadFilters = {
       const inputYear = $('#FilterDate_Year').val();
       const inputMonth = $('#FilterDate_Month').val();
       const inputDay = $('#FilterDate_Day').val();
-      const errorMessage = dateFilter.find('.govuk-error-message').not('.date-range-error').not('.range-error')
 
+      // Remove duplicate GOV.UK error messages created by repeated initAll()
+      dateFilter.find('.govuk-error-message').each(function (index) {
+        if (index > 0) $(this).remove();
+      });
+
+      const errorMessage = dateFilter.find('.govuk-error-message').not('.date-range-error').not('.range-error')
       const pageBanner = $('#downloadsTitle');
 
       let message = '';
@@ -152,7 +159,6 @@ const GiasDownloadFilters = {
       dateFilter.removeClass('govuk-form-group--error');
       clientErrorSummary.updateErrors();
       today.setHours(0, 0, 0, 0);
-
 
       const dateContainsEmpty = [inputYear, inputMonth, inputDay].filter((dateElement) => {
         return dateElement === ''
@@ -170,7 +176,7 @@ const GiasDownloadFilters = {
         return;
       }
 
-      if (GiasFilterValidation.validateDate({day: inputDay, month: inputMonth, year: inputYear})) {
+      if (GiasFilterValidation.validateDate({ day: inputDay, month: inputMonth, year: inputYear })) {
         message = GiasDownloadFilters.errorMessages[1];
         errorMessage.removeClass('hidden').text(message);
         dateFilter.addClass('govuk-form-group--error');
@@ -201,7 +207,7 @@ const GiasDownloadFilters = {
       }
     });
 
-	GiasDownloadResults.init();
+    GiasDownloadResults.init();
   }
 }
 
