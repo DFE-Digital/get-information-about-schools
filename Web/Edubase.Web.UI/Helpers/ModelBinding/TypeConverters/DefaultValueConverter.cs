@@ -28,15 +28,6 @@ public class DefaultValueConverter : IValueConverter
     /// An object of the target type representing the converted value, or null if the input
     /// is empty. Throws exceptions if conversion is invalid.
     /// </returns>
-    /// <exception cref="FormatException">
-    /// Thrown when attempting to bind a comma-separated string to a single primitive or decimal type.
-    /// </exception>
-    /// <exception cref="InvalidCastException">
-    /// Thrown when no suitable type converter exists to convert from string to the target type.
-    /// </exception>
-    /// <exception cref="Exception">
-    /// May be thrown by underlying conversion logic (e.g., DateTime parsing failures).
-    /// </exception>
     public object Convert(string value, Type targetType)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -51,7 +42,7 @@ public class DefaultValueConverter : IValueConverter
         // Reject comma-separated values for single primitive types.
         if (value.Contains(',') &&
             (underlyingType.IsPrimitive ||
-            underlyingType == typeof(decimal)))
+             underlyingType == typeof(decimal)))
         {
             throw new FormatException(
                 $"Cannot bind comma-separated value '{value}' to single type {targetType.Name}");
@@ -61,6 +52,28 @@ public class DefaultValueConverter : IValueConverter
         if (underlyingType.IsEnum)
         {
             return Enum.Parse(underlyingType, value, ignoreCase: true);
+        }
+
+        if (underlyingType == typeof(int))
+        {
+            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed))
+            {
+                return parsed;
+            }
+
+            // Return default (0). Binder will add ModelState error.
+            return 0;
+        }
+
+        if (underlyingType == typeof(int?))
+        {
+            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed))
+            {
+                return parsed;
+            }
+
+            // Return null for nullable int. Binder will add ModelState error.
+            return null;
         }
 
         // Special handling for DateTime.
