@@ -53,7 +53,7 @@ else
                     @if (Model.TabDisplayPolicy.Governance)
                     {
                         <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "governance"), "gias-tabs__list-item--selected")">
-                            <a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" id="governance-tab-link" class="gias-tabs__tab">Governance</a>
+                            <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn })" id="governance-tab-link" class="gias-tabs__tab"> Governance </a>
                         </li>
                     }
 
