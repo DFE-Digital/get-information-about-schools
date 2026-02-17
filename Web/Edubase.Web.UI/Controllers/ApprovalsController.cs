@@ -22,7 +22,7 @@ namespace Edubase.Web.UI.Controllers
             _approvalService = approvalService;
         }
 
-        [HttpGet("Convert", Name = "PendingApprovals")]
+        [HttpGet("", Name = "PendingApprovals")]
         [Authorize(Policy = "EdubasePolicy")]
         public async Task<IActionResult> Index(string sortBy, int skip = 0)
         {
