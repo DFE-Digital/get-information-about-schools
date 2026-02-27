@@ -451,7 +451,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             Assert.True(viewModel.AllowIncludeChildrensCentreFields);
             Assert.True(viewModel.AllowIncludeEmailAddresses);
             Assert.True(viewModel.AllowIncludeIEBTFields);
-            Assert.Equal("Downloads/SelectFormat", result.ViewName);
+            Assert.Equal("Downloads/SelectCustomFields", result.ViewName);
 
             Assert.Contains(viewModel.CustomFields, x => x.Name == "ReasonEstablishmentOpened (name)");
             Assert.Contains(viewModel.CustomFields, x => x.Name == "RegistrationSuspended (code)");
@@ -525,7 +525,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             Assert.True(viewModel.AllowIncludeChildrensCentreFields);
             Assert.True(viewModel.AllowIncludeEmailAddresses);
             Assert.True(viewModel.AllowIncludeIEBTFields);
-            Assert.Equal("Downloads/SelectFormat", result.ViewName);
+            Assert.Equal("Downloads/SelectCustomFields", result.ViewName);
 
             Assert.Contains(viewModel.CustomFields, x => x.Name == "ReasonEstablishmentOpened (name)");
             Assert.DoesNotContain(viewModel.CustomFields, x => x.Name == "RegistrationSuspended (code)");
