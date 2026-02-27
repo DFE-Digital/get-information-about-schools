@@ -442,7 +442,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
-            var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Full };
+            var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Custom };
             var result = await subject.PrepareDownload(viewModel) as ViewResult;
 
             Assert.NotNull(result);
@@ -516,7 +516,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
-            var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Full };
+            var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Custom };
             var result = await subject.PrepareDownload(viewModel) as ViewResult;
 
             Assert.NotNull(result);
