@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Common.Config;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Services.Domain;
@@ -29,6 +31,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 {
     public class EstablishmentsSearchControllerTests
     {
+        //TODO the tests below do not appear to verify that the view model contains the actual expected result! It satisfies test coverage but thats it!
         [Fact]
         public async Task EstabSearch_Index_DisplaysResults()
         {
@@ -348,6 +351,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             Assert.Equal("Downloads/SelectDataset", result.ViewName);
         }
 
+
         [Fact]
         public async Task EstabSearch_PrepareDownload_Step1_PublicUser()
         {
@@ -379,6 +383,154 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             Assert.False(viewModel.AllowIncludeEmailAddresses);
             Assert.False(viewModel.AllowIncludeIEBTFields);
             Assert.Equal("Downloads/SelectDataset", result.ViewName);
+        }
+
+        [Fact]
+        public async Task EstabSearch_PrepareDownload_Step2_IEBT_enabled()
+        {
+            var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
+            var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
+            var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
+            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
+            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
+            var mockUrlHelper = new Mock<UrlHelper>();
+            var principal = new Mock<IPrincipal>();
+
+            eds.Setup(x => x.GetSearchDownloadCustomFields(It.IsAny<IPrincipal>()))
+                .Returns(Task.FromResult<IEnumerable<EstablishmentSearchDownloadCustomField>>(new List<EstablishmentSearchDownloadCustomField>()));
+
+            mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
+            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
+            context.SetupGet(x => x.Request).Returns(request.Object);
+            context.SetupGet(x => x.User).Returns(principal.Object);
+            principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
+
+            IEnumerable<EstablishmentSearchDownloadCustomField> expectedFields = new List<EstablishmentSearchDownloadCustomField>
+            {
+                new EstablishmentSearchDownloadCustomField()
+                {
+                    Name = "ReasonEstablishmentOpened (name)",
+                    Category = "ReasonEstablishmentOpened (name)",
+                    Id = "General characteristics"
+                },
+                new EstablishmentSearchDownloadCustomField()
+                {
+                    Name = "RegistrationSuspended (code)",
+                    Category = "RegistrationSuspended (code)",
+                    Id = "General characteristics"
+                },
+                new EstablishmentSearchDownloadCustomField()
+                {
+                    Name = "RegistrationSuspended (name)",
+                    Category = "RegistrationSuspended (name)",
+                    Id = "General characteristics"
+                },
+                new EstablishmentSearchDownloadCustomField()
+                {
+                    Name = "ReligiousCharacter (code)",
+                    Category = "ReligiousCharacter (code)",
+                    Id = "Religious characteristics"
+                },
+            };
+            eds.Setup(x => x.GetSearchDownloadCustomFields(principal.Object)).Returns(Task.FromResult(expectedFields));
+
+            var fp = new Mock<IFeatureFlagProvider>();
+            Feature.Provider = fp.Object;
+            fp.Setup(x => x.IsEnabled("FeatureIEBTSuspended")).Returns(true);
+
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
+            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            subject.Url = mockUrlHelper.Object;
+            var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Custom };
+            var result = await subject.PrepareDownload(viewModel) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.True(viewModel.AllowAnyExtraFields);
+            Assert.True(viewModel.AllowIncludeBringUpFields);
+            Assert.True(viewModel.AllowIncludeChildrensCentreFields);
+            Assert.True(viewModel.AllowIncludeEmailAddresses);
+            Assert.True(viewModel.AllowIncludeIEBTFields);
+            Assert.Equal("Downloads/SelectCustomFields", result.ViewName);
+
+            Assert.Contains(viewModel.CustomFields, x => x.Name == "ReasonEstablishmentOpened (name)");
+            Assert.Contains(viewModel.CustomFields, x => x.Name == "RegistrationSuspended (code)");
+            Assert.Contains(viewModel.CustomFields, x => x.Name == "RegistrationSuspended (name)");
+            Assert.Contains(viewModel.CustomFields, x => x.Name == "ReligiousCharacter (code)");
+        }
+
+        [Fact]
+        public async Task EstabSearch_PrepareDownload_Step2_IEBT_disabled()
+        {
+            var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
+            var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
+            var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
+            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
+            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
+            var mockUrlHelper = new Mock<UrlHelper>();
+            var principal = new Mock<IPrincipal>();
+
+            eds.Setup(x => x.GetSearchDownloadCustomFields(It.IsAny<IPrincipal>()))
+                .Returns(Task.FromResult<IEnumerable<EstablishmentSearchDownloadCustomField>>(new List<EstablishmentSearchDownloadCustomField>()));
+
+            mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
+            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
+            context.SetupGet(x => x.Request).Returns(request.Object);
+            context.SetupGet(x => x.User).Returns(principal.Object);
+            principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
+
+            IEnumerable<EstablishmentSearchDownloadCustomField> expectedFields = new List<EstablishmentSearchDownloadCustomField>
+            {
+                new EstablishmentSearchDownloadCustomField()
+                {
+                    Name = "ReasonEstablishmentOpened (name)",
+                    Category = "ReasonEstablishmentOpened (name)",
+                    Id = "General characteristics"
+                },
+                new EstablishmentSearchDownloadCustomField()
+                {
+                    Name = "RegistrationSuspended (code)",
+                    Category = "RegistrationSuspended (code)",
+                    Id = "General characteristics"
+                },
+                new EstablishmentSearchDownloadCustomField()
+                {
+                    Name = "RegistrationSuspended (name)",
+                    Category = "RegistrationSuspended (name)",
+                    Id = "General characteristics"
+                },
+                new EstablishmentSearchDownloadCustomField()
+                {
+                    Name = "ReligiousCharacter (code)",
+                    Category = "ReligiousCharacter (code)",
+                    Id = "Religious characteristics"
+                },
+            };
+            eds.Setup(x => x.GetSearchDownloadCustomFields(principal.Object)).Returns(Task.FromResult(expectedFields));
+
+            var fp = new Mock<IFeatureFlagProvider>();
+            Feature.Provider = fp.Object;
+            fp.Setup(x => x.IsEnabled("FeatureIEBTSuspended")).Returns(false);
+
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
+            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            subject.Url = mockUrlHelper.Object;
+            var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Custom };
+            var result = await subject.PrepareDownload(viewModel) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.True(viewModel.AllowAnyExtraFields);
+            Assert.True(viewModel.AllowIncludeBringUpFields);
+            Assert.True(viewModel.AllowIncludeChildrensCentreFields);
+            Assert.True(viewModel.AllowIncludeEmailAddresses);
+            Assert.True(viewModel.AllowIncludeIEBTFields);
+            Assert.Equal("Downloads/SelectCustomFields", result.ViewName);
+
+            Assert.Contains(viewModel.CustomFields, x => x.Name == "ReasonEstablishmentOpened (name)");
+            Assert.DoesNotContain(viewModel.CustomFields, x => x.Name == "RegistrationSuspended (code)");
+            Assert.DoesNotContain(viewModel.CustomFields, x => x.Name == "RegistrationSuspended (name)");
+            Assert.Contains(viewModel.CustomFields, x => x.Name == "ReligiousCharacter (code)");
         }
 
         [Fact]

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
-using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -14,6 +13,7 @@ using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
+    using Edubase.Common.Config;
     using Edubase.Services.Security;
     using Edubase.Web.UI.Helpers;
     using Edubase.Web.UI.Mappers.Establishment;
@@ -171,7 +171,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.CustomFields == null)
             {
-                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
+                var customFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
+
+                if(!Feature.IsEnabled("FeatureIEBTSuspended"))
+                {
+                    customFields.RemoveAll(f => f.Name == "RegistrationSuspended (code)");
+                    customFields.RemoveAll(f => f.Name == "RegistrationSuspended (name)");
+                }
+
+                viewModel.CustomFields = customFields;
             }
 
             if (viewModel.Dataset == eDataSet.Custom && !viewModel.SelectedCustomFields.Any())
@@ -185,8 +193,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var queryString = new NameValueCollection(Request.QueryString);
                 queryString.Remove("Dataset");
                 viewModel.SearchQueryString = queryString.ToQueryString();
-                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User))
+                var customFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User))
                     .OrderBy(x => x.Name).ToList();
+
+                if (!Feature.IsEnabled("FeatureIEBTSuspended"))
+                {
+                    customFields.RemoveAll(f => f.Name == "RegistrationSuspended (code)");
+                    customFields.RemoveAll(f => f.Name == "RegistrationSuspended (name)");
+                }
+
+                viewModel.CustomFields = customFields;
+
                 return View("Downloads/SelectCustomFields", viewModel);
             }
 
