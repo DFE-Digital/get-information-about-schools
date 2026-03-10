@@ -1049,6 +1049,132 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.Equal((eLookupGovernorRole) governor.RoleId, model.Role);
         }
 
+        [Fact]
+        public async Task Gov_Edit_ShouldNotDuplicateGovernors_WhenLocalAndSharedExistForSamePerson()
+        {
+            // Arrange
+            var estabId = 123456;
+
+            // Duplicate person across Local + Shared roles
+            var samePerson_Local = new GovernorModel
+            {
+                Id = 2001,
+                RoleId = (int) eLookupGovernorRole.LocalGovernor,
+                Person_FirstName = "Alex",
+                Person_LastName = "Taylor",
+                DOB = new DateTime(1980, 1, 1),
+                Person_TitleId = 1
+            };
+
+            var samePerson_Shared = new GovernorModel
+            {
+                Id = 2002,
+                RoleId = (int) eLookupGovernorRole.Group_SharedLocalGovernor,
+                Person_FirstName = "Alex",
+                Person_LastName = "Taylor",
+                DOB = new DateTime(1980, 1, 1),
+                Person_TitleId = 1
+            };
+
+            // IMPORTANT: ApplicableRoles AND RoleDisplayPolicies must be populated
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole>
+                {
+                    eLookupGovernorRole.LocalGovernor,
+                    eLookupGovernorRole.Group_SharedLocalGovernor
+                },
+                        RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.LocalGovernor, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Group_SharedLocalGovernor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel> { samePerson_Local, samePerson_Shared },
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            // 1) List + permissions
+            mockGovernorsReadService
+                .Setup(s => s.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorDetailsDto);
+
+            mockGovernorsReadService
+                .Setup(s => s.GetGovernorPermissions(estabId, null, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorPermissions());
+
+            // 2) Lookups (minimal)
+            mockCachedLookupService
+                .Setup(s => s.NationalitiesGetAllAsync())
+                .ReturnsAsync(new List<LookupDto>());
+
+            mockCachedLookupService
+                .Setup(s => s.GovernorAppointingBodiesGetAllAsync())
+                .ReturnsAsync(new List<LookupDto>());
+
+            mockCachedLookupService
+                .Setup(s => s.TitlesGetAllAsync())
+                .ReturnsAsync(new List<LookupDto> { new LookupDto { Id = 1, Name = "Mr" } });
+
+            mockCachedLookupService
+                .Setup(s => s.GovernorRolesGetAllAsync())
+                .ReturnsAsync(new List<LookupDto>
+                {
+            new LookupDto { Id = (int)eLookupGovernorRole.LocalGovernor, Name = "Local Governor" },
+            new LookupDto { Id = (int)eLookupGovernorRole.Group_SharedLocalGovernor, Name = "Shared Local Governor" }
+                });
+
+            // (Optional) 3) Display policy mocks – not needed by Edit(), but harmless
+            mockGovernorsReadService
+                .Setup(s => s.GetEditorDisplayPolicyAsync(
+                    eLookupGovernorRole.LocalGovernor, It.IsAny<bool>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorDisplayPolicy());
+
+            mockGovernorsReadService
+                .Setup(s => s.GetEditorDisplayPolicyAsync(
+                    eLookupGovernorRole.Group_SharedLocalGovernor, It.IsAny<bool>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorDisplayPolicy());
+
+            // 4) Layout helper + HttpContext
+            mockLayoutHelper
+                .Setup(l => l.PopulateLayoutProperties(
+                    It.IsAny<GovernorsGridViewModel>(),
+                    estabId, null, It.IsAny<IPrincipal>(),
+                    It.IsAny<Action<EstablishmentModel>>(),
+                    It.IsAny<Action<GroupModel>>()))
+                .Returns(Task.CompletedTask);
+
+            var httpContext = new Mock<System.Web.HttpContextBase>();
+            var httpRequest = new Mock<System.Web.HttpRequestBase>();
+            httpRequest.Setup(r => r.QueryString)
+                       .Returns(new System.Collections.Specialized.NameValueCollection());
+            httpContext.Setup(c => c.Request).Returns(httpRequest.Object);
+
+            var controller = new GovernorController(
+                mockGovernorsReadService.Object,
+                mockCachedLookupService.Object,
+                mockGovernorsWriteService.Object,
+                mockGroupReadService.Object,
+                mockEstablishmentReadService.Object,
+                mockLayoutHelper.Object
+            );
+
+            controller.ControllerContext = new ControllerContext(
+                new System.Web.Routing.RequestContext(httpContext.Object, new System.Web.Routing.RouteData()),
+                controller);
+
+            // Act
+            var actionResult = await controller.Edit(null, estabId, null, null);
+            var viewResult = Assert.IsType<ViewResult>(actionResult);
+            var model = Assert.IsType<GovernorsGridViewModel>(viewResult.Model);
+
+            // Assert
+            var allRows = model.Grids
+                .SelectMany(g => g.Rows)
+                    .ToList();
+
+            Assert.Equal(1, allRows.Count);
+        }
+
         [Fact()]
         public async Task Gov_Put_ReplaceChair_NewChairShared()
         {

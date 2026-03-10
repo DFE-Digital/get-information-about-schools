@@ -130,6 +130,29 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 return false;
             }).ToList();
 
+            // PATCH: De-duplicate equivalent roles but pick a representative that HAS a display policy.
+            // This avoids null displayPolicy when the local role lacks a policy but a shared variant has one.
+            roles = roles
+                .GroupBy(r => RoleEquivalence.GetLocalEquivalentToSharedRole(r) ?? r)   // family key (normalize shared -> local)
+                .Select(g =>
+                {
+                    var localKey = g.Key;
+
+                    // All roles in the "family" (e.g., Local + Shared variants)
+                    var family = RoleEquivalence.GetEquivalentToLocalRole(localKey).ToList();
+
+                    // Prefer Local over Shared, but ONLY if a policy exists for it; otherwise fall back to a shared variant that has a policy.
+                    var orderedFamily = family.OrderBy(r =>
+                        r.Equals(localKey) ? 0 :
+                        (EnumSets.eSharedGovernorRoles.Contains(r) ? 1 : 2)
+                    ).ToList();
+
+                    var representative = orderedFamily.FirstOrDefault(r => dto.RoleDisplayPolicies.ContainsKey(r));
+                    return representative.Equals(default(eLookupGovernorRole)) ? localKey : representative;
+                })
+                .Distinct()
+                .ToList();
+
             foreach (var role in roles)
             {
                 var equivalentRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
@@ -170,7 +193,27 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
                 var list = governors
                     .Where(x => x.RoleId.HasValue && equivalentRoles.Contains(x.RoleId.Value));
-                foreach (var governor in list)
+
+                // PATCH: De-duplicate rows that represent the same person across local/shared equivalents
+                var deduped = list
+                    .GroupBy(g => new
+                    {
+                        First = (g.Person_FirstName ?? string.Empty).Trim(),
+                        Last = (g.Person_LastName ?? string.Empty).Trim(),
+                        Dob = g.DOB
+                    })
+                    .Select(grp =>
+                        // Prefer LocalGovernor over shared variants; then Group_SharedLocalGovernor; then Establishment_SharedLocalGovernor.
+                        grp.OrderBy(x =>
+                            x.RoleId == (int) GR.LocalGovernor ? 0 :
+                            x.RoleId == (int) GR.Group_SharedLocalGovernor ? 1 :
+                            x.RoleId == (int) GR.Establishment_SharedLocalGovernor ? 2 : 3
+                        ).First()
+                    )
+                    .ToList();
+
+                // Use the deduped list from here on:
+                foreach (var governor in deduped)
                 {
                     var isShared = governor.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value);
                     var establishments = string.Join(
@@ -179,7 +222,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     );
 
                     GovernorAppointment appointment;
-
                     try
                     {
                         appointment = governor.Appointments?
@@ -195,6 +237,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var startDate = isShared && appointment != null
                         ? appointment.AppointmentStartDate
                         : governor.AppointmentStartDate;
+
                     var endDate = isShared && appointment != null
                         ? appointment.AppointmentEndDate
                         : governor.AppointmentEndDate;
@@ -259,6 +302,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         HistoricGovernors.Add(gov);
                     }
                 }
+
 
                 grid.Rows = grid.Rows
                     .OrderByDescending(x => x.SortValue)
