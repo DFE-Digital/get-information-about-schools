@@ -1059,8 +1059,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var samePerson_Local = new GovernorModel
             {
                 Id = 2001,
-                RoleId = (int) eLookupGovernorRole.LocalGovernor,
+                RoleId = (int) eLookupGovernorRole.Group_SharedLocalGovernor,
                 Person_FirstName = "Alex",
+                Person_MiddleName = "J",
                 Person_LastName = "Taylor",
                 DOB = new DateTime(1980, 1, 1),
                 Person_TitleId = 1
@@ -1069,8 +1070,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var samePerson_Shared = new GovernorModel
             {
                 Id = 2002,
-                RoleId = (int) eLookupGovernorRole.Group_SharedLocalGovernor,
+                RoleId = (int) eLookupGovernorRole.Establishment_SharedLocalGovernor,
                 Person_FirstName = "Alex",
+                Person_MiddleName = "J",
                 Person_LastName = "Taylor",
                 DOB = new DateTime(1980, 1, 1),
                 Person_TitleId = 1
