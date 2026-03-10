@@ -113,48 +113,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             //this allows roles that are not valid but exist to be displayed
             var allRoles = dto.ApplicableRoles.Union(governors.Select(g => (GR) g.RoleId).Distinct());
 
-            var roles = allRoles.Where(role =>
-            {
-                if (!EnumSets.eSharedGovernorRoles.Contains(role))
-                {
-                    return true;
-                }
-                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole(role);
-                if (localEquivalent != null)
-                {
-                    if (!dto.ApplicableRoles.Contains(localEquivalent.Value) || role == GR.Establishment_SharedGovernanceProfessional)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }).ToList();
-
-            // PATCH: De-duplicate equivalent roles but pick a representative that HAS a display policy.
-            // This avoids null displayPolicy when the local role lacks a policy but a shared variant has one.
-            roles = roles
-                .GroupBy(r => RoleEquivalence.GetLocalEquivalentToSharedRole(r) ?? r) 
-                .Select(g =>
-                {
-                    var localKey = g.Key;
-
-                    // All roles in the "family" (e.g., Local + Shared variants)
-                    var family = RoleEquivalence.GetEquivalentToLocalRole(localKey).ToList();
-
-                    // Prefer Local over Shared, but ONLY if a policy exists for it; otherwise fall back to a shared variant that has a policy.
-                    var orderedFamily = family
-                        .OrderBy(r => GetFamilyRolePriority(r, localKey))
-                            .ToList();
-
-                    var representative = orderedFamily.FirstOrDefault(r => dto.RoleDisplayPolicies.ContainsKey(r));
-                    return representative.Equals(default(eLookupGovernorRole)) ? localKey : representative;
-                })
+            var roles = dto.ApplicableRoles
+                .Union(governors.Select(g => (GR) g.RoleId).Distinct())
                 .Distinct()
                 .ToList();
 
             foreach (var role in roles)
             {
-                var equivalentRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
                 var shouldPluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
 
                 var governorRoleNameTitle = GovernorRoleNameFactory.Create(
@@ -191,25 +156,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
 
                 var list = governors
-                    .Where(x => x.RoleId.HasValue && equivalentRoles.Contains(x.RoleId.Value));
-
-                // PATCH: De-duplicate rows that represent the same person across local/shared equivalents
-                var deduped = list
-                    .GroupBy(g => new
-                    {
-                        First = (g.Person_FirstName ?? string.Empty).Trim(),
-                        Middle = (g.Person_MiddleName ?? string.Empty).Trim(),
-                        Last = (g.Person_LastName ?? string.Empty).Trim(),
-                        Dob = g.DOB
-                    })
-                    .Select(grp =>
-                        // Prefer LocalGovernor over shared variants; then Group_SharedLocalGovernor; then Establishment_SharedLocalGovernor.
-                        grp.OrderBy(x => GetRolePriority(x.RoleId.Value)).First()
-                    )
+                    .Where(x => x.RoleId == (int) role)
                     .ToList();
 
-                // Use the deduped list from here on:
-                foreach (var governor in deduped)
+                foreach (var governor in list)
                 {
                     var isShared = governor.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value);
                     var establishments = string.Join(
@@ -218,6 +168,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     );
 
                     GovernorAppointment appointment;
+
                     try
                     {
                         appointment = governor.Appointments?
@@ -233,7 +184,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var startDate = isShared && appointment != null
                         ? appointment.AppointmentStartDate
                         : governor.AppointmentStartDate;
-
                     var endDate = isShared && appointment != null
                         ? appointment.AppointmentEndDate
                         : governor.AppointmentEndDate;
@@ -298,7 +248,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         HistoricGovernors.Add(gov);
                     }
                 }
-
 
                 grid.Rows = grid.Rows
                     .OrderByDescending(x => x.SortValue)
@@ -418,28 +367,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             var fullNameWithTitle = StringUtil.ConcatNonEmpties(" ", titleName, governor.GetFullName());
 
             return fullNameWithTitle;
-        }
-
-        private int GetRolePriority(int roleId)
-        {
-            var role = (GR) roleId;
-
-            if (role == GR.LocalGovernor) return 0;
-            if (role == GR.Group_SharedLocalGovernor) return 1;
-            if (role == GR.Establishment_SharedLocalGovernor) return 2;
-
-            return 3; // fallback
-        }
-
-        private int GetFamilyRolePriority(eLookupGovernorRole role, eLookupGovernorRole localKey)
-        {
-            if (role == localKey)
-                return 0;
-
-            if (EnumSets.eSharedGovernorRoles.Contains(role))
-                return 1;
-
-            return 2;
         }
     }
 }

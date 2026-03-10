@@ -45,9 +45,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
         private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Strict);
 
-
-
-
         private bool disposedValue;
 
         public GovernorControllerTests()
@@ -1055,7 +1052,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             // Arrange
             var estabId = 123456;
 
-            // Duplicate person across Local + Shared roles
+            // Duplicate person across Group & Establishment Shared roles
             var samePerson_Local = new GovernorModel
             {
                 Id = 2001,
@@ -1084,12 +1081,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 ApplicableRoles = new List<eLookupGovernorRole>
                 {
                     eLookupGovernorRole.LocalGovernor,
-                    eLookupGovernorRole.Group_SharedLocalGovernor
+                    eLookupGovernorRole.Group_SharedLocalGovernor,
+                    eLookupGovernorRole.Establishment_SharedLocalGovernor
                 },
                         RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
                 {
                     { eLookupGovernorRole.LocalGovernor, new GovernorDisplayPolicy() },
-                    { eLookupGovernorRole.Group_SharedLocalGovernor, new GovernorDisplayPolicy() }
+                    { eLookupGovernorRole.Group_SharedLocalGovernor, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Establishment_SharedLocalGovernor, new GovernorDisplayPolicy() }
                 },
                 CurrentGovernors = new List<GovernorModel> { samePerson_Local, samePerson_Shared },
                 HistoricalGovernors = new List<GovernorModel>()
@@ -1174,7 +1173,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 .SelectMany(g => g.Rows)
                     .ToList();
 
-            Assert.Single(allRows);
+            Assert.Equal(2, allRows.Count);
+            Assert.Contains(allRows, r => ((GovernorModel) r.Model).RoleId == (int) eLookupGovernorRole.Group_SharedLocalGovernor);
+            Assert.Contains(allRows, r => ((GovernorModel) r.Model).RoleId == (int) eLookupGovernorRole.Establishment_SharedLocalGovernor);
         }
 
         [Fact()]
