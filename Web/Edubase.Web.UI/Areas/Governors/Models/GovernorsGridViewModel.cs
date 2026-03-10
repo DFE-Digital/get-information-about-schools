@@ -133,7 +133,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             // PATCH: De-duplicate equivalent roles but pick a representative that HAS a display policy.
             // This avoids null displayPolicy when the local role lacks a policy but a shared variant has one.
             roles = roles
-                .GroupBy(r => RoleEquivalence.GetLocalEquivalentToSharedRole(r) ?? r)   // family key (normalize shared -> local)
+                .GroupBy(r => RoleEquivalence.GetLocalEquivalentToSharedRole(r) ?? r) 
                 .Select(g =>
                 {
                     var localKey = g.Key;
@@ -142,10 +142,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var family = RoleEquivalence.GetEquivalentToLocalRole(localKey).ToList();
 
                     // Prefer Local over Shared, but ONLY if a policy exists for it; otherwise fall back to a shared variant that has a policy.
-                    var orderedFamily = family.OrderBy(r =>
-                        r.Equals(localKey) ? 0 :
-                        (EnumSets.eSharedGovernorRoles.Contains(r) ? 1 : 2)
-                    ).ToList();
+                    var orderedFamily = family
+                        .OrderBy(r => GetFamilyRolePriority(r, localKey))
+                            .ToList();
 
                     var representative = orderedFamily.FirstOrDefault(r => dto.RoleDisplayPolicies.ContainsKey(r));
                     return representative.Equals(default(eLookupGovernorRole)) ? localKey : representative;
@@ -199,16 +198,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     .GroupBy(g => new
                     {
                         First = (g.Person_FirstName ?? string.Empty).Trim(),
+                        Middle = (g.Person_MiddleName ?? string.Empty).Trim(),
                         Last = (g.Person_LastName ?? string.Empty).Trim(),
                         Dob = g.DOB
                     })
                     .Select(grp =>
                         // Prefer LocalGovernor over shared variants; then Group_SharedLocalGovernor; then Establishment_SharedLocalGovernor.
-                        grp.OrderBy(x =>
-                            x.RoleId == (int) GR.LocalGovernor ? 0 :
-                            x.RoleId == (int) GR.Group_SharedLocalGovernor ? 1 :
-                            x.RoleId == (int) GR.Establishment_SharedLocalGovernor ? 2 : 3
-                        ).First()
+                        grp.OrderBy(x => GetRolePriority(x.RoleId.Value)).First()
                     )
                     .ToList();
 
@@ -218,7 +214,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var isShared = governor.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value);
                     var establishments = string.Join(
                         ", ",
-                        (governor.Appointments?.Select(a => $"{a.EstablishmentName}, URN: {a.EstablishmentUrn}") ?? new string[] { })
+                        governor.Appointments?.Select(a => $"{a.EstablishmentName}, URN: {a.EstablishmentUrn}") ?? new string[] { }
                     );
 
                     GovernorAppointment appointment;
@@ -422,6 +418,28 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             var fullNameWithTitle = StringUtil.ConcatNonEmpties(" ", titleName, governor.GetFullName());
 
             return fullNameWithTitle;
+        }
+
+        private int GetRolePriority(int roleId)
+        {
+            var role = (GR) roleId;
+
+            if (role == GR.LocalGovernor) return 0;
+            if (role == GR.Group_SharedLocalGovernor) return 1;
+            if (role == GR.Establishment_SharedLocalGovernor) return 2;
+
+            return 3; // fallback
+        }
+
+        private int GetFamilyRolePriority(eLookupGovernorRole role, eLookupGovernorRole localKey)
+        {
+            if (role == localKey)
+                return 0;
+
+            if (EnumSets.eSharedGovernorRoles.Contains(role))
+                return 1;
+
+            return 2;
         }
     }
 }

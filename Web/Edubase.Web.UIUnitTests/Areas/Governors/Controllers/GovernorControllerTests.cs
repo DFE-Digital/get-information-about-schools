@@ -1172,7 +1172,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 .SelectMany(g => g.Rows)
                     .ToList();
 
-            Assert.Equal(1, allRows.Count);
+            Assert.Single(allRows);
         }
 
         [Fact()]
