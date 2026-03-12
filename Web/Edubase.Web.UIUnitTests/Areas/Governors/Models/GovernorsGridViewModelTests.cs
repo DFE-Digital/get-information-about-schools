@@ -12,69 +12,58 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
 {
     public class GovernorsGridViewModelTests
     {
+        // 1. SAME person, DIFFERENT roles => SEPARATE grids, SEPARATE rows
         [Fact]
         public void CreateGrids_ShouldNotMergeDifferentRoles_ForSamePerson()
         {
-            // Arrange
             var dob = new DateTime(1980, 1, 1);
+
             var g1 = Gov("Alex", "J", "Taylor", eLookupGovernorRole.Group_SharedLocalGovernor, dob);
             var g2 = Gov("Alex", "J", "Taylor", eLookupGovernorRole.Establishment_SharedLocalGovernor, dob);
 
             var dto = BuildDto(g1, g2);
-
-            // Act
             var vm = Build(dto);
 
-            // Assert
             Assert.Equal(2, vm.Grids.Count);
-            var rows = vm.Grids.SelectMany(g => g.Rows).ToList();
-            Assert.Equal(2, rows.Count);   
+            Assert.Equal(2, vm.Grids.SelectMany(g => g.Rows).Count());
         }
 
+        // 2. SAME role, TWO appointments => TWO rows (no row dedupe)
         [Fact]
-        public void CreateGrids_ShouldListAllAppointments_WithinSameRole()
+        public void CreateGrids_ShouldListAllAppointments_ForSameRole()
         {
-            // Arrange
             var dob = new DateTime(1990, 1, 1);
             var a1 = Gov("Sam", "", "Morgan", eLookupGovernorRole.LocalGovernor, dob);
             var a2 = Gov("Sam", "", "Morgan", eLookupGovernorRole.LocalGovernor, dob);
 
             var dto = BuildDto(a1, a2);
-
-            // Act
             var vm = Build(dto);
 
-            // Assert
             Assert.Single(vm.Grids);
-            var rows = vm.Grids.SelectMany(g => g.Rows).ToList();
-            Assert.Equal(2, rows.Count);
+            Assert.Equal(2, vm.Grids.SelectMany(g => g.Rows).Count());
         }
 
+        // 3. Distinct roles => distinct grids
         [Fact]
         public void CreateGrids_ShouldCreateSeparateGrids_ForDistinctRoles()
         {
-            // Arrange
             var g1 = Gov("Ava", "", "Singh", eLookupGovernorRole.LocalGovernor, null);
             var g2 = Gov("Ava", "", "Singh", eLookupGovernorRole.ChairOfLocalGoverningBody, null);
 
             var dto = BuildDto(g1, g2);
-
-            // Act
             var vm = Build(dto);
 
-            // Assert
             Assert.Equal(2, vm.Grids.Count);
             Assert.Equal(2, vm.Grids.SelectMany(g => g.Rows).Count());
         }
 
+        // 4. Exact-role-matching: NO bleed across into unrelated grids
         [Fact]
         public void CreateGrids_ShouldUseExactRoleMatching_NoBleedAcrossGrids()
         {
-            // Arrange
             var dob = new DateTime(1985, 5, 5);
             var shared = Gov("Jamie", "", "Lee", eLookupGovernorRole.Group_SharedLocalGovernor, dob);
 
-            // Intentionally include LocalGovernor in ApplicableRoles to ensure a Local grid is created too.
             var dto = new GovernorsDetailsDto
             {
                 ApplicableRoles = new List<eLookupGovernorRole>
@@ -91,35 +80,189 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
                 }
             };
 
-            // Act
             var vm = Build(dto);
 
-            // Assert
-            Assert.Equal(2, vm.Grids.Count); // Local + Group_Shared grids
             var localGrid = vm.Grids.Single(g => g.Role == eLookupGovernorRole.LocalGovernor);
-            var groupGrid = vm.Grids.Single(g => g.Role == eLookupGovernorRole.Group_SharedLocalGovernor);
+            var sharedGrid = vm.Grids.Single(g => g.Role == eLookupGovernorRole.Group_SharedLocalGovernor);
 
-            Assert.Empty(localGrid.Rows); // exact role matching → no bleed
-            Assert.Single(groupGrid.Rows);
+            Assert.Empty(localGrid.Rows);
+            Assert.Single(sharedGrid.Rows);
         }
 
+        // 5. Historic grids behave the same as current grids
         [Fact]
         public void CreateGrids_Historic_ShouldListAllAppointments()
         {
-            // Arrange
             var dob = new DateTime(1975, 1, 1);
             var g1 = Gov("Chris", "", "Walker", eLookupGovernorRole.Governor, dob);
             var g2 = Gov("Chris", "", "Walker", eLookupGovernorRole.Governor, dob);
 
             var dto = BuildHistoric(g1, g2);
-
-            // Act
             var vm = Build(dto);
 
-            // Assert
             Assert.Single(vm.HistoricGrids);
-            var rows = vm.HistoricGrids.SelectMany(g => g.Rows).ToList();
-            Assert.Equal(2, rows.Count); // NO row dedupe → two historic rows
+            Assert.Equal(2, vm.HistoricGrids.SelectMany(g => g.Rows).Count());
+        }
+
+        // 6. Every roleId must have a DisplayPolicy
+        [Fact]
+        public void CreateGrids_ShouldThrow_WhenDisplayPolicyMissing()
+        {
+            var g = Gov("Alex", "", "Test", eLookupGovernorRole.LocalGovernor, null);
+
+            var dto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.LocalGovernor },
+                CurrentGovernors = new List<GovernorModel> { g },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>() // missing!
+            };
+
+            Assert.Throws<Exception>(() => Build(dto));
+        }
+
+        // 7. With display policy present → should NOT throw
+        [Fact]
+        public void CreateGrids_ShouldNotThrow_WhenDisplayPolicyPresent()
+        {
+            var g = Gov("Alex", "", "Test", eLookupGovernorRole.LocalGovernor, null);
+
+            var dto = BuildDto(g);
+
+            var vm = Build(dto);
+
+            Assert.Single(vm.Grids);
+        }
+
+        // 8. Sorting by name
+        [Fact]
+        public void CreateGrids_ShouldSortRowsByName_WhenSortValueNull()
+        {
+            var g1 = Gov("Charlie", "", "Zed", eLookupGovernorRole.LocalGovernor, null);
+            var g2 = Gov("Adam", "", "Baker", eLookupGovernorRole.LocalGovernor, null);
+            var g3 = Gov("Ben", "", "Alpha", eLookupGovernorRole.LocalGovernor, null);
+
+            var dto = BuildDto(g1, g2, g3);
+            var vm = Build(dto);
+
+            var rows = vm.Grids.Single().Rows.Select(r => r.Model.GetFullName()).ToList();
+
+            Assert.Equal(new[] { "Adam Baker", "Ben Alpha", "Charlie Zed" }, rows);
+        }
+
+        // 9. Multi-appointments for same roleId + same URN throws
+        [Fact]
+        public void CreateGrids_ShouldThrow_WhenMultipleAppointmentsForSameUrn()
+        {
+            var g = Gov("Alex", "", "Test", eLookupGovernorRole.LocalGovernor, null);
+
+            g.Appointments = new[]
+            {
+                new GovernorAppointment { EstablishmentUrn = 12345 },
+                new GovernorAppointment { EstablishmentUrn = 12345 } // duplicate URN → should fail
+            };
+
+            var dto = BuildDto(g);
+
+            Assert.Throws<InvalidOperationException>(() => Build(dto));
+        }
+
+        // 10. Correct appointment chosen for shared roles
+        [Fact]
+        public void CreateGrids_ShouldSelectCorrectAppointment_ForSharedRoles()
+        {
+            var g = Gov("Jordan", "", "Scott", eLookupGovernorRole.Group_SharedLocalGovernor, null);
+
+            g.Appointments = new[]
+            {
+                new GovernorAppointment { EstablishmentUrn = 99999, AppointmentStartDate = new DateTime(2020,1,1) },
+                new GovernorAppointment { EstablishmentUrn = 12345, AppointmentStartDate = new DateTime(2021,1,1) }
+            };
+
+            var dto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole>
+            {
+                eLookupGovernorRole.Group_SharedLocalGovernor
+            },
+                CurrentGovernors = new List<GovernorModel> { g },
+                HistoricalGovernors = new List<GovernorModel>(),
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+            {
+                {
+                    eLookupGovernorRole.Group_SharedLocalGovernor,
+                    new GovernorDisplayPolicy
+                    {
+                        FullName = true,
+                        AppointmentStartDate = true
+                    }
+                }
+            }
+            };
+
+            var vm = Build(dto);
+
+            var row = vm.Grids.Single().Rows.Single();
+
+            var cellTexts = row.Cells.Select(c => c.Text).ToList();
+            Assert.Contains("1 January 2021", cellTexts);
+        }
+
+        // 11. Governance Professional roles produce separate grids
+        [Fact]
+        public void CreateGrids_ShouldCreateSeparateGrids_ForGovernanceProfessionalRoles()
+        {
+            var g1 = Gov("GP1", "", "One", eLookupGovernorRole.GovernanceProfessionalToAMat, null);
+            var g2 = Gov("GP2", "", "Two", eLookupGovernorRole.Group_SharedGovernanceProfessional, null);
+
+            var dto = BuildDto(g1, g2);
+            var vm = Build(dto);
+
+            Assert.Equal(2, vm.Grids.Count);
+        }
+
+        // 12. Governance Professional shared “Shared with” column only for shared GP roles
+        [Fact]
+        public void CreateGrids_ShouldIncludeSharedWithColumn_ForSharedGP()
+        {
+            var g = Gov("Sam", "", "GP", eLookupGovernorRole.Group_SharedGovernanceProfessional, null);
+
+            var dto = BuildDto(g);
+            var vm = Build(dto);
+
+            var headers = vm.Grids.Single().HeaderCells.Select(h => h.Text).ToList();
+
+            Assert.Contains("Shared with", headers);
+        }
+
+        // 13. Non-shared GP roles should NOT show “Shared with”
+        [Fact]
+        public void CreateGrids_ShouldNotIncludeSharedWithColumn_ForNonSharedGP()
+        {
+            var g = Gov("Sam", "", "GP", eLookupGovernorRole.GovernanceProfessionalToAMat, null);
+
+            var dto = BuildDto(g);
+            var vm = Build(dto);
+
+            var headers = vm.Grids.Single().HeaderCells.Select(h => h.Text).ToList();
+
+            Assert.DoesNotContain("Shared with", headers);
+        }
+
+        // 14. Multi-role scenario: no bleed, exactly one grid per roleId
+        [Fact]
+        public void CreateGrids_ShouldCreateOneGridPerRole_NoBleed()
+        {
+            var g1 = Gov("A", "", "Test", eLookupGovernorRole.LocalGovernor, null);
+            var g2 = Gov("B", "", "Test", eLookupGovernorRole.Governor, null);
+            var g3 = Gov("C", "", "Test", eLookupGovernorRole.ChairOfLocalGoverningBody, null);
+
+            var dto = BuildDto(g1, g2, g3);
+            var vm = Build(dto);
+
+            Assert.Equal(3, vm.Grids.Count);
+            Assert.Single(vm.Grids.Single(g => g.Role == eLookupGovernorRole.LocalGovernor).Rows);
+            Assert.Single(vm.Grids.Single(g => g.Role == eLookupGovernorRole.Governor).Rows);
+            Assert.Single(vm.Grids.Single(g => g.Role == eLookupGovernorRole.ChairOfLocalGoverningBody).Rows);
         }
 
         private GovernorModel Gov(string first, string middle, string last, eLookupGovernorRole role, DateTime? dob)
@@ -144,7 +287,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
                 ApplicableRoles = roles,
                 CurrentGovernors = govs.ToList(),
                 HistoricalGovernors = new List<GovernorModel>(),
-                // Interpretation B: every roleId must have a policy
                 RoleDisplayPolicies = roles.ToDictionary(r => r, _ => new GovernorDisplayPolicy())
             };
         }
