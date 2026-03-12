@@ -12,7 +12,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
 {
     public class GovernorsGridViewModelTests
     {
-        // 1. SAME person, DIFFERENT roles => SEPARATE grids, SEPARATE rows
         [Fact]
         public void CreateGrids_ShouldNotMergeDifferentRoles_ForSamePerson()
         {
@@ -28,7 +27,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Equal(2, vm.Grids.SelectMany(g => g.Rows).Count());
         }
 
-        // 2. SAME role, TWO appointments => TWO rows (no row dedupe)
         [Fact]
         public void CreateGrids_ShouldListAllAppointments_ForSameRole()
         {
@@ -43,7 +41,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Equal(2, vm.Grids.SelectMany(g => g.Rows).Count());
         }
 
-        // 3. Distinct roles => distinct grids
         [Fact]
         public void CreateGrids_ShouldCreateSeparateGrids_ForDistinctRoles()
         {
@@ -57,7 +54,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Equal(2, vm.Grids.SelectMany(g => g.Rows).Count());
         }
 
-        // 4. Exact-role-matching: NO bleed across into unrelated grids
         [Fact]
         public void CreateGrids_ShouldUseExactRoleMatching_NoBleedAcrossGrids()
         {
@@ -89,7 +85,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Single(sharedGrid.Rows);
         }
 
-        // 5. Historic grids behave the same as current grids
         [Fact]
         public void CreateGrids_Historic_ShouldListAllAppointments()
         {
@@ -104,7 +99,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Equal(2, vm.HistoricGrids.SelectMany(g => g.Rows).Count());
         }
 
-        // 6. Every roleId must have a DisplayPolicy
         [Fact]
         public void CreateGrids_ShouldThrow_WhenDisplayPolicyMissing()
         {
@@ -120,7 +114,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Throws<Exception>(() => Build(dto));
         }
 
-        // 7. With display policy present → should NOT throw
         [Fact]
         public void CreateGrids_ShouldNotThrow_WhenDisplayPolicyPresent()
         {
@@ -133,7 +126,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Single(vm.Grids);
         }
 
-        // 8. Sorting by name
         [Fact]
         public void CreateGrids_ShouldSortRowsByName_WhenSortValueNull()
         {
@@ -149,7 +141,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Equal(new[] { "Adam Baker", "Ben Alpha", "Charlie Zed" }, rows);
         }
 
-        // 9. Multi-appointments for same roleId + same URN throws
         [Fact]
         public void CreateGrids_ShouldThrow_WhenMultipleAppointmentsForSameUrn()
         {
@@ -166,7 +157,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Throws<InvalidOperationException>(() => Build(dto));
         }
 
-        // 10. Correct appointment chosen for shared roles
         [Fact]
         public void CreateGrids_ShouldSelectCorrectAppointment_ForSharedRoles()
         {
@@ -207,7 +197,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Contains("1 January 2021", cellTexts);
         }
 
-        // 11. Governance Professional roles produce separate grids
         [Fact]
         public void CreateGrids_ShouldCreateSeparateGrids_ForGovernanceProfessionalRoles()
         {
@@ -220,7 +209,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Equal(2, vm.Grids.Count);
         }
 
-        // 12. Governance Professional shared “Shared with” column only for shared GP roles
         [Fact]
         public void CreateGrids_ShouldIncludeSharedWithColumn_ForSharedGP()
         {
@@ -234,7 +222,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.Contains("Shared with", headers);
         }
 
-        // 13. Non-shared GP roles should NOT show “Shared with”
         [Fact]
         public void CreateGrids_ShouldNotIncludeSharedWithColumn_ForNonSharedGP()
         {
@@ -248,7 +235,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             Assert.DoesNotContain("Shared with", headers);
         }
 
-        // 14. Multi-role scenario: no bleed, exactly one grid per roleId
         [Fact]
         public void CreateGrids_ShouldCreateOneGridPerRole_NoBleed()
         {

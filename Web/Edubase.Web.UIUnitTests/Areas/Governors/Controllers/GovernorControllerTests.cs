@@ -1520,7 +1520,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         }
             };
 
-            // mock list + permission
             mockGovernorsReadService
                 .Setup(s => s.GetGovernorListAsync(estabId, groupId, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(dto);
@@ -1529,14 +1528,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 .Setup(s => s.GetGovernorPermissions(estabId, groupId, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(new GovernorPermissions());
 
-            // delete call
             mockGovernorsWriteService
                 .Setup(s => s.DeleteAsync(governorId, It.IsAny<IPrincipal>()))
                 .Returns(Task.FromResult(new ApiResponse(true)));
 
             var controller = BuildController();
 
-            // IMPORTANT: we must set GovernorShared = false and use Action="Remove"
             var postedModel = new GovernorsGridViewModel
             {
                 EstablishmentUrn = estabId,
@@ -1900,16 +1897,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 mockEstablishmentReadService.Object,
                 mockLayoutHelper.Object);
 
-            // -----------------------------
             // HttpContext + HttpRequest
-            // -----------------------------
             var httpContext = new Mock<HttpContextBase>();
             var httpRequest = new Mock<HttpRequestBase>();
 
             httpRequest.Setup(r => r.QueryString)
                 .Returns(new NameValueCollection());
 
-            // ⭐ REQUIRED FOR MVC URL GENERATION
+            // Required for MVC URL generation
             httpRequest.Setup(r => r.ApplicationPath).Returns("/");
             httpRequest.Setup(r => r.AppRelativeCurrentExecutionFilePath).Returns("~/");
             httpRequest.Setup(r => r.Path).Returns("/");
