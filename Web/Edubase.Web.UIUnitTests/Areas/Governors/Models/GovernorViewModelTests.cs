@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+using System;
+using System.Linq;
+using System.Web.Mvc;
+using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Xunit;
 
@@ -6,7 +9,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
 {
     public class GovernorViewModelTests
     {
-
         [Fact]
         public void EmptyViewModelHasEmptyFullName()
         {
@@ -19,11 +21,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         {
             var arbitraryInt = 1;
             var arbitraryTitle = "Arbitrary Title";
-
             var governorViewModel = new GovernorViewModel()
             {
                 GovernorTitleId = arbitraryInt,
-                Titles = new []
+                Titles = new[]
                 {
                     new SelectListItem() { Value = arbitraryInt.ToString(), Text = arbitraryTitle},
                 }
@@ -35,11 +36,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         public void FullNameContainsTitleExceptWhenNotApplicable()
         {
             var arbitraryInt = 1;
-
             var governorViewModel = new GovernorViewModel()
             {
                 GovernorTitleId = arbitraryInt,
-                Titles = new []
+                Titles = new[]
                 {
                     new SelectListItem() { Value = arbitraryInt.ToString(), Text = "Not-applicable"},
                 }
@@ -51,11 +51,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         public void FullNameContainsTitleExceptWhenNotRecorded()
         {
             var arbitraryInt = 1;
-
             var governorViewModel = new GovernorViewModel()
             {
                 GovernorTitleId = arbitraryInt,
-                Titles = new []
+                Titles = new[]
                 {
                     new SelectListItem() { Value = arbitraryInt.ToString(), Text = "Not recorded"},
                 }
@@ -66,222 +65,247 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         [Fact]
         public void FullNameContainsFirstName()
         {
-            var arbitraryString = "ABC";
-            var governorViewModel = new GovernorViewModel()
-            {
-                FirstName = arbitraryString,
-            };
-            Assert.Equal(arbitraryString, governorViewModel.FullName);
+            var vm = new GovernorViewModel { FirstName = "ABC" };
+            Assert.Equal("ABC", vm.FullName);
         }
 
         [Fact]
         public void FullNameContainsMiddleName()
         {
-            var arbitraryString = "ABC";
-            var governorViewModel = new GovernorViewModel()
-            {
-                MiddleName = arbitraryString,
-            };
-            Assert.Equal(arbitraryString, governorViewModel.FullName);
+            var vm = new GovernorViewModel { MiddleName = "ABC" };
+            Assert.Equal("ABC", vm.FullName);
         }
 
         [Fact]
         public void FullNameContainsLastName()
         {
-            var arbitraryString = "ABC";
-            var governorViewModel = new GovernorViewModel()
-            {
-                LastName = arbitraryString,
-            };
-            Assert.Equal(arbitraryString, governorViewModel.FullName);
+            var vm = new GovernorViewModel { LastName = "ABC" };
+            Assert.Equal("ABC", vm.FullName);
         }
 
         [Fact]
-        public void FullNameContainsFirstNameAndMiddleName()
+        public void FullNameContainsFirstAndMiddle()
         {
-            var arbitraryFirstName = "Arbitrary FirstName";
-            var arbitraryMiddleName = "Arbitrary MiddleName";
-            var governorViewModel = new GovernorViewModel()
+            var vm = new GovernorViewModel
             {
-                FirstName = arbitraryFirstName,
-                LastName = arbitraryMiddleName,
+                FirstName = "A",
+                LastName = "B"
             };
-            Assert.Equal($"{arbitraryFirstName} {arbitraryMiddleName}", governorViewModel.FullName);
+            Assert.Equal("A B", vm.FullName);
         }
 
         [Fact]
-        public void FullNameContainsFirstNameAndLastName()
+        public void FullNameContainsFirstAndLast()
         {
-            var arbitraryFirstName = "Arbitrary FirstName";
-            var arbitraryLastName = "Arbitrary LastName";
-            var governorViewModel = new GovernorViewModel()
+            var vm = new GovernorViewModel
             {
-                FirstName = arbitraryFirstName,
-                LastName = arbitraryLastName,
+                FirstName = "A",
+                LastName = "C"
             };
-            Assert.Equal($"{arbitraryFirstName} {arbitraryLastName}", governorViewModel.FullName);
+            Assert.Equal("A C", vm.FullName);
         }
 
         [Fact]
-        public void FullNameContainsFirstNameAndMiddleNameAndLastName()
+        public void FullNameContainsFirstMiddleLast()
         {
-            var arbitraryFirstName = "Arbitrary FirstName";
-            var arbitraryMiddleName = "Arbitrary MiddleName";
-            var arbitraryLastName = "Arbitrary LastName";
-            var governorViewModel = new GovernorViewModel()
+            var vm = new GovernorViewModel
             {
-                FirstName = arbitraryFirstName,
-                MiddleName = arbitraryMiddleName,
-                LastName = arbitraryLastName,
+                FirstName = "A",
+                MiddleName = "B",
+                LastName = "C"
             };
-            Assert.Equal($"{arbitraryFirstName} {arbitraryMiddleName} {arbitraryLastName}", governorViewModel.FullName);
+            Assert.Equal("A B C", vm.FullName);
         }
 
         [Fact]
-        public void FullNameContainsTitleAndFirstName()
+        public void FullNameContainsTitleAndFirst()
         {
-            var arbitraryInt = 1;
-            var arbitraryTitle = "Arbitrary Title";
-            var arbitraryFirstName = "Arbitrary FirstName";
-
-            var governorViewModel = new GovernorViewModel()
+            var vm = new GovernorViewModel
             {
-                GovernorTitleId = arbitraryInt,
-                Titles = new []
-                {
-                    new SelectListItem() { Value = arbitraryInt.ToString(), Text = arbitraryTitle},
-                },
-                FirstName = arbitraryFirstName,
+                GovernorTitleId = 1,
+                Titles = new[] { new SelectListItem { Value = "1", Text = "Dr" } },
+                FirstName = "Tom"
             };
-            Assert.Equal($"{arbitraryTitle} {arbitraryFirstName}", governorViewModel.FullName);
+            Assert.Equal("Dr Tom", vm.FullName);
         }
 
         [Fact]
-        public void FullNameContainsTitleAndMiddleName()
+        public void FullNameContainsTitleFirstMiddleLast()
         {
-            var arbitraryInt = 1;
-            var arbitraryTitle = "Arbitrary Title";
-            var arbitraryMiddleName = "Arbitrary FirstName";
-
-            var governorViewModel = new GovernorViewModel()
+            var vm = new GovernorViewModel
             {
-                GovernorTitleId = arbitraryInt,
-                Titles = new []
-                {
-                    new SelectListItem() { Value = arbitraryInt.ToString(), Text = arbitraryTitle},
-                },
-                FirstName = arbitraryMiddleName,
+                GovernorTitleId = 1,
+                Titles = new[] { new SelectListItem { Value = "1", Text = "Prof" } },
+                FirstName = "A",
+                MiddleName = "B",
+                LastName = "C"
             };
-            Assert.Equal($"{arbitraryTitle} {arbitraryMiddleName}", governorViewModel.FullName);
+            Assert.Equal("Prof A B C", vm.FullName);
         }
 
         [Fact]
-        public void FullNameContainsTitleAndLastName()
+        public void FullName_TrimsAllValues()
         {
-            var arbitraryInt = 1;
-            var arbitraryTitle = "Arbitrary Title";
-            var arbitraryLastName = "Arbitrary LastName";
-
-            var governorViewModel = new GovernorViewModel()
+            var vm = new GovernorViewModel
             {
-                GovernorTitleId = arbitraryInt,
-                Titles = new []
-                {
-                    new SelectListItem() { Value = arbitraryInt.ToString(), Text = arbitraryTitle},
-                },
-                FirstName = arbitraryLastName,
+                GovernorTitleId = 1,
+                Titles = new[] { new SelectListItem { Value = "1", Text = " Dr " } },
+                FirstName = " A ",
+                MiddleName = " B ",
+                LastName = " C "
             };
-            Assert.Equal($"{arbitraryTitle} {arbitraryLastName}", governorViewModel.FullName);
+            Assert.Equal("Dr A B C", vm.FullName);
         }
 
         [Fact]
-        public void FullNameContainsTitleAndFirstNameAndLastName()
+        public void NewGovernorViewModel_Defaults_OriginalFlags_ToNull()
         {
-            var arbitraryInt = 1;
-            var arbitraryTitle = "Arbitrary Title";
-            var arbitraryFirstName = "Arbitrary FirstName";
-            var arbitraryLastName = "Arbitrary LastName";
+            var vm = new GovernorViewModel();
 
-            var governorViewModel = new GovernorViewModel()
-            {
-                GovernorTitleId = arbitraryInt,
-                Titles = new []
-                {
-                    new SelectListItem() { Value = arbitraryInt.ToString(), Text = arbitraryTitle},
-                },
-                FirstName = arbitraryFirstName,
-                LastName = arbitraryLastName,
-            };
-            Assert.Equal($"{arbitraryTitle} {arbitraryFirstName} {arbitraryLastName}", governorViewModel.FullName);
+            Assert.Null(vm.IsOriginalChairOfTrustees);
+            Assert.Null(vm.IsOriginalSignatoryMember);
         }
 
         [Fact]
-        public void FullNameContainsTitleAndFirstNameAndMiddleNameAndLastName()
+        public void YesNoSelect_Defaults_No_Selected()
         {
-            var arbitraryInt = 1;
-            var arbitraryTitle = "Arbitrary Title";
-            var arbitraryFirstName = "Arbitrary FirstName";
-            var arbitraryMiddleName = "Arbitrary MiddleName";
-            var arbitraryLastName = "Arbitrary LastName";
+            var vm = new GovernorViewModel();
+            var items = vm.YesNoSelect.ToList();
 
-            var governorViewModel = new GovernorViewModel()
-            {
-                GovernorTitleId = arbitraryInt,
-                Titles = new []
-                {
-                    new SelectListItem() { Value = arbitraryInt.ToString(), Text = arbitraryTitle},
-                },
-                FirstName = arbitraryFirstName,
-                MiddleName = arbitraryMiddleName,
-                LastName = arbitraryLastName,
-            };
-            Assert.Equal($"{arbitraryTitle} {arbitraryFirstName} {arbitraryMiddleName} {arbitraryLastName}", governorViewModel.FullName);
+            var yes = Assert.Single(items.Where(x => x.Value == "true"));
+            var no = Assert.Single(items.Where(x => x.Value == "false"));
+
+            Assert.False(yes.Selected);
+            Assert.True(no.Selected);
+        }
+    }
+
+
+    public class CreateEditGovernorViewModelTests
+    {
+        [Fact]
+        public void ExistingGovernors_Defaults_ToEmpty()
+        {
+            var vm = new CreateEditGovernorViewModel();
+            Assert.Empty(vm.ExistingGovernors);
         }
 
         [Fact]
-        public void FullNameContainsTitleAndFirstNameAndMiddleNameAndLastNameAndValuesAreTrimmed()
+        public void ReplaceGovernorViewModel_NotNull()
         {
-            var arbitraryInt = 1;
-            var arbitraryTitle = "  Arbitrary Title  ";
-            var arbitraryFirstName = "  Arbitrary FirstName  ";
-            var arbitraryMiddleName = "  Arbitrary MiddleName  ";
-            var arbitraryLastName = "  Arbitrary LastName  ";
+            var vm = new CreateEditGovernorViewModel();
+            Assert.NotNull(vm.ReplaceGovernorViewModel);
+        }
 
-            var governorViewModel = new GovernorViewModel()
+        [Theory]
+        [InlineData(null, null, null, "GroupAddGovernor")]
+        [InlineData(1, null, null, "EstabAddGovernor")]
+        [InlineData(null, 5, null, "GroupEditGovernor")]
+        [InlineData(1, 5, null, "EstabEditGovernor")]
+        [InlineData(null, null, 22, "GroupReplaceGovernor")]
+        [InlineData(1, null, 22, "EstabReplaceGovernor")]
+        public void FormPostRouteName_ComputedCorrectly(
+            int? establishmentUrn,
+            int? gid,
+            int? replaceGid,
+            string expected)
+        {
+            var vm = new CreateEditGovernorViewModel
             {
-                GovernorTitleId = arbitraryInt,
-                Titles = new []
-                {
-                    new SelectListItem() { Value = arbitraryInt.ToString(), Text = arbitraryTitle},
-                },
-                FirstName = arbitraryFirstName,
-                MiddleName = arbitraryMiddleName,
-                LastName = arbitraryLastName,
+                EstablishmentUrn = establishmentUrn,
+                GID = gid,
+                ReplaceGovernorViewModel = new ReplaceGovernorViewModel { GID = replaceGid }
             };
-            Assert.Equal($"{arbitraryTitle.Trim()} {arbitraryFirstName.Trim()} {arbitraryMiddleName.Trim()} {arbitraryLastName.Trim()}", governorViewModel.FullName);
+
+            Assert.Equal(expected, vm.FormPostRouteName);
+        }
+
+        #region AllowReinstateAsGovernor Tests
+
+        [Fact]
+        public void AllowReinstate_True_ForEligibleChair_WithEstabUrn()
+        {
+            var vm = new CreateEditGovernorViewModel
+            {
+                EstablishmentUrn = 7,
+                GovernorRole = eLookupGovernorRole.ChairOfGovernors
+            };
+
+            Assert.True(vm.AllowReinstateAsGovernor);
         }
 
         [Fact]
-        public void FullNameContainsTitleAndFirstNameAndMiddleNameAndLastNameAndValuesAreTrimmedAtEndsOnly()
+        public void AllowReinstate_False_WhenNoEstablishmentUrn()
         {
-            var arbitraryInt = 1;
-            var arbitraryTitle = "  Arbitrary   Title  ";
-            var arbitraryFirstName = "  Arbitrary   FirstName  ";
-            var arbitraryMiddleName = "  Arbitrary   MiddleName  ";
-            var arbitraryLastName = "  Arbitrary   LastName  ";
-
-            var governorViewModel = new GovernorViewModel()
+            var vm = new CreateEditGovernorViewModel
             {
-                GovernorTitleId = arbitraryInt,
-                Titles = new []
-                {
-                    new SelectListItem() { Value = arbitraryInt.ToString(), Text = arbitraryTitle},
-                },
-                FirstName = arbitraryFirstName,
-                MiddleName = arbitraryMiddleName,
-                LastName = arbitraryLastName,
+                EstablishmentUrn = null,
+                GovernorRole = eLookupGovernorRole.ChairOfGovernors
             };
-            Assert.Equal($"{arbitraryTitle.Trim()} {arbitraryFirstName.Trim()} {arbitraryMiddleName.Trim()} {arbitraryLastName.Trim()}", governorViewModel.FullName);
+
+            Assert.False(vm.AllowReinstateAsGovernor);
         }
+
+        [Fact]
+        public void AllowReinstate_False_WhenNotChair()
+        {
+            var vm = new CreateEditGovernorViewModel
+            {
+                EstablishmentUrn = 123,
+                GovernorRole = eLookupGovernorRole.Governor
+            };
+
+            Assert.False(vm.AllowReinstateAsGovernor);
+        }
+
+        #endregion
+
+        #region Label Tests
+
+        [Fact]
+        public void Reinstate_Label_UsesTrustee_ForChairOfTrustees()
+        {
+            var vm = new CreateEditGovernorViewModel
+            {
+                GovernorRole = eLookupGovernorRole.ChairOfTrustees
+            };
+
+            Assert.Equal("Re-instate as trustee", vm.ReinstateAsGovernorCheckboxLabel);
+        }
+
+        [Fact]
+        public void Reinstate_Label_UsesGovernor_ForOtherChairRoles()
+        {
+            var vm = new CreateEditGovernorViewModel
+            {
+                GovernorRole = eLookupGovernorRole.ChairOfGovernors
+            };
+
+            Assert.Equal("Re-instate as governor", vm.ReinstateAsGovernorCheckboxLabel);
+        }
+
+        [Fact]
+        public void SelectPrevious_Label_UsesTrustee_ForChairOfTrustees()
+        {
+            var vm = new CreateEditGovernorViewModel
+            {
+                GovernorRole = eLookupGovernorRole.ChairOfTrustees
+            };
+
+            Assert.Equal("Choose trustee", vm.SelectPreviousGovernorLabel);
+        }
+
+        [Fact]
+        public void SelectPrevious_Label_UsesGovernor_ForOtherChairRoles()
+        {
+            var vm = new CreateEditGovernorViewModel
+            {
+                GovernorRole = eLookupGovernorRole.ChairOfGovernors
+            };
+
+            Assert.Equal("Choose governor", vm.SelectPreviousGovernorLabel);
+        }
+
+        #endregion
     }
 }
