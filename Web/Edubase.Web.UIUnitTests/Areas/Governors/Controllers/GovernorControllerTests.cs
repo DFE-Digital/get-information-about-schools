@@ -616,6 +616,63 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.False(result);
         }
 
+        [Fact()]
+        public async Task Gov_AddEditOrReplace_Create_Defaults_OriginalChairOfTrustees_ToNo()
+        {
+            // Arrange
+            var groupId = 42;
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>(),
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfTrustees },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.ChairOfTrustees, new GovernorDisplayPolicy() }
+                }
+            };
+
+            mockGovernorsReadService
+                .Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => governorDetailsDto);
+
+            mockControllerContext
+                .SetupGet(c => c.RouteData)
+                .Returns(new RouteData(
+                    new Route("", new PageRouteHandler("~/")),
+                    new PageRouteHandler("~/")));
+
+            mockLayoutHelper
+                .Setup(l => l.PopulateLayoutProperties(
+                    It.IsAny<CreateEditGovernorViewModel>(),
+                    null,
+                    groupId,
+                    It.IsAny<IPrincipal>(),
+                    It.IsAny<Action<EstablishmentModel>>(),
+                    It.IsAny<Action<GroupModel>>()))
+                .Returns(Task.CompletedTask);
+
+            mockGovernorsReadService
+                .Setup(g => g.GetEditorDisplayPolicyAsync(
+                    eLookupGovernorRole.ChairOfTrustees,
+                    true,
+                    It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new GovernorDisplayPolicy());
+
+            // Act
+            var result = await controller.AddEditOrReplace(groupId, null, eLookupGovernorRole.ChairOfTrustees, null);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<CreateEditGovernorViewModel>(viewResult.Model);
+
+            Assert.Null(model.IsOriginalChairOfTrustees);
+
+            var noItem = Assert.Single(model.YesNoSelect.Where(i => i.Value == "false"));
+            Assert.True(noItem.Selected);
+        }
+
 
         [Fact()]
         public async Task Gov_DeleteOrRetireGovernor_NoAction()
