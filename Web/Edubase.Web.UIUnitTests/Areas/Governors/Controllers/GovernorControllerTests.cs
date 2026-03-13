@@ -671,6 +671,62 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.True(noItem.Selected);
         }
 
+        [Fact]
+        public async Task Gov_AddEditOrReplace_Edit_KeepsOriginalSignatoryFlag_AndDoesNotModifyAppointingBody()
+        {
+            // Arrange
+            var estabUrn = 4000;
+            var governorId = 200;
+
+            var governor = new GovernorModel
+            {
+                Id = governorId,
+                RoleId = (int) eLookupGovernorRole.ChairOfTrustees,
+                IsOriginalSignatoryMember = true,
+                IsOriginalChairOfTrustees = true
+            };
+
+            mockControllerContext
+                .SetupGet(c => c.RouteData)
+                .Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
+
+            mockGovernorsReadService
+                .Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governor);
+
+            mockGovernorsReadService
+                .Setup(g => g.GetEditorDisplayPolicyAsync(
+                    eLookupGovernorRole.ChairOfTrustees,
+                    false,
+                    It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorDisplayPolicy
+                {
+                    AppointingBodyId = true
+                });
+
+            mockLayoutHelper
+                .Setup(l => l.PopulateLayoutProperties(
+                    It.IsAny<CreateEditGovernorViewModel>(),
+                    estabUrn,
+                    null,
+                    It.IsAny<IPrincipal>(),
+                    It.IsAny<Action<EstablishmentModel>>(),
+                    It.IsAny<Action<GroupModel>>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await controller.AddEditOrReplace(null, estabUrn, null, governorId);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var vm = Assert.IsType<CreateEditGovernorViewModel>(viewResult.Model);
+
+            Assert.True(vm.IsOriginalSignatoryMember);
+            Assert.True(vm.IsOriginalChairOfTrustees);
+
+            // Do NOT assert vm.DisplayPolicy.AppointingBodyId (frontend-only rule - JS)
+        }
+
 
         [Fact()]
         public async Task Gov_DeleteOrRetireGovernor_NoAction()
