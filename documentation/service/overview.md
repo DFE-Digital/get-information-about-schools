@@ -11,27 +11,46 @@
 C4Context
   title System Context diagram for Get Information About Schools Service
  
-  System_Ext(externalSystems, "External Consumer", "Systems that downloa<br>GIAS datasets")
-  Person(anonUser, "Anonymous User", "Accesses publicly available school<br>and establishment data")
+
+
   Person(authUser, "Signed-in User", "Accesses additional features<br>and data based on permissions")
   Person(backOfficeUser, "DfE Back Office User", "Maintains and manages GIAS data")
-
-
-
+  Person(anonUser, "Anonymous User", "Accesses publicly available school<br>and establishment data")
+  System_Ext(externalSystems, "External Consumer", "Systems that download<br>GIAS datasets") 
 
   Enterprise_Boundary(govuk, "GovUK") {
 
-
-
     Enterprise_Boundary(dfe, "Department for Education") {
-      System(GIAS, "Get Informatio About Schools", "Provides establishment and<br>governance roles data")
-      System_Ext(DfESignIn, "DfE Sign In", "User authentication system")
 
+      System(GIAS, "Get Information About Schools", "Provides establishment and<br>governance roles data")
+      System_Ext(DfESignIn, "DfE Sign In", "User authentication system")
+     
+     
     }
 
+    System_Boundary(otherGov, "Other UK Government Services") {
+      System_Ext(companiesHouse, "Companies House", "Provides lookp data via<br>Companies House number")
+      System_Ext(ofsted, "Ofsted", "Provides school inspection ratings<br>and links to inspection reports")
+    }
 
   }
 
+  System_Boundary(external, "External data services") {
+    System_Ext(ordnanceSurvey, "Ordnance Survey", "Provides map tiles")
+    System_Ext(ons, "Office for national Statistics", "Provides ONS codes for LA,<br>Region and Constituency")
+  }
+
+
+  Rel(DfESignIn, GIAS, "authenticate users")
+
+  Rel(ordnanceSurvey, GIAS , "Retrieves map tiles")
+  Rel(ons, GIAS , "Imports administrative geography<br>and statistical reference datasets")
+  Rel(companiesHouse,GIAS , "Company lookup")
+
+
+  BiRel(ofsted, GIAS, "Inspection outcomes and<br>establishment reference data")
+
+  Rel(externalSystems, GIAS, "Downloads data via APIs<br>using Basic Auth")
   Rel(anonUser, GIAS, "Searches and<br>views data")
   Rel(authUser, GIAS, "Views and updates<br>permitted data")
   Rel(backOfficeUser, GIAS, "Administers data")
@@ -39,20 +58,15 @@ C4Context
   Rel(backOfficeUser, DfESignIn, "Signs in using")
 
 
-  Rel(DfESignIn, GIAS, "")
 
 
+  UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")
 
-
-
-  UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
-  UpdateRelStyle(anonUser, GIAS, $offsetX="-110", $offsetY="-100")
-  UpdateRelStyle(authUser, GIAS, $offsetX="0", $offsetY="-100")
-  UpdateRelStyle(authUser, DfESignIn, $offsetX="0", $offsetY="0")
-  UpdateRelStyle(backOfficeUser, GIAS, $offsetX="80", $offsetY="-100")
-
-
-
+  UpdateRelStyle(externalSystems, GIAS, $offsetX="-110", $offsetY="-100")
+  UpdateRelStyle(anonUser, GIAS, $offsetX="30", $offsetY="-100")
+  UpdateRelStyle(authUser, GIAS, $offsetX="90", $offsetY="-100")
+  UpdateRelStyle(authUser, DfESignIn, $offsetX="20", $offsetY="-60")
+  UpdateRelStyle(backOfficeUser, GIAS, $offsetX="200", $offsetY="-100")
 
 
 ```
