@@ -29,6 +29,8 @@ C4Context
     }
 
     System_Boundary(otherGov, "Other UK Government Services") {
+      System_Ext(Notify, "Gov UK<br>Notify", "Mailer system for<br>Email communications")
+
       System_Ext(companiesHouse, "Companies House", "Provides lookp data via<br>Companies House number")
       System_Ext(ofsted, "Ofsted", "Provides school inspection ratings<br>and links to inspection reports")
     }
@@ -43,6 +45,7 @@ C4Context
 
   Rel(DfESignIn, GIAS, "authenticate users")
 
+  Rel(GIAS, Notify, "Sends emails<br>to users", "API" )
   Rel(ordnanceSurvey, GIAS , "Retrieves map tiles")
   Rel(ons, GIAS , "Imports administrative geography<br>and statistical reference datasets")
   Rel(companiesHouse,GIAS , "Company lookup")
