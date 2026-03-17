@@ -8,10 +8,8 @@
 
 **Questions**
 
-- Do we have a catalogue of all the Edubase backend exports, we have about 30, who are the consumers for these, can we get a list from the ws authentication table
-- What is Schools, Pupils and their Characteristics
 - Do we use Azure Maps, or OS maps
-- Do we have a profile service 
+
 
 ```mermaid
 C4Context
@@ -35,28 +33,36 @@ C4Context
 
       Enterprise_Boundary(dfe, "Department for Education") {
 
-      System_Ext(DfESignIn, "DfE Sign In", "User authentication system.<br>Consumes GIAS data to provide <br>list of establishments on sign in")
-      System(GIAS, "Get Information About Schools", "Provides establishment and<br>governance roles data")
-      System_Ext(spc, "Schools, Pupils and <br>their Characteristics", "DfE statistical dataset<br>derived from the School Census")
+      System_Ext(DfESignIn, "DfE Sign In", "User authentication system.Consumes GIAS data to <br>provide list of establishments on sign in")
+      System_Ext(profileService, "DfE Profile service", "DfE service providing user profiles,<br>organisation relationships, and role-based access data")
+      
+      System(GIAS, "Get Information About Schools", "Provides establishment and governance roles data")
+      
+      System_Ext(schoolCensus,"School census","DfE statutory data set.<br>SPC (Schools, Pupils and their Characteristics).<br>SLASC (School Level Annual School Census) ")
 
+      System_Ext(ukrlp, "UKRLP (UK Register of<br>Learning Providers)", "National register of learning providers providing<br>UKPRN identifiers and organisation data")
     }
 
   }
 
   System_Boundary(external, "External data services") {
-    System_Ext(ordnanceSurvey, "Ordnance Survey", "Provides map tiles<br>and address data")
+    System_Ext(ordnanceSurvey, "Ordnance Survey", "UK address lookup servce")
+    System_Ext(azureMaps, "Azure Maps", "Used to render maps and display<br>establishment locations")
     System_Ext(ons, "Office for national Statistics", "Provides ONS codes for LA,<br>Region and Constituency")
   }
 
 
   Rel(DfESignIn, GIAS, "Authenticate users.<br>Consumes establishment data")
-  Rel(spc,GIAS,"Provides aggregated pupil<p>characteristic metrics")
+  Rel(profileService, GIAS, "Provides user profile, organisation<br>associations, and roles")
+  Rel(schoolCensus, GIAS, "Provides pupil-level and<br>school-level statistics")
+  Rel(ukrlp, GIAS, "Provides provider identity data")
 
   Rel(GIAS, Notify, "Sends emails<br>to users", "API" )
-  Rel(ordnanceSurvey, GIAS, "Retrieves map tiles to display school locations")
+  Rel(GIAS, azureMaps, "Uses geospatial APIs to visualise<br>establishment locations")
+  Rel(ordnanceSurvey, GIAS, "Uses address lookup service to search<br>and select validated addresses")
   Rel(ons, GIAS, "Imports administrative geography<br>and statistical reference datasets")
-  Rel(companiesHouse, GIAS, "Company lookup")
-  Rel(GIAS, hmrc, "Retrieves establishment information")
+  Rel(companiesHouse, GIAS, "Provides legal entity data <br>(e.g. company number, status, address)<br> for validation and alignment")
+  Rel(GIAS, hmrc, "Provides establishment reference data<br>(e.g. URN, status, type)<br> for tax, employer classification, and validation")
 
   BiRel(ofsted, GIAS, "In : Inspection outcomes and<br>Out : establishment reference data")
 
