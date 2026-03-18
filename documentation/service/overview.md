@@ -49,10 +49,10 @@ C4Context
 
   UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")
 
-  Rel(authUser, GIAS, "Views and updates<br>permitted data")
-  Rel(backOfficeUser, GIAS, "Administers data")
-  Rel(anonUser, GIAS, "Searches and<br>views data")
-  Rel(externalSystems, GIAS, "Downloads data via APIs<br>using Basic Auth")
+  Rel(authUser, GIAS, "Views and updates<br>permitted data", "HTML")
+  Rel(backOfficeUser, GIAS, "Administers data", "HTML")
+  Rel(anonUser, GIAS, "Searches and<br>views data", "HTML")
+  Rel(externalSystems, GIAS, "Retrieves establishment and governor data", "SOAP/XML and CSV<br>using Basic Auth"
   
   Rel(authUser, DfESignIn, "Signs in using")
   Rel(backOfficeUser, DfESignIn, "Signs in using")
@@ -62,10 +62,15 @@ C4Context
   Rel(schoolCensus, GIAS, "Provides pupil-level and<br>school-level statistics")
   Rel(ukrlp, GIAS, "Provides provider identity data")
 
+  Rel(GIAS, Notify, "Submits email messages<br>for delivery", "API")
+
+  Rel(ordnanceSurvey, GIAS, "Search address<br>data by postcode", "API")
+  Rel(azureMaps,GIAS, "Retrieves map tiles<br>and location search results", "API")
+
   UpdateRelStyle(anonUser, GIAS, $offsetX="-300", $offsetY="-280")
   UpdateRelStyle(authUser, GIAS, $offsetX="-200", $offsetY="-280")
   UpdateRelStyle(backOfficeUser, GIAS, $offsetX="50", $offsetY="-280")
-  UpdateRelStyle(externalSystems, GIAS, $offsetX="190", $offsetY="-280") 
+  UpdateRelStyle(externalSystems, GIAS, $offsetX="190", $offsetY="-300") 
 
   UpdateRelStyle(authUser, DfESignIn, $offsetX="0", $offsetY="100") 
   UpdateRelStyle(backOfficeUser, DfESignIn, $offsetX="-70", $offsetY="100") 
@@ -73,6 +78,11 @@ C4Context
   UpdateRelStyle(DfESignIn, GIAS, $offsetX="-80", $offsetY="-120") 
 
   UpdateRelStyle(ukrlp, GIAS, $offsetX="-80", $offsetY="120") 
+
+  UpdateRelStyle(GIAS, Notify, $offsetX="-220", $offsetY="-100") 
+
+  UpdateRelStyle(ordnanceSurvey, GIAS, $offsetX="200", $offsetY="-150") 
+  UpdateRelStyle(azureMaps,GIAS, $offsetX="110", $offsetY="-50") 
 
 
 
