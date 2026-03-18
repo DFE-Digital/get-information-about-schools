@@ -6,10 +6,6 @@
 
 ## C4 System Context Diagram
 
-**Questions**
-
-- Do we use Azure Maps, or OS maps
-
 
 ```mermaid
 C4Context
@@ -48,7 +44,7 @@ C4Context
   System_Boundary(external, "External data services") {
     System_Ext(ordnanceSurvey, "Ordnance Survey", "UK address lookup servce")
     System_Ext(azureMaps, "Azure Maps", "Used to render maps and display<br>establishment locations")
-    System_Ext(ons, "Office for national Statistics", "Provides ONS codes for LA,<br>Region and Constituency")
+    System_Ext(ons, "Office for National Statistics", "Provides ONS codes for LA,<br>Region and Constituency")
   }
 
 
