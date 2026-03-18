@@ -11,10 +11,10 @@
 C4Context
   title System Context diagram for Get Information About Schools Service
  
-
+  Person(anonUser, "Anonymous User", "Accesses publicly available school<br>and establishment data")
   Person(authUser, "Signed-in User", "Accesses additional features<br>and data based on permissions")
   Person(backOfficeUser, "DfE Back Office User", "Maintains and manages GIAS data")
-  Person(anonUser, "Anonymous User", "Accesses publicly available school<br>and establishment data")
+
   System_Ext(externalSystems, "External Consumer", "Systems that download<br>GIAS datasets") 
 
   Enterprise_Boundary(govuk, "GovUK") {
@@ -41,43 +41,39 @@ C4Context
 
   }
 
-  System_Boundary(external, "External data services") {
+  System_Boundary(external, "External Data Services") {
     System_Ext(ordnanceSurvey, "Ordnance Survey", "UK address lookup servce")
     System_Ext(azureMaps, "Azure Maps", "Used to render maps and display<br>establishment locations")
     System_Ext(ons, "Office for National Statistics", "Provides ONS codes for LA,<br>Region and Constituency")
   }
 
+  UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")
 
-  Rel(DfESignIn, GIAS, "Authenticate users.<br>Consumes establishment data")
-  Rel(profileService, GIAS, "Provides user profile, organisation<br>associations, and roles")
-  Rel(schoolCensus, GIAS, "Provides pupil-level and<br>school-level statistics")
-  Rel(ukrlp, GIAS, "Provides provider identity data")
-
-  Rel(GIAS, Notify, "Sends emails<br>to users", "API" )
-  Rel(GIAS, azureMaps, "Uses geospatial APIs to visualise<br>establishment locations")
-  Rel(ordnanceSurvey, GIAS, "Uses address lookup service to search<br>and select validated addresses")
-  Rel(ons, GIAS, "Imports administrative geography<br>and statistical reference datasets")
-  Rel(companiesHouse, GIAS, "Provides legal entity data <br>(e.g. company number, status, address)<br> for validation and alignment")
-  Rel(GIAS, hmrc, "Provides establishment reference data<br>(e.g. URN, status, type)<br> for tax, employer classification, and validation")
-
-  BiRel(ofsted, GIAS, "In : Inspection outcomes and<br>Out : establishment reference data")
-
-
-  Rel(externalSystems, GIAS, "Downloads data via APIs<br>using Basic Auth")
-  Rel(anonUser, GIAS, "Searches and<br>views data")
   Rel(authUser, GIAS, "Views and updates<br>permitted data")
   Rel(backOfficeUser, GIAS, "Administers data")
+  Rel(anonUser, GIAS, "Searches and<br>views data")
+  Rel(externalSystems, GIAS, "Downloads data via APIs<br>using Basic Auth")
+  
   Rel(authUser, DfESignIn, "Signs in using")
   Rel(backOfficeUser, DfESignIn, "Signs in using")
 
+  BiRel(DfESignIn, GIAS, "Authenticate users.<br>Consumes establishment data")
+  Rel(profileService, GIAS, "Provides user profile data")
+  Rel(schoolCensus, GIAS, "Provides pupil-level and<br>school-level statistics")
+  Rel(ukrlp, GIAS, "Provides provider identity data")
 
-  UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")
+  UpdateRelStyle(anonUser, GIAS, $offsetX="-300", $offsetY="-280")
+  UpdateRelStyle(authUser, GIAS, $offsetX="-200", $offsetY="-280")
+  UpdateRelStyle(backOfficeUser, GIAS, $offsetX="50", $offsetY="-280")
+  UpdateRelStyle(externalSystems, GIAS, $offsetX="190", $offsetY="-280") 
 
-  UpdateRelStyle(externalSystems, GIAS, $offsetX="-110", $offsetY="-100")
-  UpdateRelStyle(anonUser, GIAS, $offsetX="30", $offsetY="-100")
-  UpdateRelStyle(authUser, GIAS, $offsetX="90", $offsetY="-100")
-  UpdateRelStyle(authUser, DfESignIn, $offsetX="20", $offsetY="-60")
-  UpdateRelStyle(backOfficeUser, GIAS, $offsetX="200", $offsetY="-100")
+  UpdateRelStyle(authUser, DfESignIn, $offsetX="0", $offsetY="100") 
+  UpdateRelStyle(backOfficeUser, DfESignIn, $offsetX="-70", $offsetY="100") 
+
+  UpdateRelStyle(DfESignIn, GIAS, $offsetX="-80", $offsetY="-120") 
+
+  UpdateRelStyle(ukrlp, GIAS, $offsetX="-80", $offsetY="120") 
+
 
 
 ```
