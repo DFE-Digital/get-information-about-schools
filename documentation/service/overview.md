@@ -6,19 +6,13 @@
 
 ## C4 System Context Diagram
 
-**Questions**
-
-- How does GIAS ingest the DfE profile service data
-- How does GIAS ingest the UK Register of Learning Providers 
-
-
 
 
 ```mermaid
 C4Context
   title System Context diagram for Get Information About Schools Service
  
-  Person(anonUser, "Anonymous User", "Accesses publicly available school<br>and establishment data")
+  Person(anonUser, "Anonymous User", "Accesses publicly available establishment<br> and governor data")
   Person(authUser, "Signed-in User", "Accesses additional features<br>and data based on permissions")
   Person(backOfficeUser, "DfE Back Office User", "Maintains and manages GIAS data")
 
@@ -40,14 +34,24 @@ C4Context
 
 
       
-      System(GIAS, "Get Information About Schools", "Supplies establishment and governance roles data")
+      System(GIAS, "Get Information About Schools", "Master information system for Establishment and<br>Governors data")
       
       System_Ext(schoolCensus,"School census","DfE statutory data set.<br>SPC (Schools, Pupils and their Characteristics).<br>SLASC (School Level Annual School Census) ")
 
       System_Ext(ukrlp, "UK Register of Learning<br>Providers (UKRLP)", "National register of learning providers providing<br>UKPRN identifiers and organisation data")
 
-      System_Ext(anm, "Analysis and Modelling Platform (AnM)", "")
+      System_Ext(anm, "Analysis and Modelling Platform (AnM)", "Education & Skills Funding Agency (ESFA)<br>Data Catalogue")
       
+      System_Ext(tv, "Teaching Vacancies", "Publishes and manages school job vacancies <br>and applications")
+
+      System_Ext("ptt", "Publish Teacher Training","Publishes teacher training course informatio<br>for providers")
+
+      System_Ext(ecf, "Early Career Framework", "Teacher training and development programme")
+
+      System_Ext(capt, "Claim Additional Payments for Teaching", "Manages teacher payment<br>claim and eligibility")
+
+      System_Ext(fbit,"Financial Benchmarking and Insights Tool<br>(FBIT)","Compares and analyses school financial data to<br>support planning and accountability")
+
     }
 
   }
@@ -55,7 +59,7 @@ C4Context
   System_Boundary(external, "External Data Services") {
     System_Ext(ordnanceSurvey, "Ordnance Survey", "UK address lookup servce")
     System_Ext(azureMaps, "Azure Maps", "Used to render maps and display<br>establishment locations")
-    System_Ext(ons, "Office for National Statistics", "Official statistics and geographic reference data")
+    System_Ext(ons, "Office for National Statistics", "Official statistics and geographic<br>reference data")
   }
 
   UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")
@@ -63,7 +67,7 @@ C4Context
   Rel(anonUser, GIAS, "Views and downloads data", "HTTPS/HTML & CSV")
   BiRel(authUser, GIAS, "Views, updates and downloads<br>permitted data", "HTTPS/HTML & CSV")
   Rel(backOfficeUser, GIAS, "Administers data", "HTTPS/HTML")
-  Rel(externalSystems, GIAS, "Downloads establishment and governor data", "HTTPS/XML and CSV<br>using Basic Auth")
+  Rel(externalSystems, GIAS, "Downloads establishment and governor data", "HTTPS/XML/CSV<br>using Basic Auth")
   
   Rel(authUser, DfESignIn, "Signs in using")
   Rel(backOfficeUser, DfESignIn, "Signs in using")
@@ -84,32 +88,41 @@ C4Context
   Rel(ofsted,GIAS,"Supplies school inspection ratings<br>and links to inspection reports","Manual/XLSX")
   Rel(GIAS, hmrc, "Extract of establishment data<br>for childcare providers (CCPs)", "Manual/CSV")
 
-  Rel(anm,GIAS,"?","")
+  Rel(GIAS,anm,"Ingests establishment and<br>governor data","HTTPS/CSV")
+  Rel(GIAS, tv, "Ingests establishment data", "HTTPS/CSV")
+  Rel(GIAS, ptt, "Ingests establishment data", "HTTPS/CSV")
+  Rel(GIAS, ecf, "Ingests establishment data", "HTTPS/CSV")
+  Rel(GIAS, capt, "Ingests establishment data", "HTTPS/CSV")
+  Rel(GIAS, fbit, "Ingests establishment data", "Manual/CSV")
 
   UpdateRelStyle(anonUser, GIAS, $offsetX="-320", $offsetY="-190")
-  UpdateRelStyle(authUser, GIAS, $offsetX="-250", $offsetY="-190")
-  UpdateRelStyle(backOfficeUser, GIAS, $offsetX="50", $offsetY="-190")
-  UpdateRelStyle(externalSystems, GIAS, $offsetX="180", $offsetY="-200") 
+  UpdateRelStyle(authUser, GIAS, $offsetX="-230", $offsetY="-190")
+  UpdateRelStyle(backOfficeUser, GIAS, $offsetX="70", $offsetY="-190")
+  UpdateRelStyle(externalSystems, GIAS, $offsetX="190", $offsetY="-200") 
 
   UpdateRelStyle(authUser, DfESignIn, $offsetX="-40", $offsetY="-50") 
-  UpdateRelStyle(backOfficeUser, DfESignIn, $offsetX="-60", $offsetY="-50") 
+  UpdateRelStyle(backOfficeUser, DfESignIn, $offsetX="-50", $offsetY="-50") 
 
   UpdateRelStyle(DfESignIn, GIAS, $offsetX="-80", $offsetY="-20") 
-
+  UpdateRelStyle(schoolCensus, GIAS, $offsetX="10", $offsetY="0") 
   UpdateRelStyle(ukrlp, GIAS, $offsetX="-80", $offsetY="100") 
-
   UpdateRelStyle(GIAS, Notify, $offsetX="-200", $offsetY="-10") 
 
   UpdateRelStyle(ordnanceSurvey, GIAS, $offsetX="120", $offsetY="-50") 
   UpdateRelStyle(azureMaps,GIAS, $offsetX="-50", $offsetY="-30") 
-  UpdateRelStyle(ons, GIAS, $offsetX="-80", $offsetY="20") 
+  UpdateRelStyle(ons, GIAS, $offsetX="-60", $offsetY="30") 
 
   UpdateRelStyle(GIAS, hmrc, $offsetX="-300", $offsetY="120") 
 
   UpdateRelStyle(companiesHouse, GIAS, $offsetX="-75", $offsetY="-30") 
   UpdateRelStyle(ofsted, GIAS, $offsetX="-150", $offsetY="10") 
 
-  UpdateRelStyle(anm, GIAS, $offsetX="0", $offsetY="240") 
+  UpdateRelStyle(GIAS, anm, $offsetX="0", $offsetY="230") 
+  UpdateRelStyle(GIAS, tv, $offsetX="0", $offsetY="300") 
+  UpdateRelStyle(GIAS, ptt, $offsetX="0", $offsetY="410") 
+  UpdateRelStyle(GIAS, ecf, $offsetX="0", $offsetY="510") 
+  UpdateRelStyle(GIAS, capt, $offsetX="0", $offsetY="600") 
+  UpdateRelStyle(GIAS, fbit, $offsetX="0", $offsetY="700") 
 
 ```
 
