@@ -40,17 +40,7 @@ C4Context
 
       System_Ext(ukrlp, "UK Register of Learning<br>Providers (UKRLP)", "National register of learning providers providing<br>UKPRN identifiers and organisation data")
 
-      System_Ext(anm, "Analysis and Modelling Platform (AnM)", "Education & Skills Funding Agency (ESFA)<br>Data Catalogue")
-      
-      System_Ext(tv, "Teaching Vacancies", "Publishes and manages school job vacancies <br>and applications")
-
-      System_Ext("ptt", "Publish Teacher Training","Publishes teacher training course informatio<br>for providers")
-
-      System_Ext(ecf, "Early Career Framework", "Teacher training and development programme")
-
-      System_Ext(capt, "Claim Additional Payments for Teaching", "Manages teacher payment<br>claim and eligibility")
-
-      System_Ext(fbit,"Financial Benchmarking and Insights Tool<br>(FBIT)","Compares and analyses school financial data to<br>support planning and accountability")
+      System_Ext(internal, "Internal DfE systems","Collection of systems that ingest GIAS data")
 
     }
 
@@ -88,12 +78,7 @@ C4Context
   Rel(ofsted,GIAS,"Supplies school inspection ratings<br>and links to inspection reports","Manual/XLSX")
   Rel(GIAS, hmrc, "Extract of establishment data<br>for childcare providers (CCPs)", "Manual/CSV")
 
-  Rel(GIAS,anm,"Ingests establishment and<br>governor data","HTTPS/CSV")
-  Rel(GIAS, tv, "Ingests establishment data", "HTTPS/CSV")
-  Rel(GIAS, ptt, "Ingests establishment data", "HTTPS/CSV")
-  Rel(GIAS, ecf, "Ingests establishment data", "HTTPS/CSV")
-  Rel(GIAS, capt, "Ingests establishment data", "HTTPS/CSV")
-  Rel(GIAS, fbit, "Ingests establishment data", "Manual/CSV")
+  Rel(GIAS, internal, "Ingests GIAS data", "HTTPS/CSV")
 
   UpdateRelStyle(anonUser, GIAS, $offsetX="-320", $offsetY="-190")
   UpdateRelStyle(authUser, GIAS, $offsetX="-230", $offsetY="-190")
@@ -117,14 +102,53 @@ C4Context
   UpdateRelStyle(companiesHouse, GIAS, $offsetX="-75", $offsetY="-30") 
   UpdateRelStyle(ofsted, GIAS, $offsetX="-150", $offsetY="10") 
 
-  UpdateRelStyle(GIAS, anm, $offsetX="0", $offsetY="230") 
-  UpdateRelStyle(GIAS, tv, $offsetX="0", $offsetY="300") 
-  UpdateRelStyle(GIAS, ptt, $offsetX="0", $offsetY="410") 
-  UpdateRelStyle(GIAS, ecf, $offsetX="0", $offsetY="510") 
-  UpdateRelStyle(GIAS, capt, $offsetX="0", $offsetY="600") 
-  UpdateRelStyle(GIAS, fbit, $offsetX="0", $offsetY="700") 
+  UpdateRelStyle(GIAS, internal, $offsetX="0", $offsetY="230") 
+
 
 ```
 
+**Note** To keep the main context diagram easy to read, all DfE internal systems have been grouped into a single external system called "Internal DfE systems"
 
 
+A second diagram has been created below to show these internal systems in more detail and how they relate to each other.
+
+We do not yet know all the internal systems that interact with GIAS. This list will grow over time as more systems and use cases are identified.
+
+```mermaid
+C4Context
+  title System context diagram showing internal DfE systems
+
+Enterprise_Boundary(dfe, "Department for Education") {
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
+
+    System_Ext(anm, "Analysis and Modelling Platform (AnM)", "Education & Skills Funding Agency (ESFA)<br>Data Catalogue")
+      
+    System_Ext(tv, "Teaching Vacancies", "Publishes and manages school job vacancies <br>and applications")
+
+    System_Ext("ptt", "Publish Teacher Training","Publishes teacher training course informatio<br>for providers")
+
+    System_Ext(ecf, "Early Career Framework", "Teacher training and development programme")
+
+    System(GIAS, "Get Information About Schools", "Master information system for Establishment and<br>Governors data")
+
+    System_Ext(capt, "Claim Additional Payments for Teaching", "Manages teacher payment<br>claim and eligibility")
+
+    System_Ext(fbit,"Financial Benchmarking and Insights Tool<br>(FBIT)","Compares and analyses school financial data to<br>support  planning and accountability") 
+  }
+
+  Rel(GIAS,anm,"Ingests establishment and<br>governor data","HTTPS/CSV")
+  Rel(GIAS, tv, "Ingests establishment data", "HTTPS/CSV")
+  Rel(GIAS, ptt, "Ingests establishment data", "HTTPS/CSV")
+  Rel(GIAS, ecf, "Ingests establishment data", "HTTPS/CSV")
+  Rel(GIAS, capt, "Ingests establishment data", "HTTPS/CSV")
+  Rel(GIAS, fbit, "Ingests establishment data", "Manual/CSV")
+
+ 
+  UpdateRelStyle(GIAS, anm, $offsetX="-190", $offsetY="-10") 
+  UpdateRelStyle(GIAS, tv, $offsetX="0", $offsetY="-20") 
+  UpdateRelStyle(GIAS, ptt, $offsetX="0", $offsetY="-10") 
+  UpdateRelStyle(GIAS, ecf, $offsetX="-70", $offsetY="40") 
+  UpdateRelStyle(GIAS, capt, $offsetX="0", $offsetY="40") 
+  UpdateRelStyle(GIAS, fbit, $offsetX="-30", $offsetY="40") 
+```
