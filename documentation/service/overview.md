@@ -7,10 +7,9 @@
 ## C4 System Context Diagram
 
 
-
+### System context diagram for the Get Information About Schools Service
 ```mermaid
 C4Context
-  title System Context diagram for Get Information About Schools Service
  
   Person(anonUser, "Anonymous User", "Accesses publicly available establishment<br> and governor data")
   Person(authUser, "Signed-in User", "Accesses additional features<br>and data based on permissions")
@@ -114,9 +113,9 @@ A second diagram has been created below to show these internal systems in more d
 
 We do not yet know all the internal systems that interact with GIAS. This list will grow over time as more systems and use cases are identified.
 
+### System context diagram showing the internal DfE systems
 ```mermaid
-C4Context
-  title System context diagram showing internal DfE systems
+C4Context 
 
 Enterprise_Boundary(dfe, "Department for Education") {
 
