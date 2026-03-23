@@ -512,5 +512,128 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
             Assert.Equal(11, vm.DateTermEnds.Month);
             Assert.Equal(2030, vm.DateTermEnds.Year);
         }
+
+
+        [Fact]
+        public async Task Gov_ReplaceChair_Prepopulates_NewLocalGovernor_Fields()
+        {
+            // Arrange
+            var estabUrn = 9001;
+            var existingChairId = 500;
+            var replacementId = 600;
+
+            var chair = new GovernorModel
+            {
+                Id = existingChairId,
+                RoleId = (int) eLookupGovernorRole.ChairOfLocalGoverningBody,
+                AppointmentEndDate = new DateTime(2025, 4, 10)
+            };
+
+            mockGovernorsReadService
+                .Setup(s => s.GetGovernorAsync(existingChairId, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(chair);
+
+            mockGovernorsReadService
+                .Setup(s => s.GetSharedGovernorsAsync(estabUrn, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new List<GovernorModel>());
+
+            var replacement = new GovernorModel
+            {
+                Id = replacementId,
+                RoleId = (int) eLookupGovernorRole.LocalGovernor,
+                AppointingBodyId = 2,
+                AppointmentStartDate = new DateTime(2020, 1, 1),
+                AppointmentEndDate = new DateTime(2024, 12, 1),
+                DOB = new DateTime(1980, 5, 5),
+                Person_FirstName = "Beth",
+                Person_MiddleName = "Jane",
+                Person_LastName = "Smith",
+                Person_TitleId = 4,
+                PreviousPerson_TitleId = 7,
+                PreviousPerson_FirstName = "B.",
+                PreviousPerson_MiddleName = "J.",
+                PreviousPerson_LastName = "S.",
+                TelephoneNumber = "01234 567890",
+                EmailAddress = "beth@example.com",
+                PostCode = "AB12 3CD",
+                EstablishmentUrn = estabUrn
+            };
+
+            var dto = new GovernorsDetailsDto
+            {
+                CurrentGovernors = new List<GovernorModel> { replacement },
+                HistoricalGovernors = new List<GovernorModel>(),
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.LocalGovernor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.LocalGovernor, new GovernorDisplayPolicy() }
+                }
+            };
+
+            mockGovernorsReadService
+                .Setup(s => s.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(dto);
+
+            mockGovernorsReadService
+                .Setup(s => s.GetEditorDisplayPolicyAsync(
+                    It.IsAny<eLookupGovernorRole>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorDisplayPolicy());
+
+            mockCachedLookupService.Setup(c => c.NationalitiesGetAllAsync())
+                .ReturnsAsync(new List<LookupDto>());
+            mockCachedLookupService.Setup(c => c.GovernorAppointingBodiesGetAllAsync())
+                .ReturnsAsync(new List<LookupDto>());
+            mockCachedLookupService.Setup(c => c.TitlesGetAllAsync())
+                .ReturnsAsync(new List<LookupDto>());
+
+            mockLayoutHelper
+                .Setup(l => l.PopulateLayoutProperties(
+                    It.IsAny<ReplaceChairViewModel>(),
+                    estabUrn,
+                    null,
+                    It.IsAny<IPrincipal>(),
+                    It.IsAny<Action<EstablishmentModel>>(),
+                    It.IsAny<Action<GroupModel>>()))
+                .Returns(Task.CompletedTask);
+
+            var qs = HttpUtility.ParseQueryString(string.Empty);
+            qs["rgid"] = replacementId.ToString();
+
+            // Act
+            var controller = BuildController(qs);
+            var result = await controller.ReplaceChair(estabUrn, existingChairId);
+
+            // Assert
+            var view = Assert.IsType<ViewResult>(result);
+            var vm = Assert.IsType<ReplaceChairViewModel>(view.Model);
+            var newGov = vm.NewLocalGovernor;
+
+            Assert.NotNull(newGov);
+
+            Assert.Equal(replacement.AppointingBodyId, newGov.AppointingBodyId);
+            Assert.Equal(replacement.AppointmentEndDate, newGov.AppointmentEndDate.ToDateTime());
+            Assert.Equal(replacement.AppointmentStartDate, newGov.AppointmentStartDate.ToDateTime());
+            Assert.Equal(replacement.DOB, newGov.DOB.ToDateTime());
+
+            Assert.Equal(replacement.EmailAddress, newGov.EmailAddress);
+
+            Assert.Equal(replacement.Person_TitleId, newGov.GovernorTitleId);
+            Assert.Equal(replacement.Person_FirstName, newGov.FirstName);
+            Assert.Equal(replacement.Person_MiddleName, newGov.MiddleName);
+            Assert.Equal(replacement.Person_LastName, newGov.LastName);
+
+            Assert.Equal(replacement.PreviousPerson_TitleId, newGov.PreviousTitleId);
+            Assert.Equal(replacement.PreviousPerson_FirstName, newGov.PreviousFirstName);
+            Assert.Equal(replacement.PreviousPerson_MiddleName, newGov.PreviousMiddleName);
+            Assert.Equal(replacement.PreviousPerson_LastName, newGov.PreviousLastName);
+
+            Assert.Equal(replacement.TelephoneNumber, newGov.TelephoneNumber);
+            Assert.Equal(replacement.PostCode, newGov.PostCode);
+
+            Assert.Equal(estabUrn, vm.Urn);
+            Assert.Equal(replacement.Id, vm.SelectedPreviousExistingNonChairId);
+        }
     }
 }
