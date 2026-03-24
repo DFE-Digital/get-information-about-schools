@@ -199,8 +199,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             // Act
             var result = await controller.Edit(null, establishmentId, null, null);
 
-            var viewResult = (ViewResult)result;
-            var model = viewResult.Model as GovernorsGridViewModel;
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<GovernorsGridViewModel>(viewResult.Model);
 
             // Assert
             Assert.NotNull(viewResult);
@@ -289,11 +289,11 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             Assert.NotNull(viewResult);
             Assert.NotNull(model);
 
-            Assert.True(model.GovernorShared);
-            Assert.Equal(43, model.RemovalGid);
-            Assert.Equal(groupId, model.GroupUId);
+            Assert.True(model!.GovernorShared);
+            Assert.Equal(43, model!.RemovalGid);
+            Assert.Equal(groupId, model!.GroupUId);
 
-            Assert.Equal(governorDetailsDto.ApplicableRoles.Count, model.GovernorRoles.Count);
+            Assert.Equal(governorDetailsDto.ApplicableRoles.Count, model!.GovernorRoles.Count);
 
             Assert.False(viewResult.ViewData.Keys.Contains("DuplicateGovernor"));
             Assert.True(viewResult.ViewData.ModelState.IsValid);
@@ -348,16 +348,17 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             // Act
             var result = await controller.Edit(5, null, 43, null);
 
-            var viewResult = result as ViewResult;
-            var model = viewResult.Model as GovernorsGridViewModel;
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<GovernorsGridViewModel>(viewResult.Model);
 
             // Assert
-            Assert.NotNull(viewResult);
-            Assert.NotNull(model);
-
             Assert.False(model.GovernorShared);
             Assert.Equal(43, model.RemovalGid);
             Assert.Equal(groupId, model.GroupUId);
+
+            Assert.Equal(governorDetailsDto.ApplicableRoles.Count, model.GovernorRoles.Count);
+
+            Assert.False(viewResult.ViewData.Keys.Contains("DuplicateGovernor"));
 
             Assert.Equal(governorDetailsDto.ApplicableRoles.Count, model.GovernorRoles.Count);
 
@@ -481,10 +482,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var result = await controller.Edit(5, null, null, duplicateId);
 
             var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
             var model = viewResult.Model as GovernorsGridViewModel;
 
             // Assert
-            Assert.NotNull(viewResult);
             Assert.NotNull(model);
 
             Assert.False(model.GovernorShared);
@@ -548,11 +549,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             // Act
             var result = await controller.Edit(null, establishmentId, null, null, true);
 
-            var viewResult = result as ViewResult;
-            var model = viewResult?.Model as GovernorsGridViewModel;
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<GovernorsGridViewModel>(viewResult.Model);
 
             // Assert
-            Assert.NotNull(viewResult);
             Assert.NotNull(model);
 
             Assert.False(model.GovernorShared);
@@ -950,7 +950,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             // Act
-            for (var i = 0; i < model.SharedGovernors?.Count; i++)
+            for (var i = 0; i < model.SharedGovernors.Count; i++)
             {
                 if (model.SharedGovernors[i].Selected)
                 {
