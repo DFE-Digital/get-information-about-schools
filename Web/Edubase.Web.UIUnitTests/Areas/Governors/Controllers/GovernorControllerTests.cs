@@ -1099,10 +1099,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
 
             WireEdit(estabId, dto);
-            var controller = BuildController();
+            var sut = BuildController();
 
             // Act
-            var actionResult = await controller.Edit(null, estabId, null, null);
+            var actionResult = await sut.Edit(null, estabId, null, null);
             var viewResult = Assert.IsType<ViewResult>(actionResult);
             var model = Assert.IsType<GovernorsGridViewModel>(viewResult.Model);
 
@@ -1137,9 +1137,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
 
             WireEdit(estabId, dto);
-            var controller = BuildController();
+            var localController = BuildController();
 
-            var result = await controller.Edit(null, estabId, null, null);
+            var result = await localController.Edit(null, estabId, null, null);
             var vm = Assert.IsType<GovernorsGridViewModel>(Assert.IsType<ViewResult>(result).Model);
 
             Assert.Equal(2, vm.Grids.Count);
@@ -1175,9 +1175,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
 
             WireEdit(estabId, dto);
-            var controller = BuildController();
+            var sut = BuildController();
 
-            var result = await controller.Edit(null, estabId, null, null);
+            var result = await sut.Edit(null, estabId, null, null);
             var vm = Assert.IsType<GovernorsGridViewModel>(Assert.IsType<ViewResult>(result).Model);
 
             Assert.Equal(2, vm.Grids.Count);
@@ -1206,9 +1206,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
 
             WireEdit(estabId, dto);
-            var controller = BuildController();
+            var localController = BuildController();
 
-            var result = await controller.Edit(null, estabId, null, null);
+            var result = await localController.Edit(null, estabId, null, null);
             var vm = Assert.IsType<GovernorsGridViewModel>(Assert.IsType<ViewResult>(result).Model);
 
             Assert.Equal(2, vm.HistoricGrids.Count);
@@ -1237,9 +1237,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
 
             WireEdit(estabId, dto);
-            var controller = BuildController();
+            var testController = BuildController();
 
-            await Assert.ThrowsAsync<Exception>(async () => await controller.Edit(null, estabId, null, null));
+            await Assert.ThrowsAsync<Exception>(async () => await testController.Edit(null, estabId, null, null));
         }
 
         [Fact]
@@ -1266,9 +1266,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
 
             WireEdit(estabId, dto);
-            var controller = BuildController();
+            var localController = BuildController();
 
-            var result = await controller.Edit(null, estabId, null, null);
+            var result = await localController.Edit(null, estabId, null, null);
             var vm = Assert.IsType<GovernorsGridViewModel>(Assert.IsType<ViewResult>(result).Model);
 
             Assert.Single(vm.Grids);
@@ -1289,9 +1289,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
 
             WireEdit(estabId, dto);
-            var controller = BuildController();
+            var testController = BuildController();
 
-            var result = await controller.Edit(null, estabId, null, null);
+            var result = await testController.Edit(null, estabId, null, null);
             Assert.IsType<ViewResult>(result);
 
             mockLayoutHelper.Verify(l => l.PopulateLayoutProperties(
@@ -1362,10 +1362,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 It.IsAny<Action<Edubase.Services.Groups.Models.GroupModel>>()))
                 .Returns(Task.CompletedTask);
 
-            var controller = BuildController();
+            var sut = BuildController();
 
             // Act
-            var result = await controller.ReplaceChair(estabId, gid);
+            var result = await sut.ReplaceChair(estabId, gid);
             var viewResult = Assert.IsType<ViewResult>(result);
             var vm = Assert.IsType<ReplaceChairViewModel>(viewResult.Model);
 
@@ -1620,7 +1620,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var estabUrn = 16802;
 
             var termEnds = DateTime.Today.AddDays(10);
-            var expectedStartDate = termEnds.AddDays(1);
 
             var model = new ReplaceChairViewModel
             {
