@@ -113,26 +113,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             //this allows roles that are not valid but exist to be displayed
             var allRoles = dto.ApplicableRoles.Union(governors.Select(g => (GR) g.RoleId).Distinct());
 
-            var roles = allRoles.Where(role =>
-            {
-                if (!EnumSets.eSharedGovernorRoles.Contains(role))
-                {
-                    return true;
-                }
-                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole(role);
-                if (localEquivalent != null)
-                {
-                    if (!dto.ApplicableRoles.Contains(localEquivalent.Value) || role == GR.Establishment_SharedGovernanceProfessional)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }).ToList();
+            var roles = dto.ApplicableRoles
+                .Union(governors.Select(g => (GR) g.RoleId).Distinct())
+                .Distinct()
+                .ToList();
 
             foreach (var role in roles)
             {
-                var equivalentRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
                 var shouldPluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
 
                 var governorRoleNameTitle = GovernorRoleNameFactory.Create(
@@ -169,13 +156,15 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
 
                 var list = governors
-                    .Where(x => x.RoleId.HasValue && equivalentRoles.Contains(x.RoleId.Value));
+                    .Where(x => x.RoleId == (int) role)
+                    .ToList();
+
                 foreach (var governor in list)
                 {
                     var isShared = governor.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value);
                     var establishments = string.Join(
                         ", ",
-                        (governor.Appointments?.Select(a => $"{a.EstablishmentName}, URN: {a.EstablishmentUrn}") ?? new string[] { })
+                        governor.Appointments?.Select(a => $"{a.EstablishmentName}, URN: {a.EstablishmentUrn}") ?? new string[] { }
                     );
 
                     GovernorAppointment appointment;
