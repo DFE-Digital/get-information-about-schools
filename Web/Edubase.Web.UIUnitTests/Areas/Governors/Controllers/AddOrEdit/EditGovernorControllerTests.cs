@@ -289,11 +289,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             Assert.NotNull(viewResult);
             Assert.NotNull(model);
 
-            Assert.True(model!.GovernorShared);
-            Assert.Equal(43, model!.RemovalGid);
-            Assert.Equal(groupId, model!.GroupUId);
+            // Now safe to access model.* because Assert.NotNull(model) guarantees it
+            Assert.True(model.GovernorShared);
+            Assert.Equal(43, model.RemovalGid);
+            Assert.Equal(groupId, model.GroupUId);
 
-            Assert.Equal(governorDetailsDto.ApplicableRoles.Count, model!.GovernorRoles.Count);
+            Assert.Equal(governorDetailsDto.ApplicableRoles.Count, model.GovernorRoles.Count);
 
             Assert.False(viewResult.ViewData.Keys.Contains("DuplicateGovernor"));
             Assert.True(viewResult.ViewData.ModelState.IsValid);
