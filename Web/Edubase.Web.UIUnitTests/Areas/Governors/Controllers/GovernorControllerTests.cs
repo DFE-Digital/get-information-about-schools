@@ -1552,7 +1552,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var result = await controller.DeleteOrRetireGovernor(postedModel);
 
             // Assert
-            var redirect = Assert.IsType<RedirectResult>(result);
+            Assert.IsType<RedirectResult>(result);
 
             mockGovernorsWriteService.Verify(
                 s => s.DeleteAsync(governorId, It.IsAny<IPrincipal>()),
