@@ -1,6 +1,6 @@
-# Edubase Backend Component Diagram
+# GIAS Backend Component Diagram
 
-This diagram reflects the major runtime components visible in this repository:
+
 
 - the WAR-based Edubase application declared in [pom.xml](/C:/code/gias-dd-backend-from-zip/pom.xml)
 - public and lookup APIs described in [Texuna Edubase API (functional).yaml](/C:/code/gias-dd-backend-from-zip/Texuna%20Edubase%20API%20(functional).yaml) and [Texuna Edubase Dictionary Lookups API.yaml](/C:/code/gias-dd-backend-from-zip/Texuna%20Edubase%20Dictionary%20Lookups%20API.yaml)
@@ -8,11 +8,10 @@ This diagram reflects the major runtime components visible in this repository:
 - persistence and SQL Server integration in [src/main/java/com/texunatech/edubase/dao](/C:/code/gias-dd-backend-from-zip/src/main/java/com/texunatech/edubase/dao) and [src/main/java/com/texunatech/edubase/dao/hibernate/EdubaseSQLServerDialect.java](/C:/code/gias-dd-backend-from-zip/src/main/java/com/texunatech/edubase/dao/hibernate/EdubaseSQLServerDialect.java)
 - batch/import assets in [jobs](/C:/code/gias-dd-backend-from-zip/jobs), [addressLayer](/C:/code/gias-dd-backend-from-zip/addressLayer), and [sql](/C:/code/gias-dd-backend-from-zip/sql)
 
-Some web-layer details are inferred from the WAR packaging and OpenAPI documents because the repo snapshot is weighted toward domain and persistence code.
 
 ```mermaid
 C4Component
-title Edubase Backend - C4 Component Diagram
+title GIAS Backend - C4 Component Diagram
 
 Person(api_user, "API Consumer", "Public or partner system using JSON APIs")
 Person(ops_user, "Operations User", "Runs deployments, DB patches, and batch processes")

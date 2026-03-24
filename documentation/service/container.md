@@ -1,24 +1,60 @@
 
-Components
-- Extract scheduler/runner
+## GIAS Container Diagram
 
+Missing file store and cache
 ```mermaid
 C4Container
-    title GIAS – Container Diagram
 
 
-    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+    System_Ext(dsi, "DfE Sign-in (DSI)", "Authentication and identity service")
+
     Person(user, "GIAS User", "Accesses GIAS through the web interface")
+    
+    System_Ext(externalSystems, "External Consumer", "Systems that download<br>GIAS datasets") 
+    
 
     System_Boundary(gias, "Get Information About Schools (GIAS)") {
-        Container(web, "GIAS Web Front End", "C# ASP.NET Web Application", "Provides the user interface for searching, viewing and managing GIAS data")
-        Container(api, "GIAS Backend API", "Java API Application", "Executes business rules, validation and data access logic")
-        ContainerDb(db, "GIAS Database", "Relational Database", "Stores establishment, governance, user and reference data")
+        
+        Container(profileAPI, "Profile API", "C# API", "Supplies list of education providers")
+
+        Container(web, "GIAS Web Front End", "C# ASP.NET Web Application", "Provides the user interface for <br>searching, viewing and managing GIAS data")
+        
+        Container(fileAPI, "File API", "Azure App Service", "Serves ZIP files from the extract file storage")
+
+        ContainerDb(db, "GIAS Database", "MS SQL Server", "Stores establishment, governance,<br>user and reference data")
+
+        Container(backend, "GIAS Backend", "Java Rest API Application + SOAP", "Executes business rules, validation and<br>data access logic")
+
+        ContainerDb(fileStorage, "Extract File Storage", "Azure File Storage", "Stores generated ZIP<br>extracts available for download")
     }
 
-    Rel_D(user, web, "Uses", "HTTPS")
-    Rel_D(web, api, "Sends requests to", "HTTPS")
-    Rel_D(api, db, "Reads from and writes to", "SQL")
+    Rel(user,web, "Browse GIAS data", "HTTPS/HTML")
+    Rel(user, fileAPI, "Downloads files using", "HTTPS/CSV/ZIP")
+    Rel(profileAPI, dsi , "Retrieves provider<br>information", "HTTPS")
+    Rel(user, dsi, "Authenticates via", "OIDC / OAuth2")
+    Rel(dsi, web, "Authenticates via", "OIDC / OAuth2")
+    Rel(web, backend, "Calls", "HTTPS")
+    Rel(db, profileAPI,  "Reads from", "SQL")
+    Rel(backend, db, "Reads from and writes to", "TCP/SQL")
+    Rel(backend, fileStorage, "Writes ZIP files to", "HTTPS/CSV/ZIP")
+    Rel(fileStorage, fileAPI, "Reads ZIP files from", "HTTPS/CSV/ZIP")
+    Rel(externalSystems, fileAPI,"Downloads GIAS data","HTTPS/CSV/ZIP")
+    Rel(externalSystems, backend,"Retrieves GIAS data","HTTPS/SOAP")
 
+    UpdateRelStyle(user, dsi, $offsetX="-48", $offsetY="-60") 
+    UpdateRelStyle(profileAPI, dsi, $offsetX="-120", $offsetY="-100") 
+    UpdateRelStyle(user,web, $offsetX="-90", $offsetY="-70") 
+    UpdateRelStyle(user, fileAPI, $offsetX="-160", $offsetY="-60") 
+    UpdateRelStyle(dsi, web, $offsetX="-140", $offsetY="-80") 
+    UpdateRelStyle(api, db, $offsetX="-50", $offsetY="50") 
+    UpdateRelStyle(externalSystems, fileAPI, $offsetX="-20", $offsetY="-60") 
+    UpdateRelStyle(externalSystems, backend, $offsetX="-5", $offsetY="-200") 
+    UpdateRelStyle(backend, db, $offsetX="-50", $offsetY="50") 
+    UpdateRelStyle(backend, fileStorage, $offsetX="-50", $offsetY="50") 
+    UpdateRelStyle(web, backend, $offsetX="-50", $offsetY="-20")
 
 ```
+
