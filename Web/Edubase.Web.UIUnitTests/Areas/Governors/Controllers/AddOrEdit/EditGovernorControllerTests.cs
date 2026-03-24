@@ -119,13 +119,11 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             // Act
             var result = await controller.Edit(5, null, null, null);
 
-            var viewResult = result as ViewResult;
+            var viewResult = Assert.IsType<ViewResult>(result);
 
-            var model = viewResult?.Model as GovernorsGridViewModel;
+            var model = Assert.IsType<GovernorsGridViewModel>(viewResult.Model);
 
             // Assert
-            Assert.NotNull(viewResult);
-            Assert.NotNull(model);
             Assert.False(model.GovernorShared);
             Assert.Null(model.RemovalGid);
             Assert.Equal(groupId, model.GroupUId);
@@ -201,8 +199,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             // Act
             var result = await controller.Edit(null, establishmentId, null, null);
 
-            var viewResult = result as ViewResult;
-            var model = viewResult?.Model as GovernorsGridViewModel;
+            var viewResult = (ViewResult)result;
+            var model = viewResult.Model as GovernorsGridViewModel;
 
             // Assert
             Assert.NotNull(viewResult);
@@ -792,8 +790,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             WireEditHelper.WireEdit(
-                estabId = estabId,
-                dto = dto,
+                estabId: estabId,
+                dto: dto,
                 mockRead: mockGovernorsReadService,
                 mockCache: mockCachedLookupService,
                 mockLayout: mockLayoutHelper
@@ -830,8 +828,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             WireEditHelper.WireEdit(
-                estabId = estabId,
-                dto = dto,
+                estabId,
+                dto,
                 mockRead: mockGovernorsReadService,
                 mockCache: mockCachedLookupService,
                 mockLayout: mockLayoutHelper
@@ -863,8 +861,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             WireEditHelper.WireEdit(
-                estabId = estabId,
-                dto = dto,
+                estabId,
+                dto,
                 mockRead: mockGovernorsReadService,
                 mockCache: mockCachedLookupService,
                 mockLayout: mockLayoutHelper
