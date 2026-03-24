@@ -795,7 +795,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         return View(model);
                     }
 
-                    var newGovernor = model.SharedGovernors.FirstOrDefault(s => s.Id == selectedId);
+                    var newGovernor = model.SharedGovernors?.FirstOrDefault(s => s.Id == selectedId);
                     if (newGovernor == null)
                     {
                         ModelState.AddModelError("SharedGovernors", "The selected chair could not be found.");
