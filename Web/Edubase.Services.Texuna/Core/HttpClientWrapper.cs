@@ -503,7 +503,7 @@ public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessa
                 {
                     HttpMethod = requestMessage.Method.ToString(),
                     RawRequestBody = GetRequestJsonBody(requestMessage),
-                    RawResponseBody = responseMessage.Ellipsis(32000),
+                    RawResponseBody = (responseMessage ?? string.Empty).Ellipsis(32000),
                     RequestHeaders = ToJsonIndented(requestMessage.Headers),
                     ResponseHeaders = ToJsonIndented(response.Headers),
                     ElapsedTimeSpan = elapsed.ToString(),
