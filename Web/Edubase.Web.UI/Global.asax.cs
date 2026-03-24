@@ -22,6 +22,7 @@ using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ValueProviders;
 using Microsoft.Ajax.Utilities;
 using Sustainsys.Saml2.Exceptions;
+using Edubase.Common.Config;
 
 namespace Edubase.Web.UI
 {
@@ -75,6 +76,8 @@ namespace Edubase.Web.UI
             ValueProviderFactories.Factories.Add(new TokenValueProviderFactory());
 
             MvcHandler.DisableMvcResponseHeader = true;
+
+            Feature.Provider = new AppConfigFeatureFlagProvider();
         }
 
 

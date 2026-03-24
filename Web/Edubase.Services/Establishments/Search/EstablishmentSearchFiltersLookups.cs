@@ -23,6 +23,8 @@ namespace Edubase.Services.Establishments.Search
 
         public int[] GenderIds { get; set; } = new int[0];
 
+        public int[] RegistrationSuspendedIds { get; set; } = new int[0];
+
         public int[] ReligiousCharacterIds { get; set; } = new int[0];
 
         public int[] ReligiousEthosIds { get; set; } = new int[0];

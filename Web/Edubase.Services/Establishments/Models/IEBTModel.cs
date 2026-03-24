@@ -2,9 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Establishments.Models
 {
@@ -97,5 +95,6 @@ namespace Edubase.Services.Establishments.Models
         public int? BoardingEstablishmentId { get; set; }
         public int? TotalFTTeachersTutors { get; set; }
         public int? TotalPTTeachersTutors { get; set; }
+        public string RegistrationSuspendedId { get; set; }
     }
 }

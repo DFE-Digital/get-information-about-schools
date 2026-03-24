@@ -1,3 +1,4 @@
+using System;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -141,6 +142,24 @@ namespace Edubase.Web.UI.Models
         public bool UserCanEdit { get; set; }
 
         public bool IsClosed => Establishment.StatusId == (int) eLookupEstablishmentStatus.Closed;
+
+        public bool IsSuspended
+        {
+            get
+            {
+                if (int.TryParse(Establishment?.IEBTModel?.RegistrationSuspendedId, out var rsId) &&
+                    Enum.IsDefined(typeof(GovRole), rsId))
+                {
+                    var status = (RegistrationSuspendedStatus) rsId;
+                    return status == RegistrationSuspendedStatus.EducationSuspended
+                           || status == RegistrationSuspendedStatus.EducationAndBoardingSuspended;
+                }
+
+                return false;
+            }
+        }
+
+        public string SuspendedStatusMessage => "This establishment is suspended";
 
         public string SearchQueryString { get; set; }
 
@@ -321,6 +340,20 @@ namespace Edubase.Web.UI.Models
                     ? $"This establishment closed on {date}. "
                     : "This establishment is closed.";
                 return establishmentClosedStatusMessage;
+            }
+        }
+
+        public string RegistrationSuspendedDisplay
+        {
+            get
+            {
+                var value = Establishment?.IEBTModel?.RegistrationSuspendedId;
+                if (int.TryParse(value, out int regId) && Enum.IsDefined(typeof(RegistrationSuspendedStatus), regId))
+                {
+                    return ((RegistrationSuspendedStatus) regId).EnumDisplayNameFor();
+                }
+
+                return value;
             }
         }
     }

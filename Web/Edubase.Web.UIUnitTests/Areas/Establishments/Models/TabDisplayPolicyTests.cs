@@ -9,6 +9,7 @@ using System.Web.Security;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
+using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Moq;
 using Xunit;
@@ -61,8 +62,15 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         [MemberData(nameof(DisplayPolicyTestData))]
         public void EstablishmentDisplayEditPolicy_SetsExpectedDependentTabs(EstablishmentDisplayEditPolicy displayPolicy, TabDisplayPolicy expectedTabDisplayPolicy)
         {
+            var mockIdentity = new Mock<IIdentity>();
+            mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
+
+            var mockPrincipal = new Mock<IPrincipal>();
+            mockPrincipal.Setup(x => x.Identity).Returns(mockIdentity.Object);
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ROLE_BACKOFFICE)).Returns(true);
+
             var establishmentModel = new EstablishmentModel { TypeId = It.IsAny<int>() };
-            var sutTabDisplayPolicy = new TabDisplayPolicy(establishmentModel, displayPolicy, new Mock<IPrincipal>().Object);
+            var sutTabDisplayPolicy = new TabDisplayPolicy(establishmentModel, displayPolicy, mockPrincipal.Object);
 
             Assert.Equal(expectedTabDisplayPolicy.IEBT, sutTabDisplayPolicy.IEBT);
             Assert.Equal(expectedTabDisplayPolicy.Helpdesk, sutTabDisplayPolicy.Helpdesk);
@@ -225,7 +233,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
 
         public static IEBTDetailDisplayEditPolicy PopulatedIEBTDetail => new IEBTDetailDisplayEditPolicy()
         {
-            Notes = true
+            Notes = true,
+            RegistrationSuspended = true
         };
 
         public static IEBTDetailDisplayEditPolicy EmptyIEBTDetail => new IEBTDetailDisplayEditPolicy

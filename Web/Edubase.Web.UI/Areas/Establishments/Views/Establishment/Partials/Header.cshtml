@@ -152,6 +152,17 @@
         }
     </dd>
 </div>
+
+@if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended && Html.FeatureEnabled("FeatureIEBTSuspended"))
+{
+    <div class="govuk-summary-list__row">
+        <dt id="registration-suspended-key" class="govuk-summary-list__key">Registration suspended</dt>
+        <dd id="registration-suspended-value" class="govuk-summary-list__value">
+            @Model.RegistrationSuspendedDisplay
+        </dd>
+    </div>
+}
+
 @if (Model.DisplayPolicy.AdmissionsPolicyId)
 {
     <div class="govuk-summary-list__row">
@@ -195,7 +206,7 @@
 *@
 @if (Model.ShowOfstedReportLink)
 {
-    <div class="govuk-summary-list__row">
+    <dl class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key" id="ofsted-rating-and-reports-key">Ofsted rating and reports</dt>
         <dd class="govuk-summary-list__value" id="ofsted-rating-and-reports-value">
             @{
@@ -248,7 +259,7 @@
             </details>
             }
         </dd>
-    </div>
+    </dl>
 }
 
 @if (Model.ShowFscpd || Model.ShowFinancialBenchmarking)

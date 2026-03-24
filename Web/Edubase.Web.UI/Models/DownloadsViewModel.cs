@@ -38,7 +38,7 @@ namespace Edubase.Web.UI.Models
         {
             var retVal = new List<Section>();
 
-            var allEstabData = Downloads?.Where(x => new[] { "all.edubase.data", "all.edubase.data.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
+            var allEstabData = Downloads?.Where(x => new[] { "all.edubase.data", "all.edubase.data.links", "all.establishment.additional.addresses" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
             var openAcademiesAndFreeSchoolsData = Downloads?.Where(x => new[] { "all.open.academies.and.free.schools", "all.open.academies.and.free.school.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
             var openStateFundedSchoolsData = Downloads?.Where(x => new[] { "all.open.state-funded.schools", "all.open.state-funded.school.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
             var openChildrensCentresData = Downloads?.Where(x => new[] { "all.open.childrens.centres", "all.open.childrens.centres.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
@@ -176,6 +176,7 @@ namespace Edubase.Web.UI.Models
              --
              tag=all.edubase.data
              tag=all.edubase.data.links
+             tag=all.establishment.additional.addresses
              tag=all.open.state-funded.schools
              tag=all.open.state-funded.school.links
              tag=all.open.academies.and.free.schools

@@ -417,7 +417,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             mockExternalLookupService.Setup(x => x.SfbCheckExists(urn, FbType.School)).ReturnsAsync(true);
             mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(urn)).ReturnsAsync(true);
 
-            var response = await controller.Details(urn);
+    var response = await controller.Details(urn);
 
             var result = Assert.IsType<ViewResult>(response);
             var model = Assert.IsType<EstablishmentDetailViewModel>(result.Model);
@@ -431,8 +431,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         [InlineData(false, false, false, true)]
         public async Task Estab_Details_TabEditPolicy(bool locationDataFieldEditable, bool expectLocationEdit, bool helpDeskNotesEditPolicy, bool expectHelpDeskEdit)
         {
-            var urn = 123456;
-            var establishmentModel = new EstablishmentModel()
+            EditPolicy = new EstablishmentDisplayEditPolicy()
             {
                 EstablishmentTypeGroupId = (int) eLookupGroupType.MultiacademyTrust,
                 IEBTModel = new IEBTModel(),

@@ -45,6 +45,7 @@
     </div>
 </div>
 
+
 <div class="gias-tabs-wrapper">
     @if (Model.AreScheduledExtractsAvailable)
     {
@@ -177,13 +178,11 @@
                         <div class="lower-pagination">
                             @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
                         </div>
-                        @helpers.BackToTopLink()
                     }
                 </div>
             </div>
         </div>
     }
-
 
     @helpers.BackToTopLink()
 </div>

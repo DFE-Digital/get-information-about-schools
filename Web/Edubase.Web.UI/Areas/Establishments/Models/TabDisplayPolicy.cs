@@ -4,6 +4,7 @@ using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
+using Edubase.Services.Security;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models
 {
@@ -22,14 +23,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
 
         public TabDisplayPolicy(EstablishmentModel model, EstablishmentDisplayEditPolicy policy, IPrincipal principal)
         {
-            IEBT = policy.IEBTDetail.Any();
+            var canSeeIebt = principal?.Identity?.IsAuthenticated == true &&
+                             (principal.IsInRole(EdubaseRoles.ROLE_BACKOFFICE)
+                             || principal.IsInRole(EdubaseRoles.IEBT));
+
+            IEBT = canSeeIebt && policy.IEBTDetail.Any();
 
             Helpdesk = policy.HelpdeskNotes;
 
             Governance = model.TypeId.OneOfThese(
-                    ET.Academy1619Converter, 
-                    ET.Academy1619SponsorLed, 
-                    ET.AcademyAlternativeProvisionConverter, 
+                    ET.Academy1619Converter,
+                    ET.Academy1619SponsorLed,
+                    ET.AcademyAlternativeProvisionConverter,
                     ET.AcademyAlternativeProvisionSponsorLed,
                     ET.AcademyConverter,
                     ET.AcademySpecialConverter,

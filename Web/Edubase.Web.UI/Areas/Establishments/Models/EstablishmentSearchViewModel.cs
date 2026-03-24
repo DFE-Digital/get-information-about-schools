@@ -63,6 +63,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public const string BIND_ALIAS_OFSTEDRATINGS = "5";
         public const string BIND_ALIAS_OPEN_DATE_FROM = "6";
         public const string BIND_ALIAS_OPEN_DATE_TO = "7";
+        public const string BIND_ALIAS_REGSUSPENDED = "8";
         #endregion
 
         public enum eTextSearchType
@@ -213,6 +214,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public List<int> SelectedParliamentaryConstituencyIds { get; set; } = new List<int>();
         public IEnumerable<LookupItemViewModel> ParliamentaryConstituencies { get; set; }
 
+        [BindAlias(BIND_ALIAS_REGSUSPENDED)]
+        public List<int> SelectedRegistrationStatusIds { get; set; } = new List<int>();
+        public IEnumerable<LookupItemViewModel> RegistrationStatuses { get; set; }
 
         [BindAlias(BIND_ALIAS_RELETHOS)]
         public List<int> SelectedReligiousEthosIds { get; set; } = new List<int>();

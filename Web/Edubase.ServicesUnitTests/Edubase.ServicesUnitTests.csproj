@@ -51,10 +51,14 @@
   <ItemGroup>
     <Compile Include="ExternalLookup\FBServiceTests.cs" />
     <Compile Include="Governors\Factories\GovernorRoleNameFactoryTests.cs" />
+    <Compile Include="HttpMessageHandlerTests.cs" />
     <Compile Include="IntegrationEndPoints\PollyUtilTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.4</Version>
+    </PackageReference>
     <PackageReference Include="Polly">
       <Version>8.4.1</Version>
     </PackageReference>
