@@ -410,8 +410,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             WireEditHelper.WireEdit(
-                estabId = estabId,
-                dto = dto,
+                estabId: estabId,
+                dto: dto,
                 mockRead: mockGovernorsReadService,
                 mockCache: mockCachedLookupService,
                 mockLayout: mockLayoutHelper
@@ -616,8 +616,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             WireEditHelper.WireEdit(
-                estabId = estabId,
-                dto = dto,
+                estabId,
+                dto,
                 mockRead: mockGovernorsReadService,
                 mockCache: mockCachedLookupService,
                 mockLayout: mockLayoutHelper
@@ -662,8 +662,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             WireEditHelper.WireEdit(
-                estabId = estabId,
-                dto = dto,
+                estabId,
+                dto,
                 mockRead: mockGovernorsReadService,
                 mockCache: mockCachedLookupService,
                 mockLayout: mockLayoutHelper
@@ -710,8 +710,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             WireEditHelper.WireEdit(
-                estabId = estabId,
-                dto = dto,
+                estabId: estabId,
+                dto: dto,
                 mockRead: mockGovernorsReadService,
                 mockCache: mockCachedLookupService,
                 mockLayout: mockLayoutHelper
@@ -751,8 +751,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
             WireEditHelper.WireEdit(
-                estabId = estabId,
-                dto = dto,
+                estabId: estabId,
+                dto: dto,
                 mockRead: mockGovernorsReadService,
                 mockCache: mockCachedLookupService,
                 mockLayout: mockLayoutHelper
