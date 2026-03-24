@@ -1,7 +1,8 @@
 
-## GIAS Container Diagram
+## C4 Container Diagram
 
-Missing file store and cache
+Major components forming GIAS service, and how they interact with each other and external actors.
+
 ```mermaid
 C4Container
 
@@ -9,7 +10,7 @@ C4Container
     UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 
 
-    System_Ext(dsi, "DfE Sign-in (DSI)", "Authentication and identity service")
+    System_Ext(dsi, "DfE Sign-in (DSI", "Authentication and identity service")
 
     Person(user, "GIAS User", "Accesses GIAS through the web interface")
     
@@ -33,11 +34,11 @@ C4Container
 
     Rel(user,web, "Browse GIAS data", "HTTPS/HTML")
     Rel(user, fileAPI, "Downloads files using", "HTTPS/CSV/ZIP")
-    Rel(profileAPI, dsi , "Retrieves provider<br>information", "HTTPS")
+    Rel(dsi,profileAPI , "Retrieves provider<br>information", "HTTPS")
     Rel(user, dsi, "Authenticates via", "OIDC / OAuth2")
     Rel(dsi, web, "Authenticates via", "OIDC / OAuth2")
     Rel(web, backend, "Calls", "HTTPS")
-    Rel(db, profileAPI,  "Reads from", "SQL")
+    Rel(profileAPI,db,  "Reads from", "SQL")
     Rel(backend, db, "Reads from and writes to", "TCP/SQL")
     Rel(backend, fileStorage, "Writes ZIP files to", "HTTPS/CSV/ZIP")
     Rel(fileStorage, fileAPI, "Reads ZIP files from", "HTTPS/CSV/ZIP")
@@ -45,7 +46,7 @@ C4Container
     Rel(externalSystems, backend,"Retrieves GIAS data","HTTPS/SOAP")
 
     UpdateRelStyle(user, dsi, $offsetX="-48", $offsetY="-60") 
-    UpdateRelStyle(profileAPI, dsi, $offsetX="-120", $offsetY="-100") 
+    UpdateRelStyle(dsi,profileAPI, $offsetX="-120", $offsetY="-100") 
     UpdateRelStyle(user,web, $offsetX="-90", $offsetY="-70") 
     UpdateRelStyle(user, fileAPI, $offsetX="-160", $offsetY="-60") 
     UpdateRelStyle(dsi, web, $offsetX="-140", $offsetY="-80") 
