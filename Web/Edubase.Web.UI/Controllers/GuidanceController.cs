@@ -28,10 +28,20 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpGet("guidance", Name = "Guidance")]
         public ActionResult Index() => View();
+
+        [HttpGet("General", Name = "General")]
         public ActionResult General() => View();
+
+        [HttpGet("BulkUpdate", Name = "BulkUpdate")]
         public ActionResult EstablishmentBulkUpdate() => View();
+
+        [HttpGet("ChildrensCentre", Name = "ChildrensCentre")]
         public ActionResult ChildrensCentre() => View();
+
+        [HttpGet("Federation", Name = "Federation")]
         public ActionResult Federation() => View();
+
+        [HttpGet("Governance", Name = "Governance")]
         public ActionResult Governance() => View();
 
         public async Task<ActionResult> LaNameCodes()
