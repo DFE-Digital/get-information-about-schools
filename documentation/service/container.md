@@ -29,7 +29,7 @@ C4Container
 
         Container(backend, "GIAS Backend", "Java Rest API Application + SOAP", "Executes business rules, validation and<br>data access logic")
 
-        ContainerDb(fileStorage, "Extract File Storage", "Azure File Storage", "Stores generated ZIP<br>extracts available for download")
+        ContainerDb(fileStorage, "File Storage", "Azure File Storage", "Stores generated ZIP<br>extracts available for download")
     }
 
     Rel(user,web, "Browse GIAS data", "HTTPS/HTML")
@@ -41,7 +41,7 @@ C4Container
     Rel(profileAPI,db,  "Reads from", "SQL")
     Rel(backend, db, "Reads from and writes to", "TCP/SQL")
     Rel(backend, fileStorage, "Writes ZIP files to", "HTTPS/CSV/ZIP")
-    Rel(fileStorage, fileAPI, "Reads ZIP files from", "HTTPS/CSV/ZIP")
+    Rel(fileAPI,fileStorage, "Reads ZIP files from", "HTTPS/CSV/ZIP")
     Rel(externalSystems, fileAPI,"Downloads GIAS data","HTTPS/CSV/ZIP")
     Rel(externalSystems, backend,"Retrieves GIAS data","HTTPS/SOAP")
 
