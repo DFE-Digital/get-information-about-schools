@@ -20,7 +20,8 @@ Questions
 - What is the Analysis / OLAP engine, src/main/java/com/texunatech/edubase/analysis/mdx/MDXQueryBuilder.java
 - When are all the jobs ran under src/main/java/com/texunatech/edubase/service/quartz/
 - What is the role of flyway, its seems to have an operational role
-  - are th old flyway scripts in sql_archive, what is the process to running flyway
+  - are the old flyway scripts in sql_archive, what is the process to running flyway
+  - what is done through flyway, what is done through the front end support section of the tools area
 - When do we run sql/Db maintenance sql scripts
 - When do we run sql/snapshot_tests 
 
@@ -42,7 +43,7 @@ Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob 
 
 Container_Boundary(edubase, "Edubase Java Application") {
 
-    Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows, search, content and admin screens")
+    Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows search,<br> content and admin screens")
 
     Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users, downloads, lookups and approvals")
 
