@@ -28,7 +28,7 @@ namespace Edubase.Web.UI.Controllers
             return View(new FaqViewModel(faqs, groups) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
         }
 
-        [Route("Create", Name = "CreateItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Faq/Create", Name = "CreateItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> Create()
         {
             var groups = await _FaqGroupRepository.GetAllAsync(1000);
@@ -172,7 +172,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [Route("Groups/New", Name = "CreateGroup"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Faq/Groups/New", Name = "CreateGroup"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public ActionResult CreateGroup() => View("EditGroup", new FaqGroupViewModel());
 
 
