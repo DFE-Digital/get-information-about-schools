@@ -64,7 +64,7 @@ namespace Edubase.Web.UI.Models
                     section.SubSections.Add(new Section
                     {
                         Heading = "All establishment data",
-                        Files = allEstabData.Select(x => new Tuple<string, FileDownload>(FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
+                        Files = allEstabData.OrderBy(x => x.Tag).Select(x => new Tuple<string, FileDownload>(FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
                     });
                 }
 
