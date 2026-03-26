@@ -37,12 +37,13 @@ This job is triggered on a cron schedule from the `companies.house.update.schedu
 
 This class coordinates the end-to-end process:
 
-- selects which Companies House numbers need processing
-- calls the Companies House API
-- compares returned company data with current GIAS group data
-- creates `GroupChangeRequest` objects for changed fields
-- records processing outcomes
-- generates a MAT closure report
+- Selects which Companies House numbers need processing
+- Calls the Companies House API
+- Uses basic auth
+- Compares returned company data with current GIAS group data
+- Creates `GroupChangeRequest` objects for changed fields
+- Records processing outcomes
+- Generates a MAT closure report
 
 ### Companies House API client
 
