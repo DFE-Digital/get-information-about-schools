@@ -11,7 +11,7 @@
 
 Questions
 
-- Where is the JSPX front end
+- How do operational users authenticate with the Web/MV layer 
 - Where is the permissions engine, ABAC and RBAC
 - What is the address layer import
 - Why do we have 2 APIs, Texuna Edubase API (functional).yaml and Texuna Edubase Dictionary Lookups API.yaml. Do we have 2 distinct use cases ? eg internal, external ?
@@ -31,23 +31,22 @@ Questions
 C4Component
 title GIAS Backend - C4 Component Diagram
 
-    UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 
-Person(ops_user, "Operations User", "Runs deployments, DB patches, and batch processes")
+Person(ops_user, "Operations User", "Runs deployments, DB patches,<br>and batch processes")
 
-Container_Ext(giasFE, "GIAS Front End Web Application", "C#/ASP.Net")
 
 System_Ext(ref_data, "Reference Data Providers", "Companies House, Ofsted, SAFE/SA,<br>Address Layer, other upstream feeds")
 
-Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
+Container_Ext(giasFE, "GIAS Front End Web Application", "C#/ASP.Net")
 
 Container_Boundary(edubase, "Edubase Java Application") {
 
     Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows search,<br> content and admin screens")
 
-    Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users, downloads, lookups and approvals")
-
     Component(auth, "Authentication & Security", "Spring Security + SAML", "SAFE/SA SSO, role-based access control, REST basic auth")
+
+    Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users,<br> downloads, lookups and approvals")
 
     Component(domain_services, "Domain Services", "Spring Services", "Core business logic for establishments, groups, staff, users, validation, approvals and reporting")
 
@@ -64,8 +63,9 @@ Container_Boundary(edubase, "Edubase Java Application") {
 
 
 
-Container_Boundary(gias_db, "GIAS Data") {
+Container_Boundary(managedServices, "Managed Services") {
   ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
+  Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
 }
 
 
@@ -94,4 +94,40 @@ Rel(batch_jobs, persistence, "Stores job state and updates data in")
 Rel(integrations, ref_data, "Consumes reference/sync feeds from", "HTTP/SOAP/SAML/files")
 Rel(auth, ref_data, "Authenticates users with SAFE/SA", "SAML")
 Rel(persistence, sql_server, "Reads/writes", "JDBC/Hibernate")
+```
+
+## GIAS front end authentication flow
+```mermaid
+sequenceDiagram
+    autonumber
+    actor authUser as Authenticated User
+    participant FE as GIAS CSharp Web App
+    participant API as Edubase REST API
+    participant Auth as Auth/Security Layer
+    participant UM as UserManager
+    participant RBAC as Domain Services / RBAC
+    participant DB as GIAS DB
+
+    authUser->>FE: Use UI action
+    FE->>API: HTTPS request + Basic Auth + sa_user_id header
+    API->>Auth: Validate API client credentials
+    Auth-->>API: API client authenticated
+
+    API->>API: RESTLoginFilter reads sa_user_id
+    API->>UM: loadUserBySAUserId(sa_user_id, true)
+    UM->>DB: Lookup internal user and group/authorities
+    DB-->>UM: User, roles, authorities
+    UM-->>API: Internal user
+
+    API->>Auth: setAuthentication(user)
+    Auth-->>API: Current request security context established
+
+    API->>RBAC: Execute endpoint/business operation
+    RBAC->>Auth: getCurrentUser()/hasAuthority(...)
+    Auth-->>RBAC: Current user and authorities
+    RBAC->>DB: Read/write permitted data
+    DB-->>RBAC: Result
+    RBAC-->>API: Response payload
+    API-->>FE: HTTPS/JSON response
+    FE-->>Ops: Render result
 ```
