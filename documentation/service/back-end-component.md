@@ -31,7 +31,10 @@ Questions
 C4Component
 title GIAS Backend - C4 Component Diagram
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
+
+System_Ext(dsi, "DfE Sign-in (DSI", "Authentication and identity service")
+
 
 Person(ops_user, "Operations User", "Runs deployments, DB patches,<br>and batch processes")
 
@@ -72,9 +75,14 @@ Container_Boundary(managedServices, "Managed Services") {
 
 
 
-Rel(giasFE, rest_api, "Uses", "HTTPS/JSON")
+Rel(giasFE, rest_api, "Uses<br>", "HTTPS/JSON/<br>Basic Auth")
+
 Rel(ops_user, web_mvc, "Operates through admin and back-office screens", "HTTPS")
 Rel(ops_user, batch_jobs, "Triggers/runs operational processes", "Batch/Admin")
+
+
+Rel(ops_user, dsi, "Authenticates via", "SAML")
+Rel(dsi, auth, "Authenticates via", "SAML")
 
 Rel(web_mvc, auth, "Authenticates and authorises via")
 Rel(rest_api, auth, "Authorises via")

@@ -32,7 +32,6 @@ C4Context
       System_Ext(DfESignIn, "DfE Sign In (DSI)", "User authentication system.Consumes GIAS data to <br>provide list of establishments on sign in")
 
 
-      
       System(GIAS, "Get Information About Schools", "Master information system for Establishment and<br>Governors data")
       
       System_Ext(schoolCensus,"School census","DfE statutory data set.<br>SPC (Schools, Pupils and their Characteristics).<br>SLASC (School Level Annual School Census) ")
