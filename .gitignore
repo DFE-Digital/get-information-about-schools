@@ -210,3 +210,8 @@ Web/Web.UI/
 
 /Web/.nuget/NuGet.Config
 Web/packages
+/Web/Edubase.Services.TexunaUnitTests/app.config
+/Web/Edubase.Web.UI/package-lock.json
+/Web/Edubase.Web.UI/Web.config
+/.gitignore
+/.gitignore
