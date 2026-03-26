@@ -20,7 +20,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
 {
     public class ReplaceChairControllerGetTests : GovernorControllerTestBase
     {
-        [Fact()]
+        [Fact]
         public async Task Gov_Get_ReplaceChair()
         {
             var controller = BuildController();

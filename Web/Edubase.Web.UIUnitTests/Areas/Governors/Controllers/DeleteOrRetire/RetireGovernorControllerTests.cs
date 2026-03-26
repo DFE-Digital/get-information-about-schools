@@ -20,20 +20,20 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.DeleteOrRetire
 {
     public class RetireGovernorControllerTests : GovernorControllerTestBase
     {
-        [Fact()]
-        public async Task Gov_DeleteOrRetireGovernor_NoAction()
+        [Fact]
+        public async Task DeleteOrRetireGovernor_WithEmptyViewModel_ThrowsInvalidParameterException()
         {
             var controller = BuildController();
             await Assert.ThrowsAsync<InvalidParameterException>(() => controller.DeleteOrRetireGovernor(new GovernorsGridViewModel()));
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_DeleteOrRetireGovernor_Save_ApiError()
         {
             // Arrange
             var groupId = 2436;
             var governorId = 6224;
-            var errorKey = "Test";
+            var errorKey = "DummyError";
             var errorMessage = "Test Error";
 
             var governorDetailsDto = new GovernorsDetailsDto
@@ -94,7 +94,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.DeleteOrRetire
                     {
                         GroupUId = groupId,
                         Action = "Save",
-                        RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
+                        RemovalAppointmentEndDate = new DateTimeViewModel(new DateTime(2026, 01, 01)),
                         RemovalGid = governorId
                     });
 

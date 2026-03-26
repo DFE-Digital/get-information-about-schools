@@ -109,7 +109,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
                 Times.Once);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Post_ReplaceChair_NewChairShared()
         {
             var controller = BuildController();
@@ -159,7 +159,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
                 .Verify(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Post_ReplaceChair_NewChairNotShared_NoValidationErrors()
         {
             var controller = BuildController();
@@ -204,7 +204,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
             Assert.Contains("#school-governance", redirectResult.Url);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Put_ReplaceChair_NewChairNotShared_ValidationErrors()
         {
             var controller = BuildController();

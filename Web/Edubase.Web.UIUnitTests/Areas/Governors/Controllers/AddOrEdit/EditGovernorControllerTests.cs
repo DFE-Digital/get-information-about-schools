@@ -22,14 +22,14 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
 {
     public class EditGovernorControllerTests : GovernorControllerTestBase
     {
-        [Fact()]
+        [Fact]
         public async Task Gov_Edit_Null_Params()
         {
             var controller = BuildController();
             await Assert.ThrowsAsync<InvalidParameterException>(() => controller.Edit(null, null, null, null));
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Edit_GroupIdSpecified()
         {
             // Arrange
@@ -142,7 +142,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
 
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Edit_EstabIdSpecified()
         {
             var controller = BuildController();
@@ -217,7 +217,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             Assert.True(viewResult.ViewData.ModelState.IsValid);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Edit_GroupId_RemovalGid_GidExists()
         {
             // Arrange
@@ -300,7 +300,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             Assert.True(viewResult.ViewData.ModelState.IsValid);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Edit_GroupId_RemovalGid_GidDoesNotExist()
         {
             // Arrange
@@ -424,7 +424,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                 controller.Edit(null, estabId, removalGid, null));
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Edit_GroupId_DuplicateGovernorId()
         {
             // Arrange
@@ -500,7 +500,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             Assert.True(viewResult.ViewData.ModelState.IsValid);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_Edit_RoleExists()
         {
             // Arrange

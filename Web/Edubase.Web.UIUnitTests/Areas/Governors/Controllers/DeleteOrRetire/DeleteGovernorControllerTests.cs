@@ -20,7 +20,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.DeleteOrRetire
 {
     public class DeleteGovernorControllerTests : GovernorControllerTestBase
     {
-        [Fact()]
+        [Fact]
         public async Task Gov_DeleteOrRetireGovernor_Save_UnknownApiError()
         {
             var controller = BuildController();
@@ -123,7 +123,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.DeleteOrRetire
             mockGovernorsWriteService.Verify(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_DeleteOrRetireGovernor_SharedGov_Save_ApiError()
         {
             var controller = BuildController();
@@ -204,7 +204,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.DeleteOrRetire
             Assert.Equal(errorMessage, viewResult.ViewData.ModelState[errorKey].Errors[0].ErrorMessage);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_DeleteOrRetireGovernor_SharedGov_Save_Estab_OK()
         {
             var controller = BuildController();
@@ -260,7 +260,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.DeleteOrRetire
             mockGovernorsWriteService.Verify(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_DeleteOrRetireGovernor_Estab_Remove_Shared_OK()
         {
             var controller = BuildController();
@@ -307,7 +307,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.DeleteOrRetire
             mockGovernorsWriteService.Verify(g => g.DeleteSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<IPrincipal>()), Times.Once);
         }
 
-        [Fact()]
+        [Fact]
         public async Task Gov_DeleteOrRetireGovernor_Estab_Remove_NonShared_OK()
         {
             var controller = BuildController();
