@@ -20,7 +20,7 @@ namespace Edubase.Services.ExternalLookup.UnitTests
 
         [Theory]
         [InlineData(1, FbType.School, "https://example.com/api/schoolstatus/1")]
-        //[InlineData(1, FbType.Federation, "https://example.com/api/federationstatus/1")]
+        [InlineData(1, FbType.Federation, "https://example.com/api/federationstatus/1")]
         [InlineData(1, FbType.Trust, "https://example.com/api/truststatus/1")]
         public void ApiUrl_ReturnsCorrectUrl(int? lookupId, FbType lookupType, string expectedUrl)
         {
