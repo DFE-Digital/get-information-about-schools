@@ -55,7 +55,6 @@ namespace Edubase.Web.UI.Models
                 .Select(y => y.Tag)
                 .Contains(x.Tag)) ?? Array.Empty<FileDownload>();
 
-
             if (allEstabData.Any() || openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
             {
                 var section = new Section { Heading = "Establishment downloads", Paragraph = "You can download the complete record for the specified establishment types. There's a separate file with links to any predecessor or successor establishments." };
