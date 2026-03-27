@@ -1,9 +1,7 @@
-# Address Layer Integration
+# Ordnance Survay Integration
 
 ## Overview
 
-
-The Address Layer integration in this repository has two distinct forms:
 
 
 Two related address integration paths exist:
