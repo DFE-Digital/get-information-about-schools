@@ -50,7 +50,7 @@ Container_Boundary(edubase, "Edubase Java Application") {
 
     Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows search,<br> content and admin screens")
 
-   Component(flyway, "Flyway DB Migration Scripts", "Flyway + T-SQL", "Versioned SQL migrations used by operations through the<br> deployment/startup process to<br> maintain schema, database configuration, rules, reference data,<br> and corrective data updates")
+   Component(flyway, "Flyway DB Migration Scripts", "Flyway + T-SQL", "ersioned DB schema, config, and data update scripts")
 
     Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users,<br> downloads, lookups and approvals")
 
