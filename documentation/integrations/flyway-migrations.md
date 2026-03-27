@@ -52,6 +52,8 @@ The Flyway scripts in this project should be understood as a combined mechanism 
 
 The migration supports several broad types of database change.
 
+Flyway migration scripts are located in `/src/main/resources/db/migration/`
+
 ### 1. Domain schema and field model changes
 
 These migrations introduce or alter the core database model used by the application, including:

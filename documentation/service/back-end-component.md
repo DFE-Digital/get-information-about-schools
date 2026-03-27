@@ -11,12 +11,12 @@
 
 Questions
 
+- What are th Spring Batch jobs, is this still used ? ie `/jobs`
+- How/When do we run the .php scripts in /scripts
 - How do operational users authenticate with the Web/MV layer 
 - Where is the permissions engine, ABAC and RBAC
 - What is the address layer import
 - Why do we have 2 APIs, Texuna Edubase API (functional).yaml and Texuna Edubase Dictionary Lookups API.yaml. Do we have 2 distinct use cases ? eg internal, external ?
-- Where is the SOAP layer implemented
-- How/When do we run the .php scripts in /scripts
 - What is the Analysis / OLAP engine, src/main/java/com/texunatech/edubase/analysis/mdx/MDXQueryBuilder.java
 - When are all the jobs ran under src/main/java/com/texunatech/edubase/service/quartz/
 - What is the role of flyway, its seems to have an operational role
@@ -36,7 +36,7 @@ UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
 System_Ext(dsi, "DfE Sign-in (DSI", "Authentication and identity service")
 
 
-Person(ops_user, "Operations User", "Runs deployments, DB patches,<br>and batch processes")
+Person(ops_user, "Operational User", "Runs deployments, DB patches,<br>and batch processes")
 
 
 System_Ext(ref_data, "Reference Data Providers", "Companies House, Ofsted, SAFE/SA,<br>Address Layer, other upstream feeds")
@@ -45,9 +45,12 @@ Container_Ext(giasFE, "GIAS Front End Web Application", "C#/ASP.Net")
 
 Container_Boundary(edubase, "Edubase Java Application") {
 
-    Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows search,<br> content and admin screens")
 
     Component(auth, "Authentication & Security", "Spring Security + SAML", "SAFE/SA SSO, role-based access control, REST basic auth")
+
+    Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows search,<br> content and admin screens")
+
+   Component(flyway, "Flyway DB Migration Scripts", "Flyway + T-SQL", "Versioned SQL migrations used by operations through the<br> deployment/startup process to<br> maintain schema, database configuration, rules, reference data,<br> and corrective data updates")
 
     Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users,<br> downloads, lookups and approvals")
 
@@ -77,31 +80,19 @@ Container_Boundary(managedServices, "Managed Services") {
 
 Rel(giasFE, rest_api, "Uses<br>", "HTTPS/JSON/<br>Basic Auth")
 
-Rel(ops_user, web_mvc, "Operates through admin and back-office screens", "HTTPS")
-Rel(ops_user, batch_jobs, "Triggers/runs operational processes", "Batch/Admin")
+
 
 
 Rel(ops_user, dsi, "Authenticates via", "SAML")
+Rel(ops_user, web_mvc, "Operates through admin and back-office screens", "HTTPS")
+Rel(ops_user, flyway, "Operates via deploymet<br>pipeline")
 Rel(dsi, auth, "Authenticates via", "SAML")
 
 Rel(web_mvc, auth, "Authenticates and authorises via")
 Rel(rest_api, auth, "Authorises via")
 Rel(web_mvc, domain_services, "Invokes")
 Rel(rest_api, domain_services, "Invokes")
-Rel(domain_services, search_lookup, "Uses")
-Rel(domain_services, extracts, "Uses for exports/downloads")
-Rel(domain_services, integrations, "Uses")
-Rel(domain_services, persistence, "Reads/writes")
-Rel(search_lookup, persistence, "Reads/writes")
-Rel(extracts, persistence, "Reads source data and callback metadata")
-Rel(extracts, object_store, "Publishes extract files to", "Azure Blob")
-Rel(batch_jobs, domain_services, "Executes")
-Rel(batch_jobs, extracts, "Schedules and generates")
-Rel(batch_jobs, integrations, "Runs sync/import jobs against")
-Rel(batch_jobs, persistence, "Stores job state and updates data in")
-Rel(integrations, ref_data, "Consumes reference/sync feeds from", "HTTP/SOAP/SAML/files")
-Rel(auth, ref_data, "Authenticates users with SAFE/SA", "SAML")
-Rel(persistence, sql_server, "Reads/writes", "JDBC/Hibernate")
+
 ```
 
 ## GIAS front end authentication flow

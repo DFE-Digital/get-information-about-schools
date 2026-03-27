@@ -51,11 +51,11 @@ This class coordinates the end-to-end process:
 
 This class:
 
-- calls `https://api.companieshouse.gov.uk/company/{number}`
-- sends an `Authorization` header using the configured API key
-- parses JSON into `SimplifiedCompanyProfile`
-- rate-limits requests to avoid Companies House throttling
-- records response status per company number
+- Calls `https://api.companieshouse.gov.uk/company/{number}`
+- Sends an `Authorization` header using the configured API key
+- Parses JSON into `SimplifiedCompanyProfile`
+- Rate-limits requests to avoid Companies House throttling
+- Records response status per company number
 
 ### Persistence and tracking
 
@@ -65,10 +65,10 @@ This class:
 
 These classes track:
 
-- which company numbers have been processed
-- whether the last attempt succeeded, failed, or was not found
-- job history and retry cycles
-- closure metadata used in reporting
+- Which company numbers have been processed
+- Whether the last attempt succeeded, failed, or was not found
+- Job history and retry cycles
+- Closure metadata used in reporting
 
 ## What Data Is Updated
 
@@ -92,9 +92,9 @@ This happens in:
 - `EdubaseCompaniesHouseUpdateManager`
 The report:
 
-- is written as CSV
-- is associated with a callback record
-- is uploaded to Azure Blob storage via `BlobStorageManager`
+- Is written as CSV
+- Is associated with a callback record
+- Is uploaded to Azure Blob storage via `BlobStorageManager`
 
 This is used to report groups that are still open in GIAS but appear closed or inactive in Companies House.
 
