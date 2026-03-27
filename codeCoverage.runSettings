@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0">
+        <Configuration>
+          <Exclude>
+            <!-- Exclude test projects by assembly name -->
+            <ModulePath>.*Test.*</ModulePath>
+            <ModulePath>.*Tests.*</ModulePath>
+            <ModulePath>.*UnitTests.*</ModulePath>
+          </Exclude>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
