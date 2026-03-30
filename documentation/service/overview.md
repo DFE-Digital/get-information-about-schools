@@ -115,7 +115,7 @@ We do not yet know all the internal systems that interact with GIAS. This list w
 3 mechanisms
  - edubase/downloads/File.xhtm?id=?
  - /edubase/downloads/public (direct file)
- - /edubase/service.wsdl
+ - /edubase/service (SOAP)
 
 
 CRM clients
