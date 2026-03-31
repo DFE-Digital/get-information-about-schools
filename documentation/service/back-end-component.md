@@ -11,7 +11,14 @@
 
 Questions
 
+- Whart is the ea-edubase-api-prod.azurewebsites.net/edubase/rest/ API
+  - establishment
+  - governors
+  - group
+  - suggest
+  - governor
 - What are th Spring Batch jobs, is this still used ? ie `/jobs`
+- Is the CRM integration turned on 
 - How/When do we run the .php scripts in /scripts
 - How do operational users authenticate with the Web/MV layer 
 - Where is the permissions engine, ABAC and RBAC
