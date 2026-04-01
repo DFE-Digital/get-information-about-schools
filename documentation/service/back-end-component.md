@@ -11,18 +11,12 @@
 
 Questions
 
-- Whart is the ea-edubase-api-prod.azurewebsites.net/edubase/rest/ API
-  - establishment
-  - governors
-  - group
-  - suggest
-  - governor
+- The ea-edubase-api-prod.azurewebsites.net/edubase/rest/ API, is used to drive the FE, but it appears to be consumed directly by other DfE services
 - What are th Spring Batch jobs, is this still used ? ie `/jobs`
 - Is the CRM integration turned on 
 - How/When do we run the .php scripts in /scripts
 - How do operational users authenticate with the Web/MV layer 
 - Where is the permissions engine, ABAC and RBAC
-- What is the address layer import
 - Why do we have 2 APIs, Texuna Edubase API (functional).yaml and Texuna Edubase Dictionary Lookups API.yaml. Do we have 2 distinct use cases ? eg internal, external ?
 - What is the Analysis / OLAP engine, src/main/java/com/texunatech/edubase/analysis/mdx/MDXQueryBuilder.java
 - When are all the jobs ran under src/main/java/com/texunatech/edubase/service/quartz/
@@ -31,6 +25,7 @@ Questions
   - what is done through flyway, what is done through the front end support section of the tools area
 - When do we run sql/Db maintenance sql scripts
 - When do we run sql/snapshot_tests 
+- What is the address layer import
 
 
 
