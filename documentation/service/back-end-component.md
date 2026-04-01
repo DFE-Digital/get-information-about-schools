@@ -1,5 +1,7 @@
 # C4 Component Diagrams for the GIAS backend Java component
 
+
+## Client interaction components
 This component diagram captures the subset of components focused on client interactions.
 
 ```mermaid
@@ -94,7 +96,7 @@ UpdateRelStyle(persistence, sql_server, $offsetX="-85", $offsetY="-40")
 UpdateRelStyle(domain_services, persistence, $offsetX="-20", $offsetY="0")
 
 ```
-## Scheduled Batch Operations Components
+## Scheduled batch operation components
 
 This component diagram shows the subset of components involved in scheduled batch processing and extract generation.
 
@@ -126,15 +128,25 @@ C4Component
     Rel(batch_jobs, extracts, "Triggers")
     Rel(batch_jobs, persistence, "Reads and writes job state")
     Rel(domain_services, persistence, "Reads from and writes to")
-    Rel(extracts, persistence, "Reads source data and callback metadata")
+    Rel(extracts, persistence, "Reads source data and<br> callback metadata")
     Rel(extracts, object_store, "Publishes extract files to")
     Rel(persistence, sql_server, "Reads from and writes to", "JDBC/Hibernate")
+
+    UpdateRelStyle(extracts, domain_services, $offsetX="-10", $offsetY="-10")
+    UpdateRelStyle(batch_jobs, extracts, $offsetX="-20", $offsetY="-20")
+    UpdateRelStyle(domain_services, persistence, $offsetX="150", $offsetY="-10")
+    UpdateRelStyle(extracts, persistence, $offsetX="-120", $offsetY="0")
+    UpdateRelStyle(batch_jobs, persistence, $offsetX="-150", $offsetY="0")
+    UpdateRelStyle(extracts, object_store, $offsetX="20", $offsetY="-100") 
+    UpdateRelStyle(persistence, sql_server, $offsetX="-80", $offsetY="-30")
+    UpdateRelStyle(x, y, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(x, y, $offsetX="0", $offsetY="0") 
 ```
 
 
-## Reference data providers
+## Reference data provider components
 
-This component diagram ocuses on the subset of components that integrates with external reference data providers.
+This component diagram focuses on the subset of components that integrates with external reference data providers.
 
 ```mermaid
 C4Component
