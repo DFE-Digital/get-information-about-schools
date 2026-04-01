@@ -10,7 +10,7 @@ title GIAS Backend - C4 Component Diagram
 
 UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
 
-System_Ext(dsi, "DfE Sign-in (DSI", "Authentication and identity service")
+System_Ext(dsi, "DfE Sign-in (DSI)", "Authentication and identity service")
 
 Person(ops_user, "Operational User", "Runs deployments, DB patches,<br>and batch processes")
 
@@ -27,7 +27,7 @@ Container_Boundary(edubase, "Edubase Java Application") {
 
     Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users,<br> downloads, lookups and approvals")
 
-    Component(soap_ws, "SOAP Web Services", "Spring-WS / SOAP", "SOAP endpoints for data extracts, establishment searc<br> and legacy system integrations")
+    Component(soap_ws, "SOAP Web Services", "Spring-WS / SOAP", "SOAP endpoints for data extracts, establishment search<br> and legacy system integrations")
 
 
     Component(flyway, "Flyway DB Migration Scripts", "Flyway + T-SQL", "Versioned DB schema, config, and data update scripts")
@@ -71,7 +71,7 @@ Rel(search_lookup, persistence, "Reads")
 Rel(extracts, persistence, "Reads metadata and callback state")
 Rel(extracts, object_store, "Stores and retrieves extract files")
 Rel(flyway, sql_server, "Applies migrations to", "T-SQL")
-Rel(persistence, sql_server, "Read, writes to", "T-SQL")
+Rel(persistence, sql_server, "Reads and writes to", "T-SQL")
 Rel(domain_services, persistence, "Uses")
 
 UpdateRelStyle(giasFE, rest_api, $offsetX="-50", $offsetY="-100") 
@@ -139,8 +139,7 @@ C4Component
     UpdateRelStyle(batch_jobs, persistence, $offsetX="-150", $offsetY="0")
     UpdateRelStyle(extracts, object_store, $offsetX="20", $offsetY="-100") 
     UpdateRelStyle(persistence, sql_server, $offsetX="-80", $offsetY="-30")
-    UpdateRelStyle(x, y, $offsetX="0", $offsetY="0")
-    UpdateRelStyle(x, y, $offsetX="0", $offsetY="0") 
+
 ```
 
 
@@ -165,7 +164,7 @@ C4Component
         
         Component(ofsted, "Ofsted Integration", "Java / Spring Services", "Retrieves inspection results and processe<br>Ofsted rating updates")
         
-        Component(os, "OS Integration", "Java / Spring MVC REST + HTTP client", "Looks up address data fro Ordnance Survey<br>Places API")
+        Component(os, "OS Integration", "Java / Spring MVC REST + HTTP client", "Looks up address data from Ordnance Survey<br>Places API")
         
         Component(ukrlp, "UKRLP Integration", "Java / SOAP client services", "Retrieves provider data and maps UKPRN<br>values to establishments and groups")
 
@@ -221,5 +220,5 @@ sequenceDiagram
     DB-->>RBAC: Result
     RBAC-->>API: Response payload
     API-->>FE: HTTPS/JSON response
-    FE-->>Ops: Render result
+    FE-->>authUser: Render result
 ```
