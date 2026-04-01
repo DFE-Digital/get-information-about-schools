@@ -1,33 +1,6 @@
-# C4 Component Diagram for the GIAS backend Java component
+# C4 Component Diagrams for the GIAS backend Java component
 
-
-
-- the WAR-based Edubase application declared in [pom.xml](/C:/code/gias-dd-backend-from-zip/pom.xml)
-- public and lookup APIs described in [Texuna Edubase API (functional).yaml](/C:/code/gias-dd-backend-from-zip/Texuna%20Edubase%20API%20(functional).yaml) and [Texuna Edubase Dictionary Lookups API.yaml](/C:/code/gias-dd-backend-from-zip/Texuna%20Edubase%20Dictionary%20Lookups%20API.yaml)
-- OLAP analysis servlets in [src/main/java/com/texunatech/edubase/analysis/servlet/AnalysisEngineSchemaServlet.java](/C:/code/gias-dd-backend-from-zip/src/main/java/com/texunatech/edubase/analysis/servlet/AnalysisEngineSchemaServlet.java)
-- persistence and SQL Server integration in [src/main/java/com/texunatech/edubase/dao](/C:/code/gias-dd-backend-from-zip/src/main/java/com/texunatech/edubase/dao) and [src/main/java/com/texunatech/edubase/dao/hibernate/EdubaseSQLServerDialect.java](/C:/code/gias-dd-backend-from-zip/src/main/java/com/texunatech/edubase/dao/hibernate/EdubaseSQLServerDialect.java)
-- batch/import assets in [jobs](/C:/code/gias-dd-backend-from-zip/jobs), [addressLayer](/C:/code/gias-dd-backend-from-zip/addressLayer), and [sql](/C:/code/gias-dd-backend-from-zip/sql)
-
-
-Questions
-
-- The ea-edubase-api-prod.azurewebsites.net/edubase/rest/ API, is used to drive the FE, but it appears to be consumed directly by other DfE services
-- What are th Spring Batch jobs, is this still used ? ie `/jobs`
-- Is the CRM integration turned on 
-- How/When do we run the .php scripts in /scripts
-- How do operational users authenticate with the Web/MV layer 
-- Where is the permissions engine, ABAC and RBAC
-- Why do we have 2 APIs, Texuna Edubase API (functional).yaml and Texuna Edubase Dictionary Lookups API.yaml. Do we have 2 distinct use cases ? eg internal, external ?
-- What is the Analysis / OLAP engine, src/main/java/com/texunatech/edubase/analysis/mdx/MDXQueryBuilder.java
-- When are all the jobs ran under src/main/java/com/texunatech/edubase/service/quartz/
-- What is the role of flyway, its seems to have an operational role
-  - are the old flyway scripts in sql_archive, what is the process to running flyway
-  - what is done through flyway, what is done through the front end support section of the tools area
-- When do we run sql/Db maintenance sql scripts
-- When do we run sql/snapshot_tests 
-- What is the address layer import
-
-
+This component diagram captures the subset of components focused on client interactions.
 
 ```mermaid
 C4Component
@@ -37,65 +10,171 @@ UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
 
 System_Ext(dsi, "DfE Sign-in (DSI", "Authentication and identity service")
 
-
 Person(ops_user, "Operational User", "Runs deployments, DB patches,<br>and batch processes")
 
-
-System_Ext(ref_data, "Reference Data Providers", "Companies House, Ofsted, SAFE/SA,<br>Address Layer, other upstream feeds")
-
 Container_Ext(giasFE, "GIAS Front End Web Application", "C#/ASP.Net")
+
+Container_Ext(internalDfE, "Internal DfE Services", "")
 
 Container_Boundary(edubase, "Edubase Java Application") {
 
 
-    Component(auth, "Authentication & Security", "Spring Security + SAML", "SAFE/SA SSO, role-based access control, REST basic auth")
+    Component(auth, "Authentication & Security", "Spring Security + SAML", "SAFE/SA SSO, role-based access control")
 
-    Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows search,<br> content and admin screens")
-
-   Component(flyway, "Flyway DB Migration Scripts", "Flyway + T-SQL", "ersioned DB schema, config, and data update scripts")
+    Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows <br>search, content and admin screens")
 
     Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users,<br> downloads, lookups and approvals")
 
-    Component(domain_services, "Domain Services", "Spring Services", "Core business logic for establishments, groups, staff, users, validation, approvals and reporting")
+    Component(soap_ws, "SOAP Web Services", "Spring-WS / SOAP", "SOAP endpoints for data extracts, establishment searc<br> and legacy system integrations")
 
-    Component(search_lookup, "Search & Lookup Services", "Search/Dictionary Services", "Filtering, lookup dictionaries, data dictionary, geo and query support")
 
-    Component(extracts, "Extract & Download Services", "Extract Managers/Renderers", "Generates CSV/XLS/XLSX/XML extracts, scheduled downloads and callbacks")
+    Component(flyway, "Flyway DB Migration Scripts", "Flyway + T-SQL", "Versioned DB schema, config, and data update scripts")
 
-    Component(batch_jobs, "Batch & Scheduled Jobs", "Spring Batch + Quartz", "Bulk update/create, scheduled extracts, sync and maintenance jobs")
+    Component(domain_services, "Domain Services", "Spring Services", "Core business logic for establishments, groups,staff, users,<br> validation, approvals and reporting")
 
-    Component(integrations, "Integration Adapters", "Integration/WS Clients", "Adapters for Companies House, Ofsted/SAFE sync, CRM and reference-data ingestion")
+    Component(search_lookup, "Search & Lookup Services", "Search/Dictionary Services", "Filtering, lookup dictionaries, data dictionary, geo<br> and query support")
 
-    Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application, audit, lookup, callback and job state data")
+    Component(extracts, "Extract & Download Services", "Extract Managers/Renderers", "Generates extracts, manages callbacks, and prepares<br>download metadata")
+
+    Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application")
 }
 
 
-
 Container_Boundary(managedServices, "Managed Services") {
+
   ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
   Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
 }
 
 
-
-
-
-Rel(giasFE, rest_api, "Uses<br>", "HTTPS/JSON/<br>Basic Auth")
-
-
+Rel(giasFE, rest_api, "Uses<br>", "HTTPS/JSON<br>Basic Auth")
+Rel(internalDfE, rest_api, "Uses<br>", "HTTPS/JSON<br>Basic Auth")
+Rel(internalDfE, soap_ws, "Uses<br>", "HTTPS/SOAP<br>Baic Auth")
 
 
 Rel(ops_user, dsi, "Authenticates via", "SAML")
-Rel(ops_user, web_mvc, "Operates through admin and back-office screens", "HTTPS")
-Rel(ops_user, flyway, "Operates via deploymet<br>pipeline")
+Rel(ops_user, web_mvc, "Operates through admin and<br>back-office screens", "HTTPS")
+Rel(ops_user, flyway, "Operates via<br>deploymet pipeline")
 Rel(dsi, auth, "Authenticates via", "SAML")
 
-Rel(web_mvc, auth, "Authenticates and authorises via")
-Rel(rest_api, auth, "Authorises via")
-Rel(web_mvc, domain_services, "Invokes")
-Rel(rest_api, domain_services, "Invokes")
+Rel(web_mvc, auth, "Authenticates via")
+Rel(web_mvc, domain_services, "Uses")
+Rel(rest_api, domain_services, "Uses")
+Rel(soap_ws, domain_services, "Uses")
+Rel(rest_api, extracts, "Triggers and queries")
+Rel(soap_ws, extracts, "Retrieves extract content via")
+
+Rel(domain_services, search_lookup, "Uses")
+Rel(search_lookup, persistence, "Reads")
+Rel(extracts, persistence, "Reads metadata and callback state")
+Rel(extracts, object_store, "Stores and retrieves extract files")
+Rel(flyway, sql_server, "Applies migrations to", "T-SQL")
+Rel(persistence, sql_server, "Read, writes to", "T-SQL")
+Rel(domain_services, persistence, "Uses")
+
+UpdateRelStyle(giasFE, rest_api, $offsetX="-50", $offsetY="-100") 
+UpdateRelStyle(internalDfE, rest_api, $offsetX="-70", $offsetY="-100")
+UpdateRelStyle(internalDfE, soap_ws, $offsetX="-100", $offsetY="-100")
+UpdateRelStyle(ops_user, dsi, $offsetX="-47", $offsetY="-50")
+UpdateRelStyle(ops_user, web_mvc, $offsetX="-40", $offsetY="-70")
+UpdateRelStyle(ops_user, flyway, $offsetX="-35", $offsetY="-180")
+UpdateRelStyle(dsi, auth, $offsetX="-130", $offsetY="-100")
+UpdateRelStyle(web_mvc, auth, $offsetX="-45", $offsetY="20")
+UpdateRelStyle(web_mvc, domain_services, $offsetX="0", $offsetY="0")
+UpdateRelStyle(rest_api, domain_services, $offsetX="-10", $offsetY="-20")
+UpdateRelStyle(soap_ws, domain_services, $offsetX="0", $offsetY="0")
+UpdateRelStyle(rest_api, extracts, $offsetX="0", $offsetY="0")
+UpdateRelStyle(soap_ws, extracts, $offsetX="0", $offsetY="0")
+UpdateRelStyle(domain_services, search_lookup, $offsetX="-10", $offsetY="-10")
+UpdateRelStyle(search_lookup, persistence, $offsetX="0", $offsetY="0")
+UpdateRelStyle(extracts, persistence, $offsetX="150", $offsetY="10")
+UpdateRelStyle(extracts, object_store, $offsetX="230", $offsetY="-50")
+UpdateRelStyle(flyway, sql_server, $offsetX="-90", $offsetY="-200")
+UpdateRelStyle(persistence, sql_server, $offsetX="-85", $offsetY="-40")
+UpdateRelStyle(domain_services, persistence, $offsetX="-20", $offsetY="0")
 
 ```
+## Scheduled Batch Operations Components
+
+This component diagram shows the subset of components involved in scheduled batch processing and extract generation.
+
+
+```mermaid
+C4Component
+    title Scheduled Batch Operations
+
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+    Container_Boundary(edubase, "Edubase Java Application") {
+
+        Component(batch_jobs, "Batch & Scheduled Jobs", "Quartz", "Bulk update/create, scheduled extracts,<br> sync and maintenance jobs")
+
+        Component(extracts, "Extract & Download Services", "Extract Managers/Renderers", "Generates CSV/XLS/XLSX/XML extracts,<br>scheduled downloads and callbacks")
+
+        Component(domain_services, "Domain Services", "Spring Services", "Core business logic for establishments, groups,<br>staff, users, validation, approvals and reporting")
+
+        Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application")
+    }
+
+    Container_Boundary(managedServices, "Managed Services") {
+        ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
+        Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
+    }
+
+    Rel(extracts, domain_services, "Uses")
+    Rel(batch_jobs, extracts, "Triggers")
+    Rel(batch_jobs, persistence, "Reads and writes job state")
+    Rel(domain_services, persistence, "Reads from and writes to")
+    Rel(extracts, persistence, "Reads source data and callback metadata")
+    Rel(extracts, object_store, "Publishes extract files to")
+    Rel(persistence, sql_server, "Reads from and writes to", "JDBC/Hibernate")
+```
+
+
+## Reference data providers
+
+This component diagram ocuses on the subset of components that integrates with external reference data providers.
+
+```mermaid
+C4Component
+    title Reference Data Providers
+
+    UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
+
+    Container_Ext(companies_house_ext, "Companies House", "External company data service")
+    Container_Ext(ofsted_ext, "Ofsted", "External inspections data service")
+    Container_Ext(os_ext, "Ordnance Survey", "External address lookup service")
+    Container_Ext(ukrlp_ext, "UKRLP", "External provider reference data service")
+
+
+    Container_Boundary(edubase, "Edubase Java Application") {
+        Component(companiesHouse, "Companies House Integration", "Java / Spring Services", "Retrieves Companies House company<br> profiles and processes group update data")
+        
+        Component(ofsted, "Ofsted Integration", "Java / Spring Services", "Retrieves inspection results and processe<br>Ofsted rating updates")
+        
+        Component(os, "OS Integration", "Java / Spring MVC REST + HTTP client", "Looks up address data fro Ordnance Survey<br>Places API")
+        
+        Component(ukrlp, "UKRLP Integration", "Java / SOAP client services", "Retrieves provider data and maps UKPRN<br>values to establishments and groups")
+
+        Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application data")
+    }
+
+
+    Container_Boundary(managedServices, "Managed Services") {
+      ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
+    }
+
+    Rel(companiesHouse, companies_house_ext, "Retrieves company profiles from", "HTTPS/JSON + Basic Auth")
+    Rel(ofsted, ofsted_ext, "Retrieves inspection results from", "HTTPS/JSON")
+    Rel(os, os_ext, "Looks up postcode address data from", "HTTPS/JSON + API key")
+    Rel(ukrlp, ukrlp_ext, "Retrieves provider data from", "SOAP")
+    
+```
+
+## Component Notes
+
+Link to integration documents
 
 ## GIAS front end authentication flow
 ```mermaid
