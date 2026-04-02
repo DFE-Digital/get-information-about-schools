@@ -1,5 +1,7 @@
 # C4 Component Diagrams for the GIAS backend Java component
 
+Missing
+- Gov.Notify
 
 ## Client interaction components
 This component diagram captures the subset of components focused on client interactions.
@@ -38,7 +40,10 @@ Container_Boundary(edubase, "Edubase Java Application") {
 
     Component(extracts, "Extract & Download Services", "Extract Managers/Renderers", "Generates extracts, manages callbacks, and prepares<br>download metadata")
 
-    Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application")
+
+    Component(gov_notify, "Gov.Notify Client", "NotificationSender + GOV.UK Notify client", "Sends templated outbound emails for user,<br>workflow and operational notifications")
+
+    Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes core application data, users,<br> approvals, job state, extracts metadata, reference data")
 }
 
 
@@ -67,8 +72,10 @@ Rel(rest_api, extracts, "Triggers and queries")
 Rel(soap_ws, extracts, "Retrieves extract content via")
 
 Rel(domain_services, search_lookup, "Uses")
+Rel(domain_services, gov_notify, "Sends notifications via")
 Rel(search_lookup, persistence, "Reads")
 Rel(extracts, persistence, "Reads metadata and callback state")
+Rel(extracts, gov_notify, "Sends extract and failure<br>notifications via")
 Rel(extracts, object_store, "Stores and retrieves extract files")
 Rel(flyway, sql_server, "Applies migrations to", "T-SQL")
 Rel(persistence, sql_server, "Reads and writes to", "T-SQL")
@@ -88,14 +95,32 @@ UpdateRelStyle(soap_ws, domain_services, $offsetX="0", $offsetY="0")
 UpdateRelStyle(rest_api, extracts, $offsetX="0", $offsetY="0")
 UpdateRelStyle(soap_ws, extracts, $offsetX="0", $offsetY="0")
 UpdateRelStyle(domain_services, search_lookup, $offsetX="-10", $offsetY="-10")
-UpdateRelStyle(search_lookup, persistence, $offsetX="0", $offsetY="0")
-UpdateRelStyle(extracts, persistence, $offsetX="150", $offsetY="10")
+UpdateRelStyle(search_lookup, persistence, $offsetX="40", $offsetY="-30")
+UpdateRelStyle(extracts, persistence, $offsetX="100", $offsetY="0")
 UpdateRelStyle(extracts, object_store, $offsetX="230", $offsetY="-50")
 UpdateRelStyle(flyway, sql_server, $offsetX="-90", $offsetY="-200")
-UpdateRelStyle(persistence, sql_server, $offsetX="-85", $offsetY="-40")
-UpdateRelStyle(domain_services, persistence, $offsetX="-20", $offsetY="0")
-
+UpdateRelStyle(persistence, sql_server, $offsetX="-45", $offsetY="-40")
+UpdateRelStyle(domain_services, persistence, $offsetX="10", $offsetY="0")
+UpdateRelStyle(extracts, gov_notify, $offsetX="180", $offsetY="-30")
+UpdateRelStyle(domain_services, gov_notify, $offsetX="-40", $offsetY="-30")
 ```
+
+### How to read this diagram
+
+- This view is intentionally client-facing. It shows the application surfaces used by external or operational clients: MVC screens, REST endpoints, SOAP services, and Flyway as part of the deployment/startup path.
+- `GIAS Front End Web Application` and `Internal DfE Services` are shown as separate clients because they enter the backend through different interfaces and security models.
+- `Authentication & Security` represents the cross-cutting Spring Security layer rather than a business capability. It is responsible for browser SSO and request authorisation, not domain logic.
+- `Domain Services` is the main business layer. The MVC, REST, and SOAP components all delegate into it rather than accessing persistence directly.
+- `Extract & Download Services` is separated from `Domain Services` because extract generation and retrieval is a distinct concern. The REST API mostly triggers generation and returns download metadata, while SOAP endpoints can return extract content directly.
+- `Search & Lookup Services` is shown as a separate component to make explicit that search/filtering and dictionary lookups are not just generic DAO calls. They are a distinct set of services used by the business layer.
+- `Flyway DB Migration Scripts` is included because, in this system, schema and configuration changes are applied operationally as part of deployment/startup rather than being an invisible implementation detail.
+
+### Scope and assumptions
+
+- This is not a full component map of the whole application. It excludes scheduled batch jobs and the external reference-data provider integrations, which are shown in separate diagrams below.
+- `Internal DfE Services -> SOAP Web Services` is included because the application exposes a separate SOAP service surface for legacy/system-to-system access.
+- `Managed Services` contains infrastructure used by this view. SQL Server is the primary operational data store, and Azure Blob Storage holds generated extract content.
+
 ## Scheduled batch operation components
 
 This component diagram shows the subset of components involved in scheduled batch processing and extract generation.
@@ -116,7 +141,9 @@ C4Component
 
         Component(domain_services, "Domain Services", "Spring Services", "Core business logic for establishments, groups,<br>staff, users, validation, approvals and reporting")
 
-        Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application")
+        Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes core application data, users,<br> approvals, job state, extracts metadata, reference data")
+
+        Component(gov_notify, "Gov.Notify Client", "NotificationSender + GOV.UK Notify client", "Sends templated outbound emails for batch,<br>extract and reminder workflows")
     }
 
     Container_Boundary(managedServices, "Managed Services") {
@@ -128,19 +155,37 @@ C4Component
     Rel(batch_jobs, extracts, "Triggers")
     Rel(batch_jobs, persistence, "Reads and writes job state")
     Rel(domain_services, persistence, "Reads from and writes to")
+    Rel(domain_services, gov_notify, "Sends workflow and reminder<br> notifications via")
     Rel(extracts, persistence, "Reads source data and<br> callback metadata")
     Rel(extracts, object_store, "Publishes extract files to")
+    Rel(extracts, gov_notify, "Sends extract failure<br> notifications via")
     Rel(persistence, sql_server, "Reads from and writes to", "JDBC/Hibernate")
 
     UpdateRelStyle(extracts, domain_services, $offsetX="-10", $offsetY="-10")
     UpdateRelStyle(batch_jobs, extracts, $offsetX="-20", $offsetY="-20")
-    UpdateRelStyle(domain_services, persistence, $offsetX="150", $offsetY="-10")
+    UpdateRelStyle(domain_services, persistence, $offsetX="70", $offsetY="-20")
     UpdateRelStyle(extracts, persistence, $offsetX="-120", $offsetY="0")
     UpdateRelStyle(batch_jobs, persistence, $offsetX="-150", $offsetY="0")
-    UpdateRelStyle(extracts, object_store, $offsetX="20", $offsetY="-100") 
+    UpdateRelStyle(extracts, object_store, $offsetX="50", $offsetY="0") 
     UpdateRelStyle(persistence, sql_server, $offsetX="-80", $offsetY="-30")
+    UpdateRelStyle(domain_services, gov_notify, $offsetX="30", $offsetY="0")
+    UpdateRelStyle(extracts, gov_notify, $offsetX="-80", $offsetY="-30") 
 
 ```
+
+### How to read this diagram
+
+- This view isolates the parts of the backend involved in scheduled and background processing. It deliberately leaves out MVC, REST, SOAP, and authentication because they are not the entry points for these flows.
+- `Batch & Scheduled Jobs` is the orchestration layer. It represents Quartz-triggered execution and job coordination rather than the business rules themselves.
+- `Domain Services` still owns the business behaviour. Scheduled jobs call into the same service layer used elsewhere in the application.
+- `Extract & Download Services` is broken out because scheduled processing is not only about mutating data. It also generates extract files and report outputs.
+- `Persistence Layer` is shown explicitly because scheduled processing relies on the database both for domain data and for job/callback state.
+- Azure Blob Storage is included because extract generation is not complete when a file is written locally. The file becomes usable to clients only after it is published to object storage.
+
+### Scope and assumptions
+
+- This diagram excludes external sync integrations such as Companies House, Ofsted, and UKRLP. Those are operational jobs in the codebase, but they are intentionally not part of this focused view.
+- The main purpose of this diagram is to show the internal flow: schedule/orchestrate, execute business logic, persist state, generate output, publish files.
 
 
 ## Reference data provider components
@@ -153,21 +198,24 @@ C4Component
 
     UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
 
+    Container_Ext(address_importer, "Address Layer Import Application", "Separate Java batch importer")
+    Container_Ext(os_ext, "Ordnance Survey", "External address lookup service")
+
     Container_Ext(companies_house_ext, "Companies House", "External company data service")
     Container_Ext(ofsted_ext, "Ofsted", "External inspections data service")
-    Container_Ext(os_ext, "Ordnance Survey", "External address lookup service")
     Container_Ext(ukrlp_ext, "UKRLP", "External provider reference data service")
+    
 
 
     Container_Boundary(edubase, "Edubase Java Application") {
+        Component(ukrlp, "UKRLP Integration", "Java / SOAP client services", "Retrieves provider data and maps UKPRN<br>values to establishments and groups")
+
+        Component(os, "OS Integration", "Java / Spring MVC REST + HTTP client", "Looks up address data from Ordnance Survey<br>Places API")
+
         Component(companiesHouse, "Companies House Integration", "Java / Spring Services", "Retrieves Companies House company<br> profiles and processes group update data")
         
         Component(ofsted, "Ofsted Integration", "Java / Spring Services", "Retrieves inspection results and processe<br>Ofsted rating updates")
         
-        Component(os, "OS Integration", "Java / Spring MVC REST + HTTP client", "Looks up address data from Ordnance Survey<br>Places API")
-        
-        Component(ukrlp, "UKRLP Integration", "Java / SOAP client services", "Retrieves provider data and maps UKPRN<br>values to establishments and groups")
-
         Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application data")
     }
 
@@ -180,12 +228,56 @@ C4Component
     Rel(ofsted, ofsted_ext, "Retrieves inspection results from", "HTTPS/JSON")
     Rel(os, os_ext, "Looks up postcode address data from", "HTTPS/JSON + API key")
     Rel(ukrlp, ukrlp_ext, "Retrieves provider data from", "SOAP")
+
+    Rel(companiesHouse, persistence, "Uses")
+    Rel(ofsted, persistence, "Uses")
+    Rel(ukrlp, persistence, "Uses")
+    Rel(persistence, sql_server, "Writes to", "JDBC/Hibernate")
+
+        Rel(address_importer, os_ext, "Loads address data from")
+    Rel(address_importer, sql_server, "Writes imported address data to")
+
+    UpdateRelStyle(companiesHouse, persistence, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(ofsted, persistence, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(os, persistence, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(uklrp, persistence, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(persistence, sql_server, $offsetX="0", $offsetY="0")
     
 ```
 
+### How to read this diagram
+
+- This view isolates the integrations whose primary role is to bring external reference data into GIAS.
+- The diagram now shows two kinds of integration path:
+  - provider-specific components that are part of the Edubase Java application
+  - a separate external importer for Address Layer / Ordnance Survey data
+- Each integration component inside the `Edubase Java Application` boundary represents application-side logic owned by that application, not the upstream system itself.
+- The purpose of this diagram is to make the external dependencies explicit. In the larger component diagrams, these responsibilities would otherwise be hidden inside the general service layer.
+- `Persistence Layer` is included to show that these integrations are not simple pass-through calls. Retrieved data is compared against, mapped onto, or persisted into the application data model.
+- Companies House and Ofsted are HTTP-based integrations, and UKRLP is SOAP-based.
+- `Address Layer Import Application` is outside the Edubase boundary because the batch address import is a separate Java process, even though it ultimately writes data into the same SQL Server database used by Edubase.
+
+### Scope and assumptions
+
+- This view is intentionally limited to reference-data providers. It excludes other external integrations such as CRM, GOV.UK Notify, Azure Blob Storage, and DfE Sign-in.
+- The on-demand OS address lookup exposed via the REST layer is intentionally excluded from this diagram.
+- The OS-related batch load is shown as a separate `Address Layer Import Application` because that import path is not part of the Edubase Java application itself.
+- The shared SQL Server database appears in this view because both the Edubase application and the separate address importer depend on it as the persistence boundary where imported reference data becomes available to the rest of the system.
+
 ## Component Notes
 
-Link to integration documents
+The diagrams above are intended to be read together rather than as alternatives:
+
+- The client interaction diagram shows how users and client systems enter the backend.
+- The scheduled batch diagram shows how background processing and extract publication works internally.
+- The reference-data provider diagram shows which components depend on upstream data services.
+
+Related integration notes in this repository:
+
+- [`docs/companies-house-integration.md`](C:/code/gias-dd-backend/docs/companies-house-integration.md)
+- [`docs/ofsted-integration.md`](C:/code/gias-dd-backend/docs/ofsted-integration.md)
+- [`docs/ukrlp-integration.md`](C:/code/gias-dd-backend/docs/ukrlp-integration.md)
+- [`docs/address-layer-integration.md`](C:/code/gias-dd-backend/docs/address-layer-integration.md)
 
 ## GIAS front end authentication flow
 ```mermaid
@@ -222,3 +314,21 @@ sequenceDiagram
     API-->>FE: HTTPS/JSON response
     FE-->>authUser: Render result
 ```
+
+### How to read this flow
+
+- This sequence describes the authenticated request path used when the GIAS front-end web application calls the backend REST API on behalf of a signed-in user.
+- Two different identities are involved in the same request:
+  - the client application identity, authenticated with REST API Basic Auth
+  - the end-user identity, passed as `sa_user_id` and resolved to an internal GIAS user
+- The Basic Auth step answers "is this calling application trusted to use the REST API?".
+- The `sa_user_id` resolution step answers "which user should this request run as inside GIAS?".
+- RBAC is applied inside the backend after the internal user has been loaded and placed into the Spring Security context.
+
+### Scope and assumptions
+
+- This is not the browser SAML login flow for the Java MVC application. It is the system-to-system REST flow used by the separate GIAS front-end application.
+- The front-end does not send a full set of user roles or claims to the backend. It sends a user identifier, and the backend derives permissions from its own user and authority data.
+- The flow assumes the calling application is trusted to assert the correct `sa_user_id`. That trust is protected by the API credentials and any configured IP restrictions.
+- The database appears in this diagram because user lookup and authority resolution are data-driven, not hardcoded in the API layer.
+
