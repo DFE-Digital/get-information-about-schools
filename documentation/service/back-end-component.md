@@ -1,7 +1,5 @@
-# C4 Component Diagrams for the GIAS backend Java component
 
-Missing
-- Gov.Notify
+# C4 Component Diagrams for the GIAS backend Java component
 
 ## Client interaction components
 This component diagram captures the subset of components focused on client interactions.
@@ -108,10 +106,10 @@ UpdateRelStyle(domain_services, gov_notify, $offsetX="-40", $offsetY="-30")
 ### How to read this diagram
 
 - This view is intentionally client-facing. It shows the application surfaces used by external or operational clients: MVC screens, REST endpoints, SOAP services, and Flyway as part of the deployment/startup path.
-- `GIAS Front End Web Application` and `Internal DfE Services` are shown as separate clients because they enter the backend through different interfaces and security models.
 - `Authentication & Security` represents the cross-cutting Spring Security layer rather than a business capability. It is responsible for browser SSO and request authorisation, not domain logic.
 - `Domain Services` is the main business layer. The MVC, REST, and SOAP components all delegate into it rather than accessing persistence directly.
 - `Extract & Download Services` is separated from `Domain Services` because extract generation and retrieval is a distinct concern. The REST API mostly triggers generation and returns download metadata, while SOAP endpoints can return extract content directly.
+- `Gov.Notify Client` represents the central outbound email integration used by business and operational flows.
 - `Search & Lookup Services` is shown as a separate component to make explicit that search/filtering and dictionary lookups are not just generic DAO calls. They are a distinct set of services used by the business layer.
 - `Flyway DB Migration Scripts` is included because, in this system, schema and configuration changes are applied operationally as part of deployment/startup rather than being an invisible implementation detail.
 
@@ -119,6 +117,7 @@ UpdateRelStyle(domain_services, gov_notify, $offsetX="-40", $offsetY="-30")
 
 - This is not a full component map of the whole application. It excludes scheduled batch jobs and the external reference-data provider integrations, which are shown in separate diagrams below.
 - `Internal DfE Services -> SOAP Web Services` is included because the application exposes a separate SOAP service surface for legacy/system-to-system access.
+- `Gov.Notify Client` is included in this client-focused view because user-facing and operational actions can trigger outbound notifications as part of normal request processing.
 - `Managed Services` contains infrastructure used by this view. SQL Server is the primary operational data store, and Azure Blob Storage holds generated extract content.
 
 ## Scheduled batch operation components
@@ -178,9 +177,9 @@ C4Component
 - This view isolates the parts of the backend involved in scheduled and background processing. It deliberately leaves out MVC, REST, SOAP, and authentication because they are not the entry points for these flows.
 - `Batch & Scheduled Jobs` is the orchestration layer. It represents Quartz-triggered execution and job coordination rather than the business rules themselves.
 - `Domain Services` still owns the business behaviour. Scheduled jobs call into the same service layer used elsewhere in the application.
-- `Extract & Download Services` is broken out because scheduled processing is not only about mutating data. It also generates extract files and report outputs.
-- `Persistence Layer` is shown explicitly because scheduled processing relies on the database both for domain data and for job/callback state.
-- Azure Blob Storage is included because extract generation is not complete when a file is written locally. The file becomes usable to clients only after it is published to object storage.
+- `Extract & Download Services` this component generates extracts, prepares downloadable output, and handles extract-related operational tasks.
+- `Gov.Notify Client` is the scheduled and background processes also send emails, for example reminders, workflow notifications, and extract failure alerts.
+- `Azure Blob Storage` extract generation is not complete when a file is written locally. The file becomes usable to clients only after it is published to object storage.
 
 ### Scope and assumptions
 
@@ -208,6 +207,7 @@ C4Component
 
 
     Container_Boundary(edubase, "Edubase Java Application") {
+        
         Component(ukrlp, "UKRLP Integration", "Java / SOAP client services", "Retrieves provider data and maps UKPRN<br>values to establishments and groups")
 
         Component(os, "OS Integration", "Java / Spring MVC REST + HTTP client", "Looks up address data from Ordnance Survey<br>Places API")
@@ -234,14 +234,18 @@ C4Component
     Rel(ukrlp, persistence, "Uses")
     Rel(persistence, sql_server, "Writes to", "JDBC/Hibernate")
 
-        Rel(address_importer, os_ext, "Loads address data from")
+    Rel(address_importer, os_ext, "Loads address data from")
     Rel(address_importer, sql_server, "Writes imported address data to")
 
     UpdateRelStyle(companiesHouse, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(ofsted, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(os, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(uklrp, persistence, $offsetX="0", $offsetY="0")
-    UpdateRelStyle(persistence, sql_server, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(persistence, sql_server, $offsetX="10", $offsetY="-40")
+    UpdateRelStyle(address_importer, os_ext, $offsetX="-50", $offsetY="30")
+    UpdateRelStyle(ukrlp, ukrlp_ext, $offsetX="0", $offsetY="-70")
+    UpdateRelStyle(address_importer, sql_server, $offsetX="-150", $offsetY="-450") 
+
     
 ```
 
@@ -253,7 +257,7 @@ C4Component
   - a separate external importer for Address Layer / Ordnance Survey data
 - Each integration component inside the `Edubase Java Application` boundary represents application-side logic owned by that application, not the upstream system itself.
 - The purpose of this diagram is to make the external dependencies explicit. In the larger component diagrams, these responsibilities would otherwise be hidden inside the general service layer.
-- `Persistence Layer` is included to show that these integrations are not simple pass-through calls. Retrieved data is compared against, mapped onto, or persisted into the application data model.
+- `Persistence Layer` Retrieved data is compared against, mapped onto, or persisted into the application data model.
 - Companies House and Ofsted are HTTP-based integrations, and UKRLP is SOAP-based.
 - `Address Layer Import Application` is outside the Edubase boundary because the batch address import is a separate Java process, even though it ultimately writes data into the same SQL Server database used by Edubase.
 
@@ -262,14 +266,14 @@ C4Component
 - This view is intentionally limited to reference-data providers. It excludes other external integrations such as CRM, GOV.UK Notify, Azure Blob Storage, and DfE Sign-in.
 - The on-demand OS address lookup exposed via the REST layer is intentionally excluded from this diagram.
 - The OS-related batch load is shown as a separate `Address Layer Import Application` because that import path is not part of the Edubase Java application itself.
-- The shared SQL Server database appears in this view because both the Edubase application and the separate address importer depend on it as the persistence boundary where imported reference data becomes available to the rest of the system.
+
 
 ## Component Notes
 
 The diagrams above are intended to be read together rather than as alternatives:
 
-- The client interaction diagram shows how users and client systems enter the backend.
-- The scheduled batch diagram shows how background processing and extract publication works internally.
+- The client interaction diagram shows how users and client systems enter the backend, including where outbound notifications are triggered during interactive flows.
+- The scheduled batch diagram shows how background processing, extract publication, and operational notifications work internally.
 - The reference-data provider diagram shows which components depend on upstream data services.
 
 Related integration notes in this repository:
@@ -278,6 +282,7 @@ Related integration notes in this repository:
 - [`docs/ofsted-integration.md`](C:/code/gias-dd-backend/docs/ofsted-integration.md)
 - [`docs/ukrlp-integration.md`](C:/code/gias-dd-backend/docs/ukrlp-integration.md)
 - [`docs/address-layer-integration.md`](C:/code/gias-dd-backend/docs/address-layer-integration.md)
+- [`docs/govuk-notify-integration.md`](C:/code/gias-dd-backend/docs/govuk-notify-integration.md)
 
 ## GIAS front end authentication flow
 ```mermaid
