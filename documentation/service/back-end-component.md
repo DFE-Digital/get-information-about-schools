@@ -1,6 +1,27 @@
 
 # C4 Component Diagrams for the GIAS backend Java component
 
+## Introduction
+
+This document provides a set of C4 component views for the GIAS back-end Java application. This system is sometimes refered to using its legacy name of Edubase. Its purpose is to describe the main runtime components of the back end, the responsibilities those components hold, and the key relationships between them and external systems.
+
+It shows the application from several focused perspectives rather than trying to capture the entire system in a single diagram. Together, these views explain how client-facing interactions enter the application, how scheduled and background processing is structured, how external reference-data integrations are handled, and how selected supporting flows such as authentication operate.
+
+The sections in this document are:
+
+- **Client interaction components :** 
+Shows the main components involved when users or client systems interact with the back end through MVC, REST, or SOAP interfaces.
+
+- **Scheduled batch operation components :** 
+Shows the components involved in scheduled jobs, background processing, extract generation, and related operational notifications.
+
+- **Reference data provider components :** 
+Shows the components responsible for integrating with upstream reference-data providers such as Companies House, Ofsted, UKRLP, and address data sources.
+
+- **GIAS front end authentication flow :** 
+Provides a sequence view of the authenticated request path used when the GIAS front-end application calls the back-end REST API.
+
+
 ## Client interaction components
 This component diagram captures the subset of components focused on client interactions.
 
@@ -111,14 +132,14 @@ UpdateRelStyle(domain_services, gov_notify, $offsetX="-40", $offsetY="-30")
 - `Extract & Download Services` is separated from `Domain Services` because extract generation and retrieval is a distinct concern. The REST API mostly triggers generation and returns download metadata, while SOAP endpoints can return extract content directly.
 - `Gov.Notify Client` represents the central outbound email integration used by business and operational flows.
 - `Search & Lookup Services` is shown as a separate component to make explicit that search/filtering and dictionary lookups are not just generic DAO calls. They are a distinct set of services used by the business layer.
-- `Flyway DB Migration Scripts` is included because, in this system, schema and configuration changes are applied operationally as part of deployment/startup rather than being an invisible implementation detail.
+- `Flyway DB Migration Scripts` is included because, in this system, schema and configuration changes are applied operationally as part of deployment/startup rather than being an invisible implementation detail. See [`../database/flyway-migrations.md`](../database/flyway-migrations.md).
 
 ### Scope and assumptions
 
 - This is not a full component map of the whole application. It excludes scheduled batch jobs and the external reference-data provider integrations, which are shown in separate diagrams below.
 - `Internal DfE Services -> SOAP Web Services` is included because the application exposes a separate SOAP service surface for legacy/system-to-system access.
 - `Gov.Notify Client` is included in this client-focused view because user-facing and operational actions can trigger outbound notifications as part of normal request processing.
-- `Managed Services` contains infrastructure used by this view. SQL Server is the primary operational data store, and Azure Blob Storage holds generated extract content.
+- `Managed Services` contains infrastructure used by this view. SQL Server is the primary operational data store, and Azure Blob Storage holds generated extract content. See [`../database/sql-server.md`](../database/sql-server.md) and [`../storage/azure-blob-storage.md`](../storage/azure-blob-storage.md).
 
 ## Scheduled batch operation components
 
@@ -179,12 +200,13 @@ C4Component
 - `Domain Services` still owns the business behaviour. Scheduled jobs call into the same service layer used elsewhere in the application.
 - `Extract & Download Services` this component generates extracts, prepares downloadable output, and handles extract-related operational tasks.
 - `Gov.Notify Client` is the scheduled and background processes also send emails, for example reminders, workflow notifications, and extract failure alerts.
-- `Azure Blob Storage` extract generation is not complete when a file is written locally. The file becomes usable to clients only after it is published to object storage.
+- `Azure Blob Storage` is where extract generation publishes output once local file creation is complete. See [`../storage/azure-blob-storage.md`](../storage/azure-blob-storage.md).
 
 ### Scope and assumptions
 
 - This diagram excludes external sync integrations such as Companies House, Ofsted, and UKRLP. Those are operational jobs in the codebase, but they are intentionally not part of this focused view.
 - The main purpose of this diagram is to show the internal flow: schedule/orchestrate, execute business logic, persist state, generate output, publish files.
+- SQL Server underpins the job state, callback metadata, and source data shown here, while Flyway governs the evolution of that database platform. See [`../database/sql-server.md`](../database/sql-server.md) and [`../database/flyway-migrations.md`](../database/flyway-migrations.md).
 
 
 ## Reference data provider components
@@ -276,13 +298,16 @@ The diagrams above are intended to be read together rather than as alternatives:
 - The scheduled batch diagram shows how background processing, extract publication, and operational notifications work internally.
 - The reference-data provider diagram shows which components depend on upstream data services.
 
-Related integration notes in this repository:
+Related notes in this repository:
 
-- [`docs/companies-house-integration.md`](C:/code/gias-dd-backend/docs/companies-house-integration.md)
-- [`docs/ofsted-integration.md`](C:/code/gias-dd-backend/docs/ofsted-integration.md)
-- [`docs/ukrlp-integration.md`](C:/code/gias-dd-backend/docs/ukrlp-integration.md)
-- [`docs/address-layer-integration.md`](C:/code/gias-dd-backend/docs/address-layer-integration.md)
-- [`docs/govuk-notify-integration.md`](C:/code/gias-dd-backend/docs/govuk-notify-integration.md)
+- [`../integrations/companies-house-integration.md`](../integrations/companies-house-integration.md)
+- [`../integrations/ofsted-integration.md`](../integrations/ofsted-integration.md)
+- [`../integrations/ukrlp-integration.md`](../integrations/ukrlp-integration.md)
+- [`../integrations/ordnance-survey-integration.md`](../integrations/ordnance-survey-integration.md)
+- [`../integrations/govuk-notify-integration.md`](../integrations/govuk-notify-integration.md)
+- [`../database/sql-server.md`](../database/sql-server.md)
+- [`../database/flyway-migrations.md`](../database/flyway-migrations.md)
+- [`../storage/azure-blob-storage.md`](../storage/azure-blob-storage.md)
 
 ## GIAS front end authentication flow
 ```mermaid
