@@ -53,7 +53,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return RedirectToRoute("GroupDetails", new { id = uid });
         }
 
-        [HttpGet("Establishment/Edit/{establishmentUrn:int}/GovernanceMode", Name = "EstabEditGovernanceMode")]
+        [HttpGet("~/Establishment/Edit/{establishmentUrn:int}/GovernanceMode", Name = "EstabEditGovernanceMode")]
         [Authorize(Policy = "EdubasePolicy")]
         public async Task<IActionResult> EditGovernanceMode(int? establishmentUrn, bool failed = false)
         {
@@ -80,7 +80,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(viewModel);
         }
 
-        [HttpPost("Establishment/Edit/{establishmentUrn:int}/GovernanceMode")]
+        [HttpPost("~/Establishment/Edit/{establishmentUrn:int}/GovernanceMode")]
         [Authorize(Policy = "EdubasePolicy")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditGovernanceMode(EditGovernanceModeViewModel viewModel)
