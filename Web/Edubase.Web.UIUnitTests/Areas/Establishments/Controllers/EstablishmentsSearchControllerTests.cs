@@ -518,7 +518,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Custom };
-            var result = await subject.PrepareDownload(viewModel) as ViewResult;
+            var result = Assert.IsType<ViewResult>(await subject.PrepareDownload(viewModel));
 
             Assert.NotNull(result);
             Assert.True(viewModel.AllowAnyExtraFields);
