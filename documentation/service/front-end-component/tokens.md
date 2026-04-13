@@ -1,6 +1,6 @@
 # Web Front End Tokens
 
-This note describes the tokens stored by the GIAS web front end in Azure Table Storage and how they are used.
+This document describes the tokens stored by the GIAS web front end in Azure Table Storage and how they are used.
 
 ## What These Tokens Are
 

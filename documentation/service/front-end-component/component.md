@@ -70,4 +70,6 @@ C4Component
 
 Related notes in this repository:
 
+- [`azure-table-storage.md`](./azure-table-storage.md)
+- [`data-quality-status.md`](./data-quality-status.md)
 - [`tokens.md`](./tokens.md)
