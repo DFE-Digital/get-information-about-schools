@@ -64,6 +64,7 @@ Related notes in this repository:
 - [`address-lookups.md`](./address-lookups.md)
 - [`azure-table-storage.md`](./azure-table-storage.md)
 - [`bulk-updates.md`](./bulk-updates.md)
+- [`change-requests-and-approvals.md`](./change-requests-and-approvals.md)
 - [`companies-house-number.md`](./companies-house-number.md)
 - [`data-quality-status.md`](./data-quality-status.md)
 - [`downloads.md`](./downloads.md)
