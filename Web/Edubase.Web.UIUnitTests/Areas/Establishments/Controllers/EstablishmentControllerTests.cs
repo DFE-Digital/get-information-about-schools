@@ -271,6 +271,55 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             Assert.IsType<HttpNotFoundResult>(response);
         }
 
+        [Theory]
+        [InlineData((int)eLookupEstablishmentType.FoundationSchool, true)]
+        [InlineData((int) eLookupEstablishmentType.Miscellaneous, false)]
+        public async Task Estab_EditDetails_OfstedReport_Shows_For_OfstedLinkEstablishmentType(int establishmentTypeId, bool shows)
+        {
+            var urn = 100000;
+            var establishment = new EstablishmentModel
+            {
+                Urn = urn,
+                TypeId = establishmentTypeId              
+            };
+
+            var editEstabModel = new EditEstablishmentModel
+            {
+                Urn = urn
+            };           
+
+            mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
+            mockPrincipal.Setup(x => x.Identity).Returns(mockIdentity.Object);
+            mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ROLE_BACKOFFICE)).Returns(true);
+
+            mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new[] { new GroupModel { Name = "Group 1", GroupUId = 1000 } });
+            mockEstablishmentReadService.Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
+            mockMapper.Setup(m => m.Map<EditEstablishmentModel>(establishment))
+                .Returns(editEstabModel);
+            mockMapper.Setup(m => m.Map(It.IsAny<IEBTModel>(), editEstabModel))
+                .Returns(editEstabModel);
+            mockEstablishmentReadService.Setup(e => e.GetDisplayPolicyAsync(establishment, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new EstablishmentDisplayEditPolicy());
+            mockEstablishmentReadService.Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new EstablishmentEditPolicyEnvelope
+                {
+                    EditPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() }
+                });           
+            mockExternalLookupService.Setup(x => x.OfstedReportUrl(urn)).Returns("ofsted_url");         
+
+            var response = await controller.EditDetails(urn, null);
+
+            Assert.IsType<ViewResult>(response);
+            var viewResult = response as ViewResult;
+            Assert.IsType<EditEstablishmentModel>(viewResult.Model);
+            var model = viewResult.Model as EditEstablishmentModel;
+            Assert.Equal(shows, model.ShowOfstedReportLink);
+            Assert.Equal(shows ? "ofsted_url" : "", model.OfstedReportUrl);            
+        }
+
         [Fact]
         public async Task Estab_EditLinks_Id_NotFound()
         {
