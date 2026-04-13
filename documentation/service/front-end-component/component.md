@@ -2,15 +2,6 @@
 
 Internal component view of the `GIAS Web Front End` container (`Web/Edubase.Web.UI`), based on the code under `/Web`.
 
-This application is an ASP.NET MVC 5 web application with:
-
-- OWIN/SAML authentication for DfE Sign-in
-- Razor MVC pages for the main user experience
-- Web API endpoints for AJAX and asynchronous workflows
-- webpack-built JavaScript, including Vue components for richer UI features
-- service clients that call the back-end APIs and selected external data providers
-- a small set of direct repositories for web-owned content, tokens, preferences, logging and cache support, backed by Azure Table Storage
-
 ```mermaid
 C4Component
 
@@ -76,4 +67,5 @@ Related notes in this repository:
 - [`companies-house-number.md`](./companies-house-number.md)
 - [`data-quality-status.md`](./data-quality-status.md)
 - [`downloads.md`](./downloads.md)
+- [`security-and-permissions.md`](./security-and-permissions.md)
 - [`tokens.md`](./tokens.md)

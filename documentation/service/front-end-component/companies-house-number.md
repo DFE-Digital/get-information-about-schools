@@ -60,13 +60,6 @@ See **GroupModel.cs**.
 
 From that point on, the web app usually reads it from the GIAS backend record rather than going back to Companies House every time.
 
-### Establishment field
-
-There is also a `CompaniesHouseNumber` field on establishments:
-
-- **EstablishmentModel.cs**
-
-In the front-end code, this field is mainly displayed or edited on establishment detail screens. I did not find a direct front-end Companies House lookup flow for establishments equivalent to the trust creation flow.
 
 ## How the front end uses it
 
