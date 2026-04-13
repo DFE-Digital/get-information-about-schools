@@ -312,10 +312,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 
             var response = await controller.EditDetails(urn, null);
 
-            Assert.IsType<ViewResult>(response);
-            var viewResult = response as ViewResult;
-            Assert.IsType<EditEstablishmentModel>(viewResult.Model);
-            var model = viewResult.Model as EditEstablishmentModel;
+            var viewResult = Assert.IsType<ViewResult>(response);
+            var model = Assert.IsType<EditEstablishmentModel>(viewResult.Model);
             Assert.Equal(shows, model.ShowOfstedReportLink);
             Assert.Equal(shows ? "ofsted_url" : "", model.OfstedReportUrl);            
         }
