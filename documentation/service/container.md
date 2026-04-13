@@ -63,4 +63,4 @@ C4Container
 
 ```
 
-For that lower-level view, see [`back-end-component.md`](./back-end-component.md). This document explains how the `GIAS Backend` container is structured internally, including client-facing entry points, scheduled and batch processing, reference-data provider integrations, and the authentication flow used by the front end when it calls the back-end APIs.
+For that lower-level view, see [`back-end-component/component.md`](./back-end-component/component.md). This document explains how the `GIAS Backend` container is structured internally, including client-facing entry points, scheduled and batch processing, reference-data provider integrations, and the authentication flow used by the front end when it calls the back-end APIs.
