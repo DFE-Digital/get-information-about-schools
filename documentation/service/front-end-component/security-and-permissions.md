@@ -171,9 +171,8 @@ The wrapper also sends:
 - A source IP header used for rate-limiting and tracing
 - Optional API interaction logging data
 
-The helper used to read the current user ID is in **LanguageExtensions.cs**
 
-This means the back end receives both:
+The back end receives both:
 
 - The front end's service-level credentials
 - The current user's Secure Access identifier
