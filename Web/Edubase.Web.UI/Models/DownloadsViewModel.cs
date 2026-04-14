@@ -55,7 +55,6 @@ namespace Edubase.Web.UI.Models
                 .Select(y => y.Tag)
                 .Contains(x.Tag)) ?? Array.Empty<FileDownload>();
 
-
             if (allEstabData.Any() || openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
             {
                 var section = new Section { Heading = "Establishment downloads", Paragraph = "You can download the complete record for the specified establishment types. There's a separate file with links to any predecessor or successor establishments." };
@@ -65,7 +64,7 @@ namespace Edubase.Web.UI.Models
                     section.SubSections.Add(new Section
                     {
                         Heading = "All establishment data",
-                        Files = allEstabData.Select(x => new Tuple<string, FileDownload>(FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
+                        Files = allEstabData.OrderBy(x => x.Tag).Select(x => new Tuple<string, FileDownload>(FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
                     });
                 }
 
