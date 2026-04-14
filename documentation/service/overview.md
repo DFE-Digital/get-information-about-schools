@@ -1,8 +1,17 @@
 # Service Overview
 
-> Get Information About Schools (GIAS) is the Department for Education’s official register of educational establishments in England. It provides a single, authoritative source of information used by schools, trusts, local authorities, government partners, and the public
+> Get Information About Schools (GIAS) is the Department for Education’s official register of educational establishments in England. It provides a single, authoritative source of information used by schools, trusts, local authorities, government partners, and the public. It holds information about establishments, establishment groups and governors.
 >
 > GIAS is also the National Database of Governors, holding governance information for state‑funded schools and academy trusts as required by legislation
+
+
+## About the C4 System Context Diagram
+
+A C4 system context diagram is the highest-level architectural view of a system. It shows GIAS as a single system, the people and external systems around it, and the most important relationships between them.
+
+This diagram is intended to help readers quickly understand the scope and boundaries of GIAS: who uses it, which external services and organisations it depends on, and which other systems consume its data.
+
+It does not show the internal structure of GIAS, such as applications, containers, components, classes, data models, deployment details, or detailed request flows. Those concerns belong in lower-level C4 diagrams and supporting documentation.
 
 ## C4 System Context Diagram
 
@@ -11,9 +20,11 @@
 ```mermaid
 C4Context
  
-  Person(anonUser, "Anonymous User", "Accesses publicly available establishment<br> and governor data")
-  Person(authUser, "Signed-in User", "Accesses additional features<br>and data based on permissions")
-  Person(backOfficeUser, "DfE Back Office User", "Maintains and manages GIAS data")
+  Person(anonUser, "Anonymous User", "Accesses publicly available establishment<br>, establishment groups and governance data")
+  
+  Person(authUser, "Signed-in User", "Accesses additional features,<br>search and data based on permissions")
+  
+  Person(backOfficeUser, "DfE Back Office User", "Signed-in user with elevated permissions<br> to maintain and manage GIAS data")
 
   System_Ext(externalSystems, "External Consumer", "Systems that download<br>GIAS datasets") 
 
@@ -24,17 +35,16 @@ C4Context
 
       System_Ext(companiesHouse, "Companies House", "UK register of companies")
       System_Ext(ofsted, "Ofsted", "Inspection ratings and reports<br>for education providers")
-      System_Ext(hmrc, "HM Revenue and Customs", "UK tax authority")
+      System_Ext(hmrc, "HM Revenue and Customs", "Tax-Free Childcare (TFC)<br>service")
     }
 
       Enterprise_Boundary(dfe, "Department for Education") {
 
-      System_Ext(DfESignIn, "DfE Sign In (DSI)", "User authentication system.Consumes GIAS data to <br>provide list of establishments on sign in")
+      System_Ext(DfESignIn, "DfE Sign-in (DSI)", "User authentication system. Consumes GIAS data to <br>provide list of establishments on sign in")
 
-
-      System(GIAS, "Get Information About Schools", "Master information system for Establishment and<br>Governors data")
+      System(GIAS, "Get Information About Schools", "Single authoritative source for registered,<br> accredited and maintained establishments and establishment groups")
       
-      System_Ext(schoolCensus,"School census","DfE statutory data set.<br>SPC (Schools, Pupils and their Characteristics).<br>SLASC (School Level Annual School Census) ")
+      System_Ext(schoolCensus,"School census","DfE statutory data sets.<br>SPC (Schools, Pupils and their Characteristics).<br>SLASC (School Level Annual School Census) ")
 
       System_Ext(ukrlp, "UK Register of Learning<br>Providers (UKRLP)", "National register of learning providers providing<br>UKPRN identifiers and organisation data")
 
@@ -46,16 +56,16 @@ C4Context
 
   System_Boundary(external, "External Data Services") {
     System_Ext(ordnanceSurvey, "Ordnance Survey", "UK address lookup servce")
-    System_Ext(azureMaps, "Azure Maps", "Used to render maps and display<br>establishment locations")
+    System_Ext(azureMaps, "Microsoft Azure Maps", "Used to render maps and display<br>establishment locations")
     System_Ext(ons, "Office for National Statistics", "Official statistics and geographic<br>reference data")
   }
 
   UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")
 
   Rel(anonUser, GIAS, "Views and downloads data", "HTTPS/HTML & CSV")
-  BiRel(authUser, GIAS, "Views, updates and downloads<br>permitted data", "HTTPS/HTML & CSV")
+  Rel(authUser, GIAS, "Views, updates and downloads<br>permitted data", "HTTPS/HTML & CSV")
   Rel(backOfficeUser, GIAS, "Administers data", "HTTPS/HTML")
-  Rel(externalSystems, GIAS, "Downloads establishment and governor data", "HTTPS/XML/CSV<br>using Basic Auth")
+  Rel(externalSystems, GIAS, "Downloads GIAS data", "HTTPS/XML/CSV/XLXS<br>using Basic Auth")
   
   Rel(authUser, DfESignIn, "Signs in using")
   Rel(backOfficeUser, DfESignIn, "Signs in using")
@@ -76,7 +86,7 @@ C4Context
   Rel(ofsted,GIAS,"Supplies school inspection ratings<br>and links to inspection reports","Manual/XLSX")
   Rel(GIAS, hmrc, "Extract of establishment data<br>for childcare providers (CCPs)", "Manual/CSV")
 
-  Rel(GIAS, internal, "Ingests GIAS data", "HTTPS/CSV")
+  Rel(GIAS, internal, "Ingests GIAS data", "HTTPS/CSV/XLXS")
 
   UpdateRelStyle(anonUser, GIAS, $offsetX="-320", $offsetY="-190")
   UpdateRelStyle(authUser, GIAS, $offsetX="-230", $offsetY="-190")
@@ -105,7 +115,12 @@ C4Context
 
 ```
 
-**Note** To keep the main context diagram easy to read, all DfE internal systems have been grouped into a single external system called "Internal DfE systems"
+**Notes**
+
+1. The `DfE Back Office User` is a signed-in user with elevated permissions. This role can do everything available to anonymous and standard signed-in users, plus additional administrative and data-management actions.
+2. To keep the main context diagram easy to read, all DfE internal systems have been grouped into a single external system called `Internal DfE systems`.
+3. The `External Consumer` is an external system, not a person. It consumes GIAS data either by downloading extract files or by calling the SOAP interface.
+4. For more detail on how front-end authentication works between GIAS and DfE Sign-in, see [front-end-authentication-flow.md](./back-end-component/front-end-authentication-flow.md).
 
 
 A second diagram has been created below to show these internal systems in more detail and how they relate to each other.
@@ -129,7 +144,7 @@ Enterprise_Boundary(dfe, "Department for Education") {
 
     System_Ext(ecf, "Early Career Framework", "Teacher training and development programme")
 
-    System(GIAS, "Get Information About Schools", "Master information system for Establishment and<br>Governors data")
+    System(GIAS, "Get Information About Schools", "Single authoritative source for registered,<br> accredited and maintained establishments and establishment groups")
 
     System_Ext(capt, "Claim Additional Payments for Teaching", "Manages teacher payment<br>claim and eligibility")
 
