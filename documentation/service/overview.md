@@ -127,7 +127,7 @@ The detailed internal DfE systems diagram has been replaced with the tables belo
 
 This list will evolve over time as more internal systems and use cases are identified.
 
-### Internal DfE systems referenced by GIAS
+### Internal DfE systems consuming GIAS
 
 | Service name | Description |
 | --- | --- |
