@@ -112,16 +112,6 @@ A second diagram has been created below to show these internal systems in more d
 
 We do not yet know all the internal systems that interact with GIAS. This list will grow over time as more systems and use cases are identified.
 
-3 mechanisms
- - edubase/downloads/File.xhtm?id=?
- - /edubase/downloads/public (direct file)
- - /edubase/service (SOAP)
-
-
-CRM clients
- - capital
- - provider
- - IEBT
 
 ### System context diagram showing the internal DfE systems
 ```mermaid
