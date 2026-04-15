@@ -7,12 +7,12 @@
 Two related address integration paths exist:
 
 1. **Offline import pipeline that converts source XML into CSV and then into database address structures**
-   - Batch-style local data import process under [`addressLayer`]
+   - Batch-style local data import process under `addressLayer`
    - Builds a local address dataset from source XML and supporting files
    - Imports and transforms that data into database tables
 
 2. **Runtime postcode lookup against the OS Places AddressBase API**
-   - Live API integration in [`AddressBaseApiController`]
+   - Live API integration in `AddressBaseApiController`
    - Exposes a REST endpoint for postcode-based address lookup
    - Calls the Ordnance Survey AddressBase Places API at runtime
 
