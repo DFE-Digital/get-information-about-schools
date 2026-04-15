@@ -21,7 +21,7 @@ C4Container
     System_Ext(externalSystems, "External Consumer", "Systems that download<br>GIAS datasets") 
     
 
-    System_Boundary(gias, "Get Information About Schools (GIAS)") {
+    System_Boundary(gias, "Get Information about Schools (GIAS)") {
         
         Container(profileAPI, "Profile API", "C# API", "Supplies list of education providers")
 

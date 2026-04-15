@@ -25,9 +25,9 @@ This is the application-facing integration used to query addresses by postcode.
 
 Main classes :
 
-- [`AddressBaseApi`]
-- [`AddressBaseApiController`]
-- [`AddressBaseResultsDeserializer`]
+- `AddressBaseApi`
+- `AddressBaseApiController`
+- `AddressBaseResultsDeserializer`
 
 
 ### Offline import module
@@ -35,15 +35,14 @@ Main classes :
 This module is used to turn source address XML into a CSV and then into database structures used by the wider application.
 
 Main classes :
-- [`addressLayer/Import Sequence.txt`]
-- [`ImportXmlMapFiles`]
-- [`XmlMapSaxHandler`]
-- [`LocationNameFormatter`]
-- [`Import.sql`]
-- [`Cleaning AddressLayerRaw.sql`]
-- [`Analysis.sql`]
-- [`EdubaseAddressLayer.sql`]
-
+- `addressLayer/Import Sequence.txt`
+- `ImportXmlMapFiles`
+- `XmlMapSaxHandler`
+- `LocationNameFormatter`
+- `Import.sql`
+- `Cleaning AddressLayerRaw.sql`
+- `Analysis.sql`
+- `EdubaseAddressLayer.sql`
 
 
 ## Runtime Address Lookup Flow
@@ -52,7 +51,7 @@ The live API endpoint is:
 
 - `GET /establishment/addressBase/queryByPostcode`
 
-defined in [`AddressBaseApi`](.
+defined in `AddressBaseApi`
 
 The controller then calls:
 
@@ -83,7 +82,7 @@ The runtime address lookup authenticates using an API key passed as a query para
 
 - `key=<address.base.api.key>`
 
-This is loaded in [`AddressBaseApiController`] via:
+This is loaded in `AddressBaseApiController` via:
 
 - `messageManager.getServerProperty("address.base.api.key")`
 
