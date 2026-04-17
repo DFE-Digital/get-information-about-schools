@@ -222,5 +222,4 @@ Included subcomponents:
 - `App_Start/IocConfig.cs` wires the web app to typed service clients for the main GIAS back-end APIs and also registers direct repositories used by the web tier.
 - Those direct repositories are Azure Table Storage-based via `Edubase.Data.Repositories.TableStorage.TableStorageBase<T>`, rather than direct SQL Server access from the web app.
 - `Controllers/Api` provides lightweight endpoints used by the client-side bundles for AJAX and long-running workflow support.
-- `Assets/Scripts/Entry` and `Assets/Scripts/GiasVueComponents` show that the UI is mostly server-rendered, with targeted JavaScript/Vue enhancement rather than a separate SPA.
 
