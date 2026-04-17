@@ -14,7 +14,7 @@ The web application uses a layered security model:
 
 ## Authentication
 
-Authentication is configured in `StartupSecureAccess.cs`.
+Authentication is configured in StartupSecureAccess.cs.
 
 The startup pipeline configures:
 
@@ -65,7 +65,7 @@ extracts:
 - First name
 - Last name
 
-The most important value is the Secure Access user ID, which is written into the app's internal `NameIdentifier` claim using `EduClaimTypes.cs`.
+The most important value is the Secure Access user ID, which is written into the app's internal `NameIdentifier` claim using EduClaimTypes.cs.
 
 In simulator mode, `StubClaimsIdConverter.cs` performs the same role using a stub claim source.
 
@@ -73,7 +73,7 @@ The result is a frontend principal with a stable internal user ID claim that the
 
 ## Roles and Role Resolution
 
-The front end does not hard-code a user's role membership during login. Instead, it asks the back end for the user's role names through `SecurityApiService.cs`.
+The front end does not hard-code a user's role membership during login. Instead, it asks the back end for the user's role names through SecurityApiService.cs.
 
 That service exposes methods such as:
 
@@ -89,7 +89,7 @@ This means the back end is the source of truth for:
 - Create permissions
 - User-to-establishment or user-to-group relationships
 
-Role constants are defined in `EdubaseRoles.cs`.
+Role constants are defined in EdubaseRoles.cs.
 
 ## Front-End Authorization
 
@@ -115,7 +115,7 @@ These attributes take one or more role names and convert them into the comma-sep
 
 ### Grouped Permission Sets
 
-The application groups raw roles into reusable permission bundles in `AuthorizedRoles.cs`.
+The application groups raw roles into reusable permission bundles in AuthorizedRoles.cs.
 
 Examples include:
 

@@ -1,73 +1,226 @@
-## C4 Component Diagram
+## C4 Component Diagrams
 
 Internal component view of the `GIAS Web Front End` container (`Web/Edubase.Web.UI`), based on the code under `/Web`.
+
+To keep the component view readable, the front-end subcomponents are grouped into two categories:
+
+- `User-facing workflow and content components`
+- `Supporting platform and integration components`
+
+### User-facing workflow and content components
+
+This category groups the journeys that users and administrators interact with directly.
+
 
 ```mermaid
 C4Component
 
-    title Component diagram for the GIAS Web Front End
+    UpdateLayoutConfig($c4ShapeInRow="6", $c4BoundaryInRow="1")
 
-    Person(user, "GIAS User", "Browses, searches and manages school information")
-    System_Ext(dsi, "DfE Sign-in", "External identity provider used via SAML")
-    System_Ext(texuna, "GIAS Backend / Texuna APIs", "Primary back-end APIs for establishments, groups, governors, approvals, downloads and security")
-    System_Ext(extData, "External Data Services", "Azure Maps, OS Places, Companies House, Ofsted, Financial Benchmarking and FSCPD")
-    ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores tokens, user preferences, FAQ/glossary/news/notifications, data quality and web log records used directly by the web tier")
+    title User-facing workflow and content components in the GIAS Web Front End
 
-    Container_Boundary(web, "GIAS Web Front End") {
-        Component(auth, "Authentication and Security Pipeline", "OWIN + Sustainsys.Saml2 + ISecurityService", "Handles login, external callback, cookie session, CSP nonce generation and role resolution")
-        Component(mvc, "MVC Pages and Area Controllers", "ASP.NET MVC 5 Controllers", "Server-rendered flows for home, search, downloads, approvals, notifications, admin, establishments, groups and governors")
-        Component(api, "AJAX and Workflow API", "ASP.NET Web API Controllers", "Supports tokenisation, approvals, academy openings, bulk creation, establishment utilities and other async UI actions")
-        Component(views, "Razor Views and View Models", "CSHTML + ViewModel classes", "Builds HTML responses, edit journeys, partials and form state")
-        Component(client, "Client-side Assets", "webpack + JavaScript + Vue + Sass", "Enhances search, downloads, maps, polling, form behaviour and rich UI interactions")
-        Component(validation, "Validation, Filters and Model Binding", "FluentValidation + MVC filters + custom binders", "Applies authorisation, anti-forgery, exception handling, model validation and token/model binding conventions")
-        Component(services, "Back-end Service Client Layer", "Edubase.Services + Edubase.Services.Texuna", "Typed clients for establishments, groups, governors, downloads, approvals, lookups and change history")
-        Component(external, "External Lookup Integration Layer", "Geo and reference-data services", "Calls Azure Maps, OS Places, Companies House, Ofsted, Financial Benchmarking and FSCPD services")
-        Component(data, "Web Data Access and Supporting Services", "Repositories + cache + blob/logging helpers", "Persists tokens, user preferences, glossary/FAQ/news/notifications, data quality, logs, cache and file references")
+    Person(anonUser, "Anonymous User", "Browses public content and uses public search and  download journeys")
+
+    Person(authUser, "Authenticated User", "Signs in via DfE Sign-in to access protected workflows such as approvals, bulk updates, saved<br>searches and other role-dependent features")
+
+    Person(admin, "Administrator", "Authenticated user with additional rights to maintain front-end content and operational data")
+
+    Container_Boundary(workflows, "GIAS Web Front End - User-facing workflow and content components") {
+
+        Component(guidance, "Guidance Pages and Blob-backed<br>Resources", "MVC pages + blob-backed file delivery", "Serves guidance pages, PDFs,<br> CSVs and packaged guidance downloads")
+
+        Component(search, "Search and Filtering", "MVC + JavaScript filters", "Searches establishments, groups and governors and manages<br> tokenised filter state")
+       
+        Component(downloads, "Downloads", "MVC + API-backed workflows", "Lets users request search-result and dataset downloads")
+        
+        Component(bulk, "Bulk Updates", "MVC upload workflows", "Runs spreadsheet-driven bulk update and bulk<br> association journeys")
+        
+        Component(approvals, "Change Requests and Approvals", "MVC review and approval flows", "Creates approval-controlled changes and,<br> manages pending approvals")
+
+        Component(editorialContent, "Editorial Content Management", "MVC content pages + admin screens", "Serves news, notification banners, FAQ content<br> and glossary terms, and provides admin maintenance")
+
+
+        Component(history, "Change History", "MVC browse/download flows", "Shows and exports establishment and group change history")
+
+        Component(apiClients, "Texuna API Client Layer", "Typed service clients + HttpClientWrapper", "Shared back-end client layer used by search,<br> downloads, bulk operations, approvals and change history")
     }
 
-    Rel(user, mvc, "Uses", "HTTPS")
-    Rel(user, api, "Invokes async actions via browser", "HTTPS/JSON")
-    Rel(user, auth, "Authenticates", "Browser redirect / cookie session")
+    Container_Boundary(infra, "","") {
+        System_Ext(blob, "Azure Blob Storage", "Guidance and support files served by the web front end")
 
-    Rel(auth, dsi, "Authenticates with", "SAML2")
-    Rel(auth, services, "Resolves roles and user access", "In-process service calls")
+        ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores front-end-owned content and<br> data quality records")
 
-    Rel(mvc, views, "Renders")
-    Rel(mvc, validation, "Uses")
-    Rel(api, validation, "Uses")
-    Rel(views, client, "Bootstraps page-specific assets")
+        System_Ext(texuna, "GIAS Backend / Texuna APIs", "Primary back-end APIs for search, downloads, approvals,<br> batch operations and change history")
+    }
 
-    Rel(mvc, services, "Calls")
-    Rel(api, services, "Calls")
-    Rel(mvc, external, "Uses for selected lookup journeys")
-    Rel(client, api, "Calls", "HTTPS/JSON")
+    Rel(anonUser, downloads, "Uses", "HTTPS")
+    Rel(anonUser, search, "Uses", "HTTPS")
+    Rel(anonUser, guidance, "Views", "HTTPS")
+    Rel(anonUser, editorialContent, "Views", "HTTPS")
+    Rel(authUser, search, "Uses", "HTTPS")
+    Rel(authUser, downloads, "Uses", "HTTPS")
+    Rel(authUser, bulk, "Bulk uploads data via", "HTTPS")
+    Rel(authUser, approvals, "Uses", "HTTPS")
+    Rel(authUser, history, "Uses", "HTTPS")
+    Rel(authUser, guidance, "Views", "HTTPS")
+    Rel(authUser, editorialContent, "Views", "HTTPS")
+    Rel(admin, editorialContent, "Maintains content", "HTTPS")
+    Rel(admin, bulk, "Bulk uploads data via", "HTTPS")
+    Rel(admin, approvals, "Uses approval workflows", "HTTPS")
+    Rel(search, downloads, "Provides selected filters and<br>result context for")
+    Rel(search, apiClients, "Uses")
+    Rel(downloads, apiClients, "Uses")
+    Rel(bulk, apiClients, "Uses")
+    Rel(approvals, apiClients, "Uses")
+    Rel(history, apiClients, "Uses")
+    Rel(apiClients, texuna, "Calls", "HTTPS/JSON")
+    Rel(editorialContent, tableStorage, "Reads and writes", "Azure Storage Tables")
+    Rel(guidance, blob, "Reads and serves files", "Azure Blob Storage")
 
-    Rel(services, texuna, "Calls", "HTTPS/JSON")
-    Rel(external, extData, "Calls", "HTTPS")
-    Rel(data, tableStorage, "Reads and writes", "Azure Storage Tables")
+    UpdateRelStyle(anonUser, guidance, $offsetX="-65", $offsetY="-50")
+    UpdateRelStyle(anonUser, search, $offsetX="-70", $offsetY="-60")
+    UpdateRelStyle(anonUser, editorialContent, $offsetX="25", $offsetY="-180")
+    UpdateRelStyle(authUser, guidance, $offsetX="200", $offsetY="-80")
+    UpdateRelStyle(authUser, history, $offsetX="60", $offsetY="-150")
+    UpdateRelStyle(authUser, editorialContent, $offsetX="100", $offsetY="-180")
+    UpdateRelStyle(anonUser, downloads, $offsetX="-240", $offsetY="-110")
+    UpdateRelStyle(authUser, search, $offsetX="25", $offsetY="-80")
+    UpdateRelStyle(authUser, downloads, $offsetX="-50", $offsetY="-80")
+    UpdateRelStyle(authUser, approvals, $offsetX="-230", $offsetY="-80")
+    UpdateRelStyle(authUser, bulk, $offsetX="-150", $offsetY="-40")
+    UpdateRelStyle(admin, bulk, $offsetX="-50", $offsetY="-50")
+    UpdateRelStyle(admin, approvals, $offsetX="-60", $offsetY="-60")
+    UpdateRelStyle(admin, editorialContent, $offsetX="400", $offsetY="-200")
+    UpdateRelStyle(search, downloads, $offsetX="-50", $offsetY="50")
+    UpdateRelStyle(guidance, blob, $offsetX="-150", $offsetY="-200")
+    UpdateRelStyle(apiClients, texuna, $offsetX="40", $offsetY="-50")
+    UpdateRelStyle(editorialContent, tableStorage, $offsetX="-40", $offsetY="-40")
 
-    Rel(mvc, data, "Reads and writes web-owned state/content")
-    Rel(api, data, "Stores tokens and workflow state")
-    Rel(services, data, "Uses cache, blob and repository-backed helpers")
 ```
 
-### Notes
+Included subcomponents:
 
-- The main runtime centre of gravity is the MVC controller layer, especially the `Areas/Establishments`, `Areas/Groups` and `Areas/Governors` flows.
+- [`search-and-filtering`](./search-and-filtering.md)
+- [`downloads`](./downloads.md)
+- [`bulk-updates`](./bulk-updates.md)
+- [`change-history`](./change-history.md)
+- [`change-requests-and-approvals`](./change-requests-and-approvals.md)
+- [`content-management`](./content-management.md)
+- [`guidance-and-blob-resources`](./guidance-and-blob-resources.md)
+
+**Notes for this diagram:**
+
+- This view shows what anonymous users, authenticated users and administrators experience directly.
+- Texuna-facing workflows are shown as going through a shared `Texuna API Client Layer`, reflecting the typed service clients and common `HttpClientWrapper` used across the web app.
+- The main runtime centre of gravity is still the MVC controller layer, especially the `Areas/Establishments`, `Areas/Groups` and `Areas/Governors` flows.
+- `Editorial Content Management` is user-facing as well as admin-facing: users read content through it, while administrators maintain that content in Azure Table Storage-backed repositories.
+  Content types include:
+  - News
+  - Notification banners/templates
+  - FAQ items/groups
+  - Glossary entries
+- `Guidance Pages and Blob-backed Resources` is a separate component because it serves help/guidance pages and blob-hosted supporting files.
+  Examples of guidance pages include:
+  - Guidance/General
+  - Guidance/EstablishmentBulkUpdate
+  - Guidance/ChildrensCentre
+  - Guidance/Federation
+  - Guidance/Governance
+
+  Blob-backed resources include:
+  - PDFs
+  - CSVs packaged guidance downloads such as the local authority name/code files
+- The front-end does not have an administrator upload interface for PDF or guidance-file authoring, so the guidance/blob component behaves as a read/serve mechanism rather than an in-app authoring tool.
+
+
+### Supporting platform and integration components
+
+This component diagram groups the services that support the visible workflows by handling authentication, state, caching, storage, diagnostics and external integrations.
+
+
+
+```mermaid
+C4Component
+
+    UpdateLayoutConfig($c4ShapeInRow="6", $c4BoundaryInRow="1")
+
+    title Supporting platform and integration components in the GIAS Web Front End
+
+    System_Ext(dsi, "DfE Sign-in", "External identity provider used via SAML")
+
+
+    Container_Boundary(platform, "GIAS Web Front End - Supporting platform and integration components") {
+        Component(security, "Security and Permissions", "OWIN + Sustainsys.Saml2 + ISecurityService", "Authenticates users, builds claims and resolves authorisation data")
+        
+        Component(apiClients, "Texuna API Client Layer", "Typed service clients + HttpClientWrapper", "Shared client layer for security, lookups, downloads, approvals,<br> change history and write/read workflows")
+        
+        Component(lookup, "Lookup and Caching", "Lookup services + cache layer", "Caches reference data and supports lookup-backed filters and forms")
+
+        Component(addresses, "Address Lookups", "Places lookup services", "Performs place and postcode address lookup journeys")
+       
+        Component(tokens, "Tokens", "Token repository + token value provider", "Stores tokenised search/filter state for later reuse")
+
+
+        Component(storage, "Azure Table Storage-backed Web State", "Table repositories", "Persists user preferences, content, data quality and other front-end-owned records")
+        
+        Component(companiesHouse, "Companies House Number Integration", "Companies House service", "Searches Companies House and persists<br> company-number based trust identifiers")
+        
+        Component(externalLinks, "External Lookup Links", "ExternalLookupService", "Builds and checks outbound links to Ofsted, benchmarking and<br> performance services")
+        
+        Component(logging, "API Session Recorder and Logging", "HttpClientWrapper + Azure Table Logger", "Captures API diagnostics and web/exception logs for support use")
+    }
+
+    Container_Boundary(infra, "","") {
+
+    ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores tokens, preferences, front-end content, data quality records and diagnostic logs")
+
+    System_Ext(texuna, "GIAS Backend / Texuna APIs", "Provides security, lookup and core business APIs")  
+
+    System_Ext(extData, "External Data Services", "Azure Maps, OS Places, Companies House, Ofsted, Financial Benchmarking and FSCPD")
+
+    }
+
+    Rel(security, dsi, "Authenticates with", "SAML2")
+    Rel(security, apiClients, "Uses for role and<br>permission resolution")
+    Rel(apiClients, texuna, "Calls", "HTTPS/JSON")
+
+    Rel(tokens, tableStorage, "Reads and writes token records", "Azure Storage Tables")
+    Rel(lookup, apiClients, "Uses for internal<br>reference data")
+    Rel(addresses, extData, "Queries Azure Maps and OS Places", "HTTPS")
+    Rel(companiesHouse, extData, "Queries Companies House", "HTTPS")
+    Rel(externalLinks, extData, "Builds and checks<br>external links", "HTTPS")
+    Rel(storage, tableStorage, "Reads and writes front-end-owned data", "Azure Storage Tables")
+    Rel(logging, tableStorage, "Writes API traces and web logs", "Azure Storage Tables")
+
+
+    UpdateRelStyle(security, dsi, $offsetX="-20", $offsetY="-50")
+    UpdateRelStyle(security, apiClients, $offsetX="-60", $offsetY="50")
+    UpdateRelStyle(lookup, apiClients, $offsetX="-30", $offsetY="40")
+    UpdateRelStyle(tokens, tableStorage, $offsetX="-40", $offsetY="-180")
+    UpdateRelStyle(storage, tableStorage, $offsetX="0", $offsetY="-200")
+    UpdateRelStyle(logging, tableStorage, $offsetX="-10", $offsetY="-30")
+    UpdateRelStyle(companiesHouse, extData, $offsetX="-60", $offsetY="-200")
+    UpdateRelStyle(addresses, extData, $offsetX="30", $offsetY="-300")
+    UpdateRelStyle(externalLinks, extData,, $offsetX="10", $offsetY="-200")
+
+```
+
+Included subcomponents:
+
+- [`security-and-permissions`](./security-and-permissions.md)
+- [`tokens`](./tokens.md)
+- [`lookup-and-caching`](./lookup-and-caching.md)
+- [`address-lookups`](./address-lookups.md)
+- [`external-lookup-links`](./external-lookup-links.md)
+- [`companies-house-number`](./companies-house-number.md)
+- [`azure-table-storage`](./azure-table-storage.md)
+- [`api-session-recorder-and-logging`](./api-session-recorder-and-logging.md)
+
+**Notes for this diagram:**
+
+- This view shows the internal services that support the visible workflows by handling authentication, state, caching, storage, diagnostics and external integrations.
 - `App_Start/IocConfig.cs` wires the web app to typed service clients for the main GIAS back-end APIs and also registers direct repositories used by the web tier.
 - Those direct repositories are Azure Table Storage-based via `Edubase.Data.Repositories.TableStorage.TableStorageBase<T>`, rather than direct SQL Server access from the web app.
 - `Controllers/Api` provides lightweight endpoints used by the client-side bundles for AJAX and long-running workflow support.
 - `Assets/Scripts/Entry` and `Assets/Scripts/GiasVueComponents` show that the UI is mostly server-rendered, with targeted JavaScript/Vue enhancement rather than a separate SPA.
 
-Related notes in this repository:
-
-- [`front-end-authentication-flow.md`](./front-end-authentication-flow.md)
-- [`address-lookups.md`](./reference/address-lookups.md)
-- [`azure-table-storage.md`](./reference/azure-table-storage.md)
-- [`bulk-updates.md`](./reference/bulk-updates.md)
-- [`change-requests-and-approvals.md`](./reference/change-requests-and-approvals.md)
-- [`companies-house-number.md`](./reference/companies-house-number.md)
-- [`data-quality-status.md`](./reference/data-quality-status.md)
-- [`downloads.md`](./reference/downloads.md)
-- [`security-and-permissions.md`](./reference/security-and-permissions.md)
-- [`tokens.md`](./reference/tokens.md)

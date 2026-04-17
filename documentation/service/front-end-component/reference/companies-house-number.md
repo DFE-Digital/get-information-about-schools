@@ -22,7 +22,7 @@ The most important point is that, for academy trust creation journeys, the numbe
 
 When a user creates an academy trust from the front end, the Companies House number comes from the Companies House API.
 
-The relevant flow is in `GroupController.cs`.
+The relevant flow is in GroupController.cs.
 
 The user can search Companies House by:
 
@@ -37,7 +37,7 @@ Otherwise it calls:
 
 - `ICompaniesHouseService.SearchByName(...)`
 
-The implementation is in `CompaniesHouseService.cs`.
+The implementation is in CompaniesHouseService.cs.
 
 That service uses the Companies House API and maps the result into a `CompanyProfile`, which contains:
 
@@ -46,7 +46,7 @@ That service uses the Companies House API and maps the result into a `CompanyPro
 - `IncorporationDate`
 - `Address`
 
-See `CompanyProfile.cs`.
+See CompanyProfile.cs.
 
 So in this creation flow, the Companies House number is not manually invented inside GIAS. It is pulled from the external Companies House record selected by the user.
 
@@ -56,7 +56,7 @@ After a trust or other group record has been created, the number is stored in th
 
 - `GroupModel.CompaniesHouseNumber`
 
-See `GroupModel.cs`.
+See GroupModel.cs.
 
 From that point on, the web app usually reads it from the GIAS backend record rather than going back to Companies House every time.
 
@@ -118,7 +118,7 @@ from:
 - `CompaniesHouseBaseUrl`
 - `Group.CompaniesHouseNumber`
 
-See `GroupDetailViewModel.cs`.
+See GroupDetailViewModel.cs.
 
 This is then used in group detail and search views to render clickable Companies House links.
 
@@ -132,7 +132,7 @@ In `GroupDetailViewModel`, for MATs and SATs:
 
 is used as the lookup ID for the financial benchmarking URL.
 
-See `GroupDetailViewModel.cs`.
+See GroupDetailViewModel.cs.
 
 ### 6. Back-end Companies House sync
 

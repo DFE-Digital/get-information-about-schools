@@ -43,10 +43,10 @@ That value is updated by `/api/save-search-token` and is used by `AccountControl
 These tokens are not:
 
 - SAML authentication assertions
-- session cookies
-- bearer tokens
+- Session cookies
+- Bearer tokens
 - API credentials
-- anti-forgery tokens
+- Anti-forgery tokens
 
 They are best understood as persisted UI state tokens for search, results, and download workflows.
 

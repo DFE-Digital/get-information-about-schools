@@ -44,7 +44,7 @@ The returned items are `PlaceDto` objects, which contain:
 - `Name`
 - `Coords`
 
-See `PlaceDto.cs`.
+See PlaceDto.cs.
 
 ### Location disambiguation
 
@@ -52,7 +52,7 @@ When a user searches by location and the location token cannot be parsed directl
 
 - `ProcessLocationDisambiguation`
 
-in `SearchController.cs`.
+in SearchController.cs.
 
 That method calls:
 
@@ -62,7 +62,7 @@ If matches are found, the user is shown a `LocationDisambiguation` view so they 
 
 ## How `IPlacesLookupService` works
 
-`IPlacesLookupService` is implemented by `PlacesLookupService.cs`.
+`IPlacesLookupService` is implemented by PlacesLookupService.cs.
 
 Its logic is:
 
@@ -78,7 +78,7 @@ So the web-tier place lookup strategy is:
 
 ## Azure Maps usage
 
-Azure Maps is used through `AzureMapsService.cs`.
+Azure Maps is used through AzureMapsService.cs.
 
 Important details from the implementation:
 
@@ -97,7 +97,7 @@ One important behaviour is postcode handling:
 
 ## OS Places usage
 
-OS Places is used through `OSPlacesApiService.cs`.
+OS Places is used through OSPlacesApiService.cs.
 
 Important details from the implementation:
 
@@ -116,7 +116,7 @@ The establishment edit flow uses a different mechanism.
 
 When a user adds or replaces an address in the establishment editor, the front end does not call Azure Maps or OS Places directly. Instead, it calls the GIAS back-end API through `IEstablishmentReadService`.
 
-This happens in `EstablishmentController.cs`.
+This happens in EstablishmentController.cs.
 
 ### Add or replace address flow
 
@@ -139,13 +139,13 @@ If not:
 
 ### What the back-end call returns
 
-`GetAddressesByPostCodeAsync` is implemented in `EstablishmentReadApiService.cs`.
+`GetAddressesByPostCodeAsync` is implemented in EstablishmentReadApiService.cs.
 
 It calls the backend endpoint:
 
 - `establishment/addressBase/queryByPostcode?postcode=...`
 
-The returned records are mapped into `AddressLookupResult`, defined in `AddressLookupResult.cs`.
+The returned records are mapped into `AddressLookupResult`, defined in AddressLookupResult.cs.
 
 That model includes:
 
@@ -162,7 +162,7 @@ After the user picks a result, the front end copies fields such as street, town,
 
 ## Configuration
 
-The external place lookup clients are wired up in `IocConfig.cs`.
+The external place lookup clients are wired up in IocConfig.cs.
 
 The front end registers:
 
