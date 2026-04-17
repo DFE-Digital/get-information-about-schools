@@ -61,6 +61,7 @@ C4Component
 
 Related notes in this repository:
 
+- [`front-end-authentication-flow.md`](./front-end-authentication-flow.md)
 - [`address-lookups.md`](./reference/address-lookups.md)
 - [`azure-table-storage.md`](./reference/azure-table-storage.md)
 - [`bulk-updates.md`](./reference/bulk-updates.md)

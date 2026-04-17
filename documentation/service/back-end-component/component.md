@@ -19,7 +19,7 @@ Shows the components involved in scheduled jobs, background processing, extract 
 Shows the components responsible for integrating with upstream reference-data providers such as Companies House, Ofsted, UKRLP, and address data sources.
 
 - **GIAS front end authentication flow :** 
-Documented separately in [`front-end-authentication-flow.md`](./front-end-authentication-flow.md).
+Documented separately in [`front-end-authentication-flow.md`](../front-end-component/front-end-authentication-flow.md).
 
 
 ## Client interaction components
@@ -308,5 +308,5 @@ Related notes in this repository:
 - [`database/sql-server.md`](./database/sql-server.md)
 - [`database/flyway-migrations.md`](./database/flyway-migrations.md)
 - [`storage/azure-blob-storage.md`](./storage/azure-blob-storage.md)
-- [`front-end-authentication-flow.md`](./front-end-authentication-flow.md)
+- [`front-end-authentication-flow.md`](../front-end-component/front-end-authentication-flow.md)
 
