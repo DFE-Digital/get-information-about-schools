@@ -14,7 +14,7 @@ The web application uses a layered security model:
 
 ## Authentication
 
-Authentication is configured in **StartupSecureAccess.cs**.
+Authentication is configured in `StartupSecureAccess.cs`.
 
 The startup pipeline configures:
 
@@ -57,7 +57,7 @@ Landing pages may depend on role and back-end lookups:
 
 The SAML assertion is normalised before the app uses it.
 
-In normal operation, **SecureAccessClaimsIdConverter.cs**
+In normal operation, `SecureAccessClaimsIdConverter.cs`
 extracts:
 
 - Secure Access user ID
@@ -65,15 +65,15 @@ extracts:
 - First name
 - Last name
 
-The most important value is the Secure Access user ID, which is written into the app's internal `NameIdentifier` claim using **EduClaimTypes.cs**.
+The most important value is the Secure Access user ID, which is written into the app's internal `NameIdentifier` claim using `EduClaimTypes.cs`.
 
-In simulator mode, **StubClaimsIdConverter.cs** performs the same role using a stub claim source.
+In simulator mode, `StubClaimsIdConverter.cs` performs the same role using a stub claim source.
 
 The result is a frontend principal with a stable internal user ID claim that the rest of the application can use.
 
 ## Roles and Role Resolution
 
-The front end does not hard-code a user's role membership during login. Instead, it asks the back end for the user's role names through **SecurityApiService.cs**.
+The front end does not hard-code a user's role membership during login. Instead, it asks the back end for the user's role names through `SecurityApiService.cs`.
 
 That service exposes methods such as:
 
@@ -89,7 +89,7 @@ This means the back end is the source of truth for:
 - Create permissions
 - User-to-establishment or user-to-group relationships
 
-Role constants are defined in **EdubaseRoles.cs**.
+Role constants are defined in `EdubaseRoles.cs`.
 
 ## Front-End Authorization
 
@@ -97,7 +97,7 @@ The front end applies authorization in several ways.
 
 ### Authentication Gate
 
-**EdubaseAuthorizeAttribute.cs** is the custom "must be signed in" attribute.
+`EdubaseAuthorizeAttribute.cs` is the custom "must be signed in" attribute.
 
 Its behaviour is:
 
@@ -106,7 +106,7 @@ Its behaviour is:
 
 ### Role-Based Access
 
-**AuthorizeRolesAttribute.cs** provides thin wrappers over the standard MVC and Web API authorize attributes:
+`AuthorizeRolesAttribute.cs` provides thin wrappers over the standard MVC and Web API authorize attributes:
 
 - `MvcAuthorizeRolesAttribute`
 - `HttpAuthorizeRolesAttribute`
@@ -115,7 +115,7 @@ These attributes take one or more role names and convert them into the comma-sep
 
 ### Grouped Permission Sets
 
-The application groups raw roles into reusable permission bundles in **AuthorizedRoles.cs**.
+The application groups raw roles into reusable permission bundles in `AuthorizedRoles.cs`.
 
 Examples include:
 
@@ -135,17 +135,17 @@ The app also uses runtime role checks directly in controller and view-model logi
 
 Examples include:
 
-- **ToolsController.cs**, which decides which tools to show based on role membership and back-end create-permission responses
-- **UserRolesController.cs**, which decides whether a user should be prompted about data quality updates
-- **DataQualityController.cs**, which combines role membership with dataset ownership rules
+- `ToolsController.cs`, which decides which tools to show based on role membership and back-end create-permission responses
+- `UserRolesController.cs`, which decides whether a user should be prompted about data quality updates
+- `DataQualityController.cs`, which combines role membership with dataset ownership rules
 
-Helper methods in **SecurityExtensionMethods.cs** provide convenience checks such as `InRole(...)`.
+Helper methods in `SecurityExtensionMethods.cs` provide convenience checks such as `InRole(...)`.
 
 ## Business-Rule Permissions, (ABAC)
 
 Some permissions depend on both role and record state, not just role membership.
 
-**GroupEditorViewModelRulesHandler.cs** is a good example. It decides things like:
+`GroupEditorViewModelRulesHandler.cs` is a good example. It decides things like:
 
 - Whether local authority is editable
 - Whether the user can close a group or mark it as created in error
@@ -163,7 +163,7 @@ This is how the front end implements fine-grained UI permissions for specific wo
 
 ## Front End to Back End Security Context
 
-When the front end calls the GIAS back-end APIs, it forwards the current user's internal ID in the `sa_user_id` header. This is done in **HttpClientWrapper.cs**
+When the front end calls the GIAS back-end APIs, it forwards the current user's internal ID in the `sa_user_id` header. This is done in `HttpClientWrapper.cs`
 
 The wrapper also sends:
 

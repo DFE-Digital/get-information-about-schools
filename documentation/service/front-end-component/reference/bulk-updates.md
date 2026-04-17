@@ -32,7 +32,7 @@ The main role groupings are:
 - `CanBulkUpdateGovernors`
 - `CanBulkAssociateEstabs2Groups`
 
-These are defined in **AuthorizedRoles.cs**
+These are defined in `AuthorizedRoles.cs`
 
 ## Common front-end behaviour
 
@@ -54,7 +54,7 @@ The web app does not parse the uploaded spreadsheet content in detail. That deep
 
 ## Establishment bulk update
 
-The establishment bulk update journey is implemented in **BulkUpdateController.cs**
+The establishment bulk update journey is implemented in `BulkUpdateController.cs`
 ### What the user provides
 
 The front end asks for:
@@ -65,7 +65,7 @@ The front end asks for:
 
 Admins can also use an override flag for the CR process.
 
-The web-tier validation is defined in **BulkUpdateViewModelValidator.cs**.
+The web-tier validation is defined in `BulkUpdateViewModelValidator.cs`.
 
 It checks:
 
@@ -78,7 +78,7 @@ The controller also enforces a maximum file size of 1 MB.
 
 ### What the front end sends to the back end
 
-The view model is mapped to `BulkUpdateDto` in **BulkUpdateViewModelToDtoMapper.cs**.
+The view model is mapped to `BulkUpdateDto` in `BulkUpdateViewModelToDtoMapper.cs`.
 
 That payload includes:
 
@@ -87,7 +87,7 @@ That payload includes:
 - `OverrideCRProcess`
 - A temporary file path used for the multipart upload
 
-The DTO shape is defined in **BulkUpdateDto.cs**.
+The DTO shape is defined in `BulkUpdateDto.cs`.
 
 ### Processing flow
 
@@ -98,13 +98,13 @@ The front end:
 3. Redirects to a result page if the API accepts the request
 4. Polls progress through `BulkUpdateAsync_GetProgressAsync(...)`
 
-Those API calls are implemented in **EstablishmentWriteApiService.cs**.
+Those API calls are implemented in `EstablishmentWriteApiService.cs`.
 
 This is an asynchronous batch-task flow. The user sees an "in progress" page until the back end marks the task complete.
 
 ## Governor bulk update
 
-The governor bulk update journey is implemented in **GovernorsBulkUpdateController.cs**.
+The governor bulk update journey is implemented in `GovernorsBulkUpdateController.cs`.
 
 ### What makes it different
 
@@ -117,7 +117,7 @@ This is different from establishment bulk update, which goes more directly into 
 
 ### Front-end validation
 
-The validator is **GovernorsBulkUpdateViewModelValidator.cs**.
+The validator is `GovernorsBulkUpdateViewModelValidator.cs`.
 
 It requires:
 
@@ -144,9 +144,9 @@ The front end:
 3. If validation succeeds, calls `BulkUpdateProcessRequestAsync(...)`
 4. If validation fails, shows inline errors or an error-log download
 
-The API client methods are implemented in **GovernorsWriteApiService.cs**.
+The API client methods are implemented in `GovernorsWriteApiService.cs`.
 
-The validation response model is **GovernorBulkUpdateValidationResult.cs**.
+The validation response model is `GovernorBulkUpdateValidationResult.cs`.
 
 That response can contain:
 
@@ -157,13 +157,13 @@ That response can contain:
 
 ## Bulk associate establishments to groups
 
-This journey is implemented in **BulkAssociateEstabs2GroupsController.cs**.
+This journey is implemented in `BulkAssociateEstabs2GroupsController.cs`.
 
 This is effectively another bulk batch operation, but its purpose is association rather than field update.
 
 ### Front-end validation
 
-The validator is **BulkAssociateEstabs2GroupsViewModelValidator.cs**.
+The validator is `BulkAssociateEstabs2GroupsViewModelValidator.cs`.
 
 It requires:
 
@@ -180,7 +180,7 @@ The front end:
 3. Redirects to a result route if the request is accepted
 4. Polls progress with `BulkAssociateEstabs2GroupsGetProgressAsync(...)`
 
-Those service calls are implemented in **EstablishmentWriteApiService.cs**.
+Those service calls are implemented in `EstablishmentWriteApiService.cs`.
 
 If the batch completes:
 
@@ -190,7 +190,7 @@ If the batch completes:
 
 ## Progress and completion model
 
-The shared status model used by establishment bulk update and bulk association is **BulkUpdateProgressModel.cs**.
+The shared status model used by establishment bulk update and bulk association is `BulkUpdateProgressModel.cs`.
 
 It includes:
 

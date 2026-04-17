@@ -28,9 +28,9 @@ The back end is responsible for:
 
 ## Where Approval Rules Come From
 
-Before saving an establishment, the front end retrieves the edit policy for that establishment from the back end using **EstablishmentReadApiService.cs**.
+Before saving an establishment, the front end retrieves the edit policy for that establishment from the back end using `EstablishmentReadApiService.cs`.
 
-That API returns an **EstablishmentEditPolicyEnvelope.cs**, which contains:
+That API returns an `EstablishmentEditPolicyEnvelope.cs`, which contains:
 
 - `EditPolicy`
 - `ApprovalsPolicy`
@@ -47,9 +47,9 @@ The helper methods on `EstablishmentApprovalsPolicy` include:
 
 ## How the Front End Detects Change Requests
 
-When the user edits an establishment, the front end compares the edited model with the current persisted model using `GetModelChangesAsync(...)` in **EstablishmentReadApiService.cs**.
+When the user edits an establishment, the front end compares the edited model with the current persisted model using `GetModelChangesAsync(...)` in `EstablishmentReadApiService.cs`.
 
-Each detected change becomes a **ChangeDescriptorDto.cs** containing:
+Each detected change becomes a `ChangeDescriptorDto.cs` containing:
 
 - `Name`
 - `OldValue`
@@ -71,9 +71,9 @@ The front end uses the approval policy to decide whether each detected change is
 
 ## User Review Before Save
 
-The establishment edit flow is handled in **EstablishmentController.cs**.
+The establishment edit flow is handled in `EstablishmentController.cs`.
 
-Before the final save, the front end builds a summary of the detected changes and stores it on the edit view model in **EditEstablishmentModel.cs**:
+Before the final save, the front end builds a summary of the detected changes and stores it on the edit view model in `EditEstablishmentModel.cs`:
 
 - `ChangesSummary`
 - `ChangesRequireApprovalCount`
@@ -93,7 +93,7 @@ If there are no actual changes, the controller returns the empty-change view ins
 
 ## Saving Changes
 
-Once the user confirms the edit, the front end sends the establishment to the back end using `SaveAsync(...)` in **EstablishmentWriteApiService.cs**.
+Once the user confirms the edit, the front end sends the establishment to the back end using `SaveAsync(...)` in `EstablishmentWriteApiService.cs`.
 
 The save request includes:
 
@@ -115,9 +115,9 @@ After save, the front end redirects back to the establishment details page and p
 
 The edit model includes `CanOverrideCRProcess` and `OverrideCRProcess`.
 
-In the front end, the override option is only enabled for admins in **EstablishmentController.cs**.
+In the front end, the override option is only enabled for admins in `EstablishmentController.cs`.
 
-At the service layer, **EstablishmentWriteApiService.cs** only sends `overrideCR=true` when the current user is in `ROLE_BACKOFFICE`.
+At the service layer, `EstablishmentWriteApiService.cs` only sends `overrideCR=true` when the current user is in `ROLE_BACKOFFICE`.
 
 This means:
 
@@ -126,19 +126,19 @@ This means:
 
 ## Approvals Queue
 
-Pending approvals are managed through the Approvals area in **ApprovalsController.cs**.
+Pending approvals are managed through the Approvals area in `ApprovalsController.cs`.
 
-Access to this area is restricted to users in `AuthorizedRoles.CanApprove` from **AuthorizedRoles.cs**.
+Access to this area is restricted to users in `AuthorizedRoles.CanApprove` from `AuthorizedRoles.cs`.
 
-The Tools page exposes this as the "Manage change requests" link in **ToolsViewModel.cs**.
+The Tools page exposes this as the "Manage change requests" link in `ToolsViewModel.cs`.
 
-The queue is loaded through **ApprovalService.cs**, which calls the back-end endpoint:
+The queue is loaded through `ApprovalService.cs`, which calls the back-end endpoint:
 
 - `approvals/pending`
 
-The queue result is **PendingApprovalsResult.cs**, which contains a count and an array of `PendingApprovalItem`.
+The queue result is `PendingApprovalsResult.cs`, which contains a count and an array of `PendingApprovalItem`.
 
-Each **PendingApprovalItem.cs** includes:
+Each `PendingApprovalItem.cs` includes:
 
 - The pending item ID
 - Originator username and full name
@@ -154,7 +154,7 @@ Each **PendingApprovalItem.cs** includes:
 
 Approvers can act on one or more pending items at once.
 
-The action payload is **PendingChangeRequestAction.cs**, which contains:
+The action payload is `PendingChangeRequestAction.cs`, which contains:
 
 - `Ids`
 - `Action`
@@ -166,9 +166,9 @@ The main actions are:
 - approve
 - reject
 
-Rejections require a reason. The MVC controller enforces that before posting the action to the back end in **ApprovalsController.cs**.
+Rejections require a reason. The MVC controller enforces that before posting the action to the back end in `ApprovalsController.cs`.
 
-The front end sends approval actions to the back end through **ApprovalService.cs**, which posts to:
+The front end sends approval actions to the back end through `ApprovalService.cs`, which posts to:
 
 - `approvals/pending`
 
@@ -185,7 +185,7 @@ MVC routes:
 
 AJAX/API routes:
 
-- **ApprovalsApiController.cs**
+- `ApprovalsApiController.cs`
 - `GET /api/approvals/change-requests`
 - `POST /api/approvals/change-request`
 
