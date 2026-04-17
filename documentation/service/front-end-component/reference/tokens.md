@@ -50,11 +50,4 @@ These tokens are not:
 
 They are best understood as persisted UI state tokens for search, results, and download workflows.
 
-## Key Code References
 
-- `Web/Edubase.Data/Entity/Token.cs`
-- `Web/Edubase.Data/Repositories/TokenRepository.cs`
-- `Web/Edubase.Web.UI/Controllers/Api/SearchApiController.cs`
-- `Web/Edubase.Web.UI/Helpers/ValueProviders/TokenValueProviderFactory.cs`
-- `Web/Edubase.Web.UI/Controllers/Api/UtilApiController.cs`
-- `Web/Edubase.Data/Entity/UserPreference.cs`
