@@ -1,0 +1,26 @@
+output_dir: output
+string_pattern_type: glob
+index_filenames:
+  - index.html
+text_extensions:
+  - css
+  - erb
+  - htm
+  - html
+  - js
+  - markdown
+  - md
+  - rb
+  - sass
+  - scss
+  - txt
+  - xml
+prune:
+  auto_prune: true
+lib_dirs:
+  - lib
+data_sources:
+  - type: filesystem
+    encoding: utf-8
+    content_dir: ../documentation
+    layouts_dir: layouts

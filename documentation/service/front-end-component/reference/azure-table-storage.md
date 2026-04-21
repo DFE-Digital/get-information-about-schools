@@ -48,7 +48,7 @@ Main usage points:
 - `TokenValueProviderFactory`
 - `AccountController`
 
-This is documented in more detail in [`tokens.md`](./tokens.md).
+This is documented in more detail in [`tokens.md`](../tokens/).
 
 ### 2. User preferences
 
@@ -368,4 +368,3 @@ This supports data stewardship and review workflows presented in the web UI.
 - `AZTLoggerMessages`
 
 These support troubleshooting and operational visibility for the web application.
-

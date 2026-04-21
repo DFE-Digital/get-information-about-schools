@@ -1,4 +1,4 @@
-## C4 Component Diagrams
+# C4 Component Diagrams
 
 Internal component view of the `GIAS Web Front End` container (`Web/Edubase.Web.UI`), based on the code under `/Web`.
 
@@ -100,13 +100,13 @@ C4Component
 
 Included subcomponents:
 
-- [`search-and-filtering`](./search-and-filtering.md)
-- [`downloads`](./downloads.md)
-- [`bulk-updates`](./bulk-updates.md)
-- [`change-history`](./change-history.md)
-- [`change-requests-and-approvals`](./change-requests-and-approvals.md)
-- [`content-management`](./content-management.md)
-- [`guidance-and-blob-resources`](./guidance-and-blob-resources.md)
+- [`search-and-filtering`](../reference/search-and-filtering/)
+- [`downloads`](../reference/downloads/)
+- [`bulk-updates`](../reference/bulk-updates/)
+- [`change-history`](../reference/change-history/)
+- [`change-requests-and-approvals`](../reference/change-requests-and-approvals/)
+- [`content-management`](../reference/content-management/)
+- [`guidance-and-blob-resources`](../reference/guidance-and-blob-resources/)
 
 **Notes for this diagram:**
 
@@ -207,14 +207,14 @@ C4Component
 
 Included subcomponents:
 
-- [`security-and-permissions`](./security-and-permissions.md)
-- [`tokens`](./tokens.md)
-- [`lookup-and-caching`](./lookup-and-caching.md)
-- [`address-lookups`](./address-lookups.md)
-- [`external-lookup-links`](./external-lookup-links.md)
-- [`companies-house-number`](./companies-house-number.md)
-- [`azure-table-storage`](./azure-table-storage.md)
-- [`api-session-recorder-and-logging`](./api-session-recorder-and-logging.md)
+- [`security-and-permissions`](../reference/security-and-permissions/)
+- [`tokens`](../reference/tokens/)
+- [`lookup-and-caching`](../reference/lookup-and-caching/)
+- [`address-lookups`](../reference/address-lookups/)
+- [`external-lookup-links`](../reference/external-lookup-links/)
+- [`companies-house-number`](../reference/companies-house-number/)
+- [`azure-table-storage`](../reference/azure-table-storage/)
+- [`api-session-recorder-and-logging`](../reference/api-session-recorder-and-logging/)
 
 **Notes for this diagram:**
 
@@ -222,4 +222,3 @@ Included subcomponents:
 - `App_Start/IocConfig.cs` wires the web app to typed service clients for the main GIAS back-end APIs and also registers direct repositories used by the web tier.
 - Those direct repositories are Azure Table Storage-based via `Edubase.Data.Repositories.TableStorage.TableStorageBase<T>`, rather than direct SQL Server access from the web app.
 - `Controllers/Api` provides lightweight endpoints used by the client-side bundles for AJAX and long-running workflow support.
-

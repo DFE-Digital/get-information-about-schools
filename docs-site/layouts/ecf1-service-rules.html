@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+  <%= render '/partials/head.*' %>
+
+  <body class="govuk-template__body">
+    <%= render '/partials/header.*' %>
+
+    <div class="govuk-width-container">
+      <main class="govuk-main-wrapper" id="main-content">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <span class="govuk-caption-xl">Service rules</span>
+            <h1 class="govuk-heading-xl"><%= item[:title] %></h1>
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <article class="ecf1-service-rules">
+              <%= yield %>
+            </article>
+          </div>
+          <div class="govuk-grid-column-one-third">
+            <%= render '/partials/key.*' %>
+          </div>
+        </div>
+      </main>
+    </div>
+    <%= render '/partials/footer.*' %>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<script>
+  document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
+</script>
+<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+<div class="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+    <div class="govuk-header__logo">
+      <% identifier = item.identifier.without_ext.to_s %>
+      <% depth = identifier.split("/").reject(&:empty?).length %>
+      <a href="<%= home_page? ? './index.html' : ('../' * depth) + 'index.html' %>" class="govuk-header__product-name govuk-link--inverse govuk-link--no-underline">Get Information about Schools documentation</a>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-width-container">
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag govuk-tag--orange">
+        Documentation
+      </strong>
+      <span class="govuk-phase-banner__text">
+        Technical documentation for the Get Information about Schools service.
+      </span>
+    </p>
+  </div>
+</div>
