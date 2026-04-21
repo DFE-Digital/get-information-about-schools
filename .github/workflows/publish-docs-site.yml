@@ -3,8 +3,7 @@ name: Publish docs-site
 on:
   push:
     branches:
-      - master
-      - front-end-docs
+      - "**"
   workflow_dispatch:
 
 permissions:
@@ -18,11 +17,12 @@ concurrency:
 
 jobs:
   build:
+    if: github.ref_name == github.event.repository.default_branch || github.ref_name == 'front-end-docs'
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -36,7 +36,6 @@ jobs:
       - name: Install Nanoc dependencies
         working-directory: docs-site
         run: |
-          bundle lock --add-platform x86_64-linux
           bundle install --jobs 4 --retry 3
 
       - name: Build docs site
@@ -46,10 +45,10 @@ jobs:
           touch output/.nojekyll
 
       - name: Set up GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs-site/output
 
@@ -59,8 +58,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    if: github.ref_name == github.event.repository.default_branch || github.ref_name == 'front-end-docs'
 
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

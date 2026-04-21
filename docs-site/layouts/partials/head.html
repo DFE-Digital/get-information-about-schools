@@ -5,6 +5,9 @@
   <title><%= page_title %> - Get Information about Schools documentation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b0c0c">
+  <% if canonical_url %>
+    <link rel="canonical" href="<%= canonical_url %>">
+  <% end %>
   <link rel="icon" sizes="48x48" href="<%= govuk_frontend_base %>/assets/images/favicon.ico">
   <link rel="icon" sizes="any" href="<%= govuk_frontend_base %>/assets/images/favicon.svg" type="image/svg+xml">
   <link rel="mask-icon" href="<%= govuk_frontend_base %>/assets/images/govuk-icon-mask.svg" color="#0b0c0c">

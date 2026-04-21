@@ -45,10 +45,16 @@ If a layout or filter change does not appear in the output, delete `docs-site/ou
 
 This repository includes a GitHub Actions workflow at `.github/workflows/publish-docs-site.yml` that builds `docs-site/output/` and deploys it to GitHub Pages.
 
+The published site is intended to be served from:
+
+`https://dfe-digital.github.io/get-information-about-schools/`
+
 To use it:
 
 1. In the repository on GitHub, go to `Settings` -> `Pages`.
 2. Under `Build and deployment`, set `Source` to `GitHub Actions`.
-3. Push to a publishing branch watched by the workflow, or run the workflow manually from the `Actions` tab.
+3. Push to the repository default branch or `front-end-docs`, or run the workflow manually from the `Actions` tab.
 
-The workflow currently publishes on pushes to `master` and `front-end-docs`.
+The workflow listens to pushes on all branches, but only builds and deploys when the pushed branch is the repository default branch or `front-end-docs`. This avoids hard-coding `main` or `master`.
+
+If the first workflow run fails with a Pages "Not Found" error, check that GitHub Pages has been enabled for the repository in `Settings` -> `Pages` and that the source is set to `GitHub Actions`.

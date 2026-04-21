@@ -1,4 +1,6 @@
 output_dir: output
+base_path: /get-information-about-schools
+site_url: https://dfe-digital.github.io/get-information-about-schools/
 string_pattern_type: glob
 index_filenames:
   - index.html

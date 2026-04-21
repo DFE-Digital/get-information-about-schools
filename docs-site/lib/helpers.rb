@@ -1,8 +1,30 @@
 use_helper Nanoc::Helpers::Rendering
+require "uri"
 
 def home_page?
   [item.identifier.to_s, item.identifier.without_ext.to_s, item.path].include?("/") ||
     [item.identifier.to_s, item.identifier.without_ext.to_s, item.path].include?("/index.html")
+end
+
+def home_href
+  return "./index.html" if home_page?
+
+  depth = item.identifier.without_ext.to_s.split("/").reject(&:empty?).length
+  ("../" * depth) + "index.html"
+end
+
+def site_url
+  @config[:site_url]
+end
+
+def base_path
+  @config[:base_path]
+end
+
+def canonical_url(doc_item = item)
+  return nil unless site_url
+
+  URI.join(site_url.end_with?("/") ? site_url : "#{site_url}/", doc_item.path.sub(%r{\A/}, "")).to_s
 end
 
 def site_index_html

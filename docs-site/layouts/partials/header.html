@@ -6,9 +6,7 @@
 <div class="govuk-header">
   <div class="govuk-header__container govuk-width-container">
     <div class="govuk-header__logo">
-      <% identifier = item.identifier.without_ext.to_s %>
-      <% depth = identifier.split("/").reject(&:empty?).length %>
-      <a href="<%= home_page? ? './index.html' : ('../' * depth) + 'index.html' %>" class="govuk-header__product-name govuk-link--inverse govuk-link--no-underline">Get Information about Schools documentation</a>
+      <a href="<%= home_href %>" class="govuk-header__product-name govuk-link--inverse govuk-link--no-underline">Get Information about Schools documentation</a>
     </div>
   </div>
 </div>
