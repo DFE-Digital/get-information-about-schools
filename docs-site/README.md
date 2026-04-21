@@ -40,3 +40,15 @@ This rebuilds the generated HTML in `docs-site/output/`.
 To check the result locally, open `docs-site/output/index.html` in a browser.
 
 If a layout or filter change does not appear in the output, delete `docs-site/output/` and `docs-site/tmp/`, then run `bundle exec nanoc compile` again.
+
+## Publish with GitHub Pages
+
+This repository includes a GitHub Actions workflow at `.github/workflows/publish-docs-site.yml` that builds `docs-site/output/` and deploys it to GitHub Pages.
+
+To use it:
+
+1. In the repository on GitHub, go to `Settings` -> `Pages`.
+2. Under `Build and deployment`, set `Source` to `GitHub Actions`.
+3. Push to a publishing branch watched by the workflow, or run the workflow manually from the `Actions` tab.
+
+The workflow currently publishes on pushes to `master` and `front-end-docs`.
