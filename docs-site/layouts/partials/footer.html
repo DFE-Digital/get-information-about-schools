@@ -36,11 +36,12 @@
   import { initAll } from "<%= govuk_frontend_base %>/govuk-frontend.min.js";
   initAll();
 </script>
-<script type="module">
-  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-
-  mermaid.initialize({
-    startOnLoad: true,
-    securityLevel: "loose"
-  });
+<script src="<%= asset_href('assets/vendor/mermaid/mermaid-11.14.0.min.js') %>"></script>
+<script>
+  if (window.mermaid) {
+    window.mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: "loose"
+    });
+  }
 </script>

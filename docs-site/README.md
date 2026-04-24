@@ -43,6 +43,13 @@ bundle exec nanoc compile
 
 This rebuilds the generated HTML in `docs-site/output/`.
 
+GitHub Pages downloads Mermaid during the build and packages it into `output/assets/vendor/mermaid/`. If you want Mermaid diagrams to render when previewing `docs-site/output/` locally, download the same pinned asset after compiling:
+
+```powershell
+New-Item -ItemType Directory -Force output/assets/vendor/mermaid | Out-Null
+Invoke-WebRequest -UseBasicParsing https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js -OutFile output/assets/vendor/mermaid/mermaid-11.14.0.min.js
+```
+
 To check the result locally, open `docs-site/output/index.html` in a browser.
 
 If a layout or filter change does not appear in the output, delete `docs-site/output/` and `docs-site/tmp/`, then run `bundle exec nanoc compile` again.

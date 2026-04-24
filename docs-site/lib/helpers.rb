@@ -27,6 +27,14 @@ def canonical_url(doc_item = item)
   URI.join(site_url.end_with?("/") ? site_url : "#{site_url}/", doc_item.path.sub(%r{\A/}, "")).to_s
 end
 
+def asset_href(asset_path)
+  clean_path = asset_path.sub(%r{\A/+}, "")
+  return "./#{clean_path}" if home_page?
+
+  depth = item.identifier.without_ext.to_s.split("/").reject(&:empty?).length
+  ("../" * depth) + clean_path
+end
+
 def site_index_html
   tree = {}
 

@@ -48,6 +48,14 @@ jobs:
         working-directory: docs-site
         run: |
           bundle exec nanoc compile
+
+      - name: Download Mermaid asset
+        working-directory: docs-site
+        run: |
+          mkdir -p output/assets/vendor/mermaid
+          curl -L https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js \
+            -o output/assets/vendor/mermaid/mermaid-11.14.0.min.js
+          echo "217b66ef4279c33c141b4afe22effad10a91c02558dc70917be2c0981e78ed87  output/assets/vendor/mermaid/mermaid-11.14.0.min.js" | sha256sum -c -
           touch output/.nojekyll
 
       - name: Verify Pages output
@@ -55,6 +63,7 @@ jobs:
         run: |
           test -d output
           test -f output/index.html
+          test -f output/assets/vendor/mermaid/mermaid-11.14.0.min.js
 
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v6
