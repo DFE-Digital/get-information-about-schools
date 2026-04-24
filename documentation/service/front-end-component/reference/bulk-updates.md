@@ -217,7 +217,7 @@ The main services are:
 - `IEstablishmentWriteService`
 - `IGovernorsWriteService`
 
-Their Texuna-backed implementations send multipart uploads to endpoints such as:
+Their back-end API implementations send multipart uploads to endpoints such as:
 
 - `establishment/bulk-update`
 - `bulk-update/progress/{id}`

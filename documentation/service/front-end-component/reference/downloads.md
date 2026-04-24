@@ -235,7 +235,7 @@ These are registered in `App_Start/IocConfig.cs`.
 
 ### Back-end APIs
 
-The front end gets its download data from the GIAS back-end APIs under `TexunaApiBaseAddress`.
+The front end gets its download data from the configured GIAS back-end API base address.
 
 Examples of endpoints used by the front end include:
 
@@ -261,7 +261,7 @@ The main front-end configuration for downloads is the API client setup in `IocCo
 
 Important settings include:
 
-- `TexunaApiBaseAddress`
+- the back-end API base address setting
 - `api:Username`
 - `api:Password`
 - `HttpClient_Timeout`
@@ -317,5 +317,4 @@ It:
 - Polls progress
 - Handles download errors
 - Streams or redirects final files
-
 

@@ -20,6 +20,12 @@ Then run:
 bundle install
 ```
 
+The lockfile includes gem checksums. This is usually a one-off step once the `CHECKSUMS` section exists, but if `Gemfile.lock` changes because dependencies were added or updated, run:
+
+```powershell
+bundle lock --add-checksums
+```
+
 If `bundle` is not available, install Bundler first:
 
 ```powershell

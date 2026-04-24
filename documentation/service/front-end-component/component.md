@@ -42,7 +42,7 @@ C4Component
 
         Component(history, "Change History", "MVC browse/download flows", "Shows and exports establishment and group change history")
 
-        Component(apiClients, "Texuna API Client Layer", "Typed service clients + HttpClientWrapper", "Shared back-end client layer used by search,<br> downloads, bulk operations, approvals and change history")
+        Component(apiClients, "Back-end API Client Layer", "Typed service clients + HttpClientWrapper", "Shared back-end client layer used by search,<br> downloads, bulk operations, approvals and change history")
     }
 
     Container_Boundary(infra, "","") {
@@ -50,7 +50,7 @@ C4Component
 
         ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores front-end-owned content and<br> data quality records")
 
-        System_Ext(texuna, "GIAS Backend / Texuna APIs", "Primary back-end APIs for search, downloads, approvals,<br> batch operations and change history")
+        System_Ext(backendApi, "GIAS Back-end APIs", "Primary back-end APIs for search, downloads, approvals,<br> batch operations and change history")
     }
 
     Rel(anonUser, downloads, "Uses", "HTTPS")
@@ -73,7 +73,7 @@ C4Component
     Rel(bulk, apiClients, "Uses")
     Rel(approvals, apiClients, "Uses")
     Rel(history, apiClients, "Uses")
-    Rel(apiClients, texuna, "Calls", "HTTPS/JSON")
+    Rel(apiClients, backendApi, "Calls", "HTTPS/JSON")
     Rel(editorialContent, tableStorage, "Reads and writes", "Azure Storage Tables")
     Rel(guidance, blob, "Reads and serves files", "Azure Blob Storage")
 
@@ -93,7 +93,7 @@ C4Component
     UpdateRelStyle(admin, editorialContent, $offsetX="400", $offsetY="-200")
     UpdateRelStyle(search, downloads, $offsetX="-50", $offsetY="50")
     UpdateRelStyle(guidance, blob, $offsetX="-150", $offsetY="-200")
-    UpdateRelStyle(apiClients, texuna, $offsetX="40", $offsetY="-50")
+    UpdateRelStyle(apiClients, backendApi, $offsetX="40", $offsetY="-50")
     UpdateRelStyle(editorialContent, tableStorage, $offsetX="-40", $offsetY="-40")
 
 ```
@@ -111,7 +111,7 @@ Included subcomponents:
 **Notes for this diagram:**
 
 - This view shows what anonymous users, authenticated users and administrators experience directly.
-- Texuna-facing workflows are shown as going through a shared `Texuna API Client Layer`, reflecting the typed service clients and common `HttpClientWrapper` used across the web app.
+- Back-end API-facing workflows are shown as going through a shared `Back-end API Client Layer`, reflecting the typed service clients and common `HttpClientWrapper` used across the web app.
 - The main runtime centre of gravity is still the MVC controller layer, especially the `Areas/Establishments`, `Areas/Groups` and `Areas/Governors` flows.
 - `Editorial Content Management` is user-facing as well as admin-facing: users read content through it, while administrators maintain that content in Azure Table Storage-backed repositories.
   Content types include:
@@ -152,7 +152,7 @@ C4Component
     Container_Boundary(platform, "GIAS Web Front End - Supporting platform and integration components") {
         Component(security, "Security and Permissions", "OWIN + Sustainsys.Saml2 + ISecurityService", "Authenticates users, builds claims and resolves authorisation data")
         
-        Component(apiClients, "Texuna API Client Layer", "Typed service clients + HttpClientWrapper", "Shared client layer for security, lookups, downloads, approvals,<br> change history and write/read workflows")
+        Component(apiClients, "Back-end API Client Layer", "Typed service clients + HttpClientWrapper", "Shared client layer for security, lookups, downloads, approvals,<br> change history and write/read workflows")
         
         Component(lookup, "Lookup and Caching", "Lookup services + cache layer", "Caches reference data and supports lookup-backed filters and forms")
 
@@ -174,7 +174,7 @@ C4Component
 
     ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores tokens, preferences, front-end content, data quality records and diagnostic logs")
 
-    System_Ext(texuna, "GIAS Backend / Texuna APIs", "Provides security, lookup and core business APIs")  
+    System_Ext(backendApi, "GIAS Back-end APIs", "Provides security, lookup and core business APIs")  
 
     System_Ext(extData, "External Data Services", "Azure Maps, OS Places, Companies House, Ofsted, Financial Benchmarking and FSCPD")
 
@@ -182,7 +182,7 @@ C4Component
 
     Rel(security, dsi, "Authenticates with", "SAML2")
     Rel(security, apiClients, "Uses for role and<br>permission resolution")
-    Rel(apiClients, texuna, "Calls", "HTTPS/JSON")
+    Rel(apiClients, backendApi, "Calls", "HTTPS/JSON")
 
     Rel(tokens, tableStorage, "Reads and writes token records", "Azure Storage Tables")
     Rel(lookup, apiClients, "Uses for internal<br>reference data")

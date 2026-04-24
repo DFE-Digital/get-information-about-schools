@@ -59,10 +59,12 @@ These classes tie blob storage to the lifecycle of generated output files.
 
 ## Configuration and Authentication
 
-The blob integration is configured in `applicationContext-extracts.xml`
+The blob integration is configured in `applicationContext-extracts.xml`.
+
+In simplified form:
 
 ```xml
-<bean id="blobStorageConfiguration" class="com.texunatech.utils.azure.blobstorage.BlobStorageConfiguration">
+<bean id="blobStorageConfiguration" class="BlobStorageConfiguration">
     <property name="connectionString" value="${microsoft.azure.blob.storage.connectionString}"/>
     <property name="containerName" value="${microsoft.azure.blob.storage.containerName}"/>
     <property name="containerUri" value="${microsoft.azure.blob.storage.containerUri}"/>
