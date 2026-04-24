@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using FluentValidation.TestHelper;
@@ -11,13 +10,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         private readonly EditGroupCorporateContactViewModelValidator _validator =
             new EditGroupCorporateContactViewModelValidator();
 
-        public static IEnumerable<object[]> TestCases =>
-            new[]
+        public static TheoryData<string, bool, string> TestCases => new TheoryData<string, bool, string>
             {
-                new object[] { null, true },
-                new object[] { "", true },
-                new object[] { new string('x', 150), true },
-                new object[] { new string('x', 151), false, "Must be 150 characters or less" }
+                { null, true, null },
+                { "", true, null },
+                { new string('x', 150), true, null },
+                { new string('x', 151), false, "Must be 150 characters or less" }
             };
 
         [Theory]
