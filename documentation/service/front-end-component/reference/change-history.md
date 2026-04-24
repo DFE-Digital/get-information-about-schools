@@ -98,7 +98,7 @@ Important filter areas include:
 - Suggester group
 - Approver group
 - Date range
-- date filter mode
+- Date filter mode
 
 The date filter mode supports:
 
