@@ -53,7 +53,7 @@ The following was configured to host this nanoc site using Github pages
 
 1. In the repository on GitHub, go to `Settings` -> `Pages`.
 2. Under `Build and deployment`, set `Source` to `GitHub Actions`.
-3. Push to the repository default branch, or run the workflow manually from the `Actions` tab.
+3. In `Settings` -> `Environments` -> `github-pages`, make sure the deployment branch rules allow the branch you want to publish from.
+4. Push to the repository default branch, or run the workflow manually from the `Actions` tab.
 
-The workflow listens to pushes on all branches, but only builds and deploys when the pushed branch is the repository default branch or `front-end-docs`. This avoids hard-coding `main` or `master`.
 

@@ -16,8 +16,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
+    # Keep the workflow branch-aware without hard-coding the default branch name.
+    # Any non-default branch listed here must also be allowed by the
+    # repository's `github-pages` environment deployment branch rules.
     if: github.ref_name == github.event.repository.default_branch || github.ref_name == 'front-end-docs'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
@@ -44,6 +50,12 @@ jobs:
           bundle exec nanoc compile
           touch output/.nojekyll
 
+      - name: Verify Pages output
+        working-directory: docs-site
+        run: |
+          test -d output
+          test -f output/index.html
+
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v6
 
@@ -52,15 +64,6 @@ jobs:
         with:
           path: docs-site/output
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref_name == github.event.repository.default_branch || github.ref_name == 'front-end-docs'
-
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
