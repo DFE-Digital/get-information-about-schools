@@ -49,9 +49,9 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers
             mockGroupsWriteService.Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new ApiResponse(true));
                       
-            var result = await controller.GroupEditCorporateContact(viewModel) as RedirectResult;
+            var actionResult = await controller.GroupEditCorporateContact(viewModel);
+            var result = Assert.IsType<RedirectResult>(actionResult);
 
-            Assert.NotNull(result);            
             Assert.Equal("test-url#governance", result.Url);
         }
 
