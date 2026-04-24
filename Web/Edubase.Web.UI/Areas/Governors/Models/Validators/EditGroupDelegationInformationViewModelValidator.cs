@@ -1,4 +1,4 @@
-﻿using Edubase.Web.UI.Validation;
+using Edubase.Web.UI.Validation;
 using FluentValidation;
 
 namespace Edubase.Web.UI.Areas.Governors.Models.Validators
@@ -19,9 +19,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
         public EditGroupCorporateContactViewModelValidator()
         {
             RuleFor(x => x.CorporateContact)
-                .Must(x => x == null || x.Length <= 10)
-                .WithMessage("Must be 10 characters or less")
-                .WithSummaryMessage("Corporate contact must be 10 characters or less");
+                .Must(x => x == null || x.Length <= 150)
+                .WithMessage("Must be 150 characters or less")
+                .WithSummaryMessage("Corporate contact must be 150 characters or less");
         }
     }
 }
