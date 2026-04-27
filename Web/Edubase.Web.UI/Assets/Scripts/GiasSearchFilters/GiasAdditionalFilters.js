@@ -1,4 +1,15 @@
 import QueryString from "../GiasHelpers/QueryString";
+
+// Simple HTML-escaping helper to prevent DOM text from being reinterpreted as HTML
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 class GiasAdditionalFilters {
   constructor() {
     this.buildAdditionalFilters();
@@ -11,7 +22,7 @@ class GiasAdditionalFilters {
       return `<div class="govuk-checkboxes__item">
               <input value="#${props.elemId}" data-alias="${props.dataAlias}" id="ctrl-${props.elemId}" class="js-filter-input additional-search-critera govuk-checkboxes__input" type="checkbox">
                 <label for="ctrl-${props.elemId}" class="js-filter-label govuk-label govuk-checkboxes__label">
-                    ${props.text}
+                    ${escapeHtml(props.text)}
                 </label>
             </div>`;
     }
