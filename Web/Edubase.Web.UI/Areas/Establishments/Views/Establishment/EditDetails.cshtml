@@ -407,11 +407,14 @@
                     @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new { @class = "govuk-select" })
                 </div>
 
-                @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection", fieldsetClassName = "edit-date-fieldset" })
+                @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection", fieldsetClassName = "edit-date-fieldset" })                
+            }
 
+            @if (Model.ShowOfstedReportLink)
+            {                               
                 <div class="govuk-form-group">
-                    <label for="ofsted-report" class="govuk-label">Ofsted report link</label>
-                    <input type="text" class="govuk-input" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
+                    <label for="ofsted-report" class="govuk-label">Ofsted report</label>
+                    <input type="text" class="govuk-input" id="ofsted-report" disabled="disabled" value="@Model.OfstedReportUrl" />
                 </div>
             }
 

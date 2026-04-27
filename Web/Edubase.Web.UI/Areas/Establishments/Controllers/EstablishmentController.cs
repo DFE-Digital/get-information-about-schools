@@ -769,6 +769,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
             viewModel.LocationEditField = string.Empty;
             viewModel.EmptyEmailFields = new List<string>();
+            viewModel.ShowOfstedReportLink = domainModel.TypeId.HasValue && EstablishmentUtility.IsOfstedLinkEstablishmentType(domainModel.TypeId.Value);
+            viewModel.OfstedReportUrl = viewModel.ShowOfstedReportLink ? _externalLookupService.OfstedReportUrl(domainModel.Urn) : "";
 
             preprocessViewModel?.Invoke(viewModel);
 
