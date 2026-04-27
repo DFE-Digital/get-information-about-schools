@@ -244,7 +244,7 @@ else
             </p>
         </div>
     </details>
-    <p class="govuk-body-s">@(Model.CorporateContact ?? "Not recorded")</p>
+    <p class="govuk-body-s">@(Model.CorporateContact != null ? Html.HtmlNewlines(Model.CorporateContact) : Html.Raw("Not recorded"))</p>
     if (Model.EditMode)
     {
         @Html.RouteLink("Edit corporate contact", "GroupEditCorporateContact", new { Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
