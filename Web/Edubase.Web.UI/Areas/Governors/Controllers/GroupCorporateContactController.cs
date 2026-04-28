@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.UI;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
@@ -18,12 +17,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private readonly IGroupReadService _groupReadService;
         private readonly IGroupsWriteService _groupWriteService;
-        private readonly LayoutHelper _layoutHelper;
+        private readonly ILayoutHelper _layoutHelper;
 
         public GroupCorporateContactController(
             IGroupReadService groupReadService, 
             IGroupsWriteService groupWriteService,
-            LayoutHelper layoutHelper)
+            ILayoutHelper layoutHelper)
         {
             _groupReadService = groupReadService;
             _groupWriteService = groupWriteService;
@@ -54,6 +53,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> GroupEditCorporateContact(EditGroupCorporateContactViewModel model)
         {
             var result = await new EditGroupCorporateContactViewModelValidator().ValidateAsync(model);
+            result.EduBaseAddToModelState(ModelState, null);
 
             if (ModelState.IsValid)
             {
@@ -71,11 +71,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
                     validation.ApplyToModelState(ControllerContext);
                 }
-            }
-            else
-            {
-                result.EduBaseAddToModelState(ModelState, null);
-            }
+            }            
             
             await _layoutHelper.PopulateLayoutProperties(model, null, model.GroupUId, User);
             return View(model);

@@ -612,6 +612,7 @@
     <Content Include="Assets\Scripts\Entry\change-history-search.js" />
     <Content Include="Assets\Scripts\Entry\create-childrens-centre.js" />
     <Content Include="Assets\Scripts\Entry\create-establishment.js" />
+    <Content Include="Assets\Scripts\Entry\corporate-contact.js" />
     <Content Include="Assets\Scripts\Entry\delegated-authority.js" />
     <Content Include="Assets\Scripts\Entry\download-select-fields.js" />
     <Content Include="Assets\Scripts\Entry\Download-specific-field.js" />
