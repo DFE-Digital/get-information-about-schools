@@ -117,7 +117,7 @@ C4Context
 1. The `DfE Back Office User` is a signed-in user with elevated permissions. This role can do everything available to anonymous and standard signed-in users, plus additional administrative and data-management actions.
 2. To keep the main context diagram easy to read, all DfE internal systems have been grouped into a single external system called `Internal DfE systems`.
 3. The `External Consumer` is an external system, not a person. It consumes GIAS data either by downloading extract files or by calling the SOAP interface.
-4. For more detail on how front-end authentication works between GIAS and DfE Sign-in, see [front-end-authentication-flow.md](./back-end-component/front-end-authentication-flow.md).
+4. For more detail on how front-end authentication works between GIAS and DfE Sign-in, see [GIAS front-end authentication flow](../front-end-component/front-end-authentication-flow/).
 
 
 The detailed internal DfE systems diagram has been replaced with the tables below. They separate internal DfE systems from external systems referenced in this overview, and give a short description of each service or system's primary purpose.

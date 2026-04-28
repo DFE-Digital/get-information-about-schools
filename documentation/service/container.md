@@ -1,5 +1,4 @@
-
-## C4 Container Diagram
+# C4 Container Diagram
 
 Major components forming GIAS service, and how they interact with each other and external actors.
 
@@ -63,4 +62,4 @@ C4Container
 
 ```
 
-For that lower-level view, see [`back-end-component/component.md`](./back-end-component/component.md). This document explains how the `GIAS Backend` container is structured internally, including client-facing entry points, scheduled and batch processing, reference-data provider integrations, and the authentication flow used by the front end when it calls the back-end APIs.
+For that lower-level view, see [the back-end component diagrams](../back-end-component/component/). This document explains how the `GIAS Backend` container is structured internally, including client-facing entry points, scheduled and batch processing, reference-data provider integrations, and the authentication flow used by the front end when it calls the back-end APIs.
