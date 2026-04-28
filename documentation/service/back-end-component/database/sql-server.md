@@ -103,13 +103,11 @@ Hibernate is configured through:
 - `sessionFactory`
 - `HibernateTransactionManager`
 
-The session factory scans domain entities under:
-
-- `com.texunatech.edubase.domain`
+The session factory scans the main application domain-entity packages.
 
 The persistence layer is then exposed through many DAO classes under:
 
-- `src/main/java/com/texunatech/edubase/dao`
+- `src/main/java/.../dao`
 
 Example DAO classes:
 
