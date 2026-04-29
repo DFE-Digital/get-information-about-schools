@@ -173,7 +173,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 var customFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
 
-                if(!Feature.IsEnabled("FeatureIEBTSuspended"))
+                if(!Feature.IsEnabled("gias.iebt.suspended"))
                 {
                     customFields.RemoveAll(f => f.Name == "RegistrationSuspended (code)");
                     customFields.RemoveAll(f => f.Name == "RegistrationSuspended (name)");
@@ -196,7 +196,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var customFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User))
                     .OrderBy(x => x.Name).ToList();
 
-                if (!Feature.IsEnabled("FeatureIEBTSuspended"))
+                if (!Feature.IsEnabled("gias.iebt.suspended"))
                 {
                     customFields.RemoveAll(f => f.Name == "RegistrationSuspended (code)");
                     customFields.RemoveAll(f => f.Name == "RegistrationSuspended (name)");
