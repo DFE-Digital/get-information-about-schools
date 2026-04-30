@@ -12,12 +12,12 @@
         @using (Html.BeginRouteForm("GroupEditCorporateContactPost", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.GroupUId)
+            @Html.HiddenFor(m => m.GroupUId)           
             <div class="edit-governor">
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CorporateContact)">
                     @Html.LabelFor(x => x.CorporateContact, new { @class = "govuk-label" })
                     @Html.ValidationMessageFor(x => x.CorporateContact, null, new { @class = "govuk-error-message" })
-                    @Html.TextBoxFor(x => x.CorporateContact, new { @class = "govuk-input govuk-!-width-two-thirds", maxlength = 15 })
+                    @Html.TextAreaFor(x => x.CorporateContact, new { rows = "4", cols = "60", @class = "govuk-textarea" })
                 </div>
 
                 <div class="button-row">
@@ -25,6 +25,11 @@
                     <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="govuk-button govuk-button--secondary" id="cancel-button" data-module="govuk-button">Cancel</a>
                 </div>
             </div>
-        }
+        }        
     </div>
 </div>
+
+@section ViewScripts
+{
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("corporate-contact.*.js"))"></script>
+}

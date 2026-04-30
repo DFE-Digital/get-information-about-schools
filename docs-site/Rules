@@ -1,0 +1,21 @@
+compile "/**/*.md" do
+  filter :govuk_markdown
+  layout "/default.*"
+end
+
+route "/**/*.md" do
+  identifier = @item.identifier.without_ext.to_s
+  identifier == "/index" ? "/index.html" : "#{identifier}/index.html"
+end
+
+compile "*" do
+  if item.binary?
+    write item.identifier.to_s
+  end
+end
+
+route "*" do
+  item.identifier.to_s
+end
+
+layout "/**/*", :erb
