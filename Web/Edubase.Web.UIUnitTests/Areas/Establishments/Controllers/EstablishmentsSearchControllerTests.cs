@@ -437,7 +437,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 
             var fp = new Mock<IFeatureFlagProvider>();
             Feature.Provider = fp.Object;
-            fp.Setup(x => x.IsEnabled("FeatureIEBTSuspended")).Returns(true);
+            fp.Setup(x => x.IsEnabled("gias.iebt.suspended")).Returns(true);
 
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
@@ -512,7 +512,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 
             var fp = new Mock<IFeatureFlagProvider>();
             Feature.Provider = fp.Object;
-            fp.Setup(x => x.IsEnabled("FeatureIEBTSuspended")).Returns(false);
+            fp.Setup(x => x.IsEnabled("gias.iebt.suspended")).Returns(false);
 
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);

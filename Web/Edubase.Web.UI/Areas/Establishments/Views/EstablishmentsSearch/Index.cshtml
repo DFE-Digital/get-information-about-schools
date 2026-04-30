@@ -202,7 +202,7 @@
 
                         @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true, true)
 
-                        @if(Html.FeatureEnabled("FeatureIEBTSuspended"))
+                        @if(Html.FeatureEnabled("gias.iebt.suspended"))
                         {
                             @Selector("Registration suspended", M.BIND_ALIAS_REGSUSPENDED, Model.RegistrationStatuses.OrderBy(x => x.Name), Model.SelectedRegistrationStatusIds, "additional-search-critera hidden", true, true)
                         }
