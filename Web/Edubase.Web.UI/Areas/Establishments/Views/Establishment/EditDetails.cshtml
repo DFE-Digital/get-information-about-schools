@@ -328,7 +328,7 @@
                 </div>
             }
 
-            @if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended && Html.FeatureEnabled("FeatureIEBTSuspended"))
+            @if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended && Html.FeatureEnabled("gias.iebt.suspended"))
             {
                 var canEdit = Model.EditPolicy.IEBTDetail.RegistrationSuspended;
 
