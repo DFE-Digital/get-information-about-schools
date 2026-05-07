@@ -12,4 +12,5 @@ This is the technical documentation area for Get Information about Schools (GIAS
 - [Container view](./service/container/index.html)
 - [Back-end component](./service/back-end-component/component/index.html)
 - [Front-end component](./service/front-end-component/component/index.html)
-
+- [Production deployment architecture](./operations/deployment-architecture/index.html)
+- [S158 Data Factory setup](./operations/data-factory-setup/index.html)
