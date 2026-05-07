@@ -11,24 +11,13 @@ It uses focused C4 deployment diagrams rather than one large diagram. The same c
 5. What is deployed in the `s158-getinformationaboutschools-production` subscription?
 6. Which S158 applications have private SQL connectivity back to the DFE T1 production SQL server?
 
-Related investigation evidence:
-
-- [front-door-configuration-investigation.md](../../../docs/infra/front-door-configuration-investigation.md)
-- [service-access-and-security.md](../../../docs/infra/service-access-and-security.md)
-- [database-configuration-investigation.md](../../../docs/infra/database-configuration-investigation.md)
-- [storage-configuration-investigation.md](../../../docs/infra/storage-configuration-investigation.md)
-- [redis-cache-configuration-investigation.md](../../../docs/infra/redis-cache-configuration-investigation.md)
-- [azure-maps-configuration-investigation.md](../../../docs/infra/azure-maps-configuration-investigation.md)
-- [s158-private-endpoint-investigation.md](../../../docs/infra/s158-private-endpoint-investigation.md)
-- [s158-application-inventory-investigation.md](../../../docs/infra/s158-application-inventory-investigation.md)
-- [s158-data-factory-investigation.md](../../../docs/infra/s158-data-factory-investigation.md)
 
 ## Scope
 
 The document is split into two subscription views:
 
-- Part 1 covers the `DFE T1 Production` subscription, where the main GIAS production App Services, Azure SQL databases, Redis caches, storage accounts, Front Door and Azure Maps account live.
-- Part 2 covers the `s158-getinformationaboutschools-production` subscription, where S158 Data Factory, Function Apps, App Services, supporting storage, monitoring, VNet and private endpoints live.
+- Section 1 covers the `DFE T1 Production` subscription, where the main GIAS production App Services, Azure SQL databases, Redis caches, storage accounts, Front Door and Azure Maps account live.
+- Section 2 covers the `s158-getinformationaboutschools-production` subscription, where S158 Data Factory, Function Apps, App Services, supporting storage, monitoring, VNet and private endpoints live.
 
 The diagrams deliberately omit lower-detail supporting resources such as deployment resources, unrelated resource group contents and individual firewall rule IP addresses unless they are needed to explain the deployment shape.
 
