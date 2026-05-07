@@ -418,18 +418,3 @@ The SQL comments say database triggers handle insert/update cases where `[delete
 
 The pipeline is triggered by `trgGIAS_StaffRecord_UpdateStatus` and ran successfully daily at about `01:00` local time in the captured last-7-days view.
 
-## Remaining Caveats
-
-- The exact business meaning of DfE Sign-in user `status=0` should be confirmed against DfE Sign-in API semantics.
-- The exact business meaning of `StaffRecord.status` values `0` and `1` should be confirmed if this document is used for business-process documentation.
-- Pipeline `GIAS_CopyDataFromProdIntoArchive` appears manual/support or historical from captured evidence, but wider run history or owner context would be needed to prove it is unused.
-- The reason for the `Deleted DSI Accounts to GIAS - One off Sync` backfill range `2024/02/01` to `2025/03/18` has not been confirmed.
-- The archive database `ea-edubase-prod-archive` was recorded elsewhere as paused during the wider investigation, which may affect archive-linked pipeline viability.
-
-## Source Material
-
-- See [S158 Data Factory Investigation](../../../docs/infra/s158-data-factory-investigation.md)
-- See [ADF Archive BulkUpdateMessages Reference](../../../docs/infra/reference/ADF/adf-archive-BulkUpdateMessages-pipeline.md)
-- See [ADF DSI Disabled Accounts Reference](../../../docs/infra/reference/ADF/adf-syncing-disabled-accounts-from-DSI.md)
-- See [DataOpsJobs SQL Reference](../../../docs/infra/reference/ADF/create-DataOpsJobs-objects.sql)
-- See [StaffRecord SQL Reference](../../../docs/infra/reference/ADF/StaffRecord%20optimisation%20264108.sql)
