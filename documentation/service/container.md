@@ -9,57 +9,63 @@ This is the container-level view of the system. It shows the major deployable/ap
 ```mermaid
 C4Container
 
-
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
-
-
-    System_Ext(dsi, "DfE Sign-in (DSI", "Authentication and identity service")
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 
     Person(user, "GIAS User", "Accesses GIAS through the web interface")
-    
-    System_Ext(externalSystems, "External Consumer", "Systems that download<br>GIAS datasets") 
-    
+
+    Person(admin, "GIAS Admin", "Uses the JSP administration interface")
+        
+    System_Ext(externalSystems, "External Consumer", "Systems that download GIAS datasets") 
+
 
     System_Boundary(gias, "Get Information about Schools (GIAS)") {
         
-        Container(profileAPI, "Profile API", "C# API", "Supplies list of education providers")
+        Container(web, "GIAS Web Front End", "C# ASP.NET Web Application", "Provides the user interface for searching, viewing and<br> managing GIAS data")
 
-        Container(web, "GIAS Web Front End", "C# ASP.NET Web Application", "Provides the user interface for <br>searching, viewing and managing GIAS data")
+        Container(adminSoapBackend, "GIAS Admin and SOAP Application", "Java Application with JSP and SOAP", "Back-end deployment with admin JSP and SOAP capabilities.")
+
+        Container(apiBackend, "GIAS API Application", "Java REST API Application", "Back-end deployment without the JSP layer.<br>Used by the C# front end.")
         
-        Container(fileAPI, "File API", "Azure App Service", "Serves ZIP files from the extract file storage")
+        ContainerDb(fileStorage, "File Store", "Azure Storage", "Stores generated ZIP<br>extracts available for download")
+        
+        Container(providerProfileApi, "Provider Profile API", "Azure Function App", "S158 provider API exposing provider lookup functions.")
 
-        ContainerDb(db, "GIAS Database", "MS SQL Server", "Stores establishment, governance,<br>user and reference data")
-
-        Container(backend, "GIAS Backend", "Java Rest API Application + SOAP", "Executes business rules, validation and<br>data access logic")
-
-        ContainerDb(fileStorage, "File Storage", "Azure File Storage", "Stores generated ZIP<br>extracts available for download")
+        ContainerDb(db, "GIAS Database", "MS SQL Server", "Stores establishment, governance, user<br> and reference data")
+        
+        
+        Container(dataFactory, "GIAS Data Factory", "Azure Data Factory", "S158 data integration workload for GIAS SQL<br> processing and archive activity.")
+        
+        Container(redundantGiasApi, "GIAS API", "Azure Function App", "S158 GIAS API Function App.<br>Not currently used.")
     }
 
     Rel(user,web, "Browse GIAS data", "HTTPS/HTML")
-    Rel(user, fileAPI, "Downloads files using", "HTTPS/CSV/ZIP")
-    Rel(dsi,profileAPI , "Retrieves provider<br>information", "HTTPS")
-    Rel(user, dsi, "Authenticates via", "OIDC / OAuth2")
-    Rel(dsi, web, "Authenticates via", "OIDC / OAuth2")
-    Rel(web, backend, "Calls", "HTTPS")
-    Rel(profileAPI,db,  "Reads from", "SQL")
-    Rel(backend, db, "Reads from and writes to", "TCP/SQL")
-    Rel(backend, fileStorage, "Writes ZIP files to", "HTTPS/CSV/ZIP")
-    Rel(fileAPI,fileStorage, "Reads ZIP files from", "HTTPS/CSV/ZIP")
-    Rel(externalSystems, fileAPI,"Downloads GIAS data","HTTPS/CSV/ZIP")
-    Rel(externalSystems, backend,"Retrieves GIAS data","HTTPS/SOAP")
+    Rel(admin, adminSoapBackend, "Administers GIAS data using JSP interface", "HTTPS/HTML")
+
+    Rel(web, apiBackend, "Calls", "HTTPS")
+    Rel(web, fileStorage, "Reads generated extracts from", "HTTPS/CSV/ZIP")
+    Rel(apiBackend, db, "Reads from and writes to", "TCP/SQL")
+    Rel(apiBackend, fileStorage, "Uses extract storage", "HTTPS/CSV/ZIP")
+    Rel(adminSoapBackend, db, "Reads from and writes to", "TCP/SQL")
+    Rel(adminSoapBackend, fileStorage, "Uses extract storage", "HTTPS/CSV/ZIP")
+    Rel(providerProfileApi, db, "Reads provider data from", "SQL over private endpoint")
+    Rel(redundantGiasApi, db, "Associated SQL path; active use not evidenced", "SQL over private endpoint")
+    Rel(dataFactory, db, "Reads from and writes to", "SQL over private endpoint")
+
+    Rel(externalSystems, web,"Downloads GIAS data","HTTPS/CSV/ZIP")
+    Rel(externalSystems, adminSoapBackend,"Retrieves GIAS data","HTTPS/SOAP")
 
     UpdateRelStyle(user, dsi, $offsetX="-48", $offsetY="-60") 
-    UpdateRelStyle(dsi,profileAPI, $offsetX="-120", $offsetY="-100") 
     UpdateRelStyle(user,web, $offsetX="-90", $offsetY="-70") 
-    UpdateRelStyle(user, fileAPI, $offsetX="-160", $offsetY="-60") 
+    UpdateRelStyle(admin, adminSoapBackend, $offsetX="-60", $offsetY="-80") 
     UpdateRelStyle(dsi, web, $offsetX="-140", $offsetY="-80") 
-    UpdateRelStyle(api, db, $offsetX="-50", $offsetY="50") 
-    UpdateRelStyle(externalSystems, fileAPI, $offsetX="-20", $offsetY="-60") 
-    UpdateRelStyle(externalSystems, backend, $offsetX="-5", $offsetY="-200") 
-    UpdateRelStyle(backend, db, $offsetX="-50", $offsetY="50") 
-    UpdateRelStyle(backend, fileStorage, $offsetX="-50", $offsetY="50") 
-    UpdateRelStyle(web, backend, $offsetX="-50", $offsetY="-20")
+    UpdateRelStyle(externalSystems, web, $offsetX="-20", $offsetY="-60") 
+    UpdateRelStyle(externalSystems, adminSoapBackend, $offsetX="-5", $offsetY="-200") 
+    UpdateRelStyle(apiBackend, db, $offsetX="-50", $offsetY="50") 
+    UpdateRelStyle(adminSoapBackend, db, $offsetX="-50", $offsetY="50") 
+    UpdateRelStyle(apiBackend, fileStorage, $offsetX="-50", $offsetY="50") 
+    UpdateRelStyle(adminSoapBackend, fileStorage, $offsetX="-50", $offsetY="50") 
+    UpdateRelStyle(web, apiBackend, $offsetX="-50", $offsetY="-20")
 
 ```
 
-For that lower-level view, see [the back-end component diagrams](../back-end-component/component/). This document explains how the `GIAS Backend` container is structured internally, including client-facing entry points, scheduled and batch processing, reference-data provider integrations, and the authentication flow used by the front end when it calls the back-end APIs.
+For lower-level Java back-end detail, see [the back-end component diagrams](../back-end-component/component/). That documentation explains the internal structure behind the Java API and admin/SOAP application capabilities, including client-facing entry points, scheduled and batch processing, reference-data provider integrations, and the authentication flow used by the front end when it calls the back-end APIs.
