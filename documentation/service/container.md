@@ -4,8 +4,40 @@ Major components forming GIAS service, and how they interact with each other and
 
 This is the container-level view of the system. It shows the major deployable/application building blocks and the main relationships between them, but it does not break the Java back end down into its internal Spring, persistence, extract, and integration components.
 
+## How To Read This Diagram
+
+Read the diagram from the outside in:
+
+- `GIAS User`, `GIAS Admin` and `External Consumer` are actors or systems outside the GIAS application boundary.
+- The `Get Information about Schools (GIAS)` boundary contains the main deployable containers and data stores currently in scope for this view.
+- The C# web front end calls the Java API application for application behaviour and uses the file store for generated extracts.
+- The Java admin and SOAP application is the back-end deployment with the JSP administration interface and SOAP capabilities.
+- `S158` refers to a separate production Azure subscription/environment used by DfE Platform Identity for GIAS-related integration workloads.
 
 
+## Diagram key
+```mermaid
+C4Container
+
+    UpdateLayoutConfig($c4ShapeInRow="5", $c4BoundaryInRow="1")
+
+    System_Boundary(key, "Diagram key") {
+        Container(appServiceKey, "Azure App Service", "Application hosting", "")
+        ContainerDb(storageKey, "Azure Storage", "")
+        ContainerDb(databaseKey, "Database", "")
+        Container(functionAppKey, "Azure Function App", "Serverless application hosting", "")
+        Container(dataFactoryKey, "Azure Data Factory", "Data integration", "")
+    }
+
+    UpdateElementStyle(appServiceKey, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
+    UpdateElementStyle(storageKey, $bgColor="#fef3c7", $fontColor="#000000", $borderColor="#b45309")
+    UpdateElementStyle(databaseKey, $bgColor="#bfdbfe", $fontColor="#000000", $borderColor="#1e3a8a")
+    UpdateElementStyle(functionAppKey, $bgColor="#ccfbf1", $fontColor="#000000", $borderColor="#0f766e")
+    UpdateElementStyle(dataFactoryKey, $bgColor="#f3e8ff", $fontColor="#000000", $borderColor="#9333ea")
+```
+
+
+## Container diagram
 ```mermaid
 C4Container
 
@@ -28,14 +60,13 @@ C4Container
         
         ContainerDb(fileStorage, "File Store", "Azure Storage", "Stores generated ZIP<br>extracts available for download")
         
-        Container(providerProfileApi, "Provider Profile API", "Azure Function App", "S158 provider API exposing provider lookup functions.")
+        Container(providerProfileApi, "Provider Profile API", "Azure Function App", "Provider API in the S158 production environment.<br>Exposes provider lookup functions.")
 
         ContainerDb(db, "GIAS Database", "MS SQL Server", "Stores establishment, governance, user<br> and reference data")
         
-        
-        Container(dataFactory, "GIAS Data Factory", "Azure Data Factory", "S158 data integration workload for GIAS SQL<br> processing and archive activity.")
-        
-        Container(redundantGiasApi, "GIAS API", "Azure Function App", "S158 GIAS API Function App.<br>Not currently used.")
+        Container(redundantGiasApi, "GIAS API", "Azure Function App", "GIAS API Function App in the S158 production environment.<br>Not currently used.")
+
+        Container(dataFactory, "GIAS Data Factory", "Azure Data Factory", "Data integration workload in the S158 production environment for GIAS SQL<br> processing and archive activity.")
     }
 
     Rel(user,web, "Browse GIAS data", "HTTPS/HTML")
@@ -54,10 +85,8 @@ C4Container
     Rel(externalSystems, web,"Downloads GIAS data","HTTPS/CSV/ZIP")
     Rel(externalSystems, adminSoapBackend,"Retrieves GIAS data","HTTPS/SOAP")
 
-    UpdateRelStyle(user, dsi, $offsetX="-48", $offsetY="-60") 
     UpdateRelStyle(user,web, $offsetX="-90", $offsetY="-70") 
     UpdateRelStyle(admin, adminSoapBackend, $offsetX="-60", $offsetY="-80") 
-    UpdateRelStyle(dsi, web, $offsetX="-140", $offsetY="-80") 
     UpdateRelStyle(externalSystems, web, $offsetX="-20", $offsetY="-60") 
     UpdateRelStyle(externalSystems, adminSoapBackend, $offsetX="-5", $offsetY="-200") 
     UpdateRelStyle(apiBackend, db, $offsetX="-50", $offsetY="50") 
@@ -66,6 +95,23 @@ C4Container
     UpdateRelStyle(adminSoapBackend, fileStorage, $offsetX="-50", $offsetY="50") 
     UpdateRelStyle(web, apiBackend, $offsetX="-50", $offsetY="-20")
 
+    UpdateElementStyle(web, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
+    UpdateElementStyle(apiBackend, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
+    UpdateElementStyle(adminSoapBackend, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
+
+    UpdateElementStyle(providerProfileApi, $bgColor="#ccfbf1", $fontColor="#000000", $borderColor="#0f766e")
+    UpdateElementStyle(dataFactory, $bgColor="#f3e8ff", $fontColor="#000000", $borderColor="#9333ea")
+
+    UpdateElementStyle(db, $bgColor="#bfdbfe", $fontColor="#000000", $borderColor="#1e3a8a")
+    UpdateElementStyle(fileStorage, $bgColor="#fef3c7", $fontColor="#000000", $borderColor="#b45309")
+
+    UpdateElementStyle(redundantGiasApi, $bgColor="#ccfbf1", $fontColor="#000000", $borderColor="#0f766e")
+
 ```
 
-For lower-level Java back-end detail, see [the back-end component diagrams](../back-end-component/component/). That documentation explains the internal structure behind the Java API and admin/SOAP application capabilities, including client-facing entry points, scheduled and batch processing, reference-data provider integrations, and the authentication flow used by the front end when it calls the back-end APIs.
+## Notes
+
+
+- For lower-level C# front-end detail, see [the front-end component diagram](../front-end-component/component/).
+- For lower-level Java back-end detail, see [the back-end component diagrams](../back-end-component/component/).
+- The `GIAS API` Azure Function App is shown because it is deployed infrastructure, but it is not currently being used.
