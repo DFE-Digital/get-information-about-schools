@@ -70,12 +70,12 @@ C4Container
     }
 
     Rel(user,web, "Browse GIAS data", "HTTPS/HTML")
-    Rel(admin, adminSoapBackend, "Administers GIAS data using JSP interface", "HTTPS/HTML")
+    Rel(admin, adminSoapBackend, "Administers GIAS data<br>using JSP interface", "HTTPS/HTML")
 
     Rel(web, apiBackend, "Calls", "HTTPS")
     Rel(web, fileStorage, "Reads generated extracts from", "HTTPS/CSV/ZIP")
     Rel(apiBackend, db, "Reads from and writes to", "TCP/SQL")
-    Rel(apiBackend, fileStorage, "Uses extract storage", "HTTPS/CSV/ZIP")
+    Rel(apiBackend, fileStorage, "Uses", "HTTPS/CSV/ZIP")
     Rel(adminSoapBackend, db, "Reads from and writes to", "TCP/SQL")
     Rel(adminSoapBackend, fileStorage, "Uses extract storage", "HTTPS/CSV/ZIP")
     Rel(providerProfileApi, db, "Reads provider data from", "SQL over private endpoint")
@@ -85,14 +85,14 @@ C4Container
     Rel(externalSystems, web,"Downloads GIAS data","HTTPS/CSV/ZIP")
     Rel(externalSystems, adminSoapBackend,"Retrieves GIAS data","HTTPS/SOAP")
 
-    UpdateRelStyle(user,web, $offsetX="-90", $offsetY="-70") 
-    UpdateRelStyle(admin, adminSoapBackend, $offsetX="-60", $offsetY="-80") 
-    UpdateRelStyle(externalSystems, web, $offsetX="-20", $offsetY="-60") 
-    UpdateRelStyle(externalSystems, adminSoapBackend, $offsetX="-5", $offsetY="-200") 
-    UpdateRelStyle(apiBackend, db, $offsetX="-50", $offsetY="50") 
-    UpdateRelStyle(adminSoapBackend, db, $offsetX="-50", $offsetY="50") 
-    UpdateRelStyle(apiBackend, fileStorage, $offsetX="-50", $offsetY="50") 
-    UpdateRelStyle(adminSoapBackend, fileStorage, $offsetX="-50", $offsetY="50") 
+    UpdateRelStyle(user,web, $offsetX="-30", $offsetY="-170") 
+    UpdateRelStyle(admin, adminSoapBackend, $offsetX="-70", $offsetY="-160") 
+    UpdateRelStyle(externalSystems, web, $offsetX="-170", $offsetY="-80") 
+    UpdateRelStyle(externalSystems, adminSoapBackend, $offsetX="-140", $offsetY="-80") 
+    UpdateRelStyle(apiBackend, db, $offsetX="-210", $offsetY="-30") 
+    UpdateRelStyle(adminSoapBackend, db, $offsetX="40", $offsetY="-130") 
+    UpdateRelStyle(apiBackend, fileStorage, $offsetX="-45", $offsetY="-50") 
+    UpdateRelStyle(adminSoapBackend, fileStorage, $offsetX="-100", $offsetY="-20") 
     UpdateRelStyle(web, apiBackend, $offsetX="-50", $offsetY="-20")
 
     UpdateElementStyle(web, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
