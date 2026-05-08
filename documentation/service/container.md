@@ -79,7 +79,7 @@ C4Container
     Rel(adminSoapBackend, db, "Reads from and writes to", "TCP/SQL")
     Rel(adminSoapBackend, fileStorage, "Uses extract storage", "HTTPS/CSV/ZIP")
     Rel(providerProfileApi, db, "Reads provider data from", "SQL over private endpoint")
-    Rel(redundantGiasApi, db, "Associated SQL path; active use not evidenced", "SQL over private endpoint")
+    Rel(redundantGiasApi, db, "Reads", "SQL over private endpoint")
     Rel(dataFactory, db, "Reads from and writes to", "SQL over private endpoint")
 
     Rel(externalSystems, web,"Downloads GIAS data","HTTPS/CSV/ZIP")
@@ -94,6 +94,10 @@ C4Container
     UpdateRelStyle(apiBackend, fileStorage, $offsetX="-45", $offsetY="-50") 
     UpdateRelStyle(adminSoapBackend, fileStorage, $offsetX="-100", $offsetY="-20") 
     UpdateRelStyle(web, apiBackend, $offsetX="-50", $offsetY="-20")
+
+    UpdateRelStyle(providerProfileApi, db, $offsetX="-70", $offsetY="45")
+
+    UpdateRelStyle(dataFactory, db, $offsetX="70", $offsetY="10")
 
     UpdateElementStyle(web, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
     UpdateElementStyle(apiBackend, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
