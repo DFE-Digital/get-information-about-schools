@@ -11,62 +11,40 @@ To keep the component view readable, the front-end subcomponents are grouped int
 
 This category groups the journeys that users and administrators interact with directly.
 
-
 ```mermaid
 C4Component
 
-    UpdateLayoutConfig($c4ShapeInRow="6", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 
     title User-facing workflow and content components in the GIAS Web Front End
 
-    Person(anonUser, "Anonymous User", "Browses public content and uses public search and  download journeys")
-
-    Person(authUser, "Authenticated User", "Signs in via DfE Sign-in to access protected workflows such as approvals, bulk updates, saved<br>searches and other role-dependent features")
-
-    Person(admin, "Administrator", "Authenticated user with additional rights to maintain front-end content and operational data")
-
     Container_Boundary(workflows, "GIAS Web Front End - User-facing workflow and content components") {
 
-        Component(guidance, "Guidance Pages and Blob-backed<br>Resources", "MVC pages + blob-backed file delivery", "Serves guidance pages, PDFs,<br> CSVs and packaged guidance downloads")
+        Component(history, "Change History", "MVC browse/download flows", "Shows and exports establishment and group change history")
 
         Component(search, "Search and Filtering", "MVC + JavaScript filters", "Searches establishments, groups and governors and manages<br> tokenised filter state")
        
         Component(downloads, "Downloads", "MVC + API-backed workflows", "Lets users request search-result and dataset downloads")
         
-        Component(bulk, "Bulk Updates", "MVC upload workflows", "Runs spreadsheet-driven bulk update and bulk<br> association journeys")
-        
         Component(approvals, "Change Requests and Approvals", "MVC review and approval flows", "Creates approval-controlled changes and,<br> manages pending approvals")
+
+        Component(apiClients, "Back-end API Client Layer", "Typed service clients + HttpClientWrapper", "Shared back-end client layer used by search,<br> downloads, bulk operations,<br>approvals and change history")
+
+        Component(bulk, "Bulk Updates", "MVC upload workflows", "Runs spreadsheet-driven bulk update and bulk<br> association journeys")
 
         Component(editorialContent, "Editorial Content Management", "MVC content pages + admin screens", "Serves news, notification banners, FAQ content<br> and glossary terms, and provides admin maintenance")
 
-
-        Component(history, "Change History", "MVC browse/download flows", "Shows and exports establishment and group change history")
-
-        Component(apiClients, "Back-end API Client Layer", "Typed service clients + HttpClientWrapper", "Shared back-end client layer used by search,<br> downloads, bulk operations, approvals and change history")
+        Component(guidance, "Guidance Pages and Blob-backed<br>Resources", "MVC pages + blob-backed file delivery", "Serves guidance pages, PDFs, CSVs and packaged guidance downloads")
     }
 
     Container_Boundary(infra, "","") {
-        System_Ext(blob, "Azure Blob Storage", "Guidance and support files served by the web front end")
-
         ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores front-end-owned content and<br> data quality records")
-
+        
         System_Ext(backendApi, "GIAS Back-end APIs", "Primary back-end APIs for search, downloads, approvals,<br> batch operations and change history")
+        
+        System_Ext(blob, "Azure Blob Storage", "Guidance and support files served by the web front end")
     }
 
-    Rel(anonUser, downloads, "Uses", "HTTPS")
-    Rel(anonUser, search, "Uses", "HTTPS")
-    Rel(anonUser, guidance, "Views", "HTTPS")
-    Rel(anonUser, editorialContent, "Views", "HTTPS")
-    Rel(authUser, search, "Uses", "HTTPS")
-    Rel(authUser, downloads, "Uses", "HTTPS")
-    Rel(authUser, bulk, "Bulk uploads data via", "HTTPS")
-    Rel(authUser, approvals, "Uses", "HTTPS")
-    Rel(authUser, history, "Uses", "HTTPS")
-    Rel(authUser, guidance, "Views", "HTTPS")
-    Rel(authUser, editorialContent, "Views", "HTTPS")
-    Rel(admin, editorialContent, "Maintains content", "HTTPS")
-    Rel(admin, bulk, "Bulk uploads data via", "HTTPS")
-    Rel(admin, approvals, "Uses approval workflows", "HTTPS")
     Rel(search, downloads, "Provides selected filters and<br>result context for")
     Rel(search, apiClients, "Uses")
     Rel(downloads, apiClients, "Uses")
@@ -77,24 +55,12 @@ C4Component
     Rel(editorialContent, tableStorage, "Reads and writes", "Azure Storage Tables")
     Rel(guidance, blob, "Reads and serves files", "Azure Blob Storage")
 
-    UpdateRelStyle(anonUser, guidance, $offsetX="-65", $offsetY="-50")
-    UpdateRelStyle(anonUser, search, $offsetX="-70", $offsetY="-60")
-    UpdateRelStyle(anonUser, editorialContent, $offsetX="25", $offsetY="-180")
-    UpdateRelStyle(authUser, guidance, $offsetX="200", $offsetY="-80")
-    UpdateRelStyle(authUser, history, $offsetX="60", $offsetY="-150")
-    UpdateRelStyle(authUser, editorialContent, $offsetX="100", $offsetY="-180")
-    UpdateRelStyle(anonUser, downloads, $offsetX="-240", $offsetY="-110")
-    UpdateRelStyle(authUser, search, $offsetX="25", $offsetY="-80")
-    UpdateRelStyle(authUser, downloads, $offsetX="-50", $offsetY="-80")
-    UpdateRelStyle(authUser, approvals, $offsetX="-230", $offsetY="-80")
-    UpdateRelStyle(authUser, bulk, $offsetX="-150", $offsetY="-40")
-    UpdateRelStyle(admin, bulk, $offsetX="-50", $offsetY="-50")
-    UpdateRelStyle(admin, approvals, $offsetX="-60", $offsetY="-60")
-    UpdateRelStyle(admin, editorialContent, $offsetX="400", $offsetY="-200")
     UpdateRelStyle(search, downloads, $offsetX="-50", $offsetY="50")
-    UpdateRelStyle(guidance, blob, $offsetX="-150", $offsetY="-200")
+    UpdateRelStyle(guidance, blob, $offsetX="-120", $offsetY="-210")
     UpdateRelStyle(apiClients, backendApi, $offsetX="40", $offsetY="-50")
-    UpdateRelStyle(editorialContent, tableStorage, $offsetX="-40", $offsetY="-40")
+    UpdateRelStyle(editorialContent, tableStorage, $offsetX="-120", $offsetY="-110")
+
+    UpdateRelStyle(apiClients, backendApi, $offsetX="150", $offsetY="-300")
 
 ```
 
@@ -148,36 +114,35 @@ C4Component
 
     System_Ext(dsi, "DfE Sign-in", "External identity provider used via SAML")
 
+    System_Ext(backendApi, "GIAS Back-end APIs", "Provides security, lookup and core business APIs")  
 
     Container_Boundary(platform, "GIAS Web Front End - Supporting platform and integration components") {
+
         Component(security, "Security and Permissions", "OWIN + Sustainsys.Saml2 + ISecurityService", "Authenticates users, builds claims and resolves authorisation data")
         
         Component(apiClients, "Back-end API Client Layer", "Typed service clients + HttpClientWrapper", "Shared client layer for security, lookups, downloads, approvals,<br> change history and write/read workflows")
         
         Component(lookup, "Lookup and Caching", "Lookup services + cache layer", "Caches reference data and supports lookup-backed filters and forms")
 
-        Component(addresses, "Address Lookups", "Places lookup services", "Performs place and postcode address lookup journeys")
-       
-        Component(tokens, "Tokens", "Token repository + token value provider", "Stores tokenised search/filter state for later reuse")
-
-
         Component(storage, "Azure Table Storage-backed Web State", "Table repositories", "Persists user preferences, content, data quality and other front-end-owned records")
+
+
+        Component(externalLinks, "External Lookup Links", "ExternalLookupService", "Builds and checks outbound links to Ofsted, benchmarking and<br> performance services")
+
+        Component(addresses, "Address Lookups", "Places lookup services", "Performs place and postcode address lookup journeys")
+
+        Component(logging, "API Session Recorder and Logging", "HttpClientWrapper + Azure Table Logger", "Captures API diagnostics and web/exception logs for support use")
+
+        Component(tokens, "Tokens", "Token repository + token value provider", "Stores tokenised search/filter state for later reuse")
         
         Component(companiesHouse, "Companies House Number Integration", "Companies House service", "Searches Companies House and persists<br> company-number based trust identifiers")
-        
-        Component(externalLinks, "External Lookup Links", "ExternalLookupService", "Builds and checks outbound links to Ofsted, benchmarking and<br> performance services")
-        
-        Component(logging, "API Session Recorder and Logging", "HttpClientWrapper + Azure Table Logger", "Captures API diagnostics and web/exception logs for support use")
     }
 
     Container_Boundary(infra, "","") {
 
-    ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores tokens, preferences, front-end content, data quality records and diagnostic logs")
+        ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores tokens, preferences, front-end content, data quality records and diagnostic logs")
 
-    System_Ext(backendApi, "GIAS Back-end APIs", "Provides security, lookup and core business APIs")  
-
-    System_Ext(extData, "External Data Services", "Azure Maps, OS Places, Companies House, Ofsted, Financial Benchmarking and FSCPD")
-
+        System_Ext(extData, "External Data Services", "Azure Maps, OS Places, Companies House, Ofsted, Financial Benchmarking and FSCPD")
     }
 
     Rel(security, dsi, "Authenticates with", "SAML2")
@@ -192,16 +157,17 @@ C4Component
     Rel(storage, tableStorage, "Reads and writes front-end-owned data", "Azure Storage Tables")
     Rel(logging, tableStorage, "Writes API traces and web logs", "Azure Storage Tables")
 
+    UpdateRelStyle(apiClients, backendApi, $offsetX="-10", $offsetY="-70")
 
     UpdateRelStyle(security, dsi, $offsetX="-20", $offsetY="-50")
-    UpdateRelStyle(security, apiClients, $offsetX="-60", $offsetY="50")
+    UpdateRelStyle(security, apiClients, $offsetX="-70", $offsetY="50")
     UpdateRelStyle(lookup, apiClients, $offsetX="-30", $offsetY="40")
-    UpdateRelStyle(tokens, tableStorage, $offsetX="-40", $offsetY="-180")
+    UpdateRelStyle(tokens, tableStorage, $offsetX="130", $offsetY="-110")
     UpdateRelStyle(storage, tableStorage, $offsetX="0", $offsetY="-200")
-    UpdateRelStyle(logging, tableStorage, $offsetX="-10", $offsetY="-30")
-    UpdateRelStyle(companiesHouse, extData, $offsetX="-60", $offsetY="-200")
-    UpdateRelStyle(addresses, extData, $offsetX="30", $offsetY="-300")
-    UpdateRelStyle(externalLinks, extData,, $offsetX="10", $offsetY="-200")
+    UpdateRelStyle(logging, tableStorage, $offsetX="-190", $offsetY="-40")
+    UpdateRelStyle(companiesHouse, extData, $offsetX="-60", $offsetY="-100")
+    UpdateRelStyle(addresses, extData, $offsetX="150", $offsetY="-200")
+    UpdateRelStyle(externalLinks, extData,, $offsetX="-30", $offsetY="-200")
 
 ```
 
