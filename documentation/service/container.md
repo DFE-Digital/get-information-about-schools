@@ -66,7 +66,7 @@ C4Container
         
         Container(redundantGiasApi, "GIAS API", "Azure Function App", "GIAS API Function App in the S158 production environment.<br>Not currently used.")
 
-        Container(dataFactory, "GIAS Data Factory", "Azure Data Factory", "Data integration workload in the S158 production environment for GIAS SQL<br> processing and archive activity.")
+        Container(dataFactory, "GIAS Data Factory", "Azure Data Factory", "Data integration workload in the S158 production environment for<br> GIAS SQL processing and archive activity.")
     }
 
     Rel(user,web, "Browse GIAS data", "HTTPS/HTML")
