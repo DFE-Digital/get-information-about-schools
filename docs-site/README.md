@@ -6,6 +6,8 @@ Nanoc is a Ruby static site generator. In this repo it reads markdown from `docu
 
 The home page also includes an automatically generated site index built from the markdown files under `documentation/`.
 
+When linking between source documents under `documentation/`, use relative `.md` links so the links work in GitHub's source view. The Nanoc markdown filter rewrites those links to the generated `index.html` routes during site compilation.
+
 ## Install dependencies
 
 Run these commands from `docs-site/`, not from the repository root.
