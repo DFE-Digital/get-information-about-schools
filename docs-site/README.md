@@ -45,7 +45,9 @@ bundle exec nanoc compile
 
 This rebuilds the generated HTML in `docs-site/output/`.
 
-GitHub Pages downloads Mermaid during the build and packages it into `output/assets/vendor/mermaid/`. If you want Mermaid diagrams to render when previewing `docs-site/output/` locally, download the same pinned asset after compiling:
+The generated site tries to load Mermaid from `output/assets/vendor/mermaid/` first, then falls back to the pinned CDN asset. GitHub Pages downloads Mermaid during the build and packages it into `output/assets/vendor/mermaid/`.
+
+If you want Mermaid diagrams to render when previewing `docs-site/output/` locally without relying on the CDN fallback, download the same pinned asset after compiling:
 
 ```powershell
 New-Item -ItemType Directory -Force output/assets/vendor/mermaid | Out-Null

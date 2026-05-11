@@ -104,16 +104,17 @@ C4Deployment
                     Container(apiRedis, "API/backend Redis cache", "P1 Premium, 6 GB", "Redis cache in Java API/backend production configuration. SSL port 6380. No private endpoint.")
                 }
 
-                Deployment_Node(backendAppService, "ea-edubase-backend-prod", "Azure App Service") {
-                    Container(adminSoapApp, "GIAS Admin and SOAP Application", "Java application with JSP and SOAP", "Back-end deployment with admin JSP and SOAP capabilities.")
+
+                Deployment_Node(replicaSqlServer, "ea-edubase-prod-rep-srv", "Azure SQL logical server") {
+                    ContainerDb(replicaDb, "ea-edubase-prod", "Azure SQL Database geo-replica", "Geo-replica of the primary production database.")
                 }
 
                 Deployment_Node(primarySqlServer, "ea-edubase-prod-srv", "Azure SQL logical server") {
                     ContainerDb(primaryDb, "ea-edubase-prod", "Azure SQL Database", "Primary GIAS production database.")
                 }
 
-                Deployment_Node(replicaSqlServer, "ea-edubase-prod-rep-srv", "Azure SQL logical server") {
-                    ContainerDb(replicaDb, "ea-edubase-prod", "Azure SQL Database geo-replica", "Geo-replica of the primary production database.")
+                Deployment_Node(backendAppService, "ea-edubase-backend-prod", "Azure App Service") {
+                    Container(adminSoapApp, "GIAS Admin and SOAP Application", "Java application with JSP and SOAP", "Back-end deployment with admin JSP and SOAP capabilities.")
                 }
             }
         }
