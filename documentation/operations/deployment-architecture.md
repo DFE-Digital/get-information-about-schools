@@ -122,13 +122,22 @@ C4Deployment
 
     Rel(frontDoorEndpoint, webApp, "Forwards web traffic to", "HTTPS")
     Rel(webApp, apiApp, "Calls", "HTTPS")
-    Rel(webApp, frontendRedis, "Uses cache", "Redis TLS/6380, assumed")
+    Rel(webApp, frontendRedis, "Uses cache", "Redis TLS/6380")
     Rel(webApp, azureMaps, "Searches addresses and locations", "HTTPS/JSON")
     Rel(apiApp, primaryDb, "Uses production data", "SQL")
     Rel(apiApp, apiRedis, "Uses cache", "Redis TLS/6380")
     Rel(adminSoapApp, primaryDb, "Uses production data", "SQL")
     Rel(adminSoapApp, apiRedis, "Uses cache", "Redis TLS/6380")
     Rel(primaryDb, replicaDb, "Geo-replicates to", "Azure SQL replication")
+
+    UpdateRelStyle(frontDoorEndpoint, webApp, $offsetX="-60", $offsetY="-30")
+    UpdateRelStyle(webApp, frontendRedis, $offsetX="-50", $offsetY="-40")
+    UpdateRelStyle(webApp, azureMaps, $offsetX="-130", $offsetY="-30")
+    UpdateRelStyle(webApp, apiApp, $offsetX="-10", $offsetY="-50")
+    UpdateRelStyle(apiApp, apiRedis, $offsetX="-40", $offsetY="-40")
+    UpdateRelStyle(primaryDb, replicaDb, $offsetX="-60", $offsetY="20")
+    UpdateRelStyle(adminSoapApp, primaryDb, $offsetX="-50", $offsetY="20")
+    UpdateRelStyle(x, y, $offsetX="0", $offsetY="0")
 
     UpdateElementStyle(frontDoorEndpoint, $bgColor="#ffffff", $fontColor="#0891b2", $borderColor="#0891b2")
     UpdateElementStyle(webApp, $bgColor="#ffffff", $fontColor="#1d4ed8", $borderColor="#1d4ed8")
