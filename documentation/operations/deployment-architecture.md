@@ -291,6 +291,8 @@ C4Deployment
 
     title DFE T1 Network and Database Diagram Key
 
+    UpdateLayoutConfig($c4ShapeInRow="6", $c4BoundaryInRow="3")
+
     Deployment_Node(keyBoundary, "Tenant / subscription / resource group / VNet / subnet", "Uncoloured deployment boundary") {
         Container(appServiceKey, "Azure App Service", "Application hosting", "Web, API and backend App Services")
         ContainerDb(sqlKey, "Azure SQL Database", "Relational database", "Primary and geo-replica databases")
@@ -441,6 +443,8 @@ C4Deployment
 
     title S158 Application Diagram Key
 
+    UpdateLayoutConfig($c4ShapeInRow="6", $c4BoundaryInRow="3")
+
     Deployment_Node(keyBoundary, "Tenant / subscription / resource group", "Uncoloured deployment boundary") {
         Container(functionKey, "Azure Function App", "Serverless application hosting", "HTTP and timer functions")
         Container(appServiceKey, "Azure App Service", "Application hosting", "Web app / webjob-style app")
@@ -465,6 +469,26 @@ C4Deployment
     title S158 Production Application Deployment Overview
 
     UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
+
+    Rel(giasApiFunction, giasApiPlanNode, "Runs on", "App Service Plan")
+    Rel(giasWebJobApp, giasApiPlanNode, "Runs on", "App Service Plan")
+    Rel(giasApiFunction, giasApiStorage, "Uses runtime storage", "Azure Functions storage")
+    Rel(providerFunction, providerPlanNode, "Runs on", "App Service Plan")
+    Rel(providerFunction, providerStorage, "Uses runtime storage", "Azure Functions storage")
+    Rel(providerFunction, providerInsights, "Likely sends telemetry to", "Application Insights")
+    Rel(providerInsights, providerFailureAlert, "Drives smart detection alerting")
+    Rel(giasApiFunction, api4xxAlert, "Monitored by", "HTTP 4xx metric")
+    Rel(giasApiFunction, api5xxAlert, "Monitored by", "HTTP 5xx metric")
+    Rel(dataFactory, adfFailureAlert, "Monitored by", "Pipeline failure metric")
+
+    UpdateRelStyle(giasApiFunction, api5xxAlert, $offsetX="-160", $offsetY="-70")
+    UpdateRelStyle(giasWebJobApp, giasApiPlanNode, $offsetX="10", $offsetY="0")
+    UpdateRelStyle(providerFunction, providerPlanNode, $offsetX="50", $offsetY="-10")
+    UpdateRelStyle(providerFunction, providerStorage, $offsetX="-180", $offsetY="-60")
+    UpdateRelStyle(providerFunction, providerInsights, $offsetX="-90", $offsetY="-70")
+    UpdateRelStyle(providerInsights, providerFailureAlert, $offsetX="-30", $offsetY="-20")
+    UpdateRelStyle(giasApiFunction, giasApiStorage, $offsetX="0", $offsetY="-70")
+
 
     Deployment_Node(tenantS158, "DfE Platform Identity", "Microsoft Entra tenant: platform.education.gov.uk") {
         Deployment_Node(subscriptionS158, "s158-getinformationaboutschools-production", "Azure Subscription") {
@@ -533,16 +557,6 @@ C4Deployment
         }
     }
 
-    Rel(giasApiFunction, giasApiPlanNode, "Runs on", "App Service Plan")
-    Rel(giasWebJobApp, giasApiPlanNode, "Runs on", "App Service Plan")
-    Rel(giasApiFunction, giasApiStorage, "Uses runtime storage", "Azure Functions storage")
-    Rel(providerFunction, providerPlanNode, "Runs on", "App Service Plan")
-    Rel(providerFunction, providerStorage, "Uses runtime storage", "Azure Functions storage")
-    Rel(providerFunction, providerInsights, "Likely sends telemetry to", "Application Insights")
-    Rel(providerInsights, providerFailureAlert, "Drives smart detection alerting")
-    Rel(giasApiFunction, api4xxAlert, "Monitored by", "HTTP 4xx metric")
-    Rel(giasApiFunction, api5xxAlert, "Monitored by", "HTTP 5xx metric")
-    Rel(dataFactory, adfFailureAlert, "Monitored by", "Pipeline failure metric")
 
     UpdateElementStyle(giasApiFunction, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
     UpdateElementStyle(providerFunction, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
@@ -592,6 +606,8 @@ The key points are:
 C4Deployment
 
     title S158 SQL Connectivity Diagram Key
+
+    UpdateLayoutConfig($c4ShapeInRow="6", $c4BoundaryInRow="3")
 
     Deployment_Node(keyBoundary, "Tenant / subscription / resource group / VNet / subnet", "Uncoloured deployment boundary") {
         Container(functionKey, "Azure Function App", "Application hosting", "Function App with outbound VNet integration")
@@ -679,6 +695,15 @@ C4Deployment
     Rel(privateDns, peProvider, "Resolves ea-edubase-prod-srv to", "A record 10.0.3.4")
     Rel(peProvider, dfePrimaryDb, "Approved private SQL endpoint", "Private Link")
     Rel(peRest, dfePrimaryDb, "Approved private SQL endpoint", "Private Link")
+
+    UpdateRelStyle(adfLinkedServices, adfManagedPe, $offsetX="10", $offsetY="0")
+    UpdateRelStyle(adfManagedPe, dfePrimaryDb, $offsetX="-130", $offsetY="20")
+    UpdateRelStyle(adfManagedPe, dfeArchiveDb, $offsetX="-130", $offsetY="10")
+    UpdateRelStyle(giasApiFunctionNet, peApimod, $offsetX="-20", $offsetY="-220")
+    UpdateRelStyle(privateDns, peProvider, $offsetX="10", $offsetY="-30")
+    UpdateRelStyle(peProvider, dfePrimaryDb, $offsetX="-210", $offsetY="-50")
+    UpdateRelStyle(peRest, dfePrimaryDb, $offsetX="-200", $offsetY="-40")
+    UpdateRelStyle(providerFunctionNet, peProvider, $offsetX="-50", $offsetY="-220")
 
     UpdateElementStyle(giasApiFunctionNet, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
     UpdateElementStyle(providerFunctionNet, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
