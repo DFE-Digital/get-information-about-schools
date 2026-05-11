@@ -245,6 +245,16 @@ C4Deployment
     Rel(primaryDb, operationalStorage, "Writes SQL diagnostic logs and metrics", "Azure diagnostic settings")
     Rel(primaryDb, replicaDb, "Geo-replicates to", "Azure SQL replication")
 
+    UpdateRelStyle(webApp, blobAndTableStorage, $offsetX="-250", $offsetY="-30")
+    UpdateRelStyle(webApp, operationalStorage, $offsetX="-250", $offsetY="-30")
+    UpdateRelStyle(apiApp, operationalStorage, $offsetX="-160", $offsetY="-60")
+    UpdateRelStyle(adminSoapApp, operationalStorage, $offsetX="-70", $offsetY="-60")
+    UpdateRelStyle(adminSoapApp, extractStorage, $offsetX="-60", $offsetY="-60")
+    UpdateRelStyle(apiApp, extractStorage, $offsetX="-180", $offsetY="-40")
+    UpdateRelStyle(webApp, extractStorage, $offsetX="-310", $offsetY="-50")
+    UpdateRelStyle(primaryDb, operationalStorage, $offsetX="-10", $offsetY="-10")
+    UpdateRelStyle(primaryDb, replicaDb, $offsetX="-50", $offsetY="20")
+
     UpdateElementStyle(webApp, $bgColor="#ffffff", $fontColor="#1d4ed8", $borderColor="#1d4ed8")
     UpdateElementStyle(apiApp, $bgColor="#ffffff", $fontColor="#1d4ed8", $borderColor="#1d4ed8")
     UpdateElementStyle(adminSoapApp, $bgColor="#ffffff", $fontColor="#1d4ed8", $borderColor="#1d4ed8")
@@ -361,6 +371,18 @@ C4Deployment
     Rel(primaryPrivateEndpoints, primaryDb, "Allows private SQL access")
     Rel(replicaSqlFirewall, replicaDb, "Allows selected public SQL access")
     Rel(primaryDb, replicaDb, "Geo-replicates to", "Azure SQL replication")
+
+    UpdateRelStyle(s158Resources, primaryPrivateEndpoints, $offsetX="-20", $offsetY="-250")
+    UpdateRelStyle(webApp, vnetIntegration, $offsetX="0", $offsetY="-50")
+    UpdateRelStyle(apiApp, vnetIntegration, $offsetX="-400", $offsetY="50")
+    UpdateRelStyle(adminSoapApp, vnetIntegration, $offsetX="-650", $offsetY="200")
+    UpdateRelStyle(publicAllowlist, primarySqlFirewall, $offsetX="-20", $offsetY="-150")
+    UpdateRelStyle(publicAllowlist, replicaSqlFirewall, $offsetX="-120", $offsetY="-140")
+    UpdateRelStyle(primarySqlFirewall, primaryDb, $offsetX="-20", $offsetY="-120")
+    UpdateRelStyle(primaryPrivateEndpoints, primaryDb, $offsetX="-180", $offsetY="0")
+    UpdateRelStyle(replicaSqlFirewall, replicaDb, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(primaryDb, replicaDb, $offsetX="-130", $offsetY="30")
+  
 
     UpdateElementStyle(s158Resources, $bgColor="#ffffff", $fontColor="#475569", $borderColor="#475569")
     UpdateElementStyle(publicAllowlist, $bgColor="#ffffff", $fontColor="#475569", $borderColor="#475569")
