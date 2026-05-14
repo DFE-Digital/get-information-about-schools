@@ -1,0 +1,207 @@
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.imageMQ = "(max-width: 768px)";
+    ViewBag.SiteSection = "help";
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl"><b>Acceptable use policy</b></h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Purpose</b></p>
+        <p>
+            This policy sets out what is an acceptable use of the Get Information about Schools (GIAS) service. It aims to:
+        </p>
+        <p>
+            <ul>
+                <li><p>keep the service fast and reliable for everyone</p></li>
+                <li><p>protect GIAS from abusive or excessive automated traffic (including artificial intelligence (AI) bots and web scrapers)</p></li>
+                <li><p>direct users with bulk data needs to the public downloads</p></li>
+            </ul>
+        </p>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>About GIAS and available data</b></p>
+        <p>
+            GIAS is the Department for Education (DfE) register of educational establishments, establishment groups and governance. It provides search and browse functionality and daily-updated public downloads of specific data fields. For machine-readable or frequent access use there are the:
+        </p>
+
+        <p>
+            <ul>
+                <li><p>public downloads. These are available from the GIAS service (downloads page) and updated daily. Use these for bulk data ingestion</p></li>
+            </ul>
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Scope</b></p>
+        <p>
+            This policy applies to anyone accessing GIAS, including:
+        </p>
+
+        <p>
+            <ul>
+                <li><p>individuals using the public website (interactive browsing)</p></li>
+                <li><p>organisations and developers using automated tools (including AI agents, scrapers, Robotic Process Automation (RPA), and headless browsers)</p></li>
+                <li><p>integrations consuming bulk datasets or Application Programming Interfaces (APIs)</p></li>
+            </ul>
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Acceptable use</b></p>
+        <p>
+            You may:
+        </p>
+        <p>
+            <ul>
+                <li><p>browse and search GIAS via the public website for human, interactive use</p></li>
+                <li><p>download bulk data via the public downloads page for offline analysis or system ingestion, observing the Open Government Licence (OGL) where stated on the site</p></li>
+            </ul>
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Prohibited behaviours</b></p>
+        <p>
+            To protect service quality, you must not:
+        </p>
+        <p>
+            <ul>
+                <li><p>scrape or harvest the GIAS website user interface (UI) (including via AI bots, headless browsers or automated scripts) for bulk or systematic extraction. Use public downloads or approved APIs instead</p></li>
+                <li><p>bypass or interfere with technical controls, including rate limits, access controls, or measures intended to prevent abuse (typical controls include throttling and HTTP 429 responses)</p></li>
+                <li><p>send excessive or high-frequency requests to the website that degrade performance for others. Bulk or frequent access must go via public downloads or approved APIs</p></li>
+                <li><p>use data in ways that breach licensing, privacy, or security obligations, including attempting to re-identify individuals or combining data to expose personal information (see GIAS service terms of use and overarching OGL terms of use referenced on the service under the help page)</p></li>
+            </ul>
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Automated and artificial intelligence (AI) bot access</b></p>
+        <p>
+            Automated access to the public website (HyperText Markup Language (HTML) pages) is not permitted except for transient, low‑volume use that mimics normal human browsing. Examples that are not permitted:
+        </p>
+        <p>
+            <ul>
+                <li><p>continuous crawling, indexing, or training-data collection by AI agents or bots</p></li>
+                <li><p>RPA jobs that paginate through listings daily or weekly</p></li>
+                <li><p>headless scraping to build a shadow copy of the dataset</p></li>
+            </ul>
+        </p>
+        <p>
+            If you need data at volume, frequency or in machine‑readable form, you must use the public downloads.
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Bulk data access</b></p>
+        <p>
+            If you need large or regular data extracts:
+        </p>
+        <p>
+            <ul>
+                <li><p>choose the public downloads. These are available on the GIAS service and are updated daily. These files are designed for bulk use and are the most efficient path for many use cases</p></li>
+            </ul>
+        </p>
+        <p>
+            When using DfE approved APIs:
+        </p>
+        <p>
+            <ul>
+                <li><p>authenticate using the mechanisms described in the API documentation and keep credentials secure</p></li>
+                <li><p>respect rate limits and quotas. Exceeding limits may result in "HTTP 429 Too Many Requests" and temporary or permanent suspension</p></li>
+                <li><p>use efficient patterns such as incremental refreshes, caching, and back-off/retry strategies</p></li>
+            </ul>
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Fair use and service protection</b></p>
+        <p>
+            GIAS operates controls (for example, traffic shaping and rate limiting) to ensure fair access and to protect the service from overload or abuse. GIAS may throttle, block, or otherwise mitigate traffic that appears abusive or non-compliant, including traffic from known bot networks or data-extraction tools.
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Attribution and licensing</b></p>
+        <p>
+            Where GIAS data is made available under the OGL, you must attribute appropriately and comply with the licence terms of use stated on the service. Check the licensing notice on the GIAS site footer and on specific download pages before re-use.
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Privacy and security</b></p>
+        <p>
+            Do not attempt to access non-public data or features, circumvent authentication, or probe the service for vulnerabilities. Do not combine GIAS data with other sources to create or infer personal data beyond what is lawfully and openly available.
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Monitoring and enforcement</b></p>
+        <p>
+            GIAS actively monitors usage to maintain performance and security. GIAS may:
+        </p>
+        <p>
+            <ul>
+                <li><p>rate-limit, throttle or block non-compliant traffic</p></li>
+                <li><p>revoke approved API access for repeated violations</p></li>
+                <li><p>pursue legal or contractual remedies where appropriate</p></li>
+            </ul>
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Reporting problems</b></p>
+        <p>
+            <ul>
+                <li><p>if you experience issues, or if your legitimate use has been blocked in error</p></li>
+                <li><p>for general support on GIAS</p></li>
+            </ul>
+        </p>
+        <p>
+            use the contact link under the help page or the contact link in the footer.
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><b>Changes to this policy</b></p>
+        <p>
+            This policy may be updated to reflect service changes (for example, when fields are added or removed, or when new access routes are launched). Service updates are announced on the GIAS news page.
+        </p>
+    </div>
+</div>
