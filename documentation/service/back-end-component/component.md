@@ -68,7 +68,7 @@ Container_Boundary(edubase, "Edubase Java Application") {
 
 Container_Boundary(managedServices, "Managed Services") {
       ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
-  Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
+  Container_Ext(object_store, "Extract blob storage", "Azure Blob Storage", "Stores generated extract files")
 
 
 }
@@ -170,7 +170,7 @@ C4Component
 
     Container_Boundary(managedServices, "Managed Services") {
         ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
-        Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
+        Container_Ext(object_store, "Extract blob storage", "Azure Blob Storage", "Stores generated extract files")
     }
 
     Rel(extracts, domain_services, "Uses")
@@ -264,7 +264,7 @@ C4Component
     UpdateRelStyle(companiesHouse, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(ofsted, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(os, persistence, $offsetX="0", $offsetY="0")
-    UpdateRelStyle(uklrp, persistence, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(ukrlp, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(persistence, sql_server, $offsetX="10", $offsetY="-40")
     UpdateRelStyle(address_importer, os_ext, $offsetX="-50", $offsetY="30")
     UpdateRelStyle(ukrlp, ukrlp_ext, $offsetX="0", $offsetY="-70")
