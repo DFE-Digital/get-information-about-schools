@@ -1,5 +1,5 @@
 ﻿/*
-GIAS Test public table schema
+GIAS table schema
 
 This  script creates schemas, empty table structures, and table relationships.
 It includes column definitions, identity columns, computed-column expressions, primary keys, unique constraints, default constraints and foreign keys.
