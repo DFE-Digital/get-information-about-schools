@@ -66,14 +66,8 @@ Container_Boundary(edubase, "Edubase Java Application") {
 
 
 Container_Boundary(managedServices, "Managed Services") {
-      ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
-<<<<<<< HEAD
-  Container_Ext(object_store, "Extract blob storage", "Azure Blob Storage", "Stores generated extract files")
-=======
-  Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
->>>>>>> ed3723fa8bd273dfc3541472a3b05b14cfd8fb8e
-
-
+    ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
+    Container_Ext(object_store, "Extract blob storage", "Azure Blob Storage", "Stores generated extract files")
 }
 
 
