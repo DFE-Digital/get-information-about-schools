@@ -40,7 +40,6 @@ Container_Ext(internalDfE, "Internal DfE Services", "")
 
 Container_Boundary(edubase, "Edubase Java Application") {
 
-
     Component(auth, "Authentication & Security", "Spring Security + SAML", "SAFE/SA SSO, role-based access control")
 
     Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, <br>establishment/group/staff workflows search, content<br> and admin screens")
