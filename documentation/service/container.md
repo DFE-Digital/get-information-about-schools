@@ -58,11 +58,7 @@ C4Container
 
         Container(apiBackend, "GIAS API Application", "Java REST API Application", "Back-end deployment without the JSP layer.<br>Used by the C# front end.")
         
-<<<<<<< HEAD
         ContainerDb(fileStorage, "Extract blob storage", "Azure Blob Storage", "Stores generated ZIP<br>extracts available for download")
-=======
-        ContainerDb(fileStorage, "File Store", "Azure Storage", "Stores generated ZIP<br>extracts available for download")
->>>>>>> ed3723fa8bd273dfc3541472a3b05b14cfd8fb8e
         
         Container(providerProfileApi, "Provider Profile API", "Azure Function App", "Provider API in the S158 production environment.<br>Exposes provider lookup functions.")
 
@@ -79,11 +75,7 @@ C4Container
     Rel(web, apiBackend, "Calls", "HTTPS")
     Rel(web, fileStorage, "Reads generated extracts from", "HTTPS/CSV/ZIP")
     Rel(apiBackend, db, "Reads from and writes to", "TCP/SQL")
-<<<<<<< HEAD
     Rel(apiBackend, fileStorage, "Uses extract blob storage", "HTTPS/CSV/ZIP")
-=======
-    Rel(apiBackend, fileStorage, "Uses", "HTTPS/CSV/ZIP")
->>>>>>> ed3723fa8bd273dfc3541472a3b05b14cfd8fb8e
     Rel(adminSoapBackend, db, "Reads from and writes to", "TCP/SQL")
     Rel(adminSoapBackend, fileStorage, "Uses extract storage", "HTTPS/CSV/ZIP")
     Rel(providerProfileApi, db, "Reads provider data from", "SQL over private endpoint")
