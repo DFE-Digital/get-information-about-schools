@@ -266,11 +266,13 @@ $(function () {
 
     var rows = items
       .map(function (item) {
-        var urnLink = detailTemplate ? detailTemplate.replace('__urn__', item.urn) : '#';
+        var urnForUrl = escapeHtml(item.urn);
+        var urnLink = detailTemplate ? detailTemplate.replace('__urn__', urnForUrl) : '#';
+        var predecessorUrnForUrl = item.predecessorUrn ? escapeHtml(item.predecessorUrn) : '';
         var predecessorLink = item.predecessorUrn
-          ? '<a class="govuk-link" href="' + detailTemplate.replace('__urn__', item.predecessorUrn) + '">' + escapeHtml(item.predecessorUrn) + '</a>'
+          ? '<a class="govuk-link" href="' + (detailTemplate ? detailTemplate.replace('__urn__', predecessorUrnForUrl) : '#') + '">' + escapeHtml(item.predecessorUrn) + '</a>'
           : '';
-        var editLink = editTemplate ? editTemplate.replace('__urn__', item.urn) : '#';
+        var editLink = editTemplate ? editTemplate.replace('__urn__', urnForUrl) : '#';
 
         return '<tr class="govuk-table__row">' +
           '<td class="govuk-table__cell cell-openingdate">' + escapeHtml(item.openDateDisplay) + '</td>' +
