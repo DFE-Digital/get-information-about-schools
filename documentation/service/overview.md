@@ -92,7 +92,6 @@ C4Context
   UpdateRelStyle(backOfficeUser, DfESignIn, $offsetX="-50", $offsetY="-50") 
 
   UpdateRelStyle(DfESignIn, GIAS, $offsetX="-80", $offsetY="-20") 
-  UpdateRelStyle(schoolCensus, GIAS, $offsetX="10", $offsetY="0") 
   UpdateRelStyle(ukrlp, GIAS, $offsetX="-190", $offsetY="180") 
   UpdateRelStyle(GIAS, Notify, $offsetX="-200", $offsetY="-10") 
 

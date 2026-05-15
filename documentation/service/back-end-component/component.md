@@ -40,35 +40,34 @@ Container_Ext(internalDfE, "Internal DfE Services", "")
 
 Container_Boundary(edubase, "Edubase Java Application") {
 
-
     Component(auth, "Authentication & Security", "Spring Security + SAML", "SAFE/SA SSO, role-based access control")
 
-    Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, establishment/group/staff workflows <br>search, content and admin screens")
+    Component(web_mvc, "Web MVC Controllers", "Spring MVC", "Back-office UI, <br>establishment/group/staff workflows search, content<br> and admin screens")
 
-    Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users,<br> downloads, lookups and approvals")
+    Component(rest_api, "REST API Controllers", "Spring MVC REST", "REST endpoints for establishments, groups, users,  downloads,<br> lookups and approvals")
 
     Component(soap_ws, "SOAP Web Services", "Spring-WS / SOAP", "SOAP endpoints for data extracts, establishment search<br> and legacy system integrations")
 
 
     Component(flyway, "Flyway DB Migration Scripts", "Flyway + T-SQL", "Versioned DB schema, config, and data update scripts")
 
-    Component(domain_services, "Domain Services", "Spring Services", "Core business logic for establishments, groups,staff, users,<br> validation, approvals and reporting")
+    Component(domain_services, "Domain Services", "Spring Services", "Core business logic for establishments,<br> groups,staff, users, validation, approvals and reporting")
 
     Component(search_lookup, "Search & Lookup Services", "Search/Dictionary Services", "Filtering, lookup dictionaries, data dictionary, geo<br> and query support")
 
     Component(extracts, "Extract & Download Services", "Extract Managers/Renderers", "Generates extracts, manages callbacks, and prepares<br>download metadata")
 
 
-    Component(gov_notify, "Gov.Notify Client", "NotificationSender + GOV.UK Notify client", "Sends templated outbound emails for user,<br>workflow and operational notifications")
 
     Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes core application data, users,<br> approvals, job state, extracts metadata, reference data")
+
+    Component(gov_notify, "Gov.Notify Client", "NotificationSender + GOV.UK Notify client", "Sends templated outbound emails for user,<br>workflow and operational notifications")
 }
 
 
 Container_Boundary(managedServices, "Managed Services") {
-
-  ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
-  Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
+    ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
+    Container_Ext(object_store, "Extract blob storage", "Azure Blob Storage", "Stores generated extract files")
 }
 
 
@@ -114,12 +113,13 @@ UpdateRelStyle(rest_api, extracts, $offsetX="0", $offsetY="0")
 UpdateRelStyle(soap_ws, extracts, $offsetX="0", $offsetY="0")
 UpdateRelStyle(domain_services, search_lookup, $offsetX="-10", $offsetY="-10")
 UpdateRelStyle(search_lookup, persistence, $offsetX="40", $offsetY="-30")
-UpdateRelStyle(extracts, persistence, $offsetX="100", $offsetY="0")
-UpdateRelStyle(extracts, object_store, $offsetX="230", $offsetY="-50")
+UpdateRelStyle(extracts, persistence, $offsetX="110", $offsetY="-20")
+UpdateRelStyle(extracts, object_store, $offsetX="300", $offsetY="-100")
+UpdateRelStyle(extracts, gov_notify, $offsetX="180", $offsetY="-40")
 UpdateRelStyle(flyway, sql_server, $offsetX="-90", $offsetY="-200")
-UpdateRelStyle(persistence, sql_server, $offsetX="-45", $offsetY="-40")
+UpdateRelStyle(persistence, sql_server, $offsetX="30", $offsetY="-50")
 UpdateRelStyle(domain_services, persistence, $offsetX="10", $offsetY="0")
-UpdateRelStyle(extracts, gov_notify, $offsetX="180", $offsetY="-30")
+
 UpdateRelStyle(domain_services, gov_notify, $offsetX="-40", $offsetY="-30")
 ```
 
@@ -167,7 +167,7 @@ C4Component
 
     Container_Boundary(managedServices, "Managed Services") {
         ContainerDb_Ext(sql_server, "GIAS Data database", "MS SQL Server")
-        Container_Ext(object_store, "Object Storage, stores data extracts", "Azure Blob storage")
+        Container_Ext(object_store, "Extract blob storage", "Azure Blob Storage", "Stores generated extract files")
     }
 
     Rel(extracts, domain_services, "Uses")
@@ -261,7 +261,7 @@ C4Component
     UpdateRelStyle(companiesHouse, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(ofsted, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(os, persistence, $offsetX="0", $offsetY="0")
-    UpdateRelStyle(uklrp, persistence, $offsetX="0", $offsetY="0")
+    UpdateRelStyle(ukrlp, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(persistence, sql_server, $offsetX="10", $offsetY="-40")
     UpdateRelStyle(address_importer, os_ext, $offsetX="-50", $offsetY="30")
     UpdateRelStyle(ukrlp, ukrlp_ext, $offsetX="0", $offsetY="-70")
