@@ -73,6 +73,8 @@ module GiasDocumentationHelpers
   end
 
   def documentation_page?(doc_item)
+    return false unless doc_item.identifier.to_s.end_with?(".md")
+
     identifier = doc_item.identifier.without_ext.to_s
     identifier.start_with?("/") && identifier != "/" && identifier != "/index"
   end

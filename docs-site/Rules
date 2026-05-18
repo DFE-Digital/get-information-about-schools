@@ -11,13 +11,11 @@ route "/**/*.md" do
   identifier == "/index" ? "/index.html" : "#{identifier}/index.html"
 end
 
-compile "*" do
-  if item.binary?
-    write item.identifier.to_s
-  end
+compile "/**/*" do
+  write item.identifier.to_s
 end
 
-route "*" do
+route "/**/*" do
   item.identifier.to_s
 end
 
