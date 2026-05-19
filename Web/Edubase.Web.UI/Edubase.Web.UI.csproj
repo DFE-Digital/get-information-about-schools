@@ -926,6 +926,7 @@
     <Content Include="Views\Guidance\SelectFormat.cshtml" />
     <Content Include="Views\Guidance\SelectData.cshtml" />
     <Content Include="Views\Guidance\ReadyToDownload.cshtml" />
+    <Content Include="Views\Home\AcceptableUsePolicy.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

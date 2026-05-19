@@ -148,5 +148,8 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/Contact")]
         public ActionResult Contact() => View();
+
+        [Route("~/AcceptableUsePolicy")]
+        public ActionResult AcceptableUsePolicy() => View(); 
     }
 }
