@@ -383,7 +383,7 @@
                 </div>
             }
 
-            @if (Model.DisplayPolicy.SENIds)
+            @if (Model.DisplayPolicy.SENIds && (Html.FeatureEnabled("gias.iebt.sen") || Model.Establishment.TypeId != (int)eLookupEstablishmentType.OtherIndependentSpecialSchool))
             {
                 <div class="govuk-summary-list__row">
                     <dt id="sen-type-key" class="govuk-summary-list__key">Type of SEN provision</dt>
