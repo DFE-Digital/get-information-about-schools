@@ -8,6 +8,26 @@ namespace Edubase.Services.Enums
 
     public static class EnumSets
     {
+        public static IEnumerable<int> AllowedEstablishmentTypeForBulkCreateAcademies { get; } = new[]
+{
+            ET.CommunitySchool,
+            ET.CommunitySpecialSchool,
+            ET.FoundationSchool,
+            ET.FoundationSpecialSchool,
+            ET.VoluntaryAidedSchool,
+            ET.VoluntaryControlledSchool
+        }.Cast<int>();
+
+        public static IEnumerable<int> NotAllowedEstablishmentTypeForBulkCreateAcademies { get; } = new[]
+        {
+            ET.FurtherEducation,
+            ET.SixthFormCentres,
+            ET.FreeSchoolsSpecial,
+            ET.OtherIndependentSchool,
+            ET.OtherIndependentSpecialSchool,
+            ET.NonmaintainedSpecialSchool
+       }.Cast<int>();
+
         public static IEnumerable<int> LAMaintainedEstablishments { get; } = new[]
         {
             ET.CommunitySchool,

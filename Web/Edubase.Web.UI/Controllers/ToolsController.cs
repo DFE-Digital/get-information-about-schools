@@ -1,6 +1,7 @@
 using Edubase.Services.Domain;
 using Microsoft.Ajax.Utilities;
 using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
+using ES = Edubase.Services.Enums.EnumSets;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -139,6 +140,12 @@ namespace Edubase.Web.UI.Controllers
                     est = estCall.GetResult();
                     if (est == null)
                     {
+                        ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
+                    }
+                    else if (est.TypeId != null && !ES.AllowedEstablishmentTypeForBulkCreateAcademies.Any(x => x == est.TypeId)
+                                || ES.NotAllowedEstablishmentTypeForBulkCreateAcademies.Any(x => x == est.TypeId))
+                    {
+
                         ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                     }
                     else
