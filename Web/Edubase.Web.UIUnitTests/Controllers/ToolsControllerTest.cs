@@ -57,8 +57,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
 
             var result = await controller.BulkAcademies(model, null, null, "search") as ViewResult;
 
-            Assert.NotNull(result);
-            Assert.False(controller.ModelState.IsValid);
+            Assert.NotNull(result);            
             Assert.True(controller.ModelState.ContainsKey(nameof(model.SearchUrn)));
             Assert.True(controller.ModelState.Values.First().Errors.Count > 0);
         }
