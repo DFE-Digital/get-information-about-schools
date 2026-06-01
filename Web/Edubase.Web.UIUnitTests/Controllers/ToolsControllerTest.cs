@@ -21,111 +21,46 @@ namespace Edubase.Web.UIUnitTests.Controllers
 {
     public class ToolsControllerTest
     {
-        private readonly ToolsController controller;
-        private readonly Mock<IEstablishmentReadService> mockEstablishmentReadService = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
-        private readonly Mock<IEstablishmentWriteService> mockEstablishmentWriteService = new Mock<IEstablishmentWriteService>(MockBehavior.Strict);
-        private readonly Mock<IEstablishmentDownloadService> mockEstablishmentDownloadService = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
 
-        public ToolsControllerTest()
+        private static ToolsController CreateController(
+            IEstablishmentReadService readService = null)
         {
-            controller = new ToolsController(
+            return new ToolsController(
                 Mock.Of<ISecurityService>(),
-                mockEstablishmentReadService.Object,
-                mockEstablishmentWriteService.Object,
+                readService ?? Mock.Of<IEstablishmentReadService>(),
+                Mock.Of<IEstablishmentWriteService>(),
                 Mock.Of<ICachedLookupService>(),
                 Mock.Of<IClientStorage>(),
                 Mock.Of<ILocalAuthoritySetRepository>(),
-                mockEstablishmentDownloadService.Object);
+                Mock.Of<IEstablishmentDownloadService>());
+        }
+
+        private static IEstablishmentReadService CreateReadServiceReturning(
+            EstablishmentModel establishment)
+        {
+            var mock = new Mock<IEstablishmentReadService>();
+            mock.Setup(x => x.GetAsync(123, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new ServiceResultDto<EstablishmentModel>(establishment));
+            return mock.Object;
         }
 
         [Fact]
-        public async Task BulkAcademies_Convert_AllowedType_Success()
+        public async Task BulkAcademies_Search_NullUrn_AddsValidationError()
         {
-            var allowedType = ES.AllowedEstablishmentTypeForBulkCreateAcademies.First();
+            var controller = CreateController();
+            var model = new BulkAcademiesViewModel { SearchUrn = null };
 
-            var est = new EstablishmentModel
-            {
-                Urn = 999,
-                Name = "Valid School",
-                TypeId = allowedType
-            };
+            await controller.BulkAcademies(model, null, null, "search");
 
-            mockEstablishmentReadService.Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
-               .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(est));
-
-            var model = CreateBulkAcademiesViewModel();
-
-            var result = await controller.BulkAcademies(model, null, null, "search") as ViewResult;
-
-            Assert.NotNull(result);            
-            Assert.True(controller.ModelState.ContainsKey(nameof(model.SearchUrn)));
-            Assert.True(controller.ModelState.Values.First().Errors.Count > 0);
+            var errors = controller.ModelState[nameof(model.SearchUrn)].Errors;
+            Assert.Single(errors);
+            Assert.Equal("Please enter a valid URN", errors[0].ErrorMessage);
         }
 
         [Fact]
-        public async Task BulkAcademies_Convert_Not_AllowedType_Failure()
+        public async Task BulkAcademies_Search_DuplicateUrn_AddsDuplicateError()
         {
-            var notAllowedType = ES.LAMaintainedEstablishments.Except(ES.AllowedEstablishmentTypeForBulkCreateAcademies).First();
-
-            var est = new EstablishmentModel
-            {
-                Urn = 999,
-                Name = "Valid School",
-                TypeId = notAllowedType
-            };
-
-            mockEstablishmentReadService.Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
-               .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(est));
-
-            var model = CreateBulkAcademiesViewModel();
-
-            var result = await controller.BulkAcademies(model, null, null, "search") as ViewResult;
-
-            Assert.NotNull(result);
-            Assert.False(controller.ModelState.IsValid);
-            Assert.True(controller.ModelState.ContainsKey(nameof(model.SearchUrn)));
-            Assert.True(controller.ModelState.Values.First().Errors.Count > 0);
-            Assert.Equal("Please enter a valid URN", controller.ModelState.Values.First().Errors.First().ErrorMessage);
-        }
-
-        [Fact]
-        public async Task BulkAcademies_Convert_Duplicate_Urn_Failure()
-        {
-            var allowedType = ES.AllowedEstablishmentTypeForBulkCreateAcademies.First();
-
-            var est = new EstablishmentModel
-            {
-                Urn = 999,
-                Name = "Valid School",
-                TypeId = allowedType
-            };
-
-            mockEstablishmentReadService.Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
-               .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(est));
-
-            var model = CreateBulkAcademiesViewModelWithItems();
-
-            var result = await controller.BulkAcademies(model, null, null, "search") as ViewResult;
-
-            Assert.NotNull(result);
-            Assert.False(controller.ModelState.IsValid);
-            Assert.True(controller.ModelState.ContainsKey(nameof(model.SearchUrn)));
-            Assert.True(controller.ModelState.Values.First().Errors.Count > 0);
-            Assert.Equal("URN is a duplicate", controller.ModelState.Values.First().Errors.First().ErrorMessage);
-        }
-
-        private BulkAcademiesViewModel CreateBulkAcademiesViewModel()
-        {
-            var model = new BulkAcademiesViewModel
-            {
-                SearchUrn = 123,
-            };
-
-            return model;
-        }
-
-        private BulkAcademiesViewModel CreateBulkAcademiesViewModelWithItems()
-        {
+            var controller = CreateController();
             var model = new BulkAcademiesViewModel
             {
                 SearchUrn = 123,
@@ -135,8 +70,165 @@ namespace Edubase.Web.UIUnitTests.Controllers
                 }
             };
 
-            return model;
+            await controller.BulkAcademies(model, null, null, "search");
+
+            var errors = controller.ModelState[nameof(model.SearchUrn)].Errors;
+            Assert.Single(errors);
+            Assert.Equal("URN is a duplicate", errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public async Task BulkAcademies_Search_EstablishmentNotFound_AddsValidationError()
+        {
+            var readService = CreateReadServiceReturning(null);
+            var controller = CreateController(readService);
+
+            var model = new BulkAcademiesViewModel { SearchUrn = 123 };
+
+            await controller.BulkAcademies(model, null, null, "search");
+
+            var errors = controller.ModelState[nameof(model.SearchUrn)].Errors;
+            Assert.Single(errors);
+            Assert.Equal("Please enter a valid URN", errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public async Task BulkAcademies_Search_NotAllowedEstablishmentType_AddsValidationError()
+        {
+            var notAllowedType = ES.LAMaintainedEstablishments
+                .Except(ES.AllowedEstablishmentTypeForBulkCreateAcademies)
+                .First();
+
+            var establishment = new EstablishmentModel
+            {
+                Urn = 123,
+                Name = "Test School",
+                TypeId = notAllowedType
+            };
+
+            var controller = CreateController(
+                CreateReadServiceReturning(establishment));
+
+            var model = new BulkAcademiesViewModel { SearchUrn = 123 };
+
+            await controller.BulkAcademies(model, null, null, "search");
+
+            var errors = controller.ModelState[nameof(model.SearchUrn)].Errors;
+            Assert.Single(errors);
+            Assert.Equal("Please enter a valid URN", errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public async Task BulkAcademies_Cancel_ClearsModelAndModelState()
+        {
+            var controller = CreateController();
+
+            var model = new BulkAcademiesViewModel
+            {
+                SearchUrn = 123,
+                FoundItem = new BulkAcademyViewModel { Urn = 123 }
+            };
+
+            controller.ModelState.AddModelError("x", "error");
+
+            var result = await controller.BulkAcademies(model, null, null, "cancel") as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Null(model.SearchUrn);
+            Assert.Null(model.FoundItem);
+            Assert.True(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async Task BulkAcademies_RemoveUrn_RemovesItemFromList()
+        {
+            var controller = CreateController();
+
+            var model = new BulkAcademiesViewModel
+            {
+                ItemsToAdd = new List<BulkAcademyViewModel>
+                {
+                    new BulkAcademyViewModel { Urn = 111 },
+                    new BulkAcademyViewModel { Urn = 222 }
+                }
+            };
+
+            await controller.BulkAcademies(model, 111, null, null);
+
+            Assert.Single(model.ItemsToAdd);
+            Assert.Equal(222, model.ItemsToAdd[0].Urn);
+        }
+
+        [Fact]
+        public async Task BulkAcademies_EditUrn_PopulatesFoundItem_AndSetsButtonText()
+        {
+            var controller = CreateController();
+
+            var model = new BulkAcademiesViewModel
+            {
+                ItemsToAdd = new List<BulkAcademyViewModel>
+                {
+                    new BulkAcademyViewModel
+                    {
+                        Urn = 123,
+                        Name = "Test School",
+                        EstablishmentTypeId = 1
+                    }
+                }
+            };
+
+            await controller.BulkAcademies(model, null, 123, null);
+
+            Assert.NotNull(model.FoundItem);
+            Assert.Equal(123, model.FoundItem.Urn);
+            Assert.Equal("Update establishment", controller.ViewBag.ButtonText);
+        }
+
+        [Fact]
+        public async Task BulkAcademies_AddAction_NoEstablishmentType_AddsValidationError()
+        {
+            var controller = CreateController();
+
+            var model = new BulkAcademiesViewModel
+            {
+                FoundItem = new BulkAcademyViewModel
+                {
+                    Urn = 123,
+                    EstablishmentTypeId = null
+                }
+            };
+
+            await controller.BulkAcademies(model, null, null, "add");
+
+            var errors = controller.ModelState[nameof(model.FilteredItemTypes)].Errors;
+            Assert.Single(errors);
+            Assert.Equal("Please select an establishment type", errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public async Task BulkAcademies_FoundItem_AddsItemToItemsToAdd_AndClearsFoundItem()
+        {
+            var controller = CreateController();
+
+            var model = new BulkAcademiesViewModel
+            {
+                FoundItem = new BulkAcademyViewModel
+                {
+                    Urn = 123,
+                    Name = "Test School",
+                    EstablishmentTypeId = 1
+                },
+                ItemsToAdd = new List<BulkAcademyViewModel>
+                {
+                    new BulkAcademyViewModel { Urn = 123, Name = "Old name" }
+                }
+            };
+
+            await controller.BulkAcademies(model, null, null, null);
+
+            Assert.Null(model.FoundItem);
+            Assert.Single(model.ItemsToAdd);
+            Assert.Equal("Test School", model.ItemsToAdd[0].Name);
         }
     }
-
 }
