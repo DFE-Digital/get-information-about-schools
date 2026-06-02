@@ -29,6 +29,7 @@ namespace Edubase.Web.UI.Controllers
     using System.Web.Mvc;
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
+    using ES = Edubase.Services.Enums.EnumSets;
 
     [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
     public class ToolsController : Controller
@@ -141,6 +142,11 @@ namespace Edubase.Web.UI.Controllers
                     {
                         ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                     }
+                    else if (!ES.AllowedEstablishmentTypeForBulkCreateAcademies.Any(x => x == est.TypeId))
+                    {
+
+                        ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
+                    }
                     else
                     {
                         filteredItems = (await GetFilteredBulkAcademyTypes((int) est.Urn, establishmentTypeFullList))
@@ -150,6 +156,9 @@ namespace Edubase.Web.UI.Controllers
                             ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                         }
                     }
+
+
+
                 }
             }
 
@@ -481,7 +490,8 @@ namespace Edubase.Web.UI.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
-                    status = "error", redirect = string.Concat("/independent-schools/download/", id)
+                    status = "error",
+                    redirect = string.Concat("/independent-schools/download/", id)
                 }));
             }
 
@@ -489,7 +499,8 @@ namespace Edubase.Web.UI.Controllers
             return Json(
                 JsonConvert.SerializeObject(new
                 {
-                    status = model.IsComplete, redirect = string.Concat("/independent-schools/download/", id)
+                    status = model.IsComplete,
+                    redirect = string.Concat("/independent-schools/download/", id)
                 }), JsonRequestBehavior.AllowGet);
         }
 
