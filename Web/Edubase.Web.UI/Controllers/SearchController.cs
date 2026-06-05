@@ -252,8 +252,10 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
                         {
-                            return Redirect(
-                                $"{Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" })}?{Request.QueryString}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");
+                            var baseUrl = Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" });
+                            var roleIdParams = string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"));
+                            var redirectUrl = string.IsNullOrEmpty(roleIdParams) ? baseUrl : $"{baseUrl}?{roleIdParams}";
+                            return Redirect(redirectUrl);
                         }
 
                         throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
