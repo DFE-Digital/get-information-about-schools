@@ -228,7 +228,7 @@ namespace Edubase.Web.UI.Controllers
                 }
                 else
                 {
-                    model.FilteredItemTypes = filteredItems;
+                    model.FilteredItemTypes = validateAllowedAcademyTypes;
                     model.FoundItem = new BulkAcademyViewModel()
                     {
                         Urn = est.Urn,
