@@ -30,6 +30,7 @@ namespace Edubase.Web.UI.Controllers
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
     using ES = Edubase.Services.Enums.EnumSets;
+    using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 
     [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
     public class ToolsController : Controller
@@ -41,6 +42,17 @@ namespace Edubase.Web.UI.Controllers
         private readonly IClientStorage _clientStorage;
         private readonly ILocalAuthoritySetRepository _localAuthoritySetRepository;
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
+
+        private readonly Dictionary<ET, List<ET>> establishmentToConvertMap = new Dictionary<ET, List<ET>>
+        {
+            [ET.CommunitySchool] = new List<ET> { ET.AcademyConverter },
+            [ET.CommunitySpecialSchool] = new List<ET> { ET.AcademySpecialConverter },
+            [ET.FoundationSchool] = new List<ET> { ET.AcademyConverter },
+            [ET.FoundationSpecialSchool] = new List<ET> { ET.AcademySpecialConverter },
+            [ET.VoluntaryAidedSchool] = new List<ET> { ET.AcademyConverter },
+            [ET.VoluntaryControlledSchool] = new List<ET> { ET.AcademySpecialConverter },
+            [ET.PupilReferralUnit] = new List<ET> { ET.AcademyAlternativeProvisionConverter }
+        };
 
         public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService,
             IEstablishmentWriteService establishmentWriteService, ICachedLookupService lookup,
@@ -114,7 +126,7 @@ namespace Edubase.Web.UI.Controllers
             model.ItemTypes = establishmentTypeFullList.ToSelectList();
             EstablishmentModel est = null;
 
-            SelectListItem[] filteredItems = null;
+            SelectListItem[] validateAllowedAcademyTypes = null;
 
             // validation
             if (action == "search")
@@ -149,16 +161,21 @@ namespace Edubase.Web.UI.Controllers
                     }
                     else
                     {
-                        filteredItems = (await GetFilteredBulkAcademyTypes((int) est.Urn, establishmentTypeFullList))
-                            .ToSelectList(est?.TypeId)?.ToArray();
-                        if (filteredItems?.Length == 0)
+                        var allowedTypes = establishmentToConvertMap.TryGetValue((ET) est.TypeId, out var mappedEnumList)
+                            ? establishmentTypeFullList
+                                .Where(dto => mappedEnumList.Contains((ET) dto.Id))
+                                .ToList()
+                            : establishmentTypeFullList;
+
+                        validateAllowedAcademyTypes = (await GetFilteredBulkAcademyTypes((int) est.Urn, allowedTypes))
+                           .ToSelectList(est?.TypeId)
+                           ?.ToArray();
+
+                        if (validateAllowedAcademyTypes?.Length == 0)
                         {
                             ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                         }
                     }
-
-
-
                 }
             }
 
@@ -268,6 +285,28 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
+        private async Task<List<EstablishmentLookupDto>> GetFilteredBulkAcademyTypesByMap(int urn,
+           Dictionary<ET, List<ET>> map)
+        {
+
+            foreach (var est in map)
+            {
+                var call = await _establishmentWriteService.ValidateBulkCreateAcademies(
+                    new NewAcademyRequest[]
+                    {
+                        new NewAcademyRequest()
+                        {
+                            //TypeId = map[]., OpeningDate = DateTime.Now, PredecessorEstablishmentUrn = urn
+                        }
+                    }, User);
+
+                if (call.HasErrors || (call.Response.Length > 0 && call.Response[0].HasErrors))
+                {
+                    //map.RemoveAll(x => x.Id == est.Id);
+                }
+            }
+            return null;
+        }
 
         private async Task<Tuple<Guid, List<BulkAcademyViewModel>>> ProcessBulkAcademies(
             List<BulkAcademyViewModel> itemsToAdd)
