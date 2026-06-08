@@ -285,29 +285,6 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        private async Task<List<EstablishmentLookupDto>> GetFilteredBulkAcademyTypesByMap(int urn,
-           Dictionary<ET, List<ET>> map)
-        {
-
-            foreach (var est in map)
-            {
-                var call = await _establishmentWriteService.ValidateBulkCreateAcademies(
-                    new NewAcademyRequest[]
-                    {
-                        new NewAcademyRequest()
-                        {
-                            //TypeId = map[]., OpeningDate = DateTime.Now, PredecessorEstablishmentUrn = urn
-                        }
-                    }, User);
-
-                if (call.HasErrors || (call.Response.Length > 0 && call.Response[0].HasErrors))
-                {
-                    //map.RemoveAll(x => x.Id == est.Id);
-                }
-            }
-            return null;
-        }
-
         private async Task<Tuple<Guid, List<BulkAcademyViewModel>>> ProcessBulkAcademies(
             List<BulkAcademyViewModel> itemsToAdd)
         {
