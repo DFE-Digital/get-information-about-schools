@@ -737,7 +737,7 @@
             }
 
 
-            @if (Model.EditPolicy.SENIds)
+            @if (Model.EditPolicy.SENIds && (Html.FeatureEnabled("gias.iebt.sen") || Model.TypeId != (int)eLookupEstablishmentType.OtherIndependentSpecialSchool))
             {
                 <div class="govuk-form-group sen-provision">
                     <fieldset class="govuk-fieldset">

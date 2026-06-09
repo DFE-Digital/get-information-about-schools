@@ -29,6 +29,8 @@ namespace Edubase.Web.UI.Controllers
     using System.Web.Mvc;
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
+    using ES = Edubase.Services.Enums.EnumSets;
+    using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 
     [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
     public class ToolsController : Controller
@@ -40,6 +42,17 @@ namespace Edubase.Web.UI.Controllers
         private readonly IClientStorage _clientStorage;
         private readonly ILocalAuthoritySetRepository _localAuthoritySetRepository;
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
+
+        private readonly Dictionary<ET, List<ET>> establishmentToConvertMap = new Dictionary<ET, List<ET>>
+        {
+            [ET.CommunitySchool] = new List<ET> { ET.AcademyConverter },
+            [ET.CommunitySpecialSchool] = new List<ET> { ET.AcademySpecialConverter },
+            [ET.FoundationSchool] = new List<ET> { ET.AcademyConverter },
+            [ET.FoundationSpecialSchool] = new List<ET> { ET.AcademySpecialConverter },
+            [ET.VoluntaryAidedSchool] = new List<ET> { ET.AcademyConverter },
+            [ET.VoluntaryControlledSchool] = new List<ET> { ET.AcademyConverter },
+            [ET.PupilReferralUnit] = new List<ET> { ET.AcademyAlternativeProvisionConverter }
+        };
 
         public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService,
             IEstablishmentWriteService establishmentWriteService, ICachedLookupService lookup,
@@ -113,7 +126,7 @@ namespace Edubase.Web.UI.Controllers
             model.ItemTypes = establishmentTypeFullList.ToSelectList();
             EstablishmentModel est = null;
 
-            SelectListItem[] filteredItems = null;
+            SelectListItem[] validateAllowedAcademyTypes = null;
 
             // validation
             if (action == "search")
@@ -141,11 +154,24 @@ namespace Edubase.Web.UI.Controllers
                     {
                         ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                     }
+                    else if (!ES.AllowedEstablishmentTypeForBulkCreateAcademies.Any(x => x == est.TypeId))
+                    {
+
+                        ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
+                    }
                     else
                     {
-                        filteredItems = (await GetFilteredBulkAcademyTypes((int) est.Urn, establishmentTypeFullList))
-                            .ToSelectList(est?.TypeId)?.ToArray();
-                        if (filteredItems?.Length == 0)
+                        var allowedTypes = establishmentToConvertMap.TryGetValue((ET) est.TypeId, out var mappedEnumList)
+                            ? establishmentTypeFullList
+                                .Where(dto => mappedEnumList.Contains((ET) dto.Id))
+                                .ToList()
+                            : establishmentTypeFullList;
+
+                        validateAllowedAcademyTypes = (await GetFilteredBulkAcademyTypes((int) est.Urn, allowedTypes))
+                           .ToSelectList(est?.TypeId)
+                           ?.ToArray();
+
+                        if (validateAllowedAcademyTypes?.Length == 0)
                         {
                             ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                         }
@@ -202,7 +228,7 @@ namespace Edubase.Web.UI.Controllers
                 }
                 else
                 {
-                    model.FilteredItemTypes = filteredItems;
+                    model.FilteredItemTypes = validateAllowedAcademyTypes;
                     model.FoundItem = new BulkAcademyViewModel()
                     {
                         Urn = est.Urn,
@@ -258,7 +284,6 @@ namespace Edubase.Web.UI.Controllers
 
             return View(model);
         }
-
 
         private async Task<Tuple<Guid, List<BulkAcademyViewModel>>> ProcessBulkAcademies(
             List<BulkAcademyViewModel> itemsToAdd)
@@ -481,7 +506,8 @@ namespace Edubase.Web.UI.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
-                    status = "error", redirect = string.Concat("/independent-schools/download/", id)
+                    status = "error",
+                    redirect = string.Concat("/independent-schools/download/", id)
                 }));
             }
 
@@ -489,7 +515,8 @@ namespace Edubase.Web.UI.Controllers
             return Json(
                 JsonConvert.SerializeObject(new
                 {
-                    status = model.IsComplete, redirect = string.Concat("/independent-schools/download/", id)
+                    status = model.IsComplete,
+                    redirect = string.Concat("/independent-schools/download/", id)
                 }), JsonRequestBehavior.AllowGet);
         }
 
