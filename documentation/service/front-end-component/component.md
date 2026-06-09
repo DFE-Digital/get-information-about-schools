@@ -9,7 +9,7 @@ To keep the component view readable, the front-end subcomponents are grouped int
 
 ### User-facing workflow and content components
 
-This category groups the journeys that users and administrators interact with directly.
+This category groups the journeys that users and administrators interact with directly. X
 
 ```mermaid
 C4Component
@@ -43,7 +43,7 @@ C4Component
         Component(guidance, "Guidance Pages and Blob-backed<br>Resources", "MVC pages + blob-backed file delivery", "Serves guidance pages, PDFs, CSVs and packaged guidance downloads")
     }
 
-    Container_Boundary(infra, "x","") {
+    Container_Boundary(infra, "","") {
         System_Ext(backendApi, "GIAS Back-end APIs", "Primary back-end APIs for search,<br>downloads, approvals,<br> batch operations and change history")
 
         ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores front-end-owned content and<br> data quality records")
