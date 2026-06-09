@@ -48,7 +48,6 @@ C4Component
 
         ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores front-end-owned content and<br> data quality records")
 
-        
         System_Ext(blob, "Azure Blob Storage", "Guidance and support files served by the web front end")
     }
 
