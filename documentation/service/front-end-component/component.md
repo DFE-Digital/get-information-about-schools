@@ -14,7 +14,7 @@ This category groups the journeys that users and administrators interact with di
 ```mermaid
 C4Component
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
 
     title User-facing workflow and content components in the GIAS Web Front End
 
@@ -31,6 +31,12 @@ C4Component
         Component(apiClients, "Back-end API Client Layer", "Typed service clients + HttpClientWrapper", "Shared back-end client layer used by search,<br> downloads, bulk operations,<br>approvals and change history")
 
         Component(bulk, "Bulk Updates", "MVC upload workflows", "Runs spreadsheet-driven bulk update and bulk<br> association journeys")
+
+        Component(establishmentLifecycle, "Establishment Creation and Lifecycle", "MVC creation and lifecycle workflows", "Creates establishment records and supports<br> amalgamation and merger journeys")
+
+        Component(groupLifecycle, "Group Creation and Conversion", "MVC group workflows", "Creates groups and converts single-academy<br> trusts to multi-academy trusts")
+
+        Component(academyOpenings, "Academy Openings Management", "MVC management workflow", "Searches, reviews and updates academy<br> opening records")
 
         Component(editorialContent, "Editorial Content Management", "MVC content pages + admin screens", "Serves news, notification banners, FAQ content<br> and glossary terms, and provides admin maintenance")
 
@@ -49,6 +55,9 @@ C4Component
     Rel(search, apiClients, "Uses")
     Rel(downloads, apiClients, "Uses")
     Rel(bulk, apiClients, "Uses")
+    Rel(establishmentLifecycle, apiClients, "Uses")
+    Rel(groupLifecycle, apiClients, "Uses")
+    Rel(academyOpenings, apiClients, "Uses")
     Rel(approvals, apiClients, "Uses")
     Rel(history, apiClients, "Uses")
     Rel(apiClients, backendApi, "Calls", "HTTPS/JSON")
@@ -79,6 +88,19 @@ Included subcomponents:
 - This view shows what anonymous users, authenticated users and administrators experience directly.
 - Back-end API-facing workflows are shown as going through a shared `Back-end API Client Layer`, reflecting the typed service clients and common `HttpClientWrapper` used across the web app.
 - The main runtime centre of gravity is still the MVC controller layer, especially the `Areas/Establishments`, `Areas/Groups` and `Areas/Governors` flows.
+- `Establishment Creation and Lifecycle` groups front-end journeys implemented through `EstablishmentController` and `AmalgamateMergeController`. It includes:
+  - Create a new establishment.
+  - Amalgamate establishments.
+  - Merge establishments.
+- `Group Creation and Conversion` groups front-end journeys implemented through `GroupController`. It includes:
+  - Create a new academy trust.
+  - Create a new children's centre group or collaboration.
+  - Create a new federation.
+  - Create a new foundation trust, represented internally by the group type `Trust` and exposed in tools permissions as `CreateSchoolTrustGroup`.
+  - Create a new academy sponsor.
+  - Convert a single-academy trust to a multi-academy trust.
+- `Academy Openings Management` represents the dedicated `AcademyOpeningsController` journey for searching, reviewing and updating academy opening records.
+- These front-end workflows own the MVC routes, views, input handling, validation and permission-aware journeys. They call the shared back-end API client layer; the GIAS back-end APIs execute the underlying domain writes.
 - `Editorial Content Management` is user-facing as well as admin-facing: users read content through it, while administrators maintain that content in Azure Table Storage-backed repositories.
   Content types include:
   - News
