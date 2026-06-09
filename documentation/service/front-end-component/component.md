@@ -60,16 +60,15 @@ C4Component
     Rel(academyOpenings, apiClients, "Uses")
     Rel(approvals, apiClients, "Uses")
     Rel(history, apiClients, "Uses")
-    Rel(apiClients, backendApi, "Calls", "HTTPS/JSON")
+    Rel(apiClients, backendApi, "Calls XXXX", "HTTPS/JSON")
     Rel(editorialContent, tableStorage, "Reads and writes", "Azure Storage Tables")
     Rel(guidance, blob, "Reads and serves files", "Azure Blob Storage")
 
-    UpdateRelStyle(search, downloads, $offsetX="-50", $offsetY="50")
-    UpdateRelStyle(guidance, blob, $offsetX="-120", $offsetY="-210")
-    UpdateRelStyle(apiClients, backendApi, $offsetX="40", $offsetY="-50")
-    UpdateRelStyle(editorialContent, tableStorage, $offsetX="-120", $offsetY="-110")
+    UpdateRelStyle(search, downloads, $offsetX="-80", $offsetY="-100")
+    UpdateRelStyle(guidance, blob, $offsetX="10", $offsetY="-120")
+    UpdateRelStyle(editorialContent, tableStorage, $offsetX="-20", $offsetY="-140")
 
-    UpdateRelStyle(apiClients, backendApi, $offsetX="150", $offsetY="-300")
+    UpdateRelStyle(apiClients, backendApi, $offsetX="10", $offsetY="80")
 
 ```
 
