@@ -43,7 +43,7 @@ C4Component
         Component(guidance, "Guidance Pages and Blob-backed<br>Resources", "MVC pages + blob-backed file delivery", "Serves guidance pages, PDFs, CSVs and packaged guidance downloads")
     }
 
-    Container_Boundary(infra, "","") {
+    Container_Boundary(infra, "x","") {
         System_Ext(backendApi, "GIAS Back-end APIs", "Primary back-end APIs for search,<br>downloads, approvals,<br> batch operations and change history")
 
         ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores front-end-owned content and<br> data quality records")
