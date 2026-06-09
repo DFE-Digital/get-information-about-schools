@@ -44,9 +44,10 @@ C4Component
     }
 
     Container_Boundary(infra, "","") {
+        System_Ext(backendApi, "GIAS Back-end APIs", "Primary back-end APIs for search,<br>downloads, approvals,<br> batch operations and change history")
+
         ContainerDb_Ext(tableStorage, "Azure Table Storage", "Azure Storage Tables", "Stores front-end-owned content and<br> data quality records")
-        
-        System_Ext(backendApi, "GIAS Back-end APIs", "Primary back-end APIs for search, downloads, approvals,<br> batch operations and change history")
+
         
         System_Ext(blob, "Azure Blob Storage", "Guidance and support files served by the web front end")
     }
