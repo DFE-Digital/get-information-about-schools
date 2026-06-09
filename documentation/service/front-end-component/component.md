@@ -22,7 +22,7 @@ C4Component
 
         Component(history, "Change History", "MVC browse/download flows", "Shows and exports establishment and group change history")
 
-        Component(search, "Search and Filtering", "MVC + JavaScript filters", "Searches establishments, groups and governors and manages<br> tokenised filter state")
+        Component(search, "Search and Filtering", "MVC + JavaScript filters", "Searches establishments, groups and governors<br>and manages tokenised filter state")
        
         Component(downloads, "Downloads", "MVC + API-backed workflows", "Lets users request search-result and dataset downloads")
         
