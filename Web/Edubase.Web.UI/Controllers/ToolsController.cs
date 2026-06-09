@@ -50,7 +50,7 @@ namespace Edubase.Web.UI.Controllers
             [ET.FoundationSchool] = new List<ET> { ET.AcademyConverter },
             [ET.FoundationSpecialSchool] = new List<ET> { ET.AcademySpecialConverter },
             [ET.VoluntaryAidedSchool] = new List<ET> { ET.AcademyConverter },
-            [ET.VoluntaryControlledSchool] = new List<ET> { ET.AcademySpecialConverter },
+            [ET.VoluntaryControlledSchool] = new List<ET> { ET.AcademyConverter },
             [ET.PupilReferralUnit] = new List<ET> { ET.AcademyAlternativeProvisionConverter }
         };
 
