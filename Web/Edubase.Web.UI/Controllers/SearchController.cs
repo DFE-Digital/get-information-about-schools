@@ -15,6 +15,7 @@ using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using System.Web;
     using Common.Spatial;
     using Edubase.Services.Geo;
     using eStatus = Services.Enums.eLookupEstablishmentStatus;
@@ -252,9 +253,12 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
                         {
-                            var baseUrl = Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" });
-                            var roleIdParams = string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"));
-                            var redirectUrl = string.IsNullOrEmpty(roleIdParams) ? baseUrl : $"{baseUrl}?{roleIdParams}";
+                            string[] allowedKeys = { "SelectedTab", "SearchType", "searchtype", "gsearch", "GovernorSearchModel.Forename", "GovernorSearchModel.Surname", "GovernorSearchModel.RoleId", "GovernorSearchModel.IncludeHistoric", "GovernorSearchModel.Gid" };
+
+                            var qs = CleanQueryString(allowedKeys);
+
+                            var redirectUrl = $"{Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" })}?{qs}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}";
+
                             return Redirect(redirectUrl);
                         }
 
@@ -264,6 +268,29 @@ namespace Edubase.Web.UI.Controllers
             }
 
             return await Index(viewModel);
+        }
+
+        /// <summary>
+        /// Extract an allowed list of query string parameters with the keys contained in allowedKeys.
+        /// </summary>
+        /// <param name="allowedKeys"></param>
+        /// <returns></returns>
+        public string CleanQueryString(string[] allowedKeys)
+        {
+            var cleanQuery = HttpUtility.ParseQueryString(string.Empty);
+
+            foreach (var key in allowedKeys)
+            {
+                var value = Request.QueryString[key];
+                if (value != null)
+                {
+                    cleanQuery[key] = value;
+                }
+            }
+
+            var nqs = cleanQuery.ToString();
+
+            return nqs;
         }
 
         [Route("Suggest"), HttpGet]
