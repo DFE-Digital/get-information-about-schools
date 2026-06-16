@@ -229,7 +229,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             var gps = new Mock<IPlacesLookupService>();
 
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString("a=b&c=d&e=f"));
+            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString("SelectedTab=Governors&SearchType=Governor"));
 
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             context.SetupGet(x => x.Request).Returns(request.Object);
@@ -241,7 +241,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
 
-            const string resultantUrl = "/Governor/Search?a=b&c=d&e=f&";
+            const string resultantUrl = "/Governor/Search?SelectedTab=Governors&SearchType=Governor&";
             var result = await subject.IndexResults(new SearchViewModel { SearchType = eSearchType.Governor }) as RedirectResult;
 
             Assert.NotNull(result);
