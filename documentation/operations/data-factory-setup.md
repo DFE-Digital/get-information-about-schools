@@ -47,8 +47,6 @@ flowchart LR
 
     USER_ACTIVITY -->|"Read selected UserActivity rows"| PROD_DB
     USER_ACTIVITY -->|"Insert selected UserActivity rows"| ARCHIVE_DB
-
-
 ```
 
 The diagram shows the important boundary: ADF is orchestrating reads and writes against GIAS SQL databases, plus one inbound DfE Sign-in API call. There are no outbound file, storage, analytics or external-consumer paths

@@ -9,7 +9,7 @@ To keep the component view readable, the front-end subcomponents are grouped int
 
 ### User-facing workflow and content components
 
-This category groups the journeys that users and administrators interact with directly. X
+This category groups the journeys that users and administrators interact with directly.
 
 ```mermaid
 C4Component
@@ -60,7 +60,7 @@ C4Component
     Rel(academyOpenings, apiClients, "Uses")
     Rel(approvals, apiClients, "Uses")
     Rel(history, apiClients, "Uses")
-    Rel(apiClients, backendApi, "Calls XXXX", "HTTPS/JSON")
+    Rel(apiClients, backendApi, "Calls", "HTTPS/JSON")
     Rel(editorialContent, tableStorage, "Reads and writes", "Azure Storage Tables")
     Rel(guidance, blob, "Reads and serves files", "Azure Blob Storage")
 
@@ -89,8 +89,8 @@ Included subcomponents:
 - The main runtime centre of gravity is still the MVC controller layer, especially the `Areas/Establishments`, `Areas/Groups` and `Areas/Governors` flows.
 - `Establishment Creation and Lifecycle` groups front-end journeys implemented through `EstablishmentController` and `AmalgamateMergeController`. It includes:
   - Create a new establishment.
-  - Amalgamate establishments.
-  - Merge establishments.
+  - Amalgamate establishments: close two or more establishments and create a new establishment as a new legal entity.
+  - Merge establishments: close one or more establishments into a lead establishment that remains open and is altered.
 - `Group Creation and Conversion` groups front-end journeys implemented through `GroupController`. It includes:
   - Create a new academy trust.
   - Create a new children's centre group or collaboration.

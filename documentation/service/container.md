@@ -12,7 +12,7 @@ Read the diagram from the outside in:
 - The `Get Information about Schools (GIAS)` boundary contains the main deployable containers and data stores currently in scope for this view.
 - The C# web front end calls the Java API application for application behaviour and uses the file store for generated extracts.
 - The Java admin and SOAP application is the back-end deployment with the JSP administration interface and SOAP capabilities.
-- `S158` refers to a separate production Azure subscription/environment used by DfE Platform Identity for GIAS-related integration workloads.
+- `S158` refers to a separate production Azure subscription/environment within the CIP tenancy used by DfE Platform Identity for GIAS-related integration workloads.
 
 
 ## Diagram key
