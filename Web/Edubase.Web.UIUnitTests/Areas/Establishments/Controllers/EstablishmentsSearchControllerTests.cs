@@ -387,9 +387,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             vm.TextSearchModel.Text = "123/45678";
             vm.GoToDetailPageOnOneResult = true;
 
-            var result = await subject.Index(vm) as RedirectResult;
+            var result = Assert.IsType<RedirectResult>(await subject.Index(vm));
 
-            Assert.NotNull(result);
             Assert.Equal("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=123/45678|NoResults=True", result.Url);
             Assert.Equal("The LAESTAB, UKPRN or URN was invalid.", vm.Error);
         }
