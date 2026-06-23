@@ -350,9 +350,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             vm.TextSearchModel.Text = "12345678";
             vm.GoToDetailPageOnOneResult = true;
 
-            var result = await subject.Index(vm) as RedirectToRouteResult;
+            var actionResult = await subject.Index(vm);
+            var result = Assert.IsType<RedirectToRouteResult>(actionResult);
 
-            Assert.NotNull(result);
             Assert.Equal("Details", result.RouteValues["action"]);
             Assert.Equal("Establishment", result.RouteValues["controller"]);
             Assert.Equal(123456, result.RouteValues["id"]);
