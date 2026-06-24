@@ -130,7 +130,7 @@
         <value>Please select an establishment type</value>
     </data>
     <data name="error.establishment.group.link.cannot.have.trusts" xml:space="preserve">
-        <value>Establishment is not LA maintained, please select another one.</value>
+        <value>A foundation trust can only have a foundation school or a foundation special school attached to it. Please select a different establishment type.</value>
     </data>
     <data name="field.validation.headFirstName.can.not.be.empty" xml:space="preserve">
         <value>Please enter a headteacher/principal/manager first name</value>
