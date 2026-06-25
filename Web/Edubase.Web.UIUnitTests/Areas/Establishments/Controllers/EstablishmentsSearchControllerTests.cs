@@ -350,9 +350,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             vm.TextSearchModel.Text = "12345678";
             vm.GoToDetailPageOnOneResult = true;
 
-            var result = await subject.Index(vm) as RedirectToRouteResult;
+            var actionResult = await subject.Index(vm);
+            var result = Assert.IsType<RedirectToRouteResult>(actionResult);
 
-            Assert.NotNull(result);
             Assert.Equal("Details", result.RouteValues["action"]);
             Assert.Equal("Establishment", result.RouteValues["controller"]);
             Assert.Equal(123456, result.RouteValues["id"]);
@@ -387,9 +387,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             vm.TextSearchModel.Text = "123/45678";
             vm.GoToDetailPageOnOneResult = true;
 
-            var result = await subject.Index(vm) as RedirectResult;
+            var result = Assert.IsType<RedirectResult>(await subject.Index(vm));
 
-            Assert.NotNull(result);
             Assert.Equal("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=123/45678|NoResults=True", result.Url);
             Assert.Equal("The LAESTAB, UKPRN or URN was invalid.", vm.Error);
         }
