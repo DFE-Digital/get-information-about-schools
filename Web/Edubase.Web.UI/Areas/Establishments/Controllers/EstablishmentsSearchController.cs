@@ -371,7 +371,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (model.SearchType == eSearchType.Text || model.SearchType == eSearchType.EstablishmentAll)
             {
-                if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.UKPRN)
+                if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.UKPRN && model.TextSearchModel.Text.IsInteger())
                 {
                     filters.UKPRN = model.TextSearchModel.Text;
                 }
