@@ -51,7 +51,8 @@ namespace Edubase.Web.UI.Controllers
             [ET.FoundationSpecialSchool] = new List<ET> { ET.AcademySpecialConverter },
             [ET.VoluntaryAidedSchool] = new List<ET> { ET.AcademyConverter },
             [ET.VoluntaryControlledSchool] = new List<ET> { ET.AcademyConverter },
-            [ET.PupilReferralUnit] = new List<ET> { ET.AcademyAlternativeProvisionConverter }
+            [ET.PupilReferralUnit] = new List<ET> { ET.AcademyAlternativeProvisionConverter },
+            [ET.FurtherEducation] = new List<ET> { ET.Academy1619Converter }
         };
 
         public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService,
