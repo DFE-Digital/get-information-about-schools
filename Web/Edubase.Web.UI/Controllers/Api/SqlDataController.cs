@@ -14,7 +14,7 @@ namespace Edubase.Web.UI.Controllers.Api
             var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
 
             var connectionString =
-                $"Server=tcp:{serverName}.database.windows.net,1433;" +
+                $"Server=tcp:{serverName},1433;" +
                 $"database={databaseName};" +
                 "authentication=Active Directory Default;" + // leverages Managed Identity on App Service
                 "encrypt=True;TrustServerCertificate=False;";
