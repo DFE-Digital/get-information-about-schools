@@ -3,25 +3,27 @@ using Microsoft.Data.SqlClient;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Trace = System.Diagnostics.Trace;
+using AzureTableLogger;
+using AzureTableLogger.LogMessages;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
+    [Authorize]
     public class SqlDataController : ApiController
     {
+        private readonly IAzLogger _logger;
+        public SqlDataController(IAzLogger logger) => _logger = logger;
+
+
         [Route("api/sql"), HttpGet]
         public async Task<IHttpActionResult> Sql()
         {
             var serverName = ConfigurationManager.AppSettings["SQLServer"];
             var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
-
-            Trace.TraceInformation($"[api/sql] SQL Server='{serverName}' (len={serverName?.Length}), " +
-                                   $"SQL Database='{databaseName}' (len={databaseName?.Length})");
-
             var connectionString =
                 $"Server=tcp:{serverName},1433;" +
                 $"database={databaseName};" +
-                "authentication=Active Directory Default;" + // leverages Managed Identity on App Service
+                "authentication=Active Directory Default;" +
                 "encrypt=True;TrustServerCertificate=False;";
 
             try
@@ -38,15 +40,15 @@ namespace Edubase.Web.UI.Controllers.Api
             }
             catch (SqlException ex)
             {
-                Trace.TraceError($"[api/sql] connection failed: {ex.GetType().Name}: {ex.Message}");
-                return Content(HttpStatusCode.InternalServerError,
-                    new
-                    {
-                        sqlServer = serverName,
-                        sqlDatabase = databaseName,
-                        error = ex.GetType().Name,
-                        message = ex.Message
-                    });
+                _logger.Log(new WebLogMessage
+                {
+                    Level = LogMessage.LogLevel.ERROR,
+                    Environment = ConfigurationManager.AppSettings["Environment"],
+                    Message = $"[api/sql] connection failed. SQLServer='{serverName}', " +
+                              $"SQLDatabase='{databaseName}', {ex.GetType().Name}: {ex.Message}",
+                    Exception = ex.ToString()
+                });
+                return StatusCode(HttpStatusCode.ServiceUnavailable);
             }
         }
     }
