@@ -1,4 +1,4 @@
-# Ordnance Survay Integration
+# Ordnance Survey Integration
 
 ## Overview
 
