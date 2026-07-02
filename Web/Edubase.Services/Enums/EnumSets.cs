@@ -16,7 +16,8 @@ namespace Edubase.Services.Enums
             ET.FoundationSpecialSchool,
             ET.VoluntaryAidedSchool,
             ET.VoluntaryControlledSchool,
-            ET.PupilReferralUnit
+            ET.PupilReferralUnit,
+            ET.FurtherEducation
         }.Cast<int>();
 
         public static IEnumerable<int> LAMaintainedEstablishments { get; } = new[]
