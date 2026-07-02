@@ -72,6 +72,14 @@
     <div class="govuk-grid-column-full">
         @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure() && !Model.Result.CompletedWithErrors())
         {
+            <script nonce="@Html.ScriptNonce()">
+                window.datalayer = window.datalayer || [];
+                datalayer.push({
+                    event: "transaction_submitted",
+                    transaction_type: "bulk_update_establishments"
+                });
+            </script>
+
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
                 <div class="tick"></div>
                 <p class="message-text" aria-live="polite">Your bulk update was successful.</p>

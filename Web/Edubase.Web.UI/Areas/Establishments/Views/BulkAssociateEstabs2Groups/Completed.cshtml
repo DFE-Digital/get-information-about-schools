@@ -2,6 +2,15 @@
 @{
     ViewBag.SiteSection = "tools";
 }
+
+<script nonce="@Html.ScriptNonce()">
+    window.datalayer = window.datalayer || [];
+    datalayer.push({
+         event: "transaction_submitted",
+         transaction_type: "bulk_associate_estabs_to_groups"
+    });
+</script>
+
 @section BreadCrumbs
 {
     <div class="govuk-grid-row">
