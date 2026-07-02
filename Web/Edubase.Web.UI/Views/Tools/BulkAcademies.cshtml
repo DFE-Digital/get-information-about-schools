@@ -204,6 +204,14 @@
     <!-- COMPLETE -->
     if (Model?.IsComplete == true)
     {
+        <script nonce="@Html.ScriptNonce()">
+            window.datalayer = window.datalayer || [];
+            datalayer.push({
+                event: "transaction_submitted",
+                transaction_type: "bulk_create_new_academies"
+            });
+        </script>
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 <table class="govuk-table gias-table">

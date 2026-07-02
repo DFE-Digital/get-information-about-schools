@@ -1,4 +1,13 @@
 @model BulkCreateFreeSchoolsViewModel
+
+<script nonce="@Html.ScriptNonce()">
+    window.datalayer = window.datalayer || [];
+    datalayer.push({
+         event: "transaction_submitted",
+         transaction_type: "bulk_create_free_schools"
+    });
+</script>
+
 @section BreadCrumbs
 {
     <div class="govuk-grid-row">
