@@ -36,6 +36,12 @@ This folder contains entity relationship diagram documentation for GIAS data are
 - [Operational status code lists](operational-status-code-lists.md)
 - [Organisation group classifications](organisation-group-classifications.md)
 
+## Reference
+
+- [Legacy programme indicators](legacy-programme-indicators.md)
+- [Provision and workforce indicators](provision-and-workforce-indicators.md)
+- [Specialism and quality indicators](specialism-and-quality-indicators.md)
+
 ## Operations
 
 - [Bulk updates, triggers and processing](bulk-updates-triggers-and-processing.md)
