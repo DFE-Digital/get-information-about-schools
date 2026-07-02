@@ -73,8 +73,8 @@
         @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure() && !Model.Result.CompletedWithErrors())
         {
             <script nonce="@Html.ScriptNonce()">
-                window.datalayer = window.datalayer || [];
-                datalayer.push({
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
                     event: "transaction_submitted",
                     transaction_type: "bulk_update_establishments"
                 });
