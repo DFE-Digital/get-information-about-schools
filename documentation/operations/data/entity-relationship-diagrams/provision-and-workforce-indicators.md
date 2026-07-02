@@ -2,6 +2,12 @@
 
 This page explains provision, early-years and workforce-related reference data held against establishment records.
 
+## Business Context
+
+Some values in this area may represent historic initiatives or policy-specific attributes rather than enduring provider-register concepts. They are still present in current data structures and extracts, but that does not mean they should automatically be treated as current business vocabulary.
+
+New policy-specific attributes are better owned by the service responsible for that policy area, rather than being added to the central provider register by default. There may also be differences between legacy extract fields and the fields displayed to users in the current GIAS interface.
+
 ## Scope
 
 This view focuses on:
