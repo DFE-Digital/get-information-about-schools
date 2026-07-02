@@ -2,7 +2,6 @@ using Autofac;
 using Edubase.Common.Cache;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Validation;
-using FluentValidation.Mvc;
 using System;
 using System.Configuration;
 using System.IO;
@@ -60,11 +59,6 @@ namespace Edubase.Web.UI
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
-
-            var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.AutofacDependencyResolver));
-            DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
-            fluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;
-            ModelValidatorProviders.Providers.Add(fluentValidationModelValidatorProvider);
 
             var logger = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IAzLogger>();
             logger.ScheduleLogFlush();
