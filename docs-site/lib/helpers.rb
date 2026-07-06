@@ -48,6 +48,7 @@ module GiasDocumentationHelpers
       .sort_by { |doc_item| doc_item.identifier.without_ext.to_s }
       .each do |doc_item|
         parts = doc_item.identifier.without_ext.to_s.split("/").reject(&:empty?)
+        parts = parts[0..-2] if parts.length > 1 && parts.last == "index"
         node = tree
 
         parts.each do |part|
@@ -76,6 +77,8 @@ module GiasDocumentationHelpers
     return false unless doc_item.identifier.to_s.end_with?(".md")
 
     identifier = doc_item.identifier.without_ext.to_s
+    return false if identifier.end_with?("/README")
+
     identifier.start_with?("/") && identifier != "/" && identifier != "/index"
   end
 
@@ -134,6 +137,7 @@ module GiasDocumentationHelpers
 
   def relative_output_href(target_item)
     segments = target_item.identifier.without_ext.to_s.split("/").reject(&:empty?)
+    segments = segments[0..-2] if segments.length > 1 && segments.last == "index"
     "./#{segments.join('/')}/index.html"
   end
 end
