@@ -8,7 +8,13 @@ end
 
 route "/**/*.md" do
   identifier = @item.identifier.without_ext.to_s
-  identifier == "/index" ? "/index.html" : "#{identifier}/index.html"
+  if identifier == "/index"
+    "/index.html"
+  elsif identifier.end_with?("/index")
+    "#{identifier.sub(%r{/index$}, "")}/index.html"
+  else
+    "#{identifier}/index.html"
+  end
 end
 
 compile "/**/*" do
