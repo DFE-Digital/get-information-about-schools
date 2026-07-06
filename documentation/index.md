@@ -12,5 +12,8 @@ This is the technical documentation area for Get Information about Schools (GIAS
 - [Container view](./service/container.md)
 - [Back-end component](./service/back-end-component/component.md)
 - [Front-end component](./service/front-end-component/component.md)
+- [Operations](./operations/index.md)
 - [Production deployment architecture](./operations/deployment-architecture.md)
 - [S158 Data Factory setup](./operations/data-factory-setup.md)
+- [Data architecture](./operations/data/data-architecture/index.md)
+- [Entity relationship diagrams](./operations/data/entity-relationship-diagrams/index.md)
