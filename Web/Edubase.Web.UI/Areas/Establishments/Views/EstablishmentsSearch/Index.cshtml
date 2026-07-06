@@ -133,7 +133,7 @@
                     <a href="#results-container" class="govuk-skip-link">Skip filters</a>
                     @if (!User.Identity.IsAuthenticated)
                     {
-                        <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
+                        <button type="submit" form="clear-filters-form" class="gias-link-button add-clear-filters" id="clear-filters">Clear all filters</button>                       
                     }
                     <div id="EditSearchCollapse" class="search-result-filters blanket-container">
                         @if (User.Identity.IsAuthenticated)
@@ -242,7 +242,7 @@
                         </div>
 
                         <div id="filter-additional-controls" class="filter-additional-controls">
-                            <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
+                            <button type="submit" form="clear-filters-form" class="gias-link-button add-clear-filters" id="clear-filters-additional">Clear all filters</button>                            
                             @* @if (User.Identity.IsAuthenticated) *@
                             @* { *@
                             @*     <a href="javascript:" class="save-filter-set-link js-save-set hidden govuk-button govuk-button--secondary">Save filter set</a> *@
@@ -286,6 +286,21 @@
             @{Html.RenderPartial("Partials/_EstablishmentSearchMap");}
 
         </div>
+    </form>
+
+    <form id="clear-filters-form" method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
+        @Html.HiddenFor(x => x.SearchType)
+        @Html.HiddenFor(Model.SortBy.HasValue, x => x.SortBy)
+        @if (Model.SearchType == eSearchType.Text)
+        {
+            @Html.HiddenFor(!Model.TextSearchModel.Text.IsEmpty(), x => x.TextSearchModel.Text)
+            @Html.HiddenFor(!Model.TextSearchModel.AutoSuggestValue.IsEmpty(), x => x.TextSearchModel.AutoSuggestValue)
+        }
+        else if (Model.SearchType == eSearchType.Location)
+        {
+            @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
+            @Html.HiddenFor(!Model.LocationSearchModel.AutoSuggestValue.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
+        }        
     </form>
 </div>
 
