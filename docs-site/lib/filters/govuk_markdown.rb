@@ -1,7 +1,8 @@
 require "cgi"
 require "govuk_markdown"
+require "pathname"
 
-Nanoc::Filter.define(:govuk_markdown) do |content, _params|
+Nanoc::Filter.define(:govuk_markdown) do |content, params|
   mermaid_blocks = {}
   text_code_blocks = {}
 
@@ -43,15 +44,40 @@ Nanoc::Filter.define(:govuk_markdown) do |content, _params|
     html = html.gsub(placeholder, block)
   end
 
-  html = html.gsub(/href="((?:\.\.?\/)[^":?#]+)\.md([?#][^"]*)?"/) do
-    path = Regexp.last_match(1)
+  source_identifier = params.fetch(:source_identifier)
+  source_path = Pathname.new(source_identifier.sub(%r{\A/}, ""))
+  source_output = if source_path.to_s == "index.md"
+                    Pathname.new("index.html")
+                  elsif source_path.basename.to_s == "index.md"
+                    source_path.dirname.join("index.html")
+                  else
+                    Pathname.new(source_path.to_s.sub(/\.md\z/, "")).join("index.html")
+                  end
+
+  html = html.gsub(/href="([^":?#]+)([?#][^"]*)?"/) do
+    href_path = Regexp.last_match(1)
     suffix = Regexp.last_match(2).to_s
-    output_path = path.end_with?("/index") || path == "./index" || path == "../index" ? "#{path}.html" : "#{path}/index.html"
 
-    %(href="#{output_path}#{suffix}")
+    if href_path.start_with?("/") || href_path.start_with?("mailto:") || href_path.start_with?("tel:")
+      Regexp.last_match(0)
+    else
+      target_source = source_path.dirname.join(href_path).cleanpath
+      target_output = if href_path.end_with?(".md")
+                        if target_source.basename.to_s == "index.md"
+                          target_source.dirname.join("index.html")
+                        else
+                          Pathname.new(target_source.to_s.sub(/\.md\z/, "")).join("index.html")
+                        end
+                      elsif href_path.end_with?("/")
+                        target_source.join("index.html")
+                      else
+                        target_source
+                      end
+
+      relative_path = target_output.relative_path_from(source_output.dirname).to_s.tr("\\", "/")
+      %(href="#{relative_path}#{suffix}")
+    end
   end
-
-  html = html.gsub(/href="((?:\.\.?\/)[^":?#]*\/)"/, 'href="\1index.html"')
 
   html
 end

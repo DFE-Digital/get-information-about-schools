@@ -18,7 +18,7 @@ Shows the components involved in scheduled jobs, background processing, extract 
 Shows the components responsible for integrating with upstream reference-data providers such as Companies House, Ofsted, UKRLP, and address data sources.
 
 - **GIAS front end authentication flow :** 
-Documented separately in [GIAS front-end authentication flow](../../front-end-component/front-end-authentication-flow/).
+Documented separately in [GIAS front-end authentication flow](../front-end-component/front-end-authentication-flow/).
 
 
 ## Client interaction components
@@ -131,14 +131,14 @@ UpdateRelStyle(domain_services, gov_notify, $offsetX="-40", $offsetY="-30")
 - `Extract & Download Services` is separated from `Domain Services` because extract generation and retrieval is a distinct concern. The REST API mostly triggers generation and returns download metadata, while SOAP endpoints can return extract content directly.
 - `Gov.Notify Client` represents the central outbound email integration used by business and operational flows.
 - `Search & Lookup Services` is shown as a separate component to make explicit that search/filtering and dictionary lookups are not just generic DAO calls. They are a distinct set of services used by the business layer.
-- `Flyway DB Migration Scripts` is included because, in this system, schema and configuration changes are applied operationally as part of deployment/startup rather than being an invisible implementation detail. See [`database/flyway-migrations.md`](../database/flyway-migrations/).
+- `Flyway DB Migration Scripts` is included because, in this system, schema and configuration changes are applied operationally as part of deployment/startup rather than being an invisible implementation detail. See [`database/flyway-migrations.md`](./database/flyway-migrations/).
 
 ### Scope and assumptions
 
 - This is not a full component map of the whole application. It excludes scheduled batch jobs and the external reference-data provider integrations, which are shown in separate diagrams below.
 - `Internal DfE Services -> SOAP Web Services` is included because the application exposes a separate SOAP service surface for legacy/system-to-system access.
 - `Gov.Notify Client` is included in this client-focused view because user-facing and operational actions can trigger outbound notifications as part of normal request processing.
-- `Managed Services` contains infrastructure used by this view. SQL Server is the primary operational data store, and Azure Blob Storage holds generated extract content. See [`database/sql-server.md`](../database/sql-server/) and [`storage/azure-blob-storage.md`](../storage/azure-blob-storage/).
+- `Managed Services` contains infrastructure used by this view. SQL Server is the primary operational data store, and Azure Blob Storage holds generated extract content. See [`database/sql-server.md`](./database/sql-server/) and [`storage/azure-blob-storage.md`](./storage/azure-blob-storage/).
 
 ## Scheduled batch operation components
 
@@ -199,13 +199,13 @@ C4Component
 - `Domain Services` still owns the business behaviour. Scheduled jobs call into the same service layer used elsewhere in the application.
 - `Extract & Download Services` this component generates extracts, prepares downloadable output, and handles extract-related operational tasks.
 - `Gov.Notify Client` is also used by scheduled and background processes to send emails, for example reminders, workflow notifications, and extract failure alerts.
-- `Azure Blob Storage` is where extract generation publishes output once local file creation is complete. See [`storage/azure-blob-storage.md`](../storage/azure-blob-storage/).
+- `Azure Blob Storage` is where extract generation publishes output once local file creation is complete. See [`storage/azure-blob-storage.md`](./storage/azure-blob-storage/).
 
 ### Scope and assumptions
 
 - This diagram excludes external sync integrations such as Companies House, Ofsted, and UKRLP. Those are operational jobs in the codebase, but they are intentionally not part of this focused view.
 - The main purpose of this diagram is to show the internal flow: schedule/orchestrate, execute business logic, persist state, generate output, publish files.
-- SQL Server underpins the job state, callback metadata, and source data shown here, while Flyway governs the evolution of that database platform. See [`database/sql-server.md`](../database/sql-server/) and [`database/flyway-migrations.md`](../database/flyway-migrations/).
+- SQL Server underpins the job state, callback metadata, and source data shown here, while Flyway governs the evolution of that database platform. See [`database/sql-server.md`](./database/sql-server/) and [`database/flyway-migrations.md`](./database/flyway-migrations/).
 
 
 ## Reference data provider components
@@ -299,13 +299,13 @@ The diagrams above are intended to be read together rather than as alternatives:
 
 Related notes in this repository:
 
-- [Companies House integration](../integrations/companies-house-integration/)
+- [Companies House integration](./integrations/companies-house-integration/)
 - Ofsted integration
-- [UKRLP integration](../integrations/ukrlp-integration/)
-- [Ordnance Survey integration](../integrations/ordnance-survey-integration/)
-- [GOV.UK Notify integration](../integrations/govuk-notify-integration/)
-- [SQL Server integration](../database/sql-server/)
-- [Flyway migration categories](../database/flyway-migrations/)
-- [Azure Blob Storage integration](../storage/azure-blob-storage/)
-- [GIAS front-end authentication flow](../../front-end-component/front-end-authentication-flow/)
+- [UKRLP integration](./integrations/ukrlp-integration/)
+- [Ordnance Survey integration](./integrations/ordnance-survey-integration/)
+- [GOV.UK Notify integration](./integrations/govuk-notify-integration/)
+- [SQL Server integration](./database/sql-server/)
+- [Flyway migration categories](./database/flyway-migrations/)
+- [Azure Blob Storage integration](./storage/azure-blob-storage/)
+- [GIAS front-end authentication flow](../front-end-component/front-end-authentication-flow/)
 

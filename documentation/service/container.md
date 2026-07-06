@@ -116,6 +116,6 @@ C4Container
 ## Notes
 
 
-- For lower-level C# front-end detail, see [the front-end component diagram](../front-end-component/component/).
-- For lower-level Java back-end detail, see [the back-end component diagrams](../back-end-component/component/).
+- For lower-level C# front-end detail, see [the front-end component diagram](./front-end-component/component/).
+- For lower-level Java back-end detail, see [the back-end component diagrams](./back-end-component/component/).
 - The `GIAS API` Azure Function App is shown because it is deployed infrastructure, but it is not currently being used.

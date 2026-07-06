@@ -140,7 +140,7 @@ The front end is not responsible for the scheduled Companies House sync, but it 
 
 The back-end documentation shows that the scheduled Companies House job reads stored Companies House numbers for relevant group records and uses them to fetch current company data and create change requests.
 
-See [Companies House integration](../../../back-end-component/integrations/companies-house-integration/).
+See [Companies House integration](../../back-end-component/integrations/companies-house-integration/).
 
 So the stored Companies House number is the join key between:
 

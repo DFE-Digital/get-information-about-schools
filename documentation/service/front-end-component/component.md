@@ -74,13 +74,13 @@ C4Component
 
 Included subcomponents:
 
-- [`search-and-filtering`](../reference/search-and-filtering/)
-- [`downloads`](../reference/downloads/)
-- [`bulk-updates`](../reference/bulk-updates/)
-- [`change-history`](../reference/change-history/)
-- [`change-requests-and-approvals`](../reference/change-requests-and-approvals/)
-- [`content-management`](../reference/content-management/)
-- [`guidance-and-blob-resources`](../reference/guidance-and-blob-resources/)
+- [`search-and-filtering`](./reference/search-and-filtering/)
+- [`downloads`](./reference/downloads/)
+- [`bulk-updates`](./reference/bulk-updates/)
+- [`change-history`](./reference/change-history/)
+- [`change-requests-and-approvals`](./reference/change-requests-and-approvals/)
+- [`content-management`](./reference/content-management/)
+- [`guidance-and-blob-resources`](./reference/guidance-and-blob-resources/)
 
 **Notes for this diagram:**
 
@@ -194,14 +194,14 @@ C4Component
 
 Included subcomponents:
 
-- [`security-and-permissions`](../reference/security-and-permissions/)
-- [`tokens`](../reference/tokens/)
-- [`lookup-and-caching`](../reference/lookup-and-caching/)
-- [`address-lookups`](../reference/address-lookups/)
-- [`external-lookup-links`](../reference/external-lookup-links/)
-- [`companies-house-number`](../reference/companies-house-number/)
-- [`azure-table-storage`](../reference/azure-table-storage/)
-- [`api-session-recorder-and-logging`](../reference/api-session-recorder-and-logging/)
+- [`security-and-permissions`](./reference/security-and-permissions/)
+- [`tokens`](./reference/tokens/)
+- [`lookup-and-caching`](./reference/lookup-and-caching/)
+- [`address-lookups`](./reference/address-lookups/)
+- [`external-lookup-links`](./reference/external-lookup-links/)
+- [`companies-house-number`](./reference/companies-house-number/)
+- [`azure-table-storage`](./reference/azure-table-storage/)
+- [`api-session-recorder-and-logging`](./reference/api-session-recorder-and-logging/)
 
 **Notes for this diagram:**
 
