@@ -394,6 +394,45 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         }
 
         [Fact]
+        public async Task EstabSearch_Index_DuplicateEstablishmentTypesRemoved()
+        {
+            var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
+            var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
+            var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
+            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
+            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
+            var mockUrlHelper = new Mock<UrlHelper>();
+
+            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
+            context.SetupGet(x => x.Request).Returns(request.Object);
+            context.SetupGet(x => x.User).Returns(null as IPrincipal);
+            context.SetupGet(x => x.Request.IsAuthenticated).Returns(false);            
+            ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(false));
+            ers.Setup(x => x.GetPermittedStatusIdsAsync(It.IsAny<IPrincipal>())).ReturnsAsync(new[] { 1 });
+
+            EstablishmentSearchPayload capturedPayload = null;
+            ers.Setup(x => x.SearchAsync(It.IsAny<EstablishmentSearchPayload>(), It.IsAny<IPrincipal>()))
+                .Callback<EstablishmentSearchPayload, IPrincipal>((payload, _) => capturedPayload = payload)
+                .ReturnsAsync(() => new ApiPagedResult<EstablishmentSearchResultModel>(2, new List<EstablishmentSearchResultModel>()));          
+
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
+            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            subject.Url = mockUrlHelper.Object;
+
+            var vm = new EstablishmentSearchViewModel
+            {
+                SelectedEstablishmentTypeIds = new List<int> { 100, 200, 100 }
+            };
+            vm.TextSearchModel.Text = "school";
+
+            var result = await subject.Index(vm) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(new[] { 100, 200 }, capturedPayload.Filters.TypeIds);            
+        }
+
+        [Fact]
         public async Task EstabSearch_PrepareDownload_Step1_BackOfficeUser()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
