@@ -58,7 +58,7 @@
                         <span id='list-count' class="hidden">@Model.Count</span>
                         <h2 class="gias-heading-xs">Filters</h2>
                         <a href="#results-container" class="govuk-skip-link">Skip filters</a>
-                        <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
+                        <button type="submit" form="clear-filters-form" class="gias-link-button add-clear-filters" id="clear-filters">Clear all filters</button>
 
 
                         <input type="hidden" id="client-only-searchtype" value="EstablishmentGroupsAll" />
@@ -153,7 +153,7 @@
                             </div>
                         }
                         <div class="filter-additional-controls">
-                            <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
+                            <button type="submit" form="clear-filters-form" class="gias-link-button add-clear-filters" id="clear-filters-additional">Clear all filters</button>
                         </div>
 
                         <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
@@ -165,6 +165,11 @@
                 </div>
             </div>
         </div>
+    </form>
+    <form id="clear-filters-form" method="get" action="@Url.Action("Index", "GroupSearch", new {area = "Groups"})">       
+        @Html.HiddenFor(Model.SortBy.HasValue, x => x.SortBy)        
+        @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
+        @Html.HiddenFor(!Model.GroupSearchModel.AutoSuggestValue.IsEmpty(), x => x.GroupSearchModel.AutoSuggestValue)        
     </form>
     <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
     <h2 class="govuk-visually-hidden">Search results listing</h2>
