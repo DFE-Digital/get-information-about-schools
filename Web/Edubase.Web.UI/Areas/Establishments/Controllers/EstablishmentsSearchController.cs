@@ -410,7 +410,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             filters.EducationPhaseIds = model.SelectedEducationPhaseIds.ToArray();
             filters.StatusIds = model.SelectedEstablishmentStatusIds.ToArray();
-            filters.TypeIds = model.SelectedEstablishmentTypeIds.ToArray();
+            filters.TypeIds = model.SelectedEstablishmentTypeIds.Distinct().ToArray();   // Some types appear in more than one section so can be duplicated
             if (!filters.LocalAuthorityIds.Any()) filters.LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray();
             filters.ReligiousCharacterIds = model.SelectedReligiousCharacterIds.ToArray();
 
