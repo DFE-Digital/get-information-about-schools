@@ -4,7 +4,7 @@ namespace Edubase.Web.UI.Controllers.Api
 {
     public abstract class SqlRepositoryBase
     {
-        protected string BuildConnectionString()
+        protected static string BuildConnectionString()
         {
             var serverName = ConfigurationManager.AppSettings["SQLServer"];
             var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
