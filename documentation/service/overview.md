@@ -76,7 +76,7 @@ C4Context
   Rel(GIAS, Notify, "Submits email messages<br>for delivery", "HTTPS/JSON")
   Rel(ordnanceSurvey, GIAS, "Search address<br>data by postcode", "HTTPS/JSON")
   Rel(azureMaps,GIAS, "Retrieves map tiles<br>and location search results", "HTTPS/JSON")
-  Rel(ons,GIAS,"Supplies ONS codes for LA,<br>Region and Constituency","Manual/CSV")
+  Rel(ons,GIAS,"Supplies postcode-to-geography<br>mappings (ward, LSOA, MSOA,<br>constituency, district, urban/rural)","Periodic/Manual CSV")
   Rel(companiesHouse, GIAS,"Company data by<br>Companies House Number", "HTTPS/JSON")
   Rel(GIAS, hmrc, "Extract of establishment data<br>for childcare providers (CCPs)", "Manual/CSV")
   Rel(GIAS, internal, "Ingests GIAS data", "HTTPS/CSV/XLXS")

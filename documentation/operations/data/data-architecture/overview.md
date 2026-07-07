@@ -53,7 +53,7 @@ flowchart LR
         UKRLP["UKRLP\nProvider register"]
         CH["Companies House\nCompany data"]
         Census["DfE School Census\nPupil data"]
-        OS["Ordnance Survey\nGeography and postcodes"]
+        ONS["ONS Postcode Directory\nGeography reference data"]
         DSI["DfE Sign-in\nUser account sync"]
     end
 
@@ -101,7 +101,7 @@ GIAS receives data from five external sources through scheduled import jobs and 
 
 **DfE school census data** feeds pupil-number and related fields into establishment records through the census import pipeline.
 
-**Ordnance Survey geography and postcode data** is imported to maintain the `dbo.postcodes`, `dbo.GeoData` and related geography classification tables that drive address validation and administrative geography on establishment records.
+**ONS Postcode Directory data** is imported periodically to maintain `dbo.GeoData` and related geography classification tables, and to update establishment geography fields (ward, LSOA, MSOA, parliamentary constituency, district, urban/rural). This is a separate, batch relationship from the Ordnance Survey address lookup API, which is called at request time for postcode search and is not an inbound data import.
 
 **DfE Sign-in** disabled-account data is received via an ADF pipeline that syncs user account status to keep GIAS system user records aligned with the identity provider.
 

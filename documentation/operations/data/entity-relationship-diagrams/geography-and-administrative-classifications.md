@@ -28,6 +28,8 @@ It does not show audit tables or staging tables marked as inactive.
 - Postcode-derived geography supports display, search, filtering and classification.
 - Target modelling should separate manually held geography, postcode-derived geography and imported/reference geography.
 - Naming mismatches such as country values stored through `Nationality` should be corrected or clearly abstracted in public models.
+- **Region is not supplied by ONS.** It is derived internally: `LocalAuthority` maps to `GovernmentOfficeRegion` via `LaGorMapping`. When an establishment's region appears on a record or extract, it comes from this LA-to-GOR lookup, not from the ONS Postcode Directory import. The ONS integration supplies postcode-to-geography codes (ward, LSOA, MSOA, parliamentary constituency, district, urban/rural) but does not supply region.
+- **GSS local authority codes** are similarly derived internally via `LaGssMapping` rather than imported directly from ONS.
 
 ## Local Authority And Region
 
@@ -95,7 +97,7 @@ which national or subset grouping does it belong to?
 
 ### LaGorMapping
 
-`LaGorMapping` maps local authorities to Government Office Regions.
+`LaGorMapping` maps local authorities to Government Office Regions. This is the mechanism by which establishment region values are produced: the establishment's LA code is looked up in this table to derive the corresponding Government Office Region code. Region is therefore an internally derived value, not a field populated by the ONS Postcode Directory import.
 
 Business-friendly pattern:
 
