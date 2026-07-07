@@ -414,6 +414,9 @@
     <Compile Include="Areas\Groups\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
     <Compile Include="Areas\IGovernorsGridViewModelFactory.cs" />
     <Compile Include="Controllers\AmalgamateMergeController.cs" />
+    <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
+    <Compile Include="Controllers\Api\SqlRepositoryBase.cs" />
+    <Compile Include="Controllers\Api\SqlUserPreferenceRepository.cs" />
     <Compile Include="Controllers\Api\UtilApiController.cs" />
     <Compile Include="Controllers\FaqController.cs" />
     <Compile Include="Controllers\GlossaryController.cs" />
@@ -582,6 +585,7 @@
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\DownloadErrorViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
+    <Compile Include="Models\SqlUserPreference.cs" />
     <Compile Include="Models\Tools\AmalgamateEstablishmentsModel.cs" />
     <Compile Include="Models\Tools\ApprovalsViewModel.cs" />
     <Compile Include="Models\Tools\BulkAcademiesCreateViewModel.cs" />

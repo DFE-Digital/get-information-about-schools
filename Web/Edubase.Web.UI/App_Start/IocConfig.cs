@@ -49,6 +49,7 @@ using Edubase.Services.Texuna.Security;
 using Edubase.Services.Texuna.Serialization;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Areas;
+using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
@@ -216,6 +217,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
             builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
             builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
+            builder.RegisterType<SqlUserPreferenceRepository>().As<ISqlUserPreferenceRepository>().SingleInstance();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
