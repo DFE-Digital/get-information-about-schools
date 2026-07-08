@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.UI;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
 
@@ -73,18 +74,24 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var allPrefs = await _tableStorageUserPreferenceRepository.GetAllAsync();
             var migrated = 0;
+            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
 
-            foreach (var pref in allPrefs.Items)
+            do
             {
-                await _sqlUserPreferenceRepository.UpsertAsync(new Models.SqlUserPreference
+                var page = await _tableStorageUserPreferenceRepository.GetAllAsync(skip: continuationToken);
+                foreach (var pref in page.Items)
                 {
-                    UserId = pref.UserId,
-                    SavedSearchToken = pref.SavedSearchToken
-                });
-                migrated++;
+                    await _sqlUserPreferenceRepository.UpsertAsync(new Models.SqlUserPreference
+                    {
+                        UserId = pref.UserId,
+                        SavedSearchToken = pref.SavedSearchToken
+                    });
+                    migrated++;
+                }
+                continuationToken = page.TableContinuationToken;
             }
+            while (continuationToken != null);
 
             return Ok(new { migrated });
         }
