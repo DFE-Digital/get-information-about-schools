@@ -10,7 +10,7 @@ namespace Edubase.Web.UI.Controllers.Api
 {
     public class SqlUserPreferenceRepository : ISqlUserPreferenceRepository
     {
-        private string BuildConnectionString()
+        private static string BuildConnectionString()
         {
             var serverName = ConfigurationManager.AppSettings["SQLServer"];
             var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
