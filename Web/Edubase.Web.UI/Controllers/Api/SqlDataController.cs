@@ -1,4 +1,6 @@
 using System.Configuration;
+using Edubase.Common.Config;
+using Edubase.Data.Repositories;
 using Microsoft.Data.SqlClient;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,7 +14,18 @@ namespace Edubase.Web.UI.Controllers.Api
     public class SqlDataController : ApiController
     {
         private readonly IAzLogger _logger;
-        public SqlDataController(IAzLogger logger) => _logger = logger;
+        private readonly IUserPreferenceRepository _tableStorageUserPreferenceRepository;
+        private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
+
+        public SqlDataController(
+            IAzLogger logger,
+            IUserPreferenceRepository tableStorageUserPreferenceRepository,
+            ISqlUserPreferenceRepository sqlUserPreferenceRepository)
+        {
+            _logger = logger;
+            _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
+            _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
+        }
 
 
         [Route("api/sql"), HttpGet]
@@ -50,6 +63,30 @@ namespace Edubase.Web.UI.Controllers.Api
                 });
                 return StatusCode(HttpStatusCode.ServiceUnavailable);
             }
+        }
+
+        [Route("api/migrate-user-preferences"), HttpPost]
+        public async Task<IHttpActionResult> MigrateUserPreferencesAsync()
+        {
+            if (!Feature.IsEnabled("UserPreferencesMigration"))
+            {
+                return NotFound();
+            }
+
+            var allPrefs = await _tableStorageUserPreferenceRepository.GetAllAsync();
+            var migrated = 0;
+
+            foreach (var pref in allPrefs.Items)
+            {
+                await _sqlUserPreferenceRepository.UpsertAsync(new Models.SqlUserPreference
+                {
+                    UserId = pref.UserId,
+                    SavedSearchToken = pref.SavedSearchToken
+                });
+                migrated++;
+            }
+
+            return Ok(new { migrated });
         }
     }
 }
