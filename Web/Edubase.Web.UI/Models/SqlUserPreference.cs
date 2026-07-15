@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Web.UI.Models
 {
+    [Table("UserPreferences")]
     public class SqlUserPreference
     {
         public SqlUserPreference() { }
