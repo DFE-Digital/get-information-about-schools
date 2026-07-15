@@ -15,7 +15,7 @@ Shows the main components involved when users or client systems interact with th
 Shows the components involved in scheduled jobs, background processing, extract generation, and related operational notifications.
 
 - **Reference data provider components :** 
-Shows the components responsible for integrating with upstream reference-data providers such as Companies House, Ofsted, UKRLP, and address data sources.
+Shows the components responsible for integrating with upstream reference-data providers such as Companies House, UKRLP, ONS geography, and address data sources.
 
 - **GIAS front end authentication flow :** 
 Documented separately in [GIAS front-end authentication flow](../front-end-component/front-end-authentication-flow/).
@@ -203,7 +203,7 @@ C4Component
 
 ### Scope and assumptions
 
-- This diagram excludes external sync integrations such as Companies House, Ofsted, and UKRLP. Those are operational jobs in the codebase, but they are intentionally not part of this focused view.
+- This diagram excludes external sync integrations such as Companies House and UKRLP. Those are operational jobs in the codebase, but they are intentionally not part of this focused view.
 - The main purpose of this diagram is to show the internal flow: schedule/orchestrate, execute business logic, persist state, generate output, publish files.
 - SQL Server underpins the job state, callback metadata, and source data shown here, while Flyway governs the evolution of that database platform. See [`database/sql-server.md`](./database/sql-server/) and [`database/flyway-migrations.md`](./database/flyway-migrations/).
 
@@ -222,7 +222,6 @@ C4Component
     Container_Ext(os_ext, "Ordnance Survey", "External address lookup service")
 
     Container_Ext(companies_house_ext, "Companies House", "External company data service")
-    Container_Ext(ofsted_ext, "Ofsted", "External inspections data service")
     Container_Ext(ukrlp_ext, "UKRLP", "External provider reference data service")
     
 
@@ -235,8 +234,6 @@ C4Component
 
         Component(companiesHouse, "Companies House Integration", "Java / Spring Services", "Retrieves Companies House company<br> profiles and processes group update data")
         
-        Component(ofsted, "Ofsted Integration", "Java / Spring Services", "Retrieves inspection results and processes<br>Ofsted rating updates")
-        
         Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application data")
     }
 
@@ -246,12 +243,10 @@ C4Component
     }
 
     Rel(companiesHouse, companies_house_ext, "Retrieves company profiles from", "HTTPS/JSON + Basic Auth")
-    Rel(ofsted, ofsted_ext, "Retrieves inspection results from", "HTTPS/JSON")
     Rel(os, os_ext, "Looks up postcode address data from", "HTTPS/JSON + API key")
     Rel(ukrlp, ukrlp_ext, "Retrieves provider data from", "SOAP")
 
     Rel(companiesHouse, persistence, "Uses")
-    Rel(ofsted, persistence, "Uses")
     Rel(ukrlp, persistence, "Uses")
     Rel(persistence, sql_server, "Writes to", "JDBC/Hibernate")
 
@@ -259,7 +254,6 @@ C4Component
     Rel(address_importer, sql_server, "Writes imported address data to")
 
     UpdateRelStyle(companiesHouse, persistence, $offsetX="0", $offsetY="0")
-    UpdateRelStyle(ofsted, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(os, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(ukrlp, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(persistence, sql_server, $offsetX="10", $offsetY="-40")
@@ -279,8 +273,8 @@ C4Component
 - Each integration component inside the `Edubase Java Application` boundary represents application-side logic owned by that application, not the upstream system itself.
 - The purpose of this diagram is to make the external dependencies explicit. In the larger component diagrams, these responsibilities would otherwise be hidden inside the general service layer.
 - `Persistence Layer` Retrieved data is compared against, mapped onto, or persisted into the application data model.
-- Companies House and Ofsted are HTTP-based integrations, and UKRLP is SOAP-based.
-- `Address Layer Import Application` is outside the Edubase boundary because the batch address import is a separate Java process, even though it ultimately writes data into the same SQL Server database used by Edubase.
+- Companies House is an HTTP-based integration, UKRLP is SOAP-based, and ONS geography data is represented by a batch/database import path.
+- `Address Layer Import Application` is outside the Edubase boundary because the batch address import is a separate Java process, even though it ultimately writes data into the same SQL Server database used by Edubase. ONS geography import is also database-centred, with `DataOpsJobs` import tables and SQL procedures rather than a live Java API client.
 
 ### Scope and assumptions
 
@@ -300,9 +294,9 @@ The diagrams above are intended to be read together rather than as alternatives:
 Related notes in this repository:
 
 - [Companies House integration](./integrations/companies-house-integration/)
-- Ofsted integration
 - [UKRLP integration](./integrations/ukrlp-integration/)
 - [Ordnance Survey integration](./integrations/ordnance-survey-integration/)
+- [ONS geography integration](./integrations/ons-geography-integration/)
 - [GOV.UK Notify integration](./integrations/govuk-notify-integration/)
 - [SQL Server integration](./database/sql-server/)
 - [Flyway migration categories](./database/flyway-migrations/)
