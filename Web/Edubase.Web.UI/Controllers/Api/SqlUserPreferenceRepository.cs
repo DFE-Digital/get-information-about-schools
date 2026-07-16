@@ -21,21 +21,26 @@ namespace Edubase.Web.UI.Controllers.Api
                 "encrypt=True;TrustServerCertificate=False;";
         }
 
-        public async Task<SqlUserPreference> GetAsync(string userId)
+        public async Task<SqlUserPreference> GetAsync(string paritionKey,  string rowKey)
         {
             using (var context = new UserPreferencesDbContext(new SqlConnection(BuildConnectionString())))
             {
-                return await context.UserPreferences.FindAsync(userId);
+                return await context.UserPreferences.FindAsync(paritionKey, rowKey);
             }
         }
 
-        public SqlUserPreference Get(string userId) => GetAsync(userId).GetAwaiter().GetResult();
+        public SqlUserPreference Get(string paritionKey,  string rowKey) => GetAsync(paritionKey, rowKey).GetAwaiter().GetResult();
 
         public async Task UpsertAsync(SqlUserPreference item)
         {
             using (var context = new UserPreferencesDbContext(new SqlConnection(BuildConnectionString())))
             {
-                var existing = await context.UserPreferences.FindAsync(item.UserId);
+                if (string.IsNullOrWhiteSpace(item.PartitionKey))
+                {
+                    item.PartitionKey = string.Empty;
+                }
+
+                var existing = await context.UserPreferences.FindAsync(item.PartitionKey, item.RowKey);
                 if (existing == null)
                 {
                     context.UserPreferences.Add(item);

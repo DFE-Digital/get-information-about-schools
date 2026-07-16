@@ -7,8 +7,8 @@ namespace Edubase.Web.UI.Controllers.Api
     public interface ISqlUserPreferenceRepository
     {
         Task UpsertAsync(SqlUserPreference item);
-        SqlUserPreference Get(string userId);
-        Task<SqlUserPreference> GetAsync(string userId);
+        SqlUserPreference Get(string partitionKey, string rowKey);
+        Task<SqlUserPreference> GetAsync(string partitionKey, string rowKey);
         Task<IEnumerable<SqlUserPreference>> GetAllAsync();
     }
 }

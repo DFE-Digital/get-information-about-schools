@@ -84,7 +84,8 @@ namespace Edubase.Web.UI.Controllers.Api
                 {
                     await _sqlUserPreferenceRepository.UpsertAsync(new Models.SqlUserPreference
                     {
-                        UserId = pref.UserId,
+                        PartitionKey = pref.PartitionKey,
+                        RowKey = pref.RowKey,
                         SavedSearchToken = pref.SavedSearchToken
                     });
                     migrated++;

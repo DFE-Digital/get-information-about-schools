@@ -3,18 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Web.UI.Models
 {
-    [Table("UserPreferences")]
+    [Table("UserPreferences", Schema = "FrontEnd")]
     public class SqlUserPreference
     {
         public SqlUserPreference() { }
 
         public SqlUserPreference(string userId)
         {
-                UserId =  userId;
+            PartitionKey = string.Empty;
         }
 
-        [Key]
-        public string UserId { get; set; }
+        [Key, Column(Order = 0)]
+        public string PartitionKey { get; set; }
+        [Key, Column(Order = 1)]
+        public string RowKey { get; set; }
         public string SavedSearchToken { get; set; }
     }
 }
