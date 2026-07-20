@@ -21,15 +21,15 @@ namespace Edubase.Web.UI.Controllers.Api
                 "encrypt=True;TrustServerCertificate=False;";
         }
 
-        public async Task<SqlUserPreference> GetAsync(string paritionKey,  string rowKey)
+        public async Task<SqlUserPreference> GetAsync(string partitionKey,  string rowKey)
         {
             using (var context = new UserPreferencesDbContext(new SqlConnection(BuildConnectionString())))
             {
-                return await context.UserPreferences.FindAsync(paritionKey, rowKey);
+                return await context.UserPreferences.FindAsync(partitionKey, rowKey);
             }
         }
 
-        public SqlUserPreference Get(string paritionKey,  string rowKey) => GetAsync(paritionKey, rowKey).GetAwaiter().GetResult();
+        public SqlUserPreference Get(string partitionKey,  string rowKey) => GetAsync(partitionKey, rowKey).GetAwaiter().GetResult();
 
         public async Task UpsertAsync(SqlUserPreference item)
         {
