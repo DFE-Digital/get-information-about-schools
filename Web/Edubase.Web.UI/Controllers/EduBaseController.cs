@@ -1,7 +1,6 @@
 using Autofac;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Helpers;
-using FluentValidation.Mvc;
 using MoreLinq;
 using System.Linq;
 using System.Web.Mvc;
