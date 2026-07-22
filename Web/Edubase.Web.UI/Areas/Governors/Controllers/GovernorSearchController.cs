@@ -193,8 +193,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             model.Results = results.Items;
 
             if (model.StartIndex == 0) model.Count = results.Count;
-            if (model.Count == 0) { return RedirectToSearchPage(model); }
-
             return View("Index", model);
         }
 
