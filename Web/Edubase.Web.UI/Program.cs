@@ -46,6 +46,7 @@ using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Authentication;
+using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler;
@@ -59,9 +60,12 @@ using Edubase.Web.UI.Models.Notifications;
 using Edubase.Web.UI.Models.Notifications.Validators;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -433,6 +437,7 @@ builder.Services.AddScoped<IGovernorsWriteService>(provider =>
 // Determines whether the simulator SAML2 authentication flow should be used.
 // Controlled by the AppSettings:UseSimulatorAuth configuration flag.
 bool useSimulator = builder.Configuration.GetValue<bool>("AppSettings:UseSimulatorAuth");
+var useBasicAuth = builder.Configuration.GetValue<bool>("AppSettings:UseBasicAuth");
 
 /// <summary>
 /// Configures the authentication schemes for the application.
@@ -466,6 +471,11 @@ var authBuilder = builder.Services.AddAuthentication(options =>
     options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
+
+if (useBasicAuth)
+{
+    authBuilder.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", _ => { });
+}
 
 /// <summary>
 /// Registers either the simulator or real SAML2 authentication flow
@@ -515,6 +525,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+if (useBasicAuth)
+{
+    app.UseMiddleware<BasicAuthenticationGateMiddleware>();
+}
+
 app.UseStaticFiles();
 var supportedCultures = new[] { new CultureInfo("en-GB") };
 app.UseRequestLocalization(new RequestLocalizationOptions
@@ -526,7 +542,6 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 
 app.UseRouting();
 app.UseSession();           // Enables session state
-app.UseAuthorization();
 app.UseSession();
 app.MapControllers()
     .RequireSystemWebAdapterSession();
@@ -534,5 +549,8 @@ app.MapControllers()
 app.UseDeveloperExceptionPage();
 
 HtmlHelperExtensions.WebRootPath = app.Environment.WebRootPath;
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
