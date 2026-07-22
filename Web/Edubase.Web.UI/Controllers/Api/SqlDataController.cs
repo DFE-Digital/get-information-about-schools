@@ -69,7 +69,7 @@ namespace Edubase.Web.UI.Controllers.Api
         [Route("api/migrate-user-preferences"), HttpPost]
         public async Task<IHttpActionResult> MigrateUserPreferencesAsync()
         {
-            if (!Feature.IsEnabled("UserPreferencesMigration"))
+            if (!Feature.IsEnabled("Feature_UserPreferencesMigration"))
             {
                 return NotFound();
             }
