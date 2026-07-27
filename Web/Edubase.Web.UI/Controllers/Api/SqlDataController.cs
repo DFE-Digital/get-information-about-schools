@@ -158,7 +158,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
                 do
                 {
-                    var page = await _tableStorageNewsArticleRepository.GetAllAsync(int.MaxValue, false, null, continuationToken);
+                    var page = await _tableStorageNewsArticleRepository.GetAllAsync(int.MaxValue, false, null, continuationToken, partition);
                     foreach (var article in page.Items)
                     {
                         await _sqlNewsArticleRepository.UpsertAsync(new Models.SqlNewsArticle
