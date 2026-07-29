@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.UI;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
+using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -19,17 +20,22 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
         private readonly NotificationTemplateRepository _tableStorageNotificationTemplateRepository;
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
+        private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
+        private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
 
         public SqlDataController(
             IAzLogger logger,
             IUserPreferenceRepository tableStorageUserPreferenceRepository,
-            ISqlUserPreferenceRepository sqlUserPreferenceRepository, NotificationTemplateRepository tableStorageNotificationTemplateRepository, ISqlNotificationTemplateRepository sqlNotificationTemplateRepository)
+            ISqlUserPreferenceRepository sqlUserPreferenceRepository, NotificationTemplateRepository tableStorageNotificationTemplateRepository,
+            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository, NotificationBannerRepository tableStorageNotificationBannerRepository, ISqlNotificationBannerRepository sqlNotificationBannerRepository)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
             _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
             _tableStorageNotificationTemplateRepository = tableStorageNotificationTemplateRepository;
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
+            _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
+            _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
         }
 
 
@@ -128,6 +134,49 @@ namespace Edubase.Web.UI.Controllers.Api
                 continuationToken = page.TableContinuationToken;
             }
             while (continuationToken != null);
+
+            return Ok(new { migrated });
+        }
+
+        [Route("api/migrate-notification-banners"), HttpPost]
+        public async Task<IHttpActionResult> MigrateNotificationBannerAsync()
+        {
+            if (!Feature.IsEnabled("Feature_NotificationBannersMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            var partitions = new[] { eNotificationBannerPartition.Current, eNotificationBannerPartition.Archive };
+
+            foreach (var partition in partitions)
+            {
+                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+                do
+                {
+                    var page = await _tableStorageNotificationBannerRepository.GetAllAsync(int.MaxValue, continuationToken, false, partition);
+                    foreach (var banner in page.Items)
+                    {
+                        await _sqlNotificationBannerRepository.UpsertAsync(new Models.SqlNotificationBanner
+                        {
+                            PartitionKey = banner.PartitionKey,
+                            RowKey = banner.RowKey,
+                            Content = banner.Content,
+                            Importance = (byte)banner.Importance,
+                            Start = banner.Start,
+                            End = banner.End,
+                            Version = (byte)banner.Version,
+                            Tracker = banner.Tracker,
+                            AuditUser = int.TryParse(banner.AuditUser, out var auditUserId) ? auditUserId : 0,
+                            AuditEvent = banner.AuditEvent,
+                            AuditTimeStamp = banner.AuditTimestamp
+                        });
+                        migrated++;
+                    }
+                    continuationToken = page.TableContinuationToken;
+                }
+                while (continuationToken != null);
+            }
 
             return Ok(new { migrated });
         }
