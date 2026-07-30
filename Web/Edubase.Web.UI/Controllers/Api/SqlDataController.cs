@@ -22,12 +22,19 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
+        private readonly FaqItemRepository _tableStorageFaqItemRepository;
+        private readonly ISqlFaqItemRepository _sqfaqItemRepository;
 
         public SqlDataController(
             IAzLogger logger,
             IUserPreferenceRepository tableStorageUserPreferenceRepository,
-            ISqlUserPreferenceRepository sqlUserPreferenceRepository, NotificationTemplateRepository tableStorageNotificationTemplateRepository,
-            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository, NotificationBannerRepository tableStorageNotificationBannerRepository, ISqlNotificationBannerRepository sqlNotificationBannerRepository)
+            ISqlUserPreferenceRepository sqlUserPreferenceRepository,
+            NotificationTemplateRepository tableStorageNotificationTemplateRepository,
+            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
+            NotificationBannerRepository tableStorageNotificationBannerRepository,
+            ISqlNotificationBannerRepository sqlNotificationBannerRepository,
+            FaqItemRepository tableStorageFaqItemRepository,
+            ISqlFaqItemRepository sqlFaqItemRepository)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -36,6 +43,8 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
             _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
+            _tableStorageFaqItemRepository = tableStorageFaqItemRepository;
+            _sqfaqItemRepository = sqlFaqItemRepository;
         }
 
 
@@ -177,6 +186,40 @@ namespace Edubase.Web.UI.Controllers.Api
                 }
                 while (continuationToken != null);
             }
+
+            return Ok(new { migrated });
+        }
+
+        [Route("api/migrate-faq-items"), HttpPost]
+        public async Task<IHttpActionResult> MigrateFaqItemsAsync()
+        {
+            if (!Feature.IsEnabled("Feature_FaqItemsMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+
+            do
+            {
+                var page = await _tableStorageFaqItemRepository.GetAllAsync(int.MaxValue, continuationToken);
+                foreach (var item in page.Items)
+                {
+                    await _sqfaqItemRepository.UpsertAsync(new Models.SqlFaqItem
+                    {
+                        PartitionKey = item.PartitionKey,
+                        RowKey = item.RowKey,
+                        Title = item.Title,
+                        Content = item.Content,
+                        DisplayOrder = item.DisplayOrder,
+                        GroupId = item.GroupId
+                    });
+                    migrated++;
+                }
+                continuationToken = page.TableContinuationToken;
+            }
+            while (continuationToken != null);
 
             return Ok(new { migrated });
         }

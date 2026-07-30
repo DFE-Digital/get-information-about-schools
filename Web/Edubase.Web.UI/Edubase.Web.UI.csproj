@@ -450,6 +450,7 @@
     <Compile Include="Controllers\Api\ISqlNotificationBannerRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
     <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
+    <Compile Include="Controllers\Api\SqlFaqItemRepository.cs" />
     <Compile Include="Controllers\Api\SqlNotificationBannerRepository.cs" />
     <Compile Include="Controllers\Api\SqlNotificationTemplateRepository.cs" />
     <Compile Include="Controllers\Api\SqlUserPreferenceRepository.cs" />
@@ -488,10 +489,12 @@
     <Compile Include="Models\Admin\LogsViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
+    <Compile Include="Models\FaqItemsDbContext.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
     <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
     <Compile Include="Models\Guidance\LaNameCodes.cs" />
+    <Compile Include="Controllers\Api\ISqlFaqItemRepository.cs" />
     <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesViewModel.cs" />
@@ -563,6 +566,7 @@
     <Compile Include="Controllers\Api\AcademyOpeningsApiController.cs" />
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
     <Compile Include="Controllers\Api\SqlDataController.cs" />
+    <Compile Include="Models\SqlFaqItem.cs" />
     <Compile Include="Models\SqlNotificationBanner.cs" />
     <Compile Include="Models\SqlNotificationTemplate.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
