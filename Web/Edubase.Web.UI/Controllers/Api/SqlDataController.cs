@@ -10,6 +10,7 @@ using Edubase.Common.Config;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Microsoft.Data.SqlClient;
+using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -23,6 +24,8 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
         private readonly NewsArticleRepository _tableStorageNewsArticleRepository;
         private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
+        private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
+        private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
 
         public SqlDataController(
             IAzLogger logger,
@@ -32,6 +35,8 @@ namespace Edubase.Web.UI.Controllers.Api
             ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
             NewsArticleRepository tableStorageNewsArticleRepository,
             ISqlNewsArticleRepository sqlNewsArticleRepository)
+            ISqlUserPreferenceRepository sqlUserPreferenceRepository, NotificationTemplateRepository tableStorageNotificationTemplateRepository,
+            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository, NotificationBannerRepository tableStorageNotificationBannerRepository, ISqlNotificationBannerRepository sqlNotificationBannerRepository)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -40,6 +45,8 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
             _tableStorageNewsArticleRepository = tableStorageNewsArticleRepository;
             _sqlNewsArticleRepository = sqlNewsArticleRepository;
+            _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
+            _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
         }
 
 
@@ -141,8 +148,51 @@ namespace Edubase.Web.UI.Controllers.Api
 
             return Ok(new { migrated });
         }
+        
+                [Route("api/migrate-notification-banners"), HttpPost]
+        public async Task<IHttpActionResult> MigrateNotificationBannerAsync()
+        {
+            if (!Feature.IsEnabled("Feature_NotificationBannersMigration"))
+            {
+                return NotFound();
+            }
 
-        [Route("api/migrate-news-article"), HttpPost]
+            var migrated = 0;
+            var partitions = new[] { eNotificationBannerPartition.Current, eNotificationBannerPartition.Archive };
+
+            foreach (var partition in partitions)
+            {
+                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+                do
+                {
+                    var page = await _tableStorageNotificationBannerRepository.GetAllAsync(int.MaxValue, continuationToken, false, partition);
+                    foreach (var banner in page.Items)
+                    {
+                        await _sqlNotificationBannerRepository.UpsertAsync(new Models.SqlNotificationBanner
+                        {
+                            PartitionKey = banner.PartitionKey,
+                            RowKey = banner.RowKey,
+                            Content = banner.Content,
+                            Importance = (byte)banner.Importance,
+                            Start = banner.Start,
+                            End = banner.End,
+                            Version = (byte)banner.Version,
+                            Tracker = banner.Tracker,
+                            AuditUser = int.TryParse(banner.AuditUser, out var auditUserId) ? auditUserId : 0,
+                            AuditEvent = banner.AuditEvent,
+                            AuditTimeStamp = banner.AuditTimestamp
+                        });
+                        migrated++;
+                    }
+                    continuationToken = page.TableContinuationToken;
+                }
+                while (continuationToken != null);
+            }
+
+            return Ok(new { migrated });
+        }
+        
+                [Route("api/migrate-news-article"), HttpPost]
         public async Task<IHttpActionResult> MigrateNewsArticlesAsync()
         {
             if (!Feature.IsEnabled("Feature_NewsArticlesMigration"))

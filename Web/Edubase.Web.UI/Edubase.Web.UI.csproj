@@ -451,6 +451,10 @@
     <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
     <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
     <Compile Include="Controllers\Api\SqlNewsArticleRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlNotificationBannerRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
+    <Compile Include="Controllers\Api\SqlNotificationBannerRepository.cs" />
     <Compile Include="Controllers\Api\SqlNotificationTemplateRepository.cs" />
     <Compile Include="Controllers\Api\SqlUserPreferenceRepository.cs" />
     <Compile Include="Controllers\Api\UtilApiController.cs" />
@@ -497,6 +501,7 @@
     <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesViewModel.cs" />
     <Compile Include="Models\News\NewsArticleViewModel.cs" />
+    <Compile Include="Models\NotificationBannersDbContext.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerAuditViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannersAuditViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
@@ -564,6 +569,7 @@
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
     <Compile Include="Controllers\Api\SqlDataController.cs" />
     <Compile Include="Models\SqlNewsArticle.cs" />
+    <Compile Include="Models\SqlNotificationBanner.cs" />
     <Compile Include="Models\SqlNotificationTemplate.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
     <Compile Include="Models\UserPreferencesDbContext.cs" />
