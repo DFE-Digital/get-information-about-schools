@@ -34,9 +34,9 @@ namespace Edubase.Web.UI.Controllers.Api
             NotificationTemplateRepository tableStorageNotificationTemplateRepository,
             ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
             NewsArticleRepository tableStorageNewsArticleRepository,
-            ISqlNewsArticleRepository sqlNewsArticleRepository)
-            ISqlUserPreferenceRepository sqlUserPreferenceRepository, NotificationTemplateRepository tableStorageNotificationTemplateRepository,
-            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository, NotificationBannerRepository tableStorageNotificationBannerRepository, ISqlNotificationBannerRepository sqlNotificationBannerRepository)
+            ISqlNewsArticleRepository sqlNewsArticleRepository,
+            NotificationBannerRepository tableStorageNotificationBannerRepository,
+            ISqlNotificationBannerRepository sqlNotificationBannerRepository)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
