@@ -23,7 +23,7 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
         private readonly FaqItemRepository _tableStorageFaqItemRepository;
-        private readonly ISqlFaqItemRepository _sqfaqItemRepository;
+        private readonly ISqlFaqItemRepository _sqlFaqItemRepository;
 
         public SqlDataController(
             IAzLogger logger,
@@ -44,7 +44,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
             _tableStorageFaqItemRepository = tableStorageFaqItemRepository;
-            _sqfaqItemRepository = sqlFaqItemRepository;
+            _sqlFaqItemRepository = sqlFaqItemRepository;
         }
 
 
@@ -206,7 +206,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 var page = await _tableStorageFaqItemRepository.GetAllAsync(int.MaxValue, continuationToken);
                 foreach (var item in page.Items)
                 {
-                    await _sqfaqItemRepository.UpsertAsync(new Models.SqlFaqItem
+                    await _sqlFaqItemRepository.UpsertAsync(new Models.SqlFaqItem
                     {
                         PartitionKey = item.PartitionKey,
                         RowKey = item.RowKey,
