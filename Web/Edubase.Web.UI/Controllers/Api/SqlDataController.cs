@@ -1,13 +1,15 @@
 using System.Configuration;
-using Edubase.Common.Config;
-using Edubase.Data.Repositories;
-using Microsoft.Data.SqlClient;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.UI;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
+using Edubase.Common.Config;
+using Edubase.Data.Entity;
+using Edubase.Data.Repositories;
+using Microsoft.Data.SqlClient;
 using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Controllers.Api
@@ -20,20 +22,29 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
         private readonly NotificationTemplateRepository _tableStorageNotificationTemplateRepository;
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
+        private readonly NewsArticleRepository _tableStorageNewsArticleRepository;
+        private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
 
         public SqlDataController(
             IAzLogger logger,
             IUserPreferenceRepository tableStorageUserPreferenceRepository,
-            ISqlUserPreferenceRepository sqlUserPreferenceRepository, NotificationTemplateRepository tableStorageNotificationTemplateRepository,
-            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository, NotificationBannerRepository tableStorageNotificationBannerRepository, ISqlNotificationBannerRepository sqlNotificationBannerRepository)
+            ISqlUserPreferenceRepository sqlUserPreferenceRepository,
+            NotificationTemplateRepository tableStorageNotificationTemplateRepository,
+            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
+            NewsArticleRepository tableStorageNewsArticleRepository,
+            ISqlNewsArticleRepository sqlNewsArticleRepository,
+            NotificationBannerRepository tableStorageNotificationBannerRepository,
+            ISqlNotificationBannerRepository sqlNotificationBannerRepository)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
             _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
             _tableStorageNotificationTemplateRepository = tableStorageNotificationTemplateRepository;
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
+            _tableStorageNewsArticleRepository = tableStorageNewsArticleRepository;
+            _sqlNewsArticleRepository = sqlNewsArticleRepository;
             _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
         }
@@ -137,8 +148,8 @@ namespace Edubase.Web.UI.Controllers.Api
 
             return Ok(new { migrated });
         }
-
-        [Route("api/migrate-notification-banners"), HttpPost]
+        
+                [Route("api/migrate-notification-banners"), HttpPost]
         public async Task<IHttpActionResult> MigrateNotificationBannerAsync()
         {
             if (!Feature.IsEnabled("Feature_NotificationBannersMigration"))
@@ -178,6 +189,48 @@ namespace Edubase.Web.UI.Controllers.Api
                 while (continuationToken != null);
             }
 
+            return Ok(new { migrated });
+        }
+        
+                [Route("api/migrate-news-article"), HttpPost]
+        public async Task<IHttpActionResult> MigrateNewsArticlesAsync()
+        {
+            if (!Feature.IsEnabled("Feature_NewsArticlesMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            var partitions = new[] { eNewsArticlePartition.Current, eNewsArticlePartition.Archive };
+
+            foreach (var partition in partitions)
+            {
+                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+                do
+                {
+                    var page = await _tableStorageNewsArticleRepository.GetAllAsync(int.MaxValue, false, null, continuationToken, partition);
+                    foreach (var article in page.Items)
+                    {
+                        await _sqlNewsArticleRepository.UpsertAsync(new Models.SqlNewsArticle
+                        {
+                            PartitionKey = article.PartitionKey,
+                            RowKey = article.RowKey,
+                            Title = article.Title,
+                            ArticleDate = article.ArticleDate,
+                            ShowDate = article.ShowDate,
+                            Content = article.Content,
+                            Version = (byte) article.Version,
+                            Tracker = article.Tracker,
+                            AuditUser = int.TryParse(article.AuditUser, out var auditUserId) ? auditUserId : 0,
+                            AuditEvent = article.AuditEvent,
+                            AuditTimeStamp = article.AuditTimestamp
+                        });
+                        migrated++;
+                    }
+                    continuationToken = page.TableContinuationToken;
+                }
+                while (continuationToken != null);
+            }
             return Ok(new { migrated });
         }
     }
