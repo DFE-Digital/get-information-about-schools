@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Web.UI.Models
 {
-    [Table("NotificationTemplates", Schema = "FrontEnd")]
+    [Table("LocalAuthoritySets", Schema = "FrontEnd")]
     public class SqlLocalAuthoritySet
     {
         public SqlLocalAuthoritySet() { }
