@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Web.UI.Models
 {
+    [Table("FaqItems", Schema = "Frontend")]
     public class SqlFaqItem
     {
         public SqlFaqItem() { }
