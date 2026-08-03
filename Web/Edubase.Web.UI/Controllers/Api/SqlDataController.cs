@@ -26,6 +26,8 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
+        private readonly FaqGroupRepository _tableStorageFaqGroupRepository;
+        private readonly ISqlFaqGroupRepository _sqlFaqGroupRepository;
 
         public SqlDataController(
             IAzLogger logger,
@@ -36,7 +38,10 @@ namespace Edubase.Web.UI.Controllers.Api
             NewsArticleRepository tableStorageNewsArticleRepository,
             ISqlNewsArticleRepository sqlNewsArticleRepository,
             NotificationBannerRepository tableStorageNotificationBannerRepository,
-            ISqlNotificationBannerRepository sqlNotificationBannerRepository)
+            ISqlNotificationBannerRepository sqlNotificationBannerRepository,
+            FaqGroupRepository tableStorageFaqGroupRepository,
+            ISqlFaqGroupRepository sqlFaqGroupRepository)
+
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -47,6 +52,8 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNewsArticleRepository = sqlNewsArticleRepository;
             _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
+            _tableStorageFaqGroupRepository = tableStorageFaqGroupRepository;
+            _sqlFaqGroupRepository = sqlFaqGroupRepository;
         }
 
 
@@ -231,6 +238,38 @@ namespace Edubase.Web.UI.Controllers.Api
                 }
                 while (continuationToken != null);
             }
+            return Ok(new { migrated });
+        }
+
+        [Route("api/migrate-faq-groups"), HttpPost]
+        public async Task<IHttpActionResult> MigrateFaqGroupsAsync()
+        {
+            if (!Feature.IsEnabled("Feature_FaqGroupsMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+
+            do
+            {
+                var page = await _tableStorageFaqGroupRepository.GetAllAsync(int.MaxValue, continuationToken);
+                foreach (var group in page.Items)
+                {
+                    await _sqlFaqGroupRepository.UpsertAsync(new Models.SqlFaqGroup
+                    {
+                        PartitionKey = group.PartitionKey,
+                        RowKey = group.RowKey,
+                        GroupName = group.GroupName,
+                        DisaplyOrder = group.DisplayOrder
+                    });
+                    migrated++;
+                }
+                continuationToken = page.TableContinuationToken;
+            }
+            while (continuationToken != null);
+
             return Ok(new { migrated });
         }
     }
