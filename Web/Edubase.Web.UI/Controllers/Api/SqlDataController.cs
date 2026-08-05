@@ -32,11 +32,11 @@ namespace Edubase.Web.UI.Controllers.Api
         public SqlDataController(
             IAzLogger logger,
             IUserPreferenceRepository tableStorageUserPreferenceRepository,
-            ISqlUserPreferenceRepository sqlUserPreferenceRepository, NotificationTemplateRepository tableStorageNotificationTemplateRepository,
-            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository, LocalAuthoritySetRepository tableStoragelocalAuthoritySetRepository, ISqlLocalAuthoritySetRepository sqlLocalAuthoritySetRepository)
             ISqlUserPreferenceRepository sqlUserPreferenceRepository,
             NotificationTemplateRepository tableStorageNotificationTemplateRepository,
             ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
+            LocalAuthoritySetRepository tableStoragelocalAuthoritySetRepository,
+            ISqlLocalAuthoritySetRepository sqlLocalAuthoritySetRepository,
             NewsArticleRepository tableStorageNewsArticleRepository,
             ISqlNewsArticleRepository sqlNewsArticleRepository,
             NotificationBannerRepository tableStorageNotificationBannerRepository,
