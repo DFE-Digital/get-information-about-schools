@@ -1,16 +1,13 @@
 using System.Configuration;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.UI;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
 using Edubase.Common.Config;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Microsoft.Data.SqlClient;
-using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -22,10 +19,14 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
         private readonly NotificationTemplateRepository _tableStorageNotificationTemplateRepository;
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
+        private readonly LocalAuthoritySetRepository _tableStoragelocalAuthoritySetRepository;
+        private readonly ISqlLocalAuthoritySetRepository _sqlLocalAuthoritySetRepository;
         private readonly NewsArticleRepository _tableStorageNewsArticleRepository;
         private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
+        private readonly FaqItemRepository _tableStorageFaqItemRepository;
+        private readonly ISqlFaqItemRepository _sqlFaqItemRepository;
         private readonly FaqGroupRepository _tableStorageFaqGroupRepository;
         private readonly ISqlFaqGroupRepository _sqlFaqGroupRepository;
 
@@ -35,23 +36,30 @@ namespace Edubase.Web.UI.Controllers.Api
             ISqlUserPreferenceRepository sqlUserPreferenceRepository,
             NotificationTemplateRepository tableStorageNotificationTemplateRepository,
             ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
+            LocalAuthoritySetRepository tableStoragelocalAuthoritySetRepository,
+            ISqlLocalAuthoritySetRepository sqlLocalAuthoritySetRepository,
             NewsArticleRepository tableStorageNewsArticleRepository,
             ISqlNewsArticleRepository sqlNewsArticleRepository,
             NotificationBannerRepository tableStorageNotificationBannerRepository,
             ISqlNotificationBannerRepository sqlNotificationBannerRepository,
+            FaqItemRepository tableStorageFaqItemRepository,
+            ISqlFaqItemRepository sqlFaqItemRepository,
             FaqGroupRepository tableStorageFaqGroupRepository,
             ISqlFaqGroupRepository sqlFaqGroupRepository)
-
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
             _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
             _tableStorageNotificationTemplateRepository = tableStorageNotificationTemplateRepository;
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
+            _tableStoragelocalAuthoritySetRepository = tableStoragelocalAuthoritySetRepository;
+            _sqlLocalAuthoritySetRepository = sqlLocalAuthoritySetRepository;
             _tableStorageNewsArticleRepository = tableStorageNewsArticleRepository;
             _sqlNewsArticleRepository = sqlNewsArticleRepository;
             _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
+            _tableStorageFaqItemRepository = tableStorageFaqItemRepository;
+            _sqlFaqItemRepository = sqlFaqItemRepository;
             _tableStorageFaqGroupRepository = tableStorageFaqGroupRepository;
             _sqlFaqGroupRepository = sqlFaqGroupRepository;
         }
@@ -241,6 +249,72 @@ namespace Edubase.Web.UI.Controllers.Api
             return Ok(new { migrated });
         }
 
+        [Route("api/migrate-local-authority-sets"), HttpPost]
+        public async Task<IHttpActionResult> MigrateLocalAuthoritySetsAsync()
+        {
+            if (!Feature.IsEnabled("Feature_LocalAuthoritySetsMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+
+            do
+            {
+                var page = await _tableStoragelocalAuthoritySetRepository.GetAllAsync(int.MaxValue, continuationToken);
+                foreach (var set in page.Items)
+                {
+                    await _sqlLocalAuthoritySetRepository.UpsertAsync(new Models.SqlLocalAuthoritySet
+                    {
+                        PartitionKey = set.PartitionKey,
+                        RowKey = set.RowKey,
+                        Title = set.Title,
+                        IdData = set.IdData
+                    });
+                    migrated++;
+                }
+                continuationToken = page.TableContinuationToken;
+            }
+            while (continuationToken != null);
+
+            return Ok(new { migrated });
+        }
+
+        [Route("api/migrate-faq-items"), HttpPost]
+        public async Task<IHttpActionResult> MigrateFaqItemsAsync()
+        {
+            if (!Feature.IsEnabled("Feature_FaqItemsMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+
+            do
+            {
+                var page = await _tableStorageFaqItemRepository.GetAllAsync(int.MaxValue, continuationToken);
+                foreach (var item in page.Items)
+                {
+                    await _sqlFaqItemRepository.UpsertAsync(new Models.SqlFaqItem
+                    {
+                        PartitionKey = item.PartitionKey,
+                        RowKey = item.RowKey,
+                        Title = item.Title,
+                        Content = item.Content,
+                        DisplayOrder = item.DisplayOrder,
+                        GroupId = item.GroupId
+                    });
+                    migrated++;
+                }
+                continuationToken = page.TableContinuationToken;
+            }
+            while (continuationToken != null);
+
+            return Ok(new { migrated });
+        }
+
         [Route("api/migrate-faq-groups"), HttpPost]
         public async Task<IHttpActionResult> MigrateFaqGroupsAsync()
         {
@@ -272,5 +346,6 @@ namespace Edubase.Web.UI.Controllers.Api
 
             return Ok(new { migrated });
         }
+
     }
 }
