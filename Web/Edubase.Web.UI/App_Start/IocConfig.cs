@@ -219,6 +219,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
             builder.RegisterType<SqlUserPreferenceRepository>().As<ISqlUserPreferenceRepository>().SingleInstance();
             builder.RegisterType<SqlNotificationTemplateRepository>().As<ISqlNotificationTemplateRepository>().SingleInstance();
+            builder.RegisterType<SqlLocalAuthoritySetRepository>().As<ISqlLocalAuthoritySetRepository>().SingleInstance();
             builder.RegisterType<SqlNewsArticleRepository>().As<ISqlNewsArticleRepository>().SingleInstance();
             builder.RegisterType<SqlNotificationBannerRepository>().As<ISqlNotificationBannerRepository>().SingleInstance();
 
