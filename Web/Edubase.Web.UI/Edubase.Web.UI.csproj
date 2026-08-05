@@ -447,6 +447,14 @@
     <Compile Include="Areas\Groups\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
     <Compile Include="Areas\IGovernorsGridViewModelFactory.cs" />
     <Compile Include="Controllers\AmalgamateMergeController.cs" />
+    <Compile Include="Controllers\Api\ISqlLocalAuthoritySetRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
+    <Compile Include="Controllers\Api\SqlLocalAuthoritySetRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlNewsArticleRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
+    <Compile Include="Controllers\Api\SqlNewsArticleRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNotificationBannerRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
     <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
@@ -495,6 +503,8 @@
     <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
     <Compile Include="Models\Guidance\LaNameCodes.cs" />
     <Compile Include="Controllers\Api\ISqlFaqItemRepository.cs" />
+    <Compile Include="Models\LocalAuthoritySetsDbContext.cs" />
+    <Compile Include="Models\NewsArticlesDbContext.cs" />
     <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesViewModel.cs" />
@@ -567,6 +577,8 @@
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
     <Compile Include="Controllers\Api\SqlDataController.cs" />
     <Compile Include="Models\SqlFaqItem.cs" />
+    <Compile Include="Models\SqlLocalAuthoritySet.cs" />
+    <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlNotificationBanner.cs" />
     <Compile Include="Models\SqlNotificationTemplate.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
