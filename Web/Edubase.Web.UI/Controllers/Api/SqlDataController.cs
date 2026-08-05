@@ -27,6 +27,8 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
         private readonly FaqItemRepository _tableStorageFaqItemRepository;
+        private readonly FaqGroupRepository _tableStorageFaqGroupRepository;
+        private readonly ISqlFaqGroupRepository _sqlFaqGroupRepository;
         private readonly ISqlFaqItemRepository _sqlFaqItemRepository;
         private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
 
@@ -44,7 +46,9 @@ namespace Edubase.Web.UI.Controllers.Api
             ISqlNotificationBannerRepository sqlNotificationBannerRepository,
             FaqItemRepository tableStorageFaqItemRepository,
             ISqlFaqItemRepository sqlFaqItemRepository,
-            GlossaryItemsMigrationService glossaryItemsMigrationService)
+            GlossaryItemsMigrationService glossaryItemsMigrationService,
+            FaqGroupRepository tableStorageFaqGroupRepository,
+            ISqlFaqGroupRepository sqlFaqGroupRepository)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -59,6 +63,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
             _tableStorageFaqItemRepository = tableStorageFaqItemRepository;
             _sqlFaqItemRepository = sqlFaqItemRepository;
+            _tableStorageFaqGroupRepository = tableStorageFaqGroupRepository;
             _glossaryItemsMigrationService = glossaryItemsMigrationService;
         }
 
@@ -303,6 +308,38 @@ namespace Edubase.Web.UI.Controllers.Api
                         Content = item.Content,
                         DisplayOrder = item.DisplayOrder,
                         GroupId = item.GroupId
+                    });
+                    migrated++;
+                }
+                continuationToken = page.TableContinuationToken;
+            }
+            while (continuationToken != null);
+
+            return Ok(new { migrated });
+        }
+
+        [Route("api/migrate-faq-groups"), HttpPost]
+        public async Task<IHttpActionResult> MigrateFaqGroupsAsync()
+        {
+            if (!Feature.IsEnabled("Feature_FaqGroupsMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+
+            do
+            {
+                var page = await _tableStorageFaqGroupRepository.GetAllAsync(int.MaxValue, continuationToken);
+                foreach (var group in page.Items)
+                {
+                    await _sqlFaqGroupRepository.UpsertAsync(new Models.SqlFaqGroup
+                    {
+                        PartitionKey = group.PartitionKey,
+                        RowKey = group.RowKey,
+                        GroupName = group.GroupName,
+                        DisaplyOrder = group.DisplayOrder
                     });
                     migrated++;
                 }
