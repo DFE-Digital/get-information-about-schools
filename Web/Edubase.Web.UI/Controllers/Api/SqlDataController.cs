@@ -7,6 +7,7 @@ using AzureTableLogger.LogMessages;
 using Edubase.Common.Config;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
+using Edubase.Web.UI.MigrationServices;
 using Microsoft.Data.SqlClient;
 
 namespace Edubase.Web.UI.Controllers.Api
@@ -27,6 +28,7 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
         private readonly FaqItemRepository _tableStorageFaqItemRepository;
         private readonly ISqlFaqItemRepository _sqlFaqItemRepository;
+        private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
 
         public SqlDataController(
             IAzLogger logger,
@@ -41,7 +43,8 @@ namespace Edubase.Web.UI.Controllers.Api
             NotificationBannerRepository tableStorageNotificationBannerRepository,
             ISqlNotificationBannerRepository sqlNotificationBannerRepository,
             FaqItemRepository tableStorageFaqItemRepository,
-            ISqlFaqItemRepository sqlFaqItemRepository)
+            ISqlFaqItemRepository sqlFaqItemRepository,
+            GlossaryItemsMigrationService glossaryItemsMigrationService)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -56,6 +59,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
             _tableStorageFaqItemRepository = tableStorageFaqItemRepository;
             _sqlFaqItemRepository = sqlFaqItemRepository;
+            _glossaryItemsMigrationService = glossaryItemsMigrationService;
         }
 
 
@@ -308,5 +312,18 @@ namespace Edubase.Web.UI.Controllers.Api
 
             return Ok(new { migrated });
         }
+
+        [Route("api/migrate-glossary-items"), HttpPost]
+        public async Task<IHttpActionResult> MigrateGlossaryItemsAsync()
+        {
+            if (!Feature.IsEnabled("Feature_GlossaryItemsMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = await _glossaryItemsMigrationService.MigrateAsync();
+            return Ok(new { migrated });
+        }
+
     }
 }

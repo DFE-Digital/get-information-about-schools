@@ -52,6 +52,7 @@ using Edubase.Web.UI.Areas;
 using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.MigrationServices;
 using Edubase.Web.UI.Validation;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
@@ -223,6 +224,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<SqlNewsArticleRepository>().As<ISqlNewsArticleRepository>().SingleInstance();
             builder.RegisterType<SqlNotificationBannerRepository>().As<ISqlNotificationBannerRepository>().SingleInstance();
             builder.RegisterType<SqlFaqItemRepository>().As<ISqlFaqItemRepository>().SingleInstance();
+            builder.RegisterType<SqlGlossaryItemRepository>().As<ISqlGlossaryItemRepository>().SingleInstance();
+            builder.RegisterType<GlossaryItemsMigrationService>().SingleInstance();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
