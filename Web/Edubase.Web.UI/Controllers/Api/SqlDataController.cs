@@ -1,13 +1,16 @@
 using System.Configuration;
-using Edubase.Common.Config;
-using Edubase.Data.Repositories;
-using Microsoft.Data.SqlClient;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.UI;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
+using Edubase.Common.Config;
+using Edubase.Data.Entity;
+using Edubase.Data.Repositories;
+using Microsoft.Data.SqlClient;
+using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -21,12 +24,23 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
         private readonly LocalAuthoritySetRepository _tableStoragelocalAuthoritySetRepository;
         private readonly ISqlLocalAuthoritySetRepository _sqlLocalAuthoritySetRepository;
+        private readonly NewsArticleRepository _tableStorageNewsArticleRepository;
+        private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
+        private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
+        private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
 
         public SqlDataController(
             IAzLogger logger,
             IUserPreferenceRepository tableStorageUserPreferenceRepository,
             ISqlUserPreferenceRepository sqlUserPreferenceRepository, NotificationTemplateRepository tableStorageNotificationTemplateRepository,
             ISqlNotificationTemplateRepository sqlNotificationTemplateRepository, LocalAuthoritySetRepository tableStoragelocalAuthoritySetRepository, ISqlLocalAuthoritySetRepository sqlLocalAuthoritySetRepository)
+            ISqlUserPreferenceRepository sqlUserPreferenceRepository,
+            NotificationTemplateRepository tableStorageNotificationTemplateRepository,
+            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
+            NewsArticleRepository tableStorageNewsArticleRepository,
+            ISqlNewsArticleRepository sqlNewsArticleRepository,
+            NotificationBannerRepository tableStorageNotificationBannerRepository,
+            ISqlNotificationBannerRepository sqlNotificationBannerRepository)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -35,6 +49,10 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
             _tableStoragelocalAuthoritySetRepository = tableStoragelocalAuthoritySetRepository;
             _sqlLocalAuthoritySetRepository = sqlLocalAuthoritySetRepository;
+            _tableStorageNewsArticleRepository = tableStorageNewsArticleRepository;
+            _sqlNewsArticleRepository = sqlNewsArticleRepository;
+            _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
+            _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
         }
 
 
@@ -134,6 +152,91 @@ namespace Edubase.Web.UI.Controllers.Api
             }
             while (continuationToken != null);
 
+            return Ok(new { migrated });
+        }
+        
+                [Route("api/migrate-notification-banners"), HttpPost]
+        public async Task<IHttpActionResult> MigrateNotificationBannerAsync()
+        {
+            if (!Feature.IsEnabled("Feature_NotificationBannersMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            var partitions = new[] { eNotificationBannerPartition.Current, eNotificationBannerPartition.Archive };
+
+            foreach (var partition in partitions)
+            {
+                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+                do
+                {
+                    var page = await _tableStorageNotificationBannerRepository.GetAllAsync(int.MaxValue, continuationToken, false, partition);
+                    foreach (var banner in page.Items)
+                    {
+                        await _sqlNotificationBannerRepository.UpsertAsync(new Models.SqlNotificationBanner
+                        {
+                            PartitionKey = banner.PartitionKey,
+                            RowKey = banner.RowKey,
+                            Content = banner.Content,
+                            Importance = (byte)banner.Importance,
+                            Start = banner.Start,
+                            End = banner.End,
+                            Version = (byte)banner.Version,
+                            Tracker = banner.Tracker,
+                            AuditUser = int.TryParse(banner.AuditUser, out var auditUserId) ? auditUserId : 0,
+                            AuditEvent = banner.AuditEvent,
+                            AuditTimeStamp = banner.AuditTimestamp
+                        });
+                        migrated++;
+                    }
+                    continuationToken = page.TableContinuationToken;
+                }
+                while (continuationToken != null);
+            }
+
+            return Ok(new { migrated });
+        }
+        
+                [Route("api/migrate-news-article"), HttpPost]
+        public async Task<IHttpActionResult> MigrateNewsArticlesAsync()
+        {
+            if (!Feature.IsEnabled("Feature_NewsArticlesMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = 0;
+            var partitions = new[] { eNewsArticlePartition.Current, eNewsArticlePartition.Archive };
+
+            foreach (var partition in partitions)
+            {
+                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+                do
+                {
+                    var page = await _tableStorageNewsArticleRepository.GetAllAsync(int.MaxValue, false, null, continuationToken, partition);
+                    foreach (var article in page.Items)
+                    {
+                        await _sqlNewsArticleRepository.UpsertAsync(new Models.SqlNewsArticle
+                        {
+                            PartitionKey = article.PartitionKey,
+                            RowKey = article.RowKey,
+                            Title = article.Title,
+                            ArticleDate = article.ArticleDate,
+                            ShowDate = article.ShowDate,
+                            Content = article.Content,
+                            Version = (byte) article.Version,
+                            Tracker = article.Tracker,
+                            AuditUser = int.TryParse(article.AuditUser, out var auditUserId) ? auditUserId : 0,
+                            AuditEvent = article.AuditEvent,
+                            AuditTimeStamp = article.AuditTimestamp
+                        });
+                        migrated++;
+                    }
+                    continuationToken = page.TableContinuationToken;
+                }
+                while (continuationToken != null);
+            }
             return Ok(new { migrated });
         }
 
