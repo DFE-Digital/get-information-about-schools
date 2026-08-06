@@ -26,11 +26,10 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
-        private readonly FaqItemRepository _tableStorageFaqItemRepository;
-        private readonly ISqlFaqItemRepository _sqlFaqItemRepository;
 
         private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
         private readonly FaqGroupsMigrationService _faqGroupsMigrationService;
+        private readonly FaqItemsMigrationService _faqItemsMigrationService;
 
         public SqlDataController(
             IAzLogger logger,
@@ -44,11 +43,10 @@ namespace Edubase.Web.UI.Controllers.Api
             ISqlNewsArticleRepository sqlNewsArticleRepository,
             NotificationBannerRepository tableStorageNotificationBannerRepository,
             ISqlNotificationBannerRepository sqlNotificationBannerRepository,
-            FaqItemRepository tableStorageFaqItemRepository,
-            ISqlFaqItemRepository sqlFaqItemRepository,
             GlossaryItemsMigrationService glossaryItemsMigrationService,
 
-            FaqGroupsMigrationService faqGroupsMigrationService)
+            FaqGroupsMigrationService faqGroupsMigrationService,
+            FaqItemsMigrationService faqItemsMigrationService)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -61,11 +59,10 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNewsArticleRepository = sqlNewsArticleRepository;
             _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
-            _tableStorageFaqItemRepository = tableStorageFaqItemRepository;
-            _sqlFaqItemRepository = sqlFaqItemRepository;
 
             _glossaryItemsMigrationService = glossaryItemsMigrationService;
             _faqGroupsMigrationService = faqGroupsMigrationService;
+            _faqItemsMigrationService = faqItemsMigrationService;
         }
 
 
@@ -293,29 +290,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStorageFaqItemRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var item in page.Items)
-                {
-                    await _sqlFaqItemRepository.UpsertAsync(new Models.SqlFaqItem
-                    {
-                        PartitionKey = item.PartitionKey,
-                        RowKey = item.RowKey,
-                        Title = item.Title,
-                        Content = item.Content,
-                        DisplayOrder = item.DisplayOrder,
-                        GroupId = item.GroupId
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
-
+            var migrated = await _faqItemsMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
@@ -328,7 +303,6 @@ namespace Edubase.Web.UI.Controllers.Api
             }
 
             var migrated = await _faqGroupsMigrationService.MigrateAsync();
-
             return Ok(new { migrated });
         }
 
