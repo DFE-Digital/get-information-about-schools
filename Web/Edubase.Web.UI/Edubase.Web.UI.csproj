@@ -504,6 +504,7 @@
     <Compile Include="MigrationServices\LocalAuthoritySetsMigrationService.cs" />
     <Compile Include="MigrationServices\NewsArticlesMigrationService.cs" />
     <Compile Include="MigrationServices\NotificationBannersMigrationService.cs" />
+    <Compile Include="MigrationServices\NotificationTemplatesMigrationService.cs" />
     <Compile Include="Models\Admin\LogsViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />

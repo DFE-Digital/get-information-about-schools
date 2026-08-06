@@ -18,8 +18,6 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly IAzLogger _logger;
         private readonly IUserPreferenceRepository _tableStorageUserPreferenceRepository;
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
-        private readonly NotificationTemplateRepository _tableStorageNotificationTemplateRepository;
-        private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
 
         private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
         private readonly FaqGroupsMigrationService _faqGroupsMigrationService;
@@ -27,26 +25,23 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly LocalAuthoritySetsMigrationService _localAuthoritySetsMigrationService;
         private readonly NewsArticlesMigrationService _sqlNewsArticleMigrationService;
         private readonly NotificationBannersMigrationService _sqlNotificationsBannersMigrationService;
-
+        private readonly NotificationTemplatesMigrationService _sqlNotificationsTemplatesMigrationService;
         public SqlDataController(
             IAzLogger logger,
             IUserPreferenceRepository tableStorageUserPreferenceRepository,
             ISqlUserPreferenceRepository sqlUserPreferenceRepository,
-            NotificationTemplateRepository tableStorageNotificationTemplateRepository,
-            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
 
             GlossaryItemsMigrationService glossaryItemsMigrationService,
             FaqGroupsMigrationService faqGroupsMigrationService,
             FaqItemsMigrationService faqItemsMigrationService,
             LocalAuthoritySetsMigrationService localAuthoritySetsMigrationService,
             NewsArticlesMigrationService sqlNewsArticleMigrationService,
-            NotificationBannersMigrationService sqlNotificationsBannersMigrationService)
+            NotificationBannersMigrationService sqlNotificationsBannersMigrationService,
+            NotificationTemplatesMigrationService sqlNotificationsTemplatesMigrationService)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
             _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
-            _tableStorageNotificationTemplateRepository = tableStorageNotificationTemplateRepository;
-            _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
 
             _glossaryItemsMigrationService = glossaryItemsMigrationService;
             _faqGroupsMigrationService = faqGroupsMigrationService;
@@ -54,6 +49,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _localAuthoritySetsMigrationService = localAuthoritySetsMigrationService;
             _sqlNewsArticleMigrationService = sqlNewsArticleMigrationService;
             _sqlNotificationsBannersMigrationService = sqlNotificationsBannersMigrationService;
+            _sqlNotificationsTemplatesMigrationService = sqlNotificationsTemplatesMigrationService;
         }
 
 
@@ -133,26 +129,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStorageNotificationTemplateRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var pref in page.Items)
-                {
-                    await _sqlNotificationTemplateRepository.UpsertAsync(new Models.SqlNotificationTemplate
-                    {
-                        PartitionKey = pref.PartitionKey,
-                        RowKey = pref.RowKey,
-                        Content = pref.Content
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
-
+            var migrated = await _sqlNotificationsTemplatesMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
         
