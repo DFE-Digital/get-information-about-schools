@@ -20,14 +20,13 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
         private readonly NotificationTemplateRepository _tableStorageNotificationTemplateRepository;
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
-        private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
-        private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
 
         private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
         private readonly FaqGroupsMigrationService _faqGroupsMigrationService;
         private readonly FaqItemsMigrationService _faqItemsMigrationService;
         private readonly LocalAuthoritySetsMigrationService _localAuthoritySetsMigrationService;
         private readonly NewsArticlesMigrationService _sqlNewsArticleMigrationService;
+        private readonly NotificationBannersMigrationService _sqlNotificationsBannersMigrationService;
 
         public SqlDataController(
             IAzLogger logger,
@@ -35,28 +34,26 @@ namespace Edubase.Web.UI.Controllers.Api
             ISqlUserPreferenceRepository sqlUserPreferenceRepository,
             NotificationTemplateRepository tableStorageNotificationTemplateRepository,
             ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
-            NotificationBannerRepository tableStorageNotificationBannerRepository,
-            ISqlNotificationBannerRepository sqlNotificationBannerRepository,
 
             GlossaryItemsMigrationService glossaryItemsMigrationService,
             FaqGroupsMigrationService faqGroupsMigrationService,
             FaqItemsMigrationService faqItemsMigrationService,
             LocalAuthoritySetsMigrationService localAuthoritySetsMigrationService,
-            NewsArticlesMigrationService sqlNewsArticleMigrationService)
+            NewsArticlesMigrationService sqlNewsArticleMigrationService,
+            NotificationBannersMigrationService sqlNotificationsBannersMigrationService)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
             _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
             _tableStorageNotificationTemplateRepository = tableStorageNotificationTemplateRepository;
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
-            _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
-            _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
 
             _glossaryItemsMigrationService = glossaryItemsMigrationService;
             _faqGroupsMigrationService = faqGroupsMigrationService;
             _faqItemsMigrationService = faqItemsMigrationService;
             _localAuthoritySetsMigrationService = localAuthoritySetsMigrationService;
             _sqlNewsArticleMigrationService = sqlNewsArticleMigrationService;
+            _sqlNotificationsBannersMigrationService = sqlNotificationsBannersMigrationService;
         }
 
 
@@ -159,7 +156,7 @@ namespace Edubase.Web.UI.Controllers.Api
             return Ok(new { migrated });
         }
         
-                [Route("api/migrate-notification-banners"), HttpPost]
+        [Route("api/migrate-notification-banners"), HttpPost]
         public async Task<IHttpActionResult> MigrateNotificationBannerAsync()
         {
             if (!Feature.IsEnabled("Feature_NotificationBannersMigration"))
@@ -167,38 +164,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            var partitions = new[] { eNotificationBannerPartition.Current, eNotificationBannerPartition.Archive };
-
-            foreach (var partition in partitions)
-            {
-                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-                do
-                {
-                    var page = await _tableStorageNotificationBannerRepository.GetAllAsync(int.MaxValue, continuationToken, false, partition);
-                    foreach (var banner in page.Items)
-                    {
-                        await _sqlNotificationBannerRepository.UpsertAsync(new Models.SqlNotificationBanner
-                        {
-                            PartitionKey = banner.PartitionKey,
-                            RowKey = banner.RowKey,
-                            Content = banner.Content,
-                            Importance = (byte)banner.Importance,
-                            Start = banner.Start,
-                            End = banner.End,
-                            Version = (byte)banner.Version,
-                            Tracker = banner.Tracker,
-                            AuditUser = int.TryParse(banner.AuditUser, out var auditUserId) ? auditUserId : 0,
-                            AuditEvent = banner.AuditEvent,
-                            AuditTimeStamp = banner.AuditTimestamp
-                        });
-                        migrated++;
-                    }
-                    continuationToken = page.TableContinuationToken;
-                }
-                while (continuationToken != null);
-            }
-
+            var migrated = await _sqlNotificationsBannersMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
         

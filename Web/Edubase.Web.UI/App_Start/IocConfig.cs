@@ -232,6 +232,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<FaqItemsMigrationService>().SingleInstance();
             builder.RegisterType<LocalAuthoritySetsMigrationService>().SingleInstance();
             builder.RegisterType<NewsArticlesMigrationService>().SingleInstance();
+            builder.RegisterType<NotificationBannersMigrationService>().SingleInstance();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
