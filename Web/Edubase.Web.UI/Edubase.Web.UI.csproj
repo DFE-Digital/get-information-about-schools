@@ -498,6 +498,7 @@
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
+    <Compile Include="MigrationServices\FaqGroupsMigrationService.cs" />
     <Compile Include="MigrationServices\GlossaryItemsMigrationService.cs" />
     <Compile Include="Models\Admin\LogsViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />

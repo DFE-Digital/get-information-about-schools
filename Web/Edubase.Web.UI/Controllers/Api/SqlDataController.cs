@@ -27,10 +27,10 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
         private readonly FaqItemRepository _tableStorageFaqItemRepository;
-        private readonly FaqGroupRepository _tableStorageFaqGroupRepository;
-        private readonly ISqlFaqGroupRepository _sqlFaqGroupRepository;
         private readonly ISqlFaqItemRepository _sqlFaqItemRepository;
+
         private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
+        private readonly FaqGroupsMigrationService _faqGroupsMigrationService;
 
         public SqlDataController(
             IAzLogger logger,
@@ -47,8 +47,8 @@ namespace Edubase.Web.UI.Controllers.Api
             FaqItemRepository tableStorageFaqItemRepository,
             ISqlFaqItemRepository sqlFaqItemRepository,
             GlossaryItemsMigrationService glossaryItemsMigrationService,
-            FaqGroupRepository tableStorageFaqGroupRepository,
-            ISqlFaqGroupRepository sqlFaqGroupRepository)
+
+            FaqGroupsMigrationService faqGroupsMigrationService)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -63,8 +63,9 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
             _tableStorageFaqItemRepository = tableStorageFaqItemRepository;
             _sqlFaqItemRepository = sqlFaqItemRepository;
-            _tableStorageFaqGroupRepository = tableStorageFaqGroupRepository;
+
             _glossaryItemsMigrationService = glossaryItemsMigrationService;
+            _faqGroupsMigrationService = faqGroupsMigrationService;
         }
 
 
@@ -326,26 +327,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStorageFaqGroupRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var group in page.Items)
-                {
-                    await _sqlFaqGroupRepository.UpsertAsync(new Models.SqlFaqGroup
-                    {
-                        PartitionKey = group.PartitionKey,
-                        RowKey = group.RowKey,
-                        GroupName = group.GroupName,
-                        DisaplyOrder = group.DisplayOrder
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
+            var migrated = await _faqGroupsMigrationService.MigrateAsync();
 
             return Ok(new { migrated });
         }

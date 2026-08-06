@@ -226,7 +226,9 @@ namespace Edubase.Web.UI
             builder.RegisterType<SqlFaqGroupRepository>().As<ISqlFaqGroupRepository>().SingleInstance();
             builder.RegisterType<SqlFaqItemRepository>().As<ISqlFaqItemRepository>().SingleInstance();
             builder.RegisterType<SqlGlossaryItemRepository>().As<ISqlGlossaryItemRepository>().SingleInstance();
+
             builder.RegisterType<GlossaryItemsMigrationService>().SingleInstance();
+            builder.RegisterType<FaqGroupsMigrationService>().SingleInstance();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
