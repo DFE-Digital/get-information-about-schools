@@ -20,8 +20,6 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
         private readonly NotificationTemplateRepository _tableStorageNotificationTemplateRepository;
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
-        private readonly LocalAuthoritySetRepository _tableStoragelocalAuthoritySetRepository;
-        private readonly ISqlLocalAuthoritySetRepository _sqlLocalAuthoritySetRepository;
         private readonly NewsArticleRepository _tableStorageNewsArticleRepository;
         private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
@@ -30,6 +28,7 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
         private readonly FaqGroupsMigrationService _faqGroupsMigrationService;
         private readonly FaqItemsMigrationService _faqItemsMigrationService;
+        private readonly LocalAuthoritySetsMigrationService _localAuthoritySetsMigrationService;
 
         public SqlDataController(
             IAzLogger logger,
@@ -37,24 +36,21 @@ namespace Edubase.Web.UI.Controllers.Api
             ISqlUserPreferenceRepository sqlUserPreferenceRepository,
             NotificationTemplateRepository tableStorageNotificationTemplateRepository,
             ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
-            LocalAuthoritySetRepository tableStoragelocalAuthoritySetRepository,
-            ISqlLocalAuthoritySetRepository sqlLocalAuthoritySetRepository,
             NewsArticleRepository tableStorageNewsArticleRepository,
             ISqlNewsArticleRepository sqlNewsArticleRepository,
             NotificationBannerRepository tableStorageNotificationBannerRepository,
             ISqlNotificationBannerRepository sqlNotificationBannerRepository,
-            GlossaryItemsMigrationService glossaryItemsMigrationService,
 
+            GlossaryItemsMigrationService glossaryItemsMigrationService,
             FaqGroupsMigrationService faqGroupsMigrationService,
-            FaqItemsMigrationService faqItemsMigrationService)
+            FaqItemsMigrationService faqItemsMigrationService,
+            LocalAuthoritySetsMigrationService localAuthoritySetsMigrationService)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
             _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
             _tableStorageNotificationTemplateRepository = tableStorageNotificationTemplateRepository;
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
-            _tableStoragelocalAuthoritySetRepository = tableStoragelocalAuthoritySetRepository;
-            _sqlLocalAuthoritySetRepository = sqlLocalAuthoritySetRepository;
             _tableStorageNewsArticleRepository = tableStorageNewsArticleRepository;
             _sqlNewsArticleRepository = sqlNewsArticleRepository;
             _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
@@ -63,6 +59,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _glossaryItemsMigrationService = glossaryItemsMigrationService;
             _faqGroupsMigrationService = faqGroupsMigrationService;
             _faqItemsMigrationService = faqItemsMigrationService;
+            _localAuthoritySetsMigrationService = localAuthoritySetsMigrationService;
         }
 
 
@@ -258,27 +255,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStoragelocalAuthoritySetRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var set in page.Items)
-                {
-                    await _sqlLocalAuthoritySetRepository.UpsertAsync(new Models.SqlLocalAuthoritySet
-                    {
-                        PartitionKey = set.PartitionKey,
-                        RowKey = set.RowKey,
-                        Title = set.Title,
-                        IdData = set.IdData
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
-
+            var migrated = await _localAuthoritySetsMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
