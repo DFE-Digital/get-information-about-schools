@@ -7,6 +7,7 @@ using AzureTableLogger.LogMessages;
 using Edubase.Common.Config;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
+using Edubase.Web.UI.MigrationServices;
 using Microsoft.Data.SqlClient;
 
 namespace Edubase.Web.UI.Controllers.Api
@@ -30,6 +31,8 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly FaqGroupRepository _tableStorageFaqGroupRepository;
         private readonly ISqlFaqGroupRepository _sqlFaqGroupRepository;
 
+        private readonly DataQualityStatusMigrationService _dataQualityStatusMigrationService;
+
         public SqlDataController(
             IAzLogger logger,
             IUserPreferenceRepository tableStorageUserPreferenceRepository,
@@ -45,7 +48,9 @@ namespace Edubase.Web.UI.Controllers.Api
             FaqItemRepository tableStorageFaqItemRepository,
             ISqlFaqItemRepository sqlFaqItemRepository,
             FaqGroupRepository tableStorageFaqGroupRepository,
-            ISqlFaqGroupRepository sqlFaqGroupRepository)
+            ISqlFaqGroupRepository sqlFaqGroupRepository,
+
+            DataQualityStatusMigrationService dataQualityStatusMigrationService)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
@@ -62,6 +67,8 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlFaqItemRepository = sqlFaqItemRepository;
             _tableStorageFaqGroupRepository = tableStorageFaqGroupRepository;
             _sqlFaqGroupRepository = sqlFaqGroupRepository;
+
+            dataQualityStatusMigrationService = dataQualityStatusMigrationService;
         }
 
 
@@ -163,7 +170,7 @@ namespace Edubase.Web.UI.Controllers.Api
 
             return Ok(new { migrated });
         }
-        
+
                 [Route("api/migrate-notification-banners"), HttpPost]
         public async Task<IHttpActionResult> MigrateNotificationBannerAsync()
         {
@@ -206,7 +213,7 @@ namespace Edubase.Web.UI.Controllers.Api
 
             return Ok(new { migrated });
         }
-        
+
                 [Route("api/migrate-news-article"), HttpPost]
         public async Task<IHttpActionResult> MigrateNewsArticlesAsync()
         {
@@ -347,5 +354,16 @@ namespace Edubase.Web.UI.Controllers.Api
             return Ok(new { migrated });
         }
 
+        [Route("api/migrate-data-quality-status"), HttpPost]
+        public async Task<IHttpActionResult> MigrateDataQualityStatusAsync()
+        {
+            if (!Feature.IsEnabled("Feature_DataQualityStatusMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = await _dataQualityStatusMigrationService.MigrateAsync();
+            return Ok(new { migrated });
+        }
     }
 }

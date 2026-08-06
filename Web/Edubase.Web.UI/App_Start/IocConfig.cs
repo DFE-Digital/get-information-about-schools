@@ -52,6 +52,7 @@ using Edubase.Web.UI.Areas;
 using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.MigrationServices;
 using Edubase.Web.UI.Validation;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
@@ -224,6 +225,10 @@ namespace Edubase.Web.UI
             builder.RegisterType<SqlNotificationBannerRepository>().As<ISqlNotificationBannerRepository>().SingleInstance();
             builder.RegisterType<SqlFaqGroupRepository>().As<ISqlFaqGroupRepository>().SingleInstance();
             builder.RegisterType<SqlFaqItemRepository>().As<ISqlFaqItemRepository>().SingleInstance();
+
+            builder.RegisterType<SqlDataQualityStatusRepository>().As<ISqlDataQualityStatusRepository>()
+                .SingleInstance();
+            builder.RegisterType<DataQualityStatusMigrationService>().SingleInstance();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
