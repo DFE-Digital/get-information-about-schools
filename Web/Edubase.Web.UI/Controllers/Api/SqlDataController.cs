@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _tableStorageFaqGroupRepository = tableStorageFaqGroupRepository;
             _sqlFaqGroupRepository = sqlFaqGroupRepository;
 
-            dataQualityStatusMigrationService = dataQualityStatusMigrationService;
+            _dataQualityStatusMigrationService = dataQualityStatusMigrationService;
         }
 
 
