@@ -502,6 +502,7 @@
     <Compile Include="MigrationServices\FaqItemsMigrationService.cs" />
     <Compile Include="MigrationServices\GlossaryItemsMigrationService.cs" />
     <Compile Include="MigrationServices\LocalAuthoritySetsMigrationService.cs" />
+    <Compile Include="MigrationServices\NewsArticlesMigrationService.cs" />
     <Compile Include="Models\Admin\LogsViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />

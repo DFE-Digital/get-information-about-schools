@@ -20,8 +20,6 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
         private readonly NotificationTemplateRepository _tableStorageNotificationTemplateRepository;
         private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
-        private readonly NewsArticleRepository _tableStorageNewsArticleRepository;
-        private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
         private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
         private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
 
@@ -29,6 +27,7 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly FaqGroupsMigrationService _faqGroupsMigrationService;
         private readonly FaqItemsMigrationService _faqItemsMigrationService;
         private readonly LocalAuthoritySetsMigrationService _localAuthoritySetsMigrationService;
+        private readonly NewsArticlesMigrationService _sqlNewsArticleMigrationService;
 
         public SqlDataController(
             IAzLogger logger,
@@ -36,23 +35,20 @@ namespace Edubase.Web.UI.Controllers.Api
             ISqlUserPreferenceRepository sqlUserPreferenceRepository,
             NotificationTemplateRepository tableStorageNotificationTemplateRepository,
             ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
-            NewsArticleRepository tableStorageNewsArticleRepository,
-            ISqlNewsArticleRepository sqlNewsArticleRepository,
             NotificationBannerRepository tableStorageNotificationBannerRepository,
             ISqlNotificationBannerRepository sqlNotificationBannerRepository,
 
             GlossaryItemsMigrationService glossaryItemsMigrationService,
             FaqGroupsMigrationService faqGroupsMigrationService,
             FaqItemsMigrationService faqItemsMigrationService,
-            LocalAuthoritySetsMigrationService localAuthoritySetsMigrationService)
+            LocalAuthoritySetsMigrationService localAuthoritySetsMigrationService,
+            NewsArticlesMigrationService sqlNewsArticleMigrationService)
         {
             _logger = logger;
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
             _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
             _tableStorageNotificationTemplateRepository = tableStorageNotificationTemplateRepository;
             _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
-            _tableStorageNewsArticleRepository = tableStorageNewsArticleRepository;
-            _sqlNewsArticleRepository = sqlNewsArticleRepository;
             _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
             _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
 
@@ -60,6 +56,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _faqGroupsMigrationService = faqGroupsMigrationService;
             _faqItemsMigrationService = faqItemsMigrationService;
             _localAuthoritySetsMigrationService = localAuthoritySetsMigrationService;
+            _sqlNewsArticleMigrationService = sqlNewsArticleMigrationService;
         }
 
 
@@ -205,7 +202,7 @@ namespace Edubase.Web.UI.Controllers.Api
             return Ok(new { migrated });
         }
         
-                [Route("api/migrate-news-article"), HttpPost]
+        [Route("api/migrate-news-article"), HttpPost]
         public async Task<IHttpActionResult> MigrateNewsArticlesAsync()
         {
             if (!Feature.IsEnabled("Feature_NewsArticlesMigration"))
@@ -213,37 +210,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            var partitions = new[] { eNewsArticlePartition.Current, eNewsArticlePartition.Archive };
-
-            foreach (var partition in partitions)
-            {
-                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-                do
-                {
-                    var page = await _tableStorageNewsArticleRepository.GetAllAsync(int.MaxValue, false, null, continuationToken, partition);
-                    foreach (var article in page.Items)
-                    {
-                        await _sqlNewsArticleRepository.UpsertAsync(new Models.SqlNewsArticle
-                        {
-                            PartitionKey = article.PartitionKey,
-                            RowKey = article.RowKey,
-                            Title = article.Title,
-                            ArticleDate = article.ArticleDate,
-                            ShowDate = article.ShowDate,
-                            Content = article.Content,
-                            Version = (byte) article.Version,
-                            Tracker = article.Tracker,
-                            AuditUser = int.TryParse(article.AuditUser, out var auditUserId) ? auditUserId : 0,
-                            AuditEvent = article.AuditEvent,
-                            AuditTimeStamp = article.AuditTimestamp
-                        });
-                        migrated++;
-                    }
-                    continuationToken = page.TableContinuationToken;
-                }
-                while (continuationToken != null);
-            }
+            var migrated = await _sqlNewsArticleMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
