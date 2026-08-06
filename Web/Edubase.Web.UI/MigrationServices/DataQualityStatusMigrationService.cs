@@ -11,10 +11,10 @@ namespace Edubase.Web.UI.MigrationServices
         private readonly ISqlDataQualityStatusRepository  _sqlDataQualityStatusRepository;
 
         public DataQualityStatusMigrationService(
-            DataQualityStatusMigrationService tableStorageDataQualityStatusMigrationService,
+            DataQualityStatusRepository tableStorageDataQualityStatusRepository,
             ISqlDataQualityStatusRepository sqlDataQualityStatusRepository)
         {
-            _tableStorageDataQualityStatusRepository = _tableStorageDataQualityStatusRepository;
+            _tableStorageDataQualityStatusRepository = tableStorageDataQualityStatusRepository;
             _sqlDataQualityStatusRepository = sqlDataQualityStatusRepository;
         }
 
