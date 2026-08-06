@@ -5,7 +5,6 @@ using System.Web.Http;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
 using Edubase.Common.Config;
-using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Web.UI.MigrationServices;
 using Microsoft.Data.SqlClient;
@@ -26,10 +25,9 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly NewsArticlesMigrationService _sqlNewsArticleMigrationService;
         private readonly NotificationBannersMigrationService _sqlNotificationsBannersMigrationService;
         private readonly NotificationTemplatesMigrationService _sqlNotificationsTemplatesMigrationService;
+        private readonly UserPreferencesMigrationService _userPreferencesMigrationService;
         public SqlDataController(
             IAzLogger logger,
-            IUserPreferenceRepository tableStorageUserPreferenceRepository,
-            ISqlUserPreferenceRepository sqlUserPreferenceRepository,
 
             GlossaryItemsMigrationService glossaryItemsMigrationService,
             FaqGroupsMigrationService faqGroupsMigrationService,
@@ -37,11 +35,10 @@ namespace Edubase.Web.UI.Controllers.Api
             LocalAuthoritySetsMigrationService localAuthoritySetsMigrationService,
             NewsArticlesMigrationService sqlNewsArticleMigrationService,
             NotificationBannersMigrationService sqlNotificationsBannersMigrationService,
-            NotificationTemplatesMigrationService sqlNotificationsTemplatesMigrationService)
+            NotificationTemplatesMigrationService sqlNotificationsTemplatesMigrationService,
+            UserPreferencesMigrationService userPreferencesMigrationService)
         {
             _logger = logger;
-            _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
-            _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
 
             _glossaryItemsMigrationService = glossaryItemsMigrationService;
             _faqGroupsMigrationService = faqGroupsMigrationService;
@@ -50,6 +47,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNewsArticleMigrationService = sqlNewsArticleMigrationService;
             _sqlNotificationsBannersMigrationService = sqlNotificationsBannersMigrationService;
             _sqlNotificationsTemplatesMigrationService = sqlNotificationsTemplatesMigrationService;
+            _userPreferencesMigrationService = userPreferencesMigrationService;
         }
 
 
@@ -98,26 +96,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStorageUserPreferenceRepository.GetAllAsync(skip: continuationToken);
-                foreach (var pref in page.Items)
-                {
-                    await _sqlUserPreferenceRepository.UpsertAsync(new Models.SqlUserPreference
-                    {
-                        PartitionKey = pref.PartitionKey,
-                        RowKey = pref.RowKey,
-                        SavedSearchToken = pref.SavedSearchToken
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
-
+            var migrated = await _userPreferencesMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
