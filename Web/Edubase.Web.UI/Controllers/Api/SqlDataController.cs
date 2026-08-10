@@ -111,7 +111,7 @@ namespace Edubase.Web.UI.Controllers.Api
             var migrated = await _sqlNotificationsTemplatesMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
-        
+
         [Route("api/migrate-notification-banners"), HttpPost]
         public async Task<IHttpActionResult> MigrateNotificationBannerAsync()
         {
@@ -123,8 +123,8 @@ namespace Edubase.Web.UI.Controllers.Api
             var migrated = await _sqlNotificationsBannersMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
-        
-        [Route("api/migrate-news-article"), HttpPost]
+
+        [Route("api/migrate-news-articles"), HttpPost]
         public async Task<IHttpActionResult> MigrateNewsArticlesAsync()
         {
             if (!Feature.IsEnabled("Feature_NewsArticlesMigration"))
