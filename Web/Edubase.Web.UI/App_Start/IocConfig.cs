@@ -236,6 +236,10 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationTemplatesMigrationService>().SingleInstance();
             builder.RegisterType<UserPreferencesMigrationService>().SingleInstance();
 
+            builder.RegisterType<SqlDataQualityStatusRepository>().As<ISqlDataQualityStatusRepository>()
+                .SingleInstance();
+            builder.RegisterType<DataQualityStatusMigrationService>().SingleInstance();
+
             builder.RegisterType<BlobService>().As<IBlobService>();
 
             builder.RegisterType<LayoutHelper>().AsImplementedInterfaces().AsSelf();

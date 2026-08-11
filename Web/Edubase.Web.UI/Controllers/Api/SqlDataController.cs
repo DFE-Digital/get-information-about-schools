@@ -26,6 +26,7 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly NotificationBannersMigrationService _sqlNotificationsBannersMigrationService;
         private readonly NotificationTemplatesMigrationService _sqlNotificationsTemplatesMigrationService;
         private readonly UserPreferencesMigrationService _userPreferencesMigrationService;
+        private readonly DataQualityStatusMigrationService _dataQualityStatusMigrationService;
         public SqlDataController(
             IAzLogger logger,
 
@@ -36,7 +37,8 @@ namespace Edubase.Web.UI.Controllers.Api
             NewsArticlesMigrationService sqlNewsArticleMigrationService,
             NotificationBannersMigrationService sqlNotificationsBannersMigrationService,
             NotificationTemplatesMigrationService sqlNotificationsTemplatesMigrationService,
-            UserPreferencesMigrationService userPreferencesMigrationService)
+            UserPreferencesMigrationService userPreferencesMigrationService,
+            DataQualityStatusMigrationService dataQualityStatusMigrationService)
         {
             _logger = logger;
 
@@ -48,6 +50,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNotificationsBannersMigrationService = sqlNotificationsBannersMigrationService;
             _sqlNotificationsTemplatesMigrationService = sqlNotificationsTemplatesMigrationService;
             _userPreferencesMigrationService = userPreferencesMigrationService;
+            _dataQualityStatusMigrationService = dataQualityStatusMigrationService;
         }
 
 
@@ -184,5 +187,16 @@ namespace Edubase.Web.UI.Controllers.Api
             return Ok(new { migrated });
         }
 
+        [Route("api/migrate-data-quality-status"), HttpPost]
+        public async Task<IHttpActionResult> MigrateDataQualityStatusAsync()
+        {
+            if (!Feature.IsEnabled("Feature_DataQualityStatusMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = await _dataQualityStatusMigrationService.MigrateAsync();
+            return Ok(new { migrated });
+        }
     }
 }
