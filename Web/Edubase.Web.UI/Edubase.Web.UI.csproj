@@ -448,11 +448,13 @@
     <Compile Include="Areas\IGovernorsGridViewModelFactory.cs" />
     <Compile Include="Controllers\AmalgamateMergeController.cs" />
     <Compile Include="Controllers\Api\ISqlDataQualityStatusRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlGlossaryItemRepository.cs" />
     <Compile Include="Controllers\Api\ISqlFaqGroupRepository.cs" />
     <Compile Include="Controllers\Api\ISqlLocalAuthoritySetRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
     <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
     <Compile Include="Controllers\Api\SqlDataQualityStatusRepository.cs" />
+    <Compile Include="Controllers\Api\SqlGlossaryItemRepository.cs" />
     <Compile Include="Controllers\Api\SqlLocalAuthoritySetRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNewsArticleRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
@@ -499,6 +501,14 @@
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
     <Compile Include="MigrationServices\DataQualityStatusMigrationService.cs" />
+    <Compile Include="MigrationServices\FaqGroupsMigrationService.cs" />
+    <Compile Include="MigrationServices\FaqItemsMigrationService.cs" />
+    <Compile Include="MigrationServices\GlossaryItemsMigrationService.cs" />
+    <Compile Include="MigrationServices\LocalAuthoritySetsMigrationService.cs" />
+    <Compile Include="MigrationServices\NewsArticlesMigrationService.cs" />
+    <Compile Include="MigrationServices\NotificationBannersMigrationService.cs" />
+    <Compile Include="MigrationServices\NotificationTemplatesMigrationService.cs" />
+    <Compile Include="MigrationServices\UserPreferencesMigrationService.cs" />
     <Compile Include="Models\Admin\LogsViewModel.cs" />
     <Compile Include="Models\DataQualityStatusDbContext.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
@@ -507,6 +517,7 @@
     <Compile Include="Models\FaqItemsDbContext.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
+    <Compile Include="Models\GlossaryItemsDbContext.cs" />
     <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
     <Compile Include="Models\Guidance\LaNameCodes.cs" />
     <Compile Include="Controllers\Api\ISqlFaqItemRepository.cs" />
@@ -586,6 +597,7 @@
     <Compile Include="Models\SqlDataQualityStatus.cs" />
     <Compile Include="Models\SqlFaqGroup.cs" />
     <Compile Include="Models\SqlFaqItem.cs" />
+    <Compile Include="Models\SqlGlossaryItems.cs" />
     <Compile Include="Models\SqlLocalAuthoritySet.cs" />
     <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlNotificationBanner.cs" />

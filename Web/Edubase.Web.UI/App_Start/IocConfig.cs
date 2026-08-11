@@ -225,6 +225,16 @@ namespace Edubase.Web.UI
             builder.RegisterType<SqlNotificationBannerRepository>().As<ISqlNotificationBannerRepository>().SingleInstance();
             builder.RegisterType<SqlFaqGroupRepository>().As<ISqlFaqGroupRepository>().SingleInstance();
             builder.RegisterType<SqlFaqItemRepository>().As<ISqlFaqItemRepository>().SingleInstance();
+            builder.RegisterType<SqlGlossaryItemRepository>().As<ISqlGlossaryItemRepository>().SingleInstance();
+
+            builder.RegisterType<GlossaryItemsMigrationService>().SingleInstance();
+            builder.RegisterType<FaqGroupsMigrationService>().SingleInstance();
+            builder.RegisterType<FaqItemsMigrationService>().SingleInstance();
+            builder.RegisterType<LocalAuthoritySetsMigrationService>().SingleInstance();
+            builder.RegisterType<NewsArticlesMigrationService>().SingleInstance();
+            builder.RegisterType<NotificationBannersMigrationService>().SingleInstance();
+            builder.RegisterType<NotificationTemplatesMigrationService>().SingleInstance();
+            builder.RegisterType<UserPreferencesMigrationService>().SingleInstance();
 
             builder.RegisterType<SqlDataQualityStatusRepository>().As<ISqlDataQualityStatusRepository>()
                 .SingleInstance();

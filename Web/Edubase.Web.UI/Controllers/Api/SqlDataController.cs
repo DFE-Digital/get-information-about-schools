@@ -5,7 +5,6 @@ using System.Web.Http;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
 using Edubase.Common.Config;
-using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Web.UI.MigrationServices;
 using Microsoft.Data.SqlClient;
@@ -18,56 +17,39 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly IAzLogger _logger;
         private readonly IUserPreferenceRepository _tableStorageUserPreferenceRepository;
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
-        private readonly NotificationTemplateRepository _tableStorageNotificationTemplateRepository;
-        private readonly ISqlNotificationTemplateRepository _sqlNotificationTemplateRepository;
-        private readonly LocalAuthoritySetRepository _tableStoragelocalAuthoritySetRepository;
-        private readonly ISqlLocalAuthoritySetRepository _sqlLocalAuthoritySetRepository;
-        private readonly NewsArticleRepository _tableStorageNewsArticleRepository;
-        private readonly ISqlNewsArticleRepository _sqlNewsArticleRepository;
-        private readonly NotificationBannerRepository _tableStorageNotificationBannerRepository;
-        private readonly ISqlNotificationBannerRepository _sqlNotificationBannerRepository;
-        private readonly FaqItemRepository _tableStorageFaqItemRepository;
-        private readonly ISqlFaqItemRepository _sqlFaqItemRepository;
-        private readonly FaqGroupRepository _tableStorageFaqGroupRepository;
-        private readonly ISqlFaqGroupRepository _sqlFaqGroupRepository;
 
+        private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
+        private readonly FaqGroupsMigrationService _faqGroupsMigrationService;
+        private readonly FaqItemsMigrationService _faqItemsMigrationService;
+        private readonly LocalAuthoritySetsMigrationService _localAuthoritySetsMigrationService;
+        private readonly NewsArticlesMigrationService _sqlNewsArticleMigrationService;
+        private readonly NotificationBannersMigrationService _sqlNotificationsBannersMigrationService;
+        private readonly NotificationTemplatesMigrationService _sqlNotificationsTemplatesMigrationService;
+        private readonly UserPreferencesMigrationService _userPreferencesMigrationService;
         private readonly DataQualityStatusMigrationService _dataQualityStatusMigrationService;
-
         public SqlDataController(
             IAzLogger logger,
-            IUserPreferenceRepository tableStorageUserPreferenceRepository,
-            ISqlUserPreferenceRepository sqlUserPreferenceRepository,
-            NotificationTemplateRepository tableStorageNotificationTemplateRepository,
-            ISqlNotificationTemplateRepository sqlNotificationTemplateRepository,
-            LocalAuthoritySetRepository tableStoragelocalAuthoritySetRepository,
-            ISqlLocalAuthoritySetRepository sqlLocalAuthoritySetRepository,
-            NewsArticleRepository tableStorageNewsArticleRepository,
-            ISqlNewsArticleRepository sqlNewsArticleRepository,
-            NotificationBannerRepository tableStorageNotificationBannerRepository,
-            ISqlNotificationBannerRepository sqlNotificationBannerRepository,
-            FaqItemRepository tableStorageFaqItemRepository,
-            ISqlFaqItemRepository sqlFaqItemRepository,
-            FaqGroupRepository tableStorageFaqGroupRepository,
-            ISqlFaqGroupRepository sqlFaqGroupRepository,
 
+            GlossaryItemsMigrationService glossaryItemsMigrationService,
+            FaqGroupsMigrationService faqGroupsMigrationService,
+            FaqItemsMigrationService faqItemsMigrationService,
+            LocalAuthoritySetsMigrationService localAuthoritySetsMigrationService,
+            NewsArticlesMigrationService sqlNewsArticleMigrationService,
+            NotificationBannersMigrationService sqlNotificationsBannersMigrationService,
+            NotificationTemplatesMigrationService sqlNotificationsTemplatesMigrationService,
+            UserPreferencesMigrationService userPreferencesMigrationService,
             DataQualityStatusMigrationService dataQualityStatusMigrationService)
         {
             _logger = logger;
-            _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
-            _sqlUserPreferenceRepository = sqlUserPreferenceRepository;
-            _tableStorageNotificationTemplateRepository = tableStorageNotificationTemplateRepository;
-            _sqlNotificationTemplateRepository = sqlNotificationTemplateRepository;
-            _tableStoragelocalAuthoritySetRepository = tableStoragelocalAuthoritySetRepository;
-            _sqlLocalAuthoritySetRepository = sqlLocalAuthoritySetRepository;
-            _tableStorageNewsArticleRepository = tableStorageNewsArticleRepository;
-            _sqlNewsArticleRepository = sqlNewsArticleRepository;
-            _tableStorageNotificationBannerRepository = tableStorageNotificationBannerRepository;
-            _sqlNotificationBannerRepository = sqlNotificationBannerRepository;
-            _tableStorageFaqItemRepository = tableStorageFaqItemRepository;
-            _sqlFaqItemRepository = sqlFaqItemRepository;
-            _tableStorageFaqGroupRepository = tableStorageFaqGroupRepository;
-            _sqlFaqGroupRepository = sqlFaqGroupRepository;
 
+            _glossaryItemsMigrationService = glossaryItemsMigrationService;
+            _faqGroupsMigrationService = faqGroupsMigrationService;
+            _faqItemsMigrationService = faqItemsMigrationService;
+            _localAuthoritySetsMigrationService = localAuthoritySetsMigrationService;
+            _sqlNewsArticleMigrationService = sqlNewsArticleMigrationService;
+            _sqlNotificationsBannersMigrationService = sqlNotificationsBannersMigrationService;
+            _sqlNotificationsTemplatesMigrationService = sqlNotificationsTemplatesMigrationService;
+            _userPreferencesMigrationService = userPreferencesMigrationService;
             _dataQualityStatusMigrationService = dataQualityStatusMigrationService;
         }
 
@@ -117,26 +99,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStorageUserPreferenceRepository.GetAllAsync(skip: continuationToken);
-                foreach (var pref in page.Items)
-                {
-                    await _sqlUserPreferenceRepository.UpsertAsync(new Models.SqlUserPreference
-                    {
-                        PartitionKey = pref.PartitionKey,
-                        RowKey = pref.RowKey,
-                        SavedSearchToken = pref.SavedSearchToken
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
-
+            var migrated = await _userPreferencesMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
@@ -148,30 +111,11 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStorageNotificationTemplateRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var pref in page.Items)
-                {
-                    await _sqlNotificationTemplateRepository.UpsertAsync(new Models.SqlNotificationTemplate
-                    {
-                        PartitionKey = pref.PartitionKey,
-                        RowKey = pref.RowKey,
-                        Content = pref.Content
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
-
+            var migrated = await _sqlNotificationsTemplatesMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
-                [Route("api/migrate-notification-banners"), HttpPost]
+        [Route("api/migrate-notification-banners"), HttpPost]
         public async Task<IHttpActionResult> MigrateNotificationBannerAsync()
         {
             if (!Feature.IsEnabled("Feature_NotificationBannersMigration"))
@@ -179,42 +123,11 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            var partitions = new[] { eNotificationBannerPartition.Current, eNotificationBannerPartition.Archive };
-
-            foreach (var partition in partitions)
-            {
-                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-                do
-                {
-                    var page = await _tableStorageNotificationBannerRepository.GetAllAsync(int.MaxValue, continuationToken, false, partition);
-                    foreach (var banner in page.Items)
-                    {
-                        await _sqlNotificationBannerRepository.UpsertAsync(new Models.SqlNotificationBanner
-                        {
-                            PartitionKey = banner.PartitionKey,
-                            RowKey = banner.RowKey,
-                            Content = banner.Content,
-                            Importance = (byte)banner.Importance,
-                            Start = banner.Start,
-                            End = banner.End,
-                            Version = (byte)banner.Version,
-                            Tracker = banner.Tracker,
-                            AuditUser = int.TryParse(banner.AuditUser, out var auditUserId) ? auditUserId : 0,
-                            AuditEvent = banner.AuditEvent,
-                            AuditTimeStamp = banner.AuditTimestamp
-                        });
-                        migrated++;
-                    }
-                    continuationToken = page.TableContinuationToken;
-                }
-                while (continuationToken != null);
-            }
-
+            var migrated = await _sqlNotificationsBannersMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
-                [Route("api/migrate-news-article"), HttpPost]
+        [Route("api/migrate-news-articles"), HttpPost]
         public async Task<IHttpActionResult> MigrateNewsArticlesAsync()
         {
             if (!Feature.IsEnabled("Feature_NewsArticlesMigration"))
@@ -222,37 +135,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            var partitions = new[] { eNewsArticlePartition.Current, eNewsArticlePartition.Archive };
-
-            foreach (var partition in partitions)
-            {
-                Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-                do
-                {
-                    var page = await _tableStorageNewsArticleRepository.GetAllAsync(int.MaxValue, false, null, continuationToken, partition);
-                    foreach (var article in page.Items)
-                    {
-                        await _sqlNewsArticleRepository.UpsertAsync(new Models.SqlNewsArticle
-                        {
-                            PartitionKey = article.PartitionKey,
-                            RowKey = article.RowKey,
-                            Title = article.Title,
-                            ArticleDate = article.ArticleDate,
-                            ShowDate = article.ShowDate,
-                            Content = article.Content,
-                            Version = (byte) article.Version,
-                            Tracker = article.Tracker,
-                            AuditUser = int.TryParse(article.AuditUser, out var auditUserId) ? auditUserId : 0,
-                            AuditEvent = article.AuditEvent,
-                            AuditTimeStamp = article.AuditTimestamp
-                        });
-                        migrated++;
-                    }
-                    continuationToken = page.TableContinuationToken;
-                }
-                while (continuationToken != null);
-            }
+            var migrated = await _sqlNewsArticleMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
@@ -264,27 +147,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStoragelocalAuthoritySetRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var set in page.Items)
-                {
-                    await _sqlLocalAuthoritySetRepository.UpsertAsync(new Models.SqlLocalAuthoritySet
-                    {
-                        PartitionKey = set.PartitionKey,
-                        RowKey = set.RowKey,
-                        Title = set.Title,
-                        IdData = set.IdData
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
-
+            var migrated = await _localAuthoritySetsMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
@@ -296,29 +159,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
-
-            do
-            {
-                var page = await _tableStorageFaqItemRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var item in page.Items)
-                {
-                    await _sqlFaqItemRepository.UpsertAsync(new Models.SqlFaqItem
-                    {
-                        PartitionKey = item.PartitionKey,
-                        RowKey = item.RowKey,
-                        Title = item.Title,
-                        Content = item.Content,
-                        DisplayOrder = item.DisplayOrder,
-                        GroupId = item.GroupId
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
-            }
-            while (continuationToken != null);
-
+            var migrated = await _faqItemsMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
@@ -330,27 +171,19 @@ namespace Edubase.Web.UI.Controllers.Api
                 return NotFound();
             }
 
-            var migrated = 0;
-            Microsoft.WindowsAzure.Storage.Table.TableContinuationToken continuationToken = null;
+            var migrated = await _faqGroupsMigrationService.MigrateAsync();
+            return Ok(new { migrated });
+        }
 
-            do
+        [Route("api/migrate-glossary-items"), HttpPost]
+        public async Task<IHttpActionResult> MigrateGlossaryItemsAsync()
+        {
+            if (!Feature.IsEnabled("Feature_GlossaryItemsMigration"))
             {
-                var page = await _tableStorageFaqGroupRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var group in page.Items)
-                {
-                    await _sqlFaqGroupRepository.UpsertAsync(new Models.SqlFaqGroup
-                    {
-                        PartitionKey = group.PartitionKey,
-                        RowKey = group.RowKey,
-                        GroupName = group.GroupName,
-                        DisplayOrder = group.DisplayOrder
-                    });
-                    migrated++;
-                }
-                continuationToken = page.TableContinuationToken;
+                return NotFound();
             }
-            while (continuationToken != null);
 
+            var migrated = await _glossaryItemsMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
 
