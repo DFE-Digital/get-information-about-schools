@@ -15,6 +15,6 @@ namespace Edubase.Web.UI.Models
         [Key, Column(Order = 1)]
         public string RowKey { get; set; }
         public string GroupName { get; set; }
-        public int DisaplyOrder { get; set; }
+        public int DisplayOrder { get; set; }
     }
 }

@@ -343,7 +343,7 @@ namespace Edubase.Web.UI.Controllers.Api
                         PartitionKey = group.PartitionKey,
                         RowKey = group.RowKey,
                         GroupName = group.GroupName,
-                        DisaplyOrder = group.DisplayOrder
+                        DisplayOrder = group.DisplayOrder
                     });
                     migrated++;
                 }
