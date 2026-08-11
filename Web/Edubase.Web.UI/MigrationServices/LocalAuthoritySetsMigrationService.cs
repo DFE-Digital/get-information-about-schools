@@ -7,11 +7,11 @@ namespace Edubase.Web.UI.MigrationServices
 {
     public class LocalAuthoritySetsMigrationService
     {
-        private readonly LocalAuthoritySetRepository _tableStorageLocalAuthoritySetRepository;
+        private readonly ILocalAuthoritySetRepository _tableStorageLocalAuthoritySetRepository;
         private readonly ISqlLocalAuthoritySetRepository _sqlLocalAuthoritySetRepository;
 
         public LocalAuthoritySetsMigrationService(
-            LocalAuthoritySetRepository tableStorageLocalAuthoritySetRepository,
+            ILocalAuthoritySetRepository tableStorageLocalAuthoritySetRepository,
             ISqlLocalAuthoritySetRepository sqlLocalAuthoritySetRepository)
         {
             _tableStorageLocalAuthoritySetRepository = tableStorageLocalAuthoritySetRepository;

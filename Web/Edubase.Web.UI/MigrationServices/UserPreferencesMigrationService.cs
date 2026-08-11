@@ -7,11 +7,11 @@ namespace Edubase.Web.UI.MigrationServices
 {
     public class UserPreferencesMigrationService
     {
-        private readonly UserPreferenceRepository _tableStorageUserPreferenceRepository;
+        private readonly IUserPreferenceRepository _tableStorageUserPreferenceRepository;
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
 
         public UserPreferencesMigrationService(
-            UserPreferenceRepository tableStorageUserPreferenceRepository,
+            IUserPreferenceRepository tableStorageUserPreferenceRepository,
             ISqlUserPreferenceRepository sqlUserPreferenceRepository)
         {
             _tableStorageUserPreferenceRepository = tableStorageUserPreferenceRepository;
