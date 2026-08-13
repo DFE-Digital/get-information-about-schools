@@ -71,7 +71,7 @@ public class AccountController : Controller
     /// <returns>An <see cref="IActionResult"/> that redirects the user to their landing page.</returns>
     [HttpGet("ExternalLoginCallback")]
     [AllowAnonymous]
-    public async Task<IActionResult> ExternalLoginCallback()
+    public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
     {
         // Authenticate against the application cookie scheme
         AuthenticateResult loginInfo =
@@ -101,6 +101,11 @@ public class AccountController : Controller
 
         // Re‑sign in with the application cookie scheme (refresh claims)
         await HttpContext.SignInAsync("ApplicationCookie", principal);
+
+        if (returnUrl != "/")
+        {
+            return Redirect(returnUrl);
+        }
 
         return await GetLandingPage(principal);
     }

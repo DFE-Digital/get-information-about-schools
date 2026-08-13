@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Security.Policy;
 using System.Web;
 using Azure.Data.Tables;
 using Edubase.Common.Cache;
@@ -64,9 +65,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -471,6 +474,8 @@ var authBuilder = builder.Services.AddAuthentication(options =>
     options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
+
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, SamlAuthorizationResultHandler>();
 
 if (useBasicAuth)
 {
