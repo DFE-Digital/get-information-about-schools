@@ -412,26 +412,8 @@ This diagram shows the S158 production application estate that relates to GIAS.
 
 
 - The `s158-getinformationaboutschools-production` subscription contains separate resource groups for the GIAS API web app, provider app, Data Factory integration and monitoring.
-- `s158p01-rg-giasapi-web` contains the GIAS API Function App, a Web App named like a webjob host, their shared App Service Plan and runtime storage.
-- `s158p01-fa-giasapi` is an API-facing Function App. It has the following HTTP functions
-  - `GetAllGeneric`
-  - `GetGenericById`
-  - `GetSupplementById`
-  - `GraphQLEndpoint`
-  - `RenderOAuth2Redirect`
-  - `RenderOpenApiDocument`
-  - `RenderSwaggerDocument`
-  - `RenderSwaggerUI`.
-  - Timer function: `RefreshCacheTables`.
-- `s158p01-rg-giasapi-provider` contains the provider Function App, its dedicated App Service Plan, runtime storage, Application Insights and failure anomaly alerting.
-- `s158p01-func-dd-provider` is a provider API Function App. It contains the following HTTP functions
-  - `GetProviderByUrn`
-  - `GetProviderLinks`
-  - `GetProviders`
-- `s158p01-ai-dd-provider` is receiving telemetry in the captured last-24-hours App Insights Logs view. It is most likely monitoring `s158p01-func-dd-provider`, based on the shared provider resource group, naming, alert scope and the Function App being the only captured provider application runtime. The exact producer should still be confirmed from `cloud_RoleName` or the Function App's Application Insights app setting names.
 - `s158p01-rg-dd-adf` contains the S158 GIAS Data Factory and a failed pipeline alert.
-- `s158p01-rg-giasapi-data` contains storage account `s158p01sagiasapid01`, with private blob containers `referencedata` and `submissions`. No file shares, queues or tables were present. Blob contents could not be listed with current portal permissions, so active use is not yet confirmed.
-- `s158p01-rg-giasapi-monitoring` contains GIAS API monitoring resources: `s158p01-giasapi-ai`, `s158p01-giasapi-la`, `s158p01-lt-dd-provider`, `s158p01sadiag01`, and a failure anomalies alert. The captured `s158p01-giasapi-ai` Application Insights `Data point volume (Sum)` metric showed no visible data point volume for the last 30 days, which suggests no telemetry ingestion in that window but does not prove permanent non-use.
+- `s158p01-rg-giasapi-monitoring` contains the remaining provider and platform monitoring resources. Former GIAS API-specific monitoring resources are not part of the current application estate.
 
 The diagram separates application hosting, runtime storage and monitoring. It does not show every network path; private SQL connectivity is shown in the next S158 diagram.
 
@@ -470,65 +452,13 @@ C4Deployment
 
     UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 
-    Rel(giasApiFunction, giasApiPlanNode, "Runs on", "App Service Plan")
-    Rel(giasWebJobApp, giasApiPlanNode, "Runs on", "App Service Plan")
-    Rel(giasApiFunction, giasApiStorage, "Uses runtime storage", "Azure Functions storage")
-    Rel(providerFunction, providerPlanNode, "Runs on", "App Service Plan")
-    Rel(providerFunction, providerStorage, "Uses runtime storage", "Azure Functions storage")
-    Rel(providerFunction, providerInsights, "Likely sends telemetry to", "Application Insights")
-    Rel(providerInsights, providerFailureAlert, "Drives smart detection alerting")
-    Rel(giasApiFunction, api4xxAlert, "Monitored by", "HTTP 4xx metric")
-    Rel(giasApiFunction, api5xxAlert, "Monitored by", "HTTP 5xx metric")
     Rel(dataFactory, adfFailureAlert, "Monitored by", "Pipeline failure metric")
 
-    UpdateRelStyle(giasApiFunction, api5xxAlert, $offsetX="-160", $offsetY="-70")
-    UpdateRelStyle(giasWebJobApp, giasApiPlanNode, $offsetX="10", $offsetY="0")
-    UpdateRelStyle(providerFunction, providerPlanNode, $offsetX="50", $offsetY="-10")
-    UpdateRelStyle(providerFunction, providerStorage, $offsetX="-180", $offsetY="-60")
-    UpdateRelStyle(providerFunction, providerInsights, $offsetX="-90", $offsetY="-70")
-    UpdateRelStyle(providerInsights, providerFailureAlert, $offsetX="-30", $offsetY="-20")
-    UpdateRelStyle(giasApiFunction, giasApiStorage, $offsetX="0", $offsetY="-70")
-
+    UpdateRelStyle(dataFactory, adfFailureAlert, $offsetX="-30", $offsetY="30")
 
     Deployment_Node(tenantS158, "DfE Platform Identity", "Microsoft Entra tenant: platform.education.gov.uk") {
         Deployment_Node(subscriptionS158, "s158-getinformationaboutschools-production", "Azure Subscription") {
 
-
-            Deployment_Node(silverMonitorRg, "s158p01-SilverMonitor", "Azure Resource Group") {
-                Container(api4xxAlert, "Silver-AppService400Errorss158p01-fa-giasapi", "Metric alert rule", "HTTP 4xx alert for s158p01-fa-giasapi.")
-                
-                Container(api5xxAlert, "Silver-AppServiceServerErrorss158p01-fa-giasapi", "Metric alert rule", "HTTP 5xx alert for s158p01-fa-giasapi.")
-            }
-
-            Deployment_Node(giasApiWebRg, "s158p01-rg-giasapi-web", "Azure Resource Group") {
-                
-                Container(giasWebJobApp, "s158p01-as-giaswebjob", "Azure App Service", "Running App Service. No WebJobs configured in the portal and no VNet integration captured.")         
-                
-                Container(giasApiPlanNode, "s158p01-giasapi-plan", "App Service Plan, Windows P1v2", "Hosting plan for the GIAS API Function App and giaswebjob App Service.")
-                
-
-                Container(giasApiFunction, "s158p01-fa-giasapi", "Azure Function App", "GIAS API functions. HTTP endpoints, GraphQL endpoint, Swagger/OpenAPI functions and<br> cache refresh timer.")      
-
-                Deployment_Node(giasApiStorageNode, "s158p01sagiasf01", "Azure Storage account") {
-                    Container(giasApiStorage, "GIAS API runtime storage", "StorageV2, LRS", "Azure Functions/WebJobs runtime containers: azure-webjobs-hosts and azure-webjobs-secrets.")
-                }
-            }
-
-            Deployment_Node(providerRg, "s158p01-rg-giasapi-provider", "Azure Resource Group") {
-                Container(providerPlanNode, "s158p01-plan-dd-provider", "App Service Plan, Windows S1", "Hosting plan for the provider Function App.")
-                
-                Container(providerFunction, "s158p01-func-dd-provider", "Azure Function App", "Provider HTTP functions: GetProviderByUrn, GetProviderLinks and GetProviders.")
-
-                Deployment_Node(providerStorageNode, "s158p01saaiddprovider", "Azure Storage account") {
-                    Container(providerStorage, "Provider runtime storage", "StorageV2, LRS", "Azure Functions/WebJobs runtime containers: azure-webjobs-hosts and azure-webjobs-secrets.")
-                }
-
-                Deployment_Node(providerMonitoringNode, "s158p01-ai-dd-provider", "Application Insights") {
-                    Container(providerInsights, "Provider Application Insights", "Application monitoring", "monitors s158p01-func-dd-provider.")
-                    
-                    Container(providerFailureAlert, "Failure Anomalies", "Smart detector alert rule", "Failure anomaly detection. Sends notifications to Azure Resource Manager role emails.")
-                }
-            }
 
             Deployment_Node(adfRg, "s158p01-rg-dd-adf", "Azure Resource Group") {
                 Deployment_Node(dataFactoryNode, "s158p01-df-gias-01", "Azure Data Factory V2") {
@@ -538,45 +468,12 @@ C4Deployment
                 }
             }
 
-            Deployment_Node(giasApiDataRg, "s158p01-rg-giasapi-data", "Azure Resource Group") {
-                Deployment_Node(giasApiDataStorageNode, "s158p01sagiasapid01", "Azure Storage account") {
-                    Container(giasApiDataStorage, "GIAS API data storage", "StorageV2, LRS", "Private blob containers: referencedata and submissions. No file shares, queues or tables.<br> No active consumer identified from current evidence.")
-                }
-            }
-
-            Deployment_Node(giasApiMonitoringRg, "s158p01-rg-giasapi-monitoring", "Azure Resource Group") {
-                Container(giasApiInsights, "s158p01-giasapi-ai", "Application Insights", "Workspace-based Application Insights for GIAS API monitoring. Uses s158p01-giasapi-la.")
-                Container(giasApiLogAnalytics, "s158p01-giasapi-la", "Log Analytics workspace", "Workspace linked from s158p01-giasapi-ai. Data point volume metric showed no visible telemetry for last 30 days.")
-                Container(providerLogAnalytics, "s158p01-lt-dd-provider", "Log Analytics workspace", "Provider-related Log Analytics workspace. Consumer relationship not yet confirmed.")
-                Deployment_Node(giasApiDiagnosticsStorageNode, "s158p01sadiag01", "Azure Storage account") {
-                    Container(giasApiDiagnosticsStorage, "GIAS API diagnostics storage", "Azure Storage", "Diagnostics storage account in monitoring resource group. Container evidence still to be captured.")
-                }
-                Container(giasApiFailureAlert, "Failure Anomalies - s158p01-giasapi-ai", "Smart detector alert rule", "Failure anomaly detection for s158p01-giasapi-ai.")
-            }
-
         }
     }
 
 
-    UpdateElementStyle(giasApiFunction, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
-    UpdateElementStyle(providerFunction, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
-    UpdateElementStyle(giasWebJobApp, $bgColor="#ffffff", $fontColor="#1d4ed8", $borderColor="#1d4ed8")
-    UpdateElementStyle(giasApiPlanNode, $bgColor="#ffffff", $fontColor="#2563eb", $borderColor="#2563eb")
-    UpdateElementStyle(providerPlanNode, $bgColor="#ffffff", $fontColor="#2563eb", $borderColor="#2563eb")
-    UpdateElementStyle(giasApiStorage, $bgColor="#ffffff", $fontColor="#b45309", $borderColor="#b45309")
-    UpdateElementStyle(providerStorage, $bgColor="#ffffff", $fontColor="#b45309", $borderColor="#b45309")
-    UpdateElementStyle(giasApiDataStorage, $bgColor="#ffffff", $fontColor="#b45309", $borderColor="#b45309")
     UpdateElementStyle(dataFactory, $bgColor="#ffffff", $fontColor="#0f766e", $borderColor="#0f766e")
     UpdateElementStyle(adfFailureAlert, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
-    UpdateElementStyle(giasApiInsights, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
-    UpdateElementStyle(giasApiLogAnalytics, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
-    UpdateElementStyle(providerLogAnalytics, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
-    UpdateElementStyle(giasApiDiagnosticsStorage, $bgColor="#ffffff", $fontColor="#b45309", $borderColor="#b45309")
-    UpdateElementStyle(giasApiFailureAlert, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
-    UpdateElementStyle(providerInsights, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
-    UpdateElementStyle(providerFailureAlert, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
-    UpdateElementStyle(api4xxAlert, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
-    UpdateElementStyle(api5xxAlert, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
 ```
 
 ### S158 Private SQL Connectivity View
@@ -591,11 +488,6 @@ The key points are:
 - The `DFE T1 Production` subscription is in the `Department for Education` tenant (`Educationgovuk.onmicrosoft.com`).
 - `s158p01-df-gias-01` uses a Data Factory managed private endpoint named `GiasConnection-Managedvnetprod`.
 - The Data Factory linked services point at `ea-edubase-prod-srv.database.windows.net` and the databases `ea-edubase-prod` and `ea-edubase-prod-archive`.
-- `s158p01-fa-giasapi` has outbound VNet integration to `s158p01-snet1-dd-apimod`.
-- `s158p01-func-dd-provider` has outbound VNet integration to `s158p01-snet-dd-provider`.
-- `s158p01-pe-dd-apimod` is an approved private endpoint to the GIAS production SQL logical server, but it is not an active database route. The associated Function App, `s158p01-fa-giasapi`, may be orphaned.
-- When S158 services look up the SQL server name `ea-edubase-prod-srv`, private DNS currently sends them to `10.0.3.4`, which is the provider private endpoint `s158p01-pe-provider`. It does not send them to the APIMOD endpoint `s158p01-pe-dd-apimod`.
-- `s158p01-pe-provider` is therefore the private endpoint currently selected by private DNS for `ea-edubase-prod-srv`.
 - `s158p01-pe-dd-rest` is also an approved SQL private endpoint to the DFE T1 SQL logical server. No active consumers have been identified
 - The private DNS zone `privatelink.database.windows.net` is linked to `s158p01-vnet-dd-common`, with fallback to internet disabled.
 
@@ -630,46 +522,32 @@ C4Deployment
 
     title S158 Private SQL Connectivity To DFE T1
 
-    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="3")
+    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="2")
 
     Deployment_Node(platformIdentityTenant, "DfE Platform Identity", "Microsoft Entra tenant: platform.education.gov.uk") {
         Deployment_Node(s158Subscription, "s158-getinformationaboutschools-production", "Azure Subscription") {
 
 
+            Deployment_Node(s158NetworkRg, "s158p01-rg-giasapi-vnet", "Azure Resource Group") {
+                Deployment_Node(s158Vnet, "s158p01-vnet-dd-common", "Azure Virtual Network") {
 
-            Deployment_Node(s158WebRg, "s158p01-rg-giasapi-web", "Azure Resource Group") {
-                Container(giasApiFunctionNet, "s158p01-fa-giasapi", "Azure Function App", "VNet integrated to s158p01-snet1-dd-apimod.")
+                     Deployment_Node(privateDnsZoneNode, "privatelink.database.windows.net", "Private DNS zone") {
+                        Container(privateDns, "ea-edubase-prod-srv", "Private DNS A record", "SQL private-link record. Target address requires post-retirement validation.")
+                    }                   
+                    Deployment_Node(restSubnet, "s158p01-snet-dd-rest1", "Subnet") {
+                        Container(peRest, "s158p01-pe-dd-rest", "Private endpoint", "Approved SQL private endpoint. Private IP 10.0.4.4.")
+                    }
+                }
             }
 
-            Deployment_Node(s158ProviderRg, "s158p01-rg-giasapi-provider", "Azure Resource Group") {
-                Container(providerFunctionNet, "s158p01-func-dd-provider", "Azure Function App", "VNet integrated to s158p01-snet-dd-provider.")
-            }
-
-            Deployment_Node(s158AdfRg, "s158p01-rg-dd-adf", "Azure Resource Group") {
+             Deployment_Node(s158AdfRg, "s158p01-rg-dd-adf", "Azure Resource Group") {
                 Deployment_Node(s158Adf, "s158p01-df-gias-01", "Azure Data Factory V2") {
                     Container(adfManagedPe, "GiasConnection-Managedvnetprod", "Managed private endpoint", "Approved Data Factory managed private endpoint to GIAS SQL.")
 
                     Container(adfLinkedServices, "GIAS SQL linked services", "Azure SQL Database linked services", "GIAS_ProdSQL_AsAzureDB and GIAS_ArchiveSQL_AsAzureDB.")
 
                 }
-            }
-
-            Deployment_Node(s158NetworkRg, "s158p01-rg-giasapi-vnet", "Azure Resource Group") {
-                Deployment_Node(s158Vnet, "s158p01-vnet-dd-common", "Azure Virtual Network") {
-                    Deployment_Node(apimodSubnet, "s158p01-dd-pemod", "Subnet") {
-                        Container(peApimod, "s158p01-pe-dd-apimod", "Private endpoint", "Approved SQL private endpoint. Private IP 10.0.1.4.")
-                    }
-                    Deployment_Node(providerSubnet, "s158p01-snet-dd-peprovider", "Subnet") {
-                        Container(peProvider, "s158p01-pe-provider", "Private endpoint", "Approved SQL private endpoint. Private IP 10.0.3.4.")
-                    }
-                    Deployment_Node(restSubnet, "s158p01-snet-dd-rest1", "Subnet") {
-                        Container(peRest, "s158p01-pe-dd-rest", "Private endpoint", "Approved SQL private endpoint. Private IP 10.0.4.4.")
-                    }
-                    Deployment_Node(privateDnsZoneNode, "privatelink.database.windows.net", "Private DNS zone") {
-                        Container(privateDns, "ea-edubase-prod-srv", "Private DNS A record", "Resolves to 10.0.3.4. Linked to s158p01-vnet-dd-common.")
-                    }
-                }
-            }
+            }           
         }
     }
 
@@ -690,27 +568,15 @@ C4Deployment
     Rel(adfLinkedServices, adfManagedPe, "Uses managed private endpoint")
     Rel(adfManagedPe, dfePrimaryDb, "Connects to", "SQL private link")
     Rel(adfManagedPe, dfeArchiveDb, "Connects to", "SQL private link")
-    Rel(giasApiFunctionNet, peApimod, "Associated but likely orphaned", "No active DB route evidenced")
-    Rel(providerFunctionNet, peProvider, "Uses active private DNS path", "Private DNS -> 10.0.3.4")
-    Rel(privateDns, peProvider, "Resolves ea-edubase-prod-srv to", "A record 10.0.3.4")
-    Rel(peProvider, dfePrimaryDb, "Approved private SQL endpoint", "Private Link")
     Rel(peRest, dfePrimaryDb, "Approved private SQL endpoint", "Private Link")
 
     UpdateRelStyle(adfLinkedServices, adfManagedPe, $offsetX="10", $offsetY="0")
     UpdateRelStyle(adfManagedPe, dfePrimaryDb, $offsetX="-130", $offsetY="20")
     UpdateRelStyle(adfManagedPe, dfeArchiveDb, $offsetX="-130", $offsetY="10")
-    UpdateRelStyle(giasApiFunctionNet, peApimod, $offsetX="-20", $offsetY="-220")
-    UpdateRelStyle(privateDns, peProvider, $offsetX="10", $offsetY="-30")
-    UpdateRelStyle(peProvider, dfePrimaryDb, $offsetX="-210", $offsetY="-50")
-    UpdateRelStyle(peRest, dfePrimaryDb, $offsetX="-200", $offsetY="-40")
-    UpdateRelStyle(providerFunctionNet, peProvider, $offsetX="-50", $offsetY="-220")
+    UpdateRelStyle(peRest, dfePrimaryDb, $offsetX="-430", $offsetY="-60")
 
-    UpdateElementStyle(giasApiFunctionNet, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
-    UpdateElementStyle(providerFunctionNet, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
     UpdateElementStyle(adfLinkedServices, $bgColor="#ffffff", $fontColor="#0f766e", $borderColor="#0f766e")
     UpdateElementStyle(adfManagedPe, $bgColor="#ffffff", $fontColor="#0891b2", $borderColor="#0891b2")
-    UpdateElementStyle(peApimod, $bgColor="#ffffff", $fontColor="#0891b2", $borderColor="#0891b2")
-    UpdateElementStyle(peProvider, $bgColor="#ffffff", $fontColor="#0891b2", $borderColor="#0891b2")
     UpdateElementStyle(peRest, $bgColor="#ffffff", $fontColor="#0891b2", $borderColor="#0891b2")
     UpdateElementStyle(privateDns, $bgColor="#ffffff", $fontColor="#0f766e", $borderColor="#0f766e")
     UpdateElementStyle(dfePrimaryDb, $bgColor="#ffffff", $fontColor="#1e3a8a", $borderColor="#1e3a8a")

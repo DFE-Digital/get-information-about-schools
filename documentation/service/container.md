@@ -60,12 +60,8 @@ C4Container
         
         ContainerDb(fileStorage, "Extract blob storage", "Azure Blob Storage", "Stores generated ZIP<br>extracts available for download")
         
-        Container(providerProfileApi, "Provider Profile API", "Azure Function App", "Provider API in the S158 production environment.<br>Exposes provider lookup functions.")
-
         ContainerDb(db, "GIAS Database", "MS SQL Server", "Stores establishment, governance, user<br> and reference data")
         
-        Container(redundantGiasApi, "GIAS API", "Azure Function App", "GIAS API Function App in the S158 production environment.<br>Not currently used.")
-
         Container(dataFactory, "GIAS Data Factory", "Azure Data Factory", "Data integration workload in the S158 production environment for<br> GIAS SQL processing and archive activity.")
     }
 
@@ -75,11 +71,9 @@ C4Container
     Rel(web, apiBackend, "Calls", "HTTPS")
     Rel(web, fileStorage, "Reads generated extracts from", "HTTPS/CSV/ZIP")
     Rel(apiBackend, db, "Reads from and writes to", "TCP/SQL")
-    Rel(apiBackend, fileStorage, "Uses extract blob storage", "HTTPS/CSV/ZIP")
+    Rel(apiBackend, fileStorage, "Uses extract<br>blob storage", "HTTPS/CSV/ZIP")
     Rel(adminSoapBackend, db, "Reads from and writes to", "TCP/SQL")
     Rel(adminSoapBackend, fileStorage, "Uses extract storage", "HTTPS/CSV/ZIP")
-    Rel(providerProfileApi, db, "Reads provider data from", "SQL over private endpoint")
-    Rel(redundantGiasApi, db, "Reads", "SQL over private endpoint")
     Rel(dataFactory, db, "Reads from and writes to", "SQL over private endpoint")
 
     Rel(externalSystems, web,"Downloads GIAS data","HTTPS/CSV/ZIP")
@@ -89,33 +83,29 @@ C4Container
     UpdateRelStyle(admin, adminSoapBackend, $offsetX="-70", $offsetY="-160") 
     UpdateRelStyle(externalSystems, web, $offsetX="-170", $offsetY="-80") 
     UpdateRelStyle(externalSystems, adminSoapBackend, $offsetX="-140", $offsetY="-80") 
-    UpdateRelStyle(apiBackend, db, $offsetX="-210", $offsetY="-30") 
+    UpdateRelStyle(apiBackend, db, $offsetX="-150", $offsetY="-30") 
     UpdateRelStyle(adminSoapBackend, db, $offsetX="40", $offsetY="-130") 
     UpdateRelStyle(apiBackend, fileStorage, $offsetX="-45", $offsetY="-50") 
-    UpdateRelStyle(adminSoapBackend, fileStorage, $offsetX="-100", $offsetY="-20") 
+    UpdateRelStyle(adminSoapBackend, fileStorage, $offsetX="30", $offsetY="-10") 
     UpdateRelStyle(web, apiBackend, $offsetX="-50", $offsetY="-20")
+    UpdateRelStyle(web, fileStorage,$offsetX="-70", $offsetY="-30")
+    UpdateRelStyle(web, fileStorage,$offsetX="-70", $offsetY="-30")
 
-    UpdateRelStyle(providerProfileApi, db, $offsetX="-70", $offsetY="45")
-
-    UpdateRelStyle(dataFactory, db, $offsetX="70", $offsetY="10")
+    UpdateRelStyle(dataFactory, db, $offsetX="-50", $offsetY="40")
 
     UpdateElementStyle(web, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
     UpdateElementStyle(apiBackend, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
     UpdateElementStyle(adminSoapBackend, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
 
-    UpdateElementStyle(providerProfileApi, $bgColor="#ccfbf1", $fontColor="#000000", $borderColor="#0f766e")
     UpdateElementStyle(dataFactory, $bgColor="#f3e8ff", $fontColor="#000000", $borderColor="#9333ea")
 
     UpdateElementStyle(db, $bgColor="#bfdbfe", $fontColor="#000000", $borderColor="#1e3a8a")
     UpdateElementStyle(fileStorage, $bgColor="#fef3c7", $fontColor="#000000", $borderColor="#b45309")
-
-    UpdateElementStyle(redundantGiasApi, $bgColor="#ccfbf1", $fontColor="#000000", $borderColor="#0f766e")
 
 ```
 
 ## Notes
 
 
-- For lower-level C# front-end detail, see [the front-end component diagram](./front-end-component/component/).
-- For lower-level Java back-end detail, see [the back-end component diagrams](./back-end-component/component/).
-- The `GIAS API` Azure Function App is shown because it is deployed infrastructure, but it is not currently being used.
+- For lower-level C# front-end detail, see [the front-end component diagram](./front-end-component/component.md).
+- For lower-level Java back-end detail, see [the back-end component diagrams](./back-end-component/component.md).

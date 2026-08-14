@@ -116,7 +116,7 @@ C4Context
 1. The `DfE Back Office User` is a signed-in user with elevated permissions. This role can do everything available to anonymous and standard signed-in users, plus additional administrative and data-management actions.
 2. To keep the main context diagram easy to read, all DfE internal systems have been grouped into a single external system called `Internal DfE systems`.
 3. The `External Consumer` is an external system, not a person. It consumes GIAS data either by downloading extract files or by calling the SOAP interface.
-4. For more detail on how front-end authentication works between GIAS and DfE Sign-in, see [GIAS front-end authentication flow](./front-end-component/front-end-authentication-flow/).
+4. For more detail on how front-end authentication works between GIAS and DfE Sign-in, see [GIAS front-end authentication flow](./front-end-component/front-end-authentication-flow.md).
 
 
 The detailed internal DfE systems diagram has been replaced with the tables below. They separate internal DfE systems from external systems referenced in this overview, and give a short description of each service or system's primary purpose.
@@ -128,7 +128,6 @@ This list will evolve over time as more internal systems and use cases are ident
 | Service name | Description |
 | --- | --- |
 | DfE Sign-in (DSI) | Department for Education identity and access management service used to sign in to DfE online services. |
-| Provider Profile (for DSI) | Service and data source used to supply provider and organisation information to DSI for access management. |
 | Collections Online - Learners, Education, Children and Teachers (COLLECT) | DfE's centralised data collection and management system for education returns. |
 | School census | DfE statutory data collection covering school, pupil and characteristics data. |
 | Submit Learner Data | Service for providers to submit, validate and review learner and funding-related data returns. |
@@ -177,7 +176,6 @@ This list will evolve over time as more internal systems and use cases are ident
 | Teaching Vacancy Service | National service for advertising teaching, leadership and education support jobs and managing applications. |
 | Funding Transformation Project (FTP) | Funding transformation programme to modernise funding operations and supporting digital services. |
 | Funding Data Service | Internal data service that supports allocations, calculations, contracts, statements and payments. |
-| Provider Profile  | Internal provider profile view or service used to surface provider reference and operational information. |
 | Single Point of Information (SPI) | Internal service intended to provide a single view of key provider and institution information. |
 | Complete conversions, transfers and changes | Service used to complete academy conversions, transfers and related change processes. |
 | Teacher CPD service | Service family supporting teacher continuing professional development journeys, including early career and NPQ-related services. |

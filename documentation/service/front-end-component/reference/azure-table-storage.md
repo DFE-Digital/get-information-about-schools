@@ -48,7 +48,7 @@ Main usage points:
 - `TokenValueProviderFactory`
 - `AccountController`
 
-This is documented in more detail in [`tokens.md`](./tokens/).
+This is documented in more detail in [`tokens.md`](./tokens.md).
 
 ### 2. User preferences
 
