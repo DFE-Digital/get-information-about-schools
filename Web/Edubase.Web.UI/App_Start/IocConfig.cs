@@ -49,8 +49,10 @@ using Edubase.Services.Texuna.Security;
 using Edubase.Services.Texuna.Serialization;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Areas;
+using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.MigrationServices;
 using Edubase.Web.UI.Validation;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
@@ -216,6 +218,27 @@ namespace Edubase.Web.UI
             builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
             builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
             builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
+            builder.RegisterType<SqlUserPreferenceRepository>().As<ISqlUserPreferenceRepository>().SingleInstance();
+            builder.RegisterType<SqlNotificationTemplateRepository>().As<ISqlNotificationTemplateRepository>().SingleInstance();
+            builder.RegisterType<SqlLocalAuthoritySetRepository>().As<ISqlLocalAuthoritySetRepository>().SingleInstance();
+            builder.RegisterType<SqlNewsArticleRepository>().As<ISqlNewsArticleRepository>().SingleInstance();
+            builder.RegisterType<SqlNotificationBannerRepository>().As<ISqlNotificationBannerRepository>().SingleInstance();
+            builder.RegisterType<SqlFaqGroupRepository>().As<ISqlFaqGroupRepository>().SingleInstance();
+            builder.RegisterType<SqlFaqItemRepository>().As<ISqlFaqItemRepository>().SingleInstance();
+            builder.RegisterType<SqlGlossaryItemRepository>().As<ISqlGlossaryItemRepository>().SingleInstance();
+
+            builder.RegisterType<GlossaryItemsMigrationService>().SingleInstance();
+            builder.RegisterType<FaqGroupsMigrationService>().SingleInstance();
+            builder.RegisterType<FaqItemsMigrationService>().SingleInstance();
+            builder.RegisterType<LocalAuthoritySetsMigrationService>().SingleInstance();
+            builder.RegisterType<NewsArticlesMigrationService>().SingleInstance();
+            builder.RegisterType<NotificationBannersMigrationService>().SingleInstance();
+            builder.RegisterType<NotificationTemplatesMigrationService>().SingleInstance();
+            builder.RegisterType<UserPreferencesMigrationService>().SingleInstance();
+
+            builder.RegisterType<SqlDataQualityStatusRepository>().As<ISqlDataQualityStatusRepository>()
+                .SingleInstance();
+            builder.RegisterType<DataQualityStatusMigrationService>().SingleInstance();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
