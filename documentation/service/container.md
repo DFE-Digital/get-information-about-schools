@@ -25,14 +25,12 @@ C4Container
         Container(appServiceKey, "Azure App Service", "Application hosting", "")
         ContainerDb(storageKey, "Azure Storage", "")
         ContainerDb(databaseKey, "Database", "")
-        Container(functionAppKey, "Azure Function App", "Serverless application hosting", "")
         Container(dataFactoryKey, "Azure Data Factory", "Data integration", "")
     }
 
     UpdateElementStyle(appServiceKey, $bgColor="#dbeafe", $fontColor="#000000", $borderColor="#1d4ed8")
     UpdateElementStyle(storageKey, $bgColor="#fef3c7", $fontColor="#000000", $borderColor="#b45309")
     UpdateElementStyle(databaseKey, $bgColor="#bfdbfe", $fontColor="#000000", $borderColor="#1e3a8a")
-    UpdateElementStyle(functionAppKey, $bgColor="#ccfbf1", $fontColor="#000000", $borderColor="#0f766e")
     UpdateElementStyle(dataFactoryKey, $bgColor="#f3e8ff", $fontColor="#000000", $borderColor="#9333ea")
 ```
 

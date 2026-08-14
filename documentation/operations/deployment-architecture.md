@@ -9,7 +9,7 @@ It uses focused C4 deployment diagrams rather than one large diagram. The same c
 3. How do the DFE T1 App Services and SQL databases relate to the physical network configuration?
 4. Which DFE T1 App Services and databases write to each storage account?
 5. What is deployed in the `s158-getinformationaboutschools-production` subscription?
-6. Which S158 applications have private SQL connectivity back to the DFE T1 production SQL server?
+6. How do the surviving S158 resources connect privately to the DFE T1 production SQL server?
 
 
 ## Scope
@@ -17,7 +17,7 @@ It uses focused C4 deployment diagrams rather than one large diagram. The same c
 The document is split into two subscription views:
 
 - Section 1 covers the `DFE T1 Production` subscription, where the main GIAS production App Services, Azure SQL databases, Redis caches, storage accounts, Front Door and Azure Maps account live.
-- Section 2 covers the `s158-getinformationaboutschools-production` subscription, where S158 Data Factory, Function Apps, App Services, supporting storage, monitoring, VNet and private endpoints live.
+- Section 2 covers the `s158-getinformationaboutschools-production` subscription, where S158 Data Factory, its pipeline alert, shared network resources and surviving private SQL connectivity live.
 
 The diagrams deliberately omit lower-detail supporting resources such as deployment resources, unrelated resource group contents and individual firewall rule IP addresses unless they are needed to explain the deployment shape.
 
@@ -278,7 +278,7 @@ The key points are:
 - `ea-edubase-prod-srv` is the primary SQL logical server in West Europe.
 - `ea-edubase-prod-rep-srv` is the SQL logical server in UK South that hosts the geo-replica database.
 - Both SQL logical servers have public network access set to selected networks.
-- The primary SQL server has selected public firewall rules and four approved private endpoint connections from S158 resources.
+- The primary SQL server has selected public firewall rules and two approved private endpoint connections from surviving S158 resources.
 - The replica SQL server has selected public firewall rules but no private endpoints.
 - The primary database geo-replicates to the database on the replica SQL server.
 - The replica SQL server may support read-only, support, reporting, manual failover or disaster recovery scenarios, but active client usage has not been confirmed.
@@ -324,7 +324,7 @@ C4Deployment
             Deployment_Node(giasRg, "rg-t1pr-edubase", "Azure Resource Group") {
                 Deployment_Node(primarySqlServer, "ea-edubase-prod-srv", "Azure SQL logical server") {
                     Container(primarySqlFirewall, "Selected public network access", "SQL firewall rules", "Public network access enabled for selected public IP ranges. Broad Azure services exception disabled.")
-                    Container(primaryPrivateEndpoints, "Approved private endpoint connections", "Private Link connections", "Four approved private endpoint connections from S158 resources.")
+                    Container(primaryPrivateEndpoints, "Approved private endpoint connections", "Private Link connections", "Two approved private endpoint connections from surviving S158 resources.")
                     ContainerDb(primaryDb, "ea-edubase-prod", "Azure SQL Database", "Primary production database. PaaS database, not deployed into the App Service subnet. Business Critical Gen5, 8 vCores.")
                 }
 
@@ -411,11 +411,10 @@ C4Deployment
 This diagram shows the S158 production application estate that relates to GIAS.
 
 
-- The `s158-getinformationaboutschools-production` subscription contains separate resource groups for the GIAS API web app, provider app, Data Factory integration and monitoring.
+- The `s158-getinformationaboutschools-production` subscription contains the surviving GIAS Data Factory workload and its supporting network resources.
 - `s158p01-rg-dd-adf` contains the S158 GIAS Data Factory and a failed pipeline alert.
-- `s158p01-rg-giasapi-monitoring` contains the remaining provider and platform monitoring resources. Former GIAS API-specific monitoring resources are not part of the current application estate.
 
-The diagram separates application hosting, runtime storage and monitoring. It does not show every network path; private SQL connectivity is shown in the next S158 diagram.
+The diagram shows the remaining application workload and its monitoring alert. It does not show every network path; private SQL connectivity is shown in the next S158 diagram.
 
 #### S158 Application Diagram Key
 
@@ -428,18 +427,10 @@ C4Deployment
     UpdateLayoutConfig($c4ShapeInRow="6", $c4BoundaryInRow="3")
 
     Deployment_Node(keyBoundary, "Tenant / subscription / resource group", "Uncoloured deployment boundary") {
-        Container(functionKey, "Azure Function App", "Serverless application hosting", "HTTP and timer functions")
-        Container(appServiceKey, "Azure App Service", "Application hosting", "Web app / webjob-style app")
-        Container(planKey, "App Service Plan", "Hosting plan", "Windows compute plan")
-        Container(storageKey, "Azure Storage account", "Runtime storage", "Function host and secrets storage")
         Container(dataFactoryKey, "Azure Data Factory", "Data integration", "Pipelines and linked services")
         Container(monitoringKey, "Monitoring", "Application Insights / alerts", "Operational monitoring")
     }
 
-    UpdateElementStyle(functionKey, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
-    UpdateElementStyle(appServiceKey, $bgColor="#ffffff", $fontColor="#1d4ed8", $borderColor="#1d4ed8")
-    UpdateElementStyle(planKey, $bgColor="#ffffff", $fontColor="#2563eb", $borderColor="#2563eb")
-    UpdateElementStyle(storageKey, $bgColor="#ffffff", $fontColor="#b45309", $borderColor="#b45309")
     UpdateElementStyle(dataFactoryKey, $bgColor="#ffffff", $fontColor="#0f766e", $borderColor="#0f766e")
     UpdateElementStyle(monitoringKey, $bgColor="#ffffff", $fontColor="#be123c", $borderColor="#be123c")
 ```
@@ -502,14 +493,12 @@ C4Deployment
     UpdateLayoutConfig($c4ShapeInRow="6", $c4BoundaryInRow="3")
 
     Deployment_Node(keyBoundary, "Tenant / subscription / resource group / VNet / subnet", "Uncoloured deployment boundary") {
-        Container(functionKey, "Azure Function App", "Application hosting", "Function App with outbound VNet integration")
         Container(dataFactoryKey, "Azure Data Factory", "Data integration", "Managed VNet and linked services")
         Container(privateEndpointKey, "Private endpoint", "Azure Private Link", "Private SQL endpoint in a subnet")
         Container(privateDnsKey, "Private DNS", "Private DNS zone", "Private link DNS resolution")
         ContainerDb(sqlKey, "Azure SQL Database", "DFE T1 SQL target", "Primary and archive databases")
     }
 
-    UpdateElementStyle(functionKey, $bgColor="#ffffff", $fontColor="#7c3aed", $borderColor="#7c3aed")
     UpdateElementStyle(dataFactoryKey, $bgColor="#ffffff", $fontColor="#0f766e", $borderColor="#0f766e")
     UpdateElementStyle(privateEndpointKey, $bgColor="#ffffff", $fontColor="#0891b2", $borderColor="#0891b2")
     UpdateElementStyle(privateDnsKey, $bgColor="#ffffff", $fontColor="#0f766e", $borderColor="#0f766e")
