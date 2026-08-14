@@ -17,6 +17,28 @@ It links:
 
 ## Main Classes
 
+### Scheduled job orchestration
+
+- `UkprnUpdateJob`
+- `applicationContext-quartz.xml`
+
+In production, the job runs daily at 01:15 in the scheduler's timezone. The schedule is configured by the `scheduled.ukprn.update` property using the Quartz cron expression `0 15 1 * * ?`.
+
+### Production configuration location
+
+The deployment pipeline places the production `server.properties` file in the WAR at `WEB-INF/classes/server.properties`. This WAR-relative location is confirmed by the deployment configuration.
+
+In the Azure portal, navigate to:
+
+1. Resource group `rg-t1pr-edubase`.
+2. App Service `ea-edubase-backend-prod`.
+3. **Advanced Tools (Kudu)**.
+4. **Debug console**.
+
+The expected expanded Windows App Service path is `D:\home\site\wwwroot\webapps\edubase\WEB-INF\classes\server.properties`. This absolute path is inferred from the deployment structure and has not been directly verified in the production Kudu console.
+
+The API App Service, `ea-edubase-api-prod`, is deployed with its own production `server.properties` file using the same WAR-relative location.
+
 ### SOAP synchronization service
 
 - `UkrlpSinchronizationService`
@@ -85,24 +107,30 @@ It also filters by:
 - Stakeholder id from `${ukrlp.ws.wsdl.stakeholder}`
 - Updated-since date from the last recorded sync
 
-Integration is incremental, does not peform a full historical pull.
+Routine synchronisation is incremental. The initial run can retrieve the full applicable dataset, as described below.
 
-## Sync Window Logic
+## Incremental And Initial Pull Behaviour
+
+Despite the method name `pullAll(...)`, routine synchronisation does not retrieve the complete UKRLP dataset on every run. The method retrieves all provider records that match the query criteria and the applicable sync window.
 
 For each sync type:
 
 - `establishment`
 - `establishmentGroup`
 
-the service checks the most recent `UkprnUpdateProcess` record.
+The service checks the most recent successful `UkprnUpdateProcess` record for that type.
 
 If one exists:
 
-- It uses that record's `sinceDate` as `providerUpdatedSince`
+- It uses that record's `sinceDate` as `providerUpdatedSince`.
+- UKRLP therefore returns provider records updated since the previous successful sync point.
 
 If one does not exist:
 
-- It uses a very early default date so the query can return the full applicable dataset
+- It uses 1 February 1950 as `providerUpdatedSince`.
+- This acts as an initial or bootstrap pull of the full applicable dataset.
+
+The initial pull is still constrained by the active-provider and stakeholder query criteria and by the verification-authority filtering applied to the response. It is not an unrestricted historical pull of every UKRLP provider record.
 
 The query id is also derived from the last process record.
 
@@ -114,7 +142,9 @@ The service:
 
 - Creates the SOAP port from the WSDL
 - Overrides the endpoint URL
-- Submits the `retrieveAllProviders` request
+- Sends selection criteria in a `retrieveAllProviders` SOAP request
+
+The request sends query criteria to UKRLP and retrieves matching provider records. It does not submit provider data for UKRLP to create, update or retain. The returned mappings are used to update records in the GIAS database.
 
 
 ## Sequence Diagram

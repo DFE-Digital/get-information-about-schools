@@ -15,10 +15,10 @@ Shows the main components involved when users or client systems interact with th
 Shows the components involved in scheduled jobs, background processing, extract generation, and related operational notifications.
 
 - **Reference data provider components :** 
-Shows the components responsible for integrating with upstream reference-data providers such as Companies House, Ofsted, UKRLP, and address data sources.
+Shows the components responsible for integrating with upstream reference-data providers such as Companies House, UKRLP, ONS geography, and address data sources.
 
 - **GIAS front end authentication flow :** 
-Documented separately in [GIAS front-end authentication flow](../../front-end-component/front-end-authentication-flow/).
+Documented separately in [GIAS front-end authentication flow](../front-end-component/front-end-authentication-flow.md).
 
 
 ## Client interaction components
@@ -131,14 +131,14 @@ UpdateRelStyle(domain_services, gov_notify, $offsetX="-40", $offsetY="-30")
 - `Extract & Download Services` is separated from `Domain Services` because extract generation and retrieval is a distinct concern. The REST API mostly triggers generation and returns download metadata, while SOAP endpoints can return extract content directly.
 - `Gov.Notify Client` represents the central outbound email integration used by business and operational flows.
 - `Search & Lookup Services` is shown as a separate component to make explicit that search/filtering and dictionary lookups are not just generic DAO calls. They are a distinct set of services used by the business layer.
-- `Flyway DB Migration Scripts` is included because, in this system, schema and configuration changes are applied operationally as part of deployment/startup rather than being an invisible implementation detail. See [`database/flyway-migrations.md`](../database/flyway-migrations/).
+- `Flyway DB Migration Scripts` is included because, in this system, schema and configuration changes are applied operationally as part of deployment/startup rather than being an invisible implementation detail. See [`database/flyway-migrations.md`](./database/flyway-migrations.md).
 
 ### Scope and assumptions
 
 - This is not a full component map of the whole application. It excludes scheduled batch jobs and the external reference-data provider integrations, which are shown in separate diagrams below.
 - `Internal DfE Services -> SOAP Web Services` is included because the application exposes a separate SOAP service surface for legacy/system-to-system access.
 - `Gov.Notify Client` is included in this client-focused view because user-facing and operational actions can trigger outbound notifications as part of normal request processing.
-- `Managed Services` contains infrastructure used by this view. SQL Server is the primary operational data store, and Azure Blob Storage holds generated extract content. See [`database/sql-server.md`](../database/sql-server/) and [`storage/azure-blob-storage.md`](../storage/azure-blob-storage/).
+- `Managed Services` contains infrastructure used by this view. SQL Server is the primary operational data store, and Azure Blob Storage holds generated extract content. See [`database/sql-server.md`](./database/sql-server.md) and [`storage/azure-blob-storage.md`](./storage/azure-blob-storage.md).
 
 ## Scheduled batch operation components
 
@@ -199,13 +199,13 @@ C4Component
 - `Domain Services` still owns the business behaviour. Scheduled jobs call into the same service layer used elsewhere in the application.
 - `Extract & Download Services` this component generates extracts, prepares downloadable output, and handles extract-related operational tasks.
 - `Gov.Notify Client` is also used by scheduled and background processes to send emails, for example reminders, workflow notifications, and extract failure alerts.
-- `Azure Blob Storage` is where extract generation publishes output once local file creation is complete. See [`storage/azure-blob-storage.md`](../storage/azure-blob-storage/).
+- `Azure Blob Storage` is where extract generation publishes output once local file creation is complete. See [`storage/azure-blob-storage.md`](./storage/azure-blob-storage.md).
 
 ### Scope and assumptions
 
-- This diagram excludes external sync integrations such as Companies House, Ofsted, and UKRLP. Those are operational jobs in the codebase, but they are intentionally not part of this focused view.
+- This diagram excludes external sync integrations such as Companies House and UKRLP. Those are operational jobs in the codebase, but they are intentionally not part of this focused view.
 - The main purpose of this diagram is to show the internal flow: schedule/orchestrate, execute business logic, persist state, generate output, publish files.
-- SQL Server underpins the job state, callback metadata, and source data shown here, while Flyway governs the evolution of that database platform. See [`database/sql-server.md`](../database/sql-server/) and [`database/flyway-migrations.md`](../database/flyway-migrations/).
+- SQL Server underpins the job state, callback metadata, and source data shown here, while Flyway governs the evolution of that database platform. See [`database/sql-server.md`](./database/sql-server.md) and [`database/flyway-migrations.md`](./database/flyway-migrations.md).
 
 
 ## Reference data provider components
@@ -222,7 +222,6 @@ C4Component
     Container_Ext(os_ext, "Ordnance Survey", "External address lookup service")
 
     Container_Ext(companies_house_ext, "Companies House", "External company data service")
-    Container_Ext(ofsted_ext, "Ofsted", "External inspections data service")
     Container_Ext(ukrlp_ext, "UKRLP", "External provider reference data service")
     
 
@@ -235,8 +234,6 @@ C4Component
 
         Component(companiesHouse, "Companies House Integration", "Java / Spring Services", "Retrieves Companies House company<br> profiles and processes group update data")
         
-        Component(ofsted, "Ofsted Integration", "Java / Spring Services", "Retrieves inspection results and processes<br>Ofsted rating updates")
-        
         Component(persistence, "Persistence Layer", "DAO + Hibernate/JDBC", "Reads and writes application data")
     }
 
@@ -246,12 +243,10 @@ C4Component
     }
 
     Rel(companiesHouse, companies_house_ext, "Retrieves company profiles from", "HTTPS/JSON + Basic Auth")
-    Rel(ofsted, ofsted_ext, "Retrieves inspection results from", "HTTPS/JSON")
     Rel(os, os_ext, "Looks up postcode address data from", "HTTPS/JSON + API key")
     Rel(ukrlp, ukrlp_ext, "Retrieves provider data from", "SOAP")
 
     Rel(companiesHouse, persistence, "Uses")
-    Rel(ofsted, persistence, "Uses")
     Rel(ukrlp, persistence, "Uses")
     Rel(persistence, sql_server, "Writes to", "JDBC/Hibernate")
 
@@ -259,7 +254,6 @@ C4Component
     Rel(address_importer, sql_server, "Writes imported address data to")
 
     UpdateRelStyle(companiesHouse, persistence, $offsetX="0", $offsetY="0")
-    UpdateRelStyle(ofsted, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(os, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(ukrlp, persistence, $offsetX="0", $offsetY="0")
     UpdateRelStyle(persistence, sql_server, $offsetX="10", $offsetY="-40")
@@ -279,8 +273,8 @@ C4Component
 - Each integration component inside the `Edubase Java Application` boundary represents application-side logic owned by that application, not the upstream system itself.
 - The purpose of this diagram is to make the external dependencies explicit. In the larger component diagrams, these responsibilities would otherwise be hidden inside the general service layer.
 - `Persistence Layer` Retrieved data is compared against, mapped onto, or persisted into the application data model.
-- Companies House and Ofsted are HTTP-based integrations, and UKRLP is SOAP-based.
-- `Address Layer Import Application` is outside the Edubase boundary because the batch address import is a separate Java process, even though it ultimately writes data into the same SQL Server database used by Edubase.
+- Companies House is an HTTP-based integration, UKRLP is SOAP-based, and ONS geography data is represented by a batch/database import path.
+- `Address Layer Import Application` is outside the Edubase boundary because the batch address import is a separate Java process, even though it ultimately writes data into the same SQL Server database used by Edubase. ONS geography import is also database-centred, with `DataOpsJobs` import tables and SQL procedures rather than a live Java API client.
 
 ### Scope and assumptions
 
@@ -299,13 +293,13 @@ The diagrams above are intended to be read together rather than as alternatives:
 
 Related notes in this repository:
 
-- [Companies House integration](../integrations/companies-house-integration/)
-- Ofsted integration
-- [UKRLP integration](../integrations/ukrlp-integration/)
-- [Ordnance Survey integration](../integrations/ordnance-survey-integration/)
-- [GOV.UK Notify integration](../integrations/govuk-notify-integration/)
-- [SQL Server integration](../database/sql-server/)
-- [Flyway migration categories](../database/flyway-migrations/)
-- [Azure Blob Storage integration](../storage/azure-blob-storage/)
-- [GIAS front-end authentication flow](../../front-end-component/front-end-authentication-flow/)
+- [Companies House integration](./integrations/companies-house-integration.md)
+- [UKRLP integration](./integrations/ukrlp-integration.md)
+- [Ordnance Survey integration](./integrations/ordnance-survey-integration.md)
+- [ONS geography integration](./integrations/ons-geography-integration.md)
+- [GOV.UK Notify integration](./integrations/govuk-notify-integration.md)
+- [SQL Server integration](./database/sql-server.md)
+- [Flyway migration categories](./database/flyway-migrations.md)
+- [Azure Blob Storage integration](./storage/azure-blob-storage.md)
+- [GIAS front-end authentication flow](../front-end-component/front-end-authentication-flow.md)
 

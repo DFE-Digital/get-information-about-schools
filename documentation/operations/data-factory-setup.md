@@ -89,7 +89,7 @@ The Data Factory is a private-network consumer of the DFE T1 GIAS SQL logical se
 
 SQL linked services use SQL authentication with password values held in Azure Key Vault. `DSIUsersRest` shows authentication type `Anonymous`, with an `Authorization` header sourced from Azure Key Vault.
 
-No captured dataset or linked-service evidence shows use of `s158p01sagiasapid01`, `referencedata`, or `submissions`.
+No captured dataset or linked-service evidence shows use of the former GIAS API blob-storage path.
 
 ## Triggers
 

@@ -2,7 +2,7 @@ require_relative "lib/helpers"
 require_relative "lib/filters/govuk_markdown"
 
 compile "/**/*.md" do
-  filter :govuk_markdown
+  filter :govuk_markdown, source_identifier: @item.identifier.to_s
   layout "/default.*"
 end
 

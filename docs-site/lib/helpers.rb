@@ -14,7 +14,9 @@ module GiasDocumentationHelpers
   def home_href
     return "./index.html" if home_page?
 
-    depth = item.identifier.without_ext.to_s.split("/").reject(&:empty?).length
+    identifier_segments = item.identifier.without_ext.to_s.split("/").reject(&:empty?)
+    depth = identifier_segments.length
+    depth -= 1 if identifier_segments.last == "index"
     ("../" * depth) + "index.html"
   end
 
