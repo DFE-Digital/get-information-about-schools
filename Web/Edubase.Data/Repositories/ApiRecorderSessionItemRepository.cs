@@ -16,7 +16,6 @@ namespace Edubase.Data.Repositories
 
         public async Task CreateAsync(ApiRecorderSessionItem message) => await Table.ExecuteAsync(TableOperation.Insert(message));
 
-        // ADD:
         public async Task<Page<ApiRecorderSessionItem>> GetAllAsync(int take, TableContinuationToken skip = null)
         {
             var query = Table.CreateQuery<ApiRecorderSessionItem>().AsQueryable();
