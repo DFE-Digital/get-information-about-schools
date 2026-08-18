@@ -18,6 +18,10 @@ namespace Edubase.Data.Entity
         /// </summary>
         public double ElapsedMS { get; set; }
 
+        public ApiRecorderSessionItem()
+        {
+        }
+
         public ApiRecorderSessionItem(string sessionId, string requestPath)
         {
             PartitionKey = sessionId;
@@ -25,6 +29,6 @@ namespace Edubase.Data.Entity
             Path = requestPath;
         }
 
-        
+
     }
 }

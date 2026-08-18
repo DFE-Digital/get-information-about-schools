@@ -447,12 +447,14 @@
     <Compile Include="Areas\Groups\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
     <Compile Include="Areas\IGovernorsGridViewModelFactory.cs" />
     <Compile Include="Controllers\AmalgamateMergeController.cs" />
+    <Compile Include="Controllers\Api\ISqlApiRecorderSessionItemRepository.cs" />
     <Compile Include="Controllers\Api\ISqlDataQualityStatusRepository.cs" />
     <Compile Include="Controllers\Api\ISqlGlossaryItemRepository.cs" />
     <Compile Include="Controllers\Api\ISqlFaqGroupRepository.cs" />
     <Compile Include="Controllers\Api\ISqlLocalAuthoritySetRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
     <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
+    <Compile Include="Controllers\Api\SqlApiRecorderSessionItemRepository.cs" />
     <Compile Include="Controllers\Api\SqlDataQualityStatusRepository.cs" />
     <Compile Include="Controllers\Api\SqlGlossaryItemRepository.cs" />
     <Compile Include="Controllers\Api\SqlLocalAuthoritySetRepository.cs" />
@@ -500,6 +502,7 @@
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
+    <Compile Include="MigrationServices\ApiRecorderSessionItemsMigrationService.cs" />
     <Compile Include="MigrationServices\DataQualityStatusMigrationService.cs" />
     <Compile Include="MigrationServices\FaqGroupsMigrationService.cs" />
     <Compile Include="MigrationServices\FaqItemsMigrationService.cs" />
@@ -510,6 +513,7 @@
     <Compile Include="MigrationServices\NotificationTemplatesMigrationService.cs" />
     <Compile Include="MigrationServices\UserPreferencesMigrationService.cs" />
     <Compile Include="Models\Admin\LogsViewModel.cs" />
+    <Compile Include="Models\ApiRecorderSessionItemsDbContext.cs" />
     <Compile Include="Models\DataQualityStatusDbContext.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
@@ -594,6 +598,7 @@
     <Compile Include="Controllers\Api\AcademyOpeningsApiController.cs" />
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
     <Compile Include="Controllers\Api\SqlDataController.cs" />
+    <Compile Include="Models\SqlApiRecorderSessionItem.cs" />
     <Compile Include="Models\SqlDataQualityStatus.cs" />
     <Compile Include="Models\SqlFaqGroup.cs" />
     <Compile Include="Models\SqlFaqItem.cs" />
