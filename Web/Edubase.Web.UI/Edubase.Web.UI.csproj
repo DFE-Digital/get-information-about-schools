@@ -467,6 +467,8 @@
     <Compile Include="Controllers\Api\SqlFaqItemRepository.cs" />
     <Compile Include="Controllers\Api\SqlNotificationBannerRepository.cs" />
     <Compile Include="Controllers\Api\SqlNotificationTemplateRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlTokenRepository.cs" />
+    <Compile Include="Controllers\Api\SqlTokenRepository.cs" />
     <Compile Include="Controllers\Api\SqlUserPreferenceRepository.cs" />
     <Compile Include="Controllers\Api\UtilApiController.cs" />
     <Compile Include="Controllers\FaqController.cs" />
@@ -508,6 +510,7 @@
     <Compile Include="MigrationServices\NewsArticlesMigrationService.cs" />
     <Compile Include="MigrationServices\NotificationBannersMigrationService.cs" />
     <Compile Include="MigrationServices\NotificationTemplatesMigrationService.cs" />
+    <Compile Include="MigrationServices\TokensMigrationService.cs" />
     <Compile Include="MigrationServices\UserPreferencesMigrationService.cs" />
     <Compile Include="Models\Admin\LogsViewModel.cs" />
     <Compile Include="Models\DataQualityStatusDbContext.cs" />
@@ -602,7 +605,9 @@
     <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlNotificationBanner.cs" />
     <Compile Include="Models\SqlNotificationTemplate.cs" />
+    <Compile Include="Models\SqlToken.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
+    <Compile Include="Models\TokensDbContext.cs" />
     <Compile Include="Models\UserPreferencesDbContext.cs" />
     <Compile Include="Controllers\Api\UserRolesController.cs" />
     <Compile Include="Controllers\ChangeHistoryController.cs" />
