@@ -10,5 +10,6 @@ namespace Edubase.Web.UI.Controllers.Api
         SqlApiRecorderSessionItem Get(string partitionKey, string rowKey);
         Task<SqlApiRecorderSessionItem> GetAsync(string partitionKey, string rowKey);
         Task<IEnumerable<SqlApiRecorderSessionItem>> GetAllAsync();
+        Task UpsertBatchAsync(IList<SqlApiRecorderSessionItem> items);
     }
 }
