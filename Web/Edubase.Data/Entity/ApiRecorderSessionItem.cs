@@ -18,13 +18,13 @@ namespace Edubase.Data.Entity
         /// </summary>
         public double ElapsedMS { get; set; }
 
+        public ApiRecorderSessionItem() { }
+
         public ApiRecorderSessionItem(string sessionId, string requestPath)
         {
             PartitionKey = sessionId;
             RowKey = string.Concat(DateTime.UtcNow.ToString("yyyyMMdd-HHmmss"), "~~", requestPath.CleanOfNonChars(false, "-"), "~~", RandomNumber.Next(1, 10000));
             Path = requestPath;
         }
-
-        
     }
 }

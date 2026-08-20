@@ -27,6 +27,7 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly NotificationTemplatesMigrationService _sqlNotificationsTemplatesMigrationService;
         private readonly UserPreferencesMigrationService _userPreferencesMigrationService;
         private readonly DataQualityStatusMigrationService _dataQualityStatusMigrationService;
+        private readonly ApiRecorderSessionItemsMigrationService _apiRecorderSessionItemsMigrationService;
         public SqlDataController(
             IAzLogger logger,
 
@@ -40,6 +41,7 @@ namespace Edubase.Web.UI.Controllers.Api
             UserPreferencesMigrationService userPreferencesMigrationService,
             DataQualityStatusMigrationService dataQualityStatusMigrationService,
             TokensMigrationService tokensMigrationService)
+            ApiRecorderSessionItemsMigrationService apiRecorderSessionItemsMigrationService)
         {
             _logger = logger;
 
@@ -53,6 +55,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _userPreferencesMigrationService = userPreferencesMigrationService;
             _dataQualityStatusMigrationService = dataQualityStatusMigrationService;
             _tokensMigrationService = tokensMigrationService;
+            _apiRecorderSessionItemsMigrationService = apiRecorderSessionItemsMigrationService;
         }
 
 
@@ -201,6 +204,19 @@ namespace Edubase.Web.UI.Controllers.Api
             return Ok(new { migrated });
         }
 
+
+        [Route("api/migrate-api-recorder-session-items"), HttpPost]
+        public async Task<IHttpActionResult> MigrateApiRecorderSessionItemsAsync()
+        {
+            if (!Feature.IsEnabled("Feature_ApiRecorderSessionItemsMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = await _apiRecorderSessionItemsMigrationService.MigrateAsync();
+            return Ok(new { migrated });
+        }
+        
         [Route("api/migrate-tokens"), HttpPost]
         public async Task<IHttpActionResult> MigrateTokensAsync()
         {

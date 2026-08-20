@@ -238,6 +238,9 @@ namespace Edubase.Web.UI
             builder.RegisterType<UserPreferencesMigrationService>().SingleInstance();
             builder.RegisterType<TokensMigrationService>().SingleInstance();
 
+            builder.RegisterType<SqlApiRecorderSessionItemRepository>().As<ISqlApiRecorderSessionItemRepository>().SingleInstance();
+            builder.RegisterType<ApiRecorderSessionItemsMigrationService>().SingleInstance();
+
             builder.RegisterType<SqlDataQualityStatusRepository>().As<ISqlDataQualityStatusRepository>()
                 .SingleInstance();
             builder.RegisterType<DataQualityStatusMigrationService>().SingleInstance();
