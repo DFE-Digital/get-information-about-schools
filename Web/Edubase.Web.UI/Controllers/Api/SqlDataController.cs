@@ -40,7 +40,7 @@ namespace Edubase.Web.UI.Controllers.Api
             NotificationTemplatesMigrationService sqlNotificationsTemplatesMigrationService,
             UserPreferencesMigrationService userPreferencesMigrationService,
             DataQualityStatusMigrationService dataQualityStatusMigrationService,
-            TokensMigrationService tokensMigrationService)
+            TokensMigrationService tokensMigrationService,
             ApiRecorderSessionItemsMigrationService apiRecorderSessionItemsMigrationService)
         {
             _logger = logger;
@@ -216,7 +216,7 @@ namespace Edubase.Web.UI.Controllers.Api
             var migrated = await _apiRecorderSessionItemsMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
-        
+
         [Route("api/migrate-tokens"), HttpPost]
         public async Task<IHttpActionResult> MigrateTokensAsync()
         {
