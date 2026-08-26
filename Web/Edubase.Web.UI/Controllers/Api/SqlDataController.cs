@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Controllers.Api
         private readonly IAzLogger _logger;
         private readonly IUserPreferenceRepository _tableStorageUserPreferenceRepository;
         private readonly ISqlUserPreferenceRepository _sqlUserPreferenceRepository;
-
+        private readonly TokensMigrationService _tokensMigrationService;
         private readonly GlossaryItemsMigrationService _glossaryItemsMigrationService;
         private readonly FaqGroupsMigrationService _faqGroupsMigrationService;
         private readonly FaqItemsMigrationService _faqItemsMigrationService;
@@ -40,6 +40,7 @@ namespace Edubase.Web.UI.Controllers.Api
             NotificationTemplatesMigrationService sqlNotificationsTemplatesMigrationService,
             UserPreferencesMigrationService userPreferencesMigrationService,
             DataQualityStatusMigrationService dataQualityStatusMigrationService,
+            TokensMigrationService tokensMigrationService,
             ApiRecorderSessionItemsMigrationService apiRecorderSessionItemsMigrationService)
         {
             _logger = logger;
@@ -53,6 +54,7 @@ namespace Edubase.Web.UI.Controllers.Api
             _sqlNotificationsTemplatesMigrationService = sqlNotificationsTemplatesMigrationService;
             _userPreferencesMigrationService = userPreferencesMigrationService;
             _dataQualityStatusMigrationService = dataQualityStatusMigrationService;
+            _tokensMigrationService = tokensMigrationService;
             _apiRecorderSessionItemsMigrationService = apiRecorderSessionItemsMigrationService;
         }
 
@@ -202,6 +204,7 @@ namespace Edubase.Web.UI.Controllers.Api
             return Ok(new { migrated });
         }
 
+
         [Route("api/migrate-api-recorder-session-items"), HttpPost]
         public async Task<IHttpActionResult> MigrateApiRecorderSessionItemsAsync()
         {
@@ -211,6 +214,18 @@ namespace Edubase.Web.UI.Controllers.Api
             }
 
             var migrated = await _apiRecorderSessionItemsMigrationService.MigrateAsync();
+            return Ok(new { migrated });
+        }
+
+        [Route("api/migrate-tokens"), HttpPost]
+        public async Task<IHttpActionResult> MigrateTokensAsync()
+        {
+            if (!Feature.IsEnabled("Feature_TokensMigration"))
+            {
+                return NotFound();
+            }
+
+            var migrated = await _tokensMigrationService.MigrateAsync();
             return Ok(new { migrated });
         }
     }
