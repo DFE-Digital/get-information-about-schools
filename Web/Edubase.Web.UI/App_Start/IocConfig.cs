@@ -15,6 +15,7 @@ using AzureTableLogger;
 using AzureTableLogger.Services;
 using Edubase.Common;
 using Edubase.Common.Cache;
+using Edubase.Common.Config;
 using Edubase.Data;
 using Edubase.Data.Repositories;
 using Edubase.Services;
@@ -35,7 +36,6 @@ using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.IntegrationEndPoints.OSPlaces;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Services.Lookup;
-using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna.Approvals;
 using Edubase.Services.Texuna.ChangeHistory;
@@ -52,8 +52,9 @@ using Edubase.Web.UI.Areas;
 using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
-using Edubase.Web.UI.MigrationServices;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
+using Microsoft.Data.SqlClient;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
 
@@ -210,40 +211,12 @@ namespace Edubase.Web.UI
             builder.RegisterType<ChangeHistoryService>().As<IChangeHistoryService>();
 
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
-            builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
+            builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();            
 
             builder.RegisterType<DataQualityWriteService>().As<IDataQualityWriteService>();
             builder.RegisterType<DataQualityReadService>().As<IDataQualityReadService>();
-            builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
-            builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
-            builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
-            builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
-            builder.RegisterType<SqlUserPreferenceRepository>().As<ISqlUserPreferenceRepository>().SingleInstance();
-            builder.RegisterType<SqlNotificationTemplateRepository>().As<ISqlNotificationTemplateRepository>().SingleInstance();
-            builder.RegisterType<SqlLocalAuthoritySetRepository>().As<ISqlLocalAuthoritySetRepository>().SingleInstance();
-            builder.RegisterType<SqlNewsArticleRepository>().As<ISqlNewsArticleRepository>().SingleInstance();
-            builder.RegisterType<SqlNotificationBannerRepository>().As<ISqlNotificationBannerRepository>().SingleInstance();
-            builder.RegisterType<SqlFaqGroupRepository>().As<ISqlFaqGroupRepository>().SingleInstance();
-            builder.RegisterType<SqlFaqItemRepository>().As<ISqlFaqItemRepository>().SingleInstance();
-            builder.RegisterType<SqlGlossaryItemRepository>().As<ISqlGlossaryItemRepository>().SingleInstance();
-            builder.RegisterType<SqlTokenRepository>().As<ISqlTokenRepository>().SingleInstance();
 
-            builder.RegisterType<GlossaryItemsMigrationService>().SingleInstance();
-            builder.RegisterType<FaqGroupsMigrationService>().SingleInstance();
-            builder.RegisterType<FaqItemsMigrationService>().SingleInstance();
-            builder.RegisterType<LocalAuthoritySetsMigrationService>().SingleInstance();
-            builder.RegisterType<NewsArticlesMigrationService>().SingleInstance();
-            builder.RegisterType<NotificationBannersMigrationService>().SingleInstance();
-            builder.RegisterType<NotificationTemplatesMigrationService>().SingleInstance();
-            builder.RegisterType<UserPreferencesMigrationService>().SingleInstance();
-            builder.RegisterType<TokensMigrationService>().SingleInstance();
-
-            builder.RegisterType<SqlApiRecorderSessionItemRepository>().As<ISqlApiRecorderSessionItemRepository>().SingleInstance();
-            builder.RegisterType<ApiRecorderSessionItemsMigrationService>().SingleInstance();
-
-            builder.RegisterType<SqlDataQualityStatusRepository>().As<ISqlDataQualityStatusRepository>()
-                .SingleInstance();
-            builder.RegisterType<DataQualityStatusMigrationService>().SingleInstance();
+            RegisterRepositories(builder);
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
@@ -252,15 +225,7 @@ namespace Edubase.Web.UI
             builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>()
                 .InstancePerRequest();
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
-
-            builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<FaqGroupRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
+            
             builder.RegisterType<GovernorsGridViewModelFactory>().As<IGovernorsGridViewModelFactory>();
         }
 
@@ -488,5 +453,33 @@ namespace Edubase.Web.UI
 
             return client;
         }
+
+        private static void RegisterRepositories(ContainerBuilder builder)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["FrontEndDatabase"].ConnectionString;
+            builder.Register(c => new FrontEndDbContext(new SqlConnection(connectionString))).InstancePerRequest();
+
+            if (Feature.IsEnabled("Feature_UserPreferencesMigration"))
+            {
+                builder.RegisterType<SqlUserPreferenceRepository>().As<IUserPreferenceRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
+            }
+
+            builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
+            builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
+            builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();           
+            builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<FaqGroupRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
+
+        }      
     }
 }
