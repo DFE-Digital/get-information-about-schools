@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Data.Repositories;
 using Edubase.Web.UI.Controllers.Api;
@@ -26,23 +27,22 @@ namespace Edubase.Web.UI.MigrationServices
             do
             {
                 var page = await _tableStorageApiRecorderSessionItemRepository.GetAllAsync(int.MaxValue, continuationToken);
-                foreach (var item in page.Items)
+                var batch = page.Items.Select(item => new Models.SqlApiRecorderSessionItem
                 {
-                    await _sqlApiRecorderSessionItemRepository.UpsertAsync(new Models.SqlApiRecorderSessionItem
-                    {
-                        PartitionKey = item.PartitionKey,
-                        RowKey = item.RowKey,
-                        HttpMethod = item.HttpMethod,
-                        Path = item.Path,
-                        RequestHeaders = item.RequestHeaders,
-                        ResponseHeaders = item.ResponseHeaders,
-                        RawRequestBody = item.RawRequestBody,
-                        RawResponseBody = item.RawResponseBody,
-                        ElapsedTimeSpan = item.ElapsedTimeSpan,
-                        ElapsedMS = item.ElapsedMS
-                    });
-                    migrated++;
-                }
+                    PartitionKey = item.PartitionKey,
+                    RowKey = item.RowKey,
+                    HttpMethod = item.HttpMethod,
+                    Path = item.Path,
+                    RequestHeaders = item.RequestHeaders,
+                    ResponseHeaders = item.ResponseHeaders,
+                    RawRequestBody = item.RawRequestBody,
+                    RawResponseBody = item.RawResponseBody,
+                    ElapsedTimeSpan = item.ElapsedTimeSpan,
+                    ElapsedMS = item.ElapsedMS
+                }).ToList();
+
+                await _sqlApiRecorderSessionItemRepository.UpsertBatchAsync(batch);
+                migrated += batch.Count;
                 continuationToken = page.TableContinuationToken;
             }
             while (continuationToken != null);
