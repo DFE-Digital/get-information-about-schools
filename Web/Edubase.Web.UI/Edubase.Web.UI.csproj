@@ -687,6 +687,7 @@
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".well-known\security.txt" />
     <Content Include="403.aspx" />
     <Content Include="403.html" />
     <Content Include="500.aspx" />
