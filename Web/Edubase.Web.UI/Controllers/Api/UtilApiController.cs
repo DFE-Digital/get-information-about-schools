@@ -21,7 +21,7 @@ namespace Edubase.Web.UI.Controllers.Api
         {
             if (User.Identity.IsAuthenticated)
             {
-                var prefs = _userPreferenceRepository.Get(User.GetUserId()) ?? new Data.Entity.UserPreference(User.GetUserId());
+                var prefs = await _userPreferenceRepository.GetAsync(User.GetUserId()) ?? new Data.Entity.UserPreference(User.GetUserId());
                 prefs.SavedSearchToken = (string) payload.token;
                 await _userPreferenceRepository.UpsertAsync(prefs);
                 return StatusCode(System.Net.HttpStatusCode.NoContent);
