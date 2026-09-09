@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
-using Edubase.Web.UI.Models;
+using Edubase.Data.Repositories.EF;
 
 namespace Edubase.Web.UI.Controllers.Api
 {

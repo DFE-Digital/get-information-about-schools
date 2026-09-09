@@ -1,9 +1,8 @@
 using System.Data.Common;
 using System.Data.Entity;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories.EF;
 
-namespace Edubase.Web.UI.Models
+namespace Edubase.Data.Repositories.EF
 {
     public class FrontEndDbContext : DbContext
     {               

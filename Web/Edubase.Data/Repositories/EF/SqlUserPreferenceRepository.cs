@@ -1,9 +1,7 @@
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories;
-using Edubase.Web.UI.Models;
 using System.Threading.Tasks;
 
-namespace Edubase.Web.UI.Controllers.Api
+namespace Edubase.Data.Repositories.EF
 {
     public class SqlUserPreferenceRepository : IUserPreferenceRepository
     {
