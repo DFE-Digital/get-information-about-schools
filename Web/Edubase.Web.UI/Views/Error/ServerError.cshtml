@@ -1,0 +1,21 @@
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.SiteSection = "500";
+    //Response.SetStatus(500);
+
+    //var errorCode = HttpContext.Current.Items["edubase_error_code"];
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Sorry, there is a problem with the service</h1>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        <p>Try again later.</p>
+
+        @if (ViewBag.EdubaseErrorCode != null)
+        {
+            <p style="color:#ddd;">Error code: @ViewBag.EdubaseErrorCode></p>
+        }
+    </div>
+</div>

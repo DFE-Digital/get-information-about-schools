@@ -6,6 +6,7 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Security.Policy;
 using System.Web;
+using System.Web.Http.Filters;
 using Azure.Data.Tables;
 using Edubase.Common.Cache;
 using Edubase.Data;
@@ -76,6 +77,9 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using Sustainsys.Saml2.AspNetCore2;
+using Edubase.Web.UI.Filters;
+using Microsoft.Extensions.Logging;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -171,6 +175,15 @@ static HttpClient CreateOSPlacesClient(IConfiguration configuration)
     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
     return client;
 }
+
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+//builder.Services
+//    .AddOpenTelemetry()
+//    .UseAzureMonitor(options =>
+//    {
+//        options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+//    });
 
 builder.Services.AddDistributedMemoryCache();                               // Required for ASP.NET Core session
 builder.Services.AddSession();                                              // ASP.NET Core session middleware
@@ -435,6 +448,7 @@ builder.Services.AddScoped<IGovernorsWriteService>(provider =>
     return new GovernorsWriteApiService(defaultWrapper);
 });
 
+
 // -------------------- Authentication --------------------
 //
 // Determines whether the simulator SAML2 authentication flow should be used.
@@ -514,15 +528,17 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
+//if (!app.Environment.IsDevelopment())
+//{
     app.UseExceptionHandler("/error"); // Optional: route to a custom error page
     app.UseHsts();
-}
-else
-{
-    app.UseDeveloperExceptionPage();
-}
+//}
+//else
+//{
+//    app.UseDeveloperExceptionPage();
+//}
+
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 if (!app.Environment.IsDevelopment())
 {
@@ -550,8 +566,6 @@ app.UseSession();           // Enables session state
 app.UseSession();
 app.MapControllers()
     .RequireSystemWebAdapterSession();
-
-app.UseDeveloperExceptionPage();
 
 HtmlHelperExtensions.WebRootPath = app.Environment.WebRootPath;
 
