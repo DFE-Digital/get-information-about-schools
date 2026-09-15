@@ -43,7 +43,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
 
             var controller = CreateController(repository);
 
-            var result = await controller.LaNameCodes() as ViewResult;
+            var result = Assert.IsType<ViewResult> (await controller.LaNameCodes());
             var model = Assert.IsType<GuidanceLaNameCodeViewModel>(result.Model);
 
             var english = Assert.Single(model.EnglishLas);
@@ -70,7 +70,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
 
             var controller = CreateController(repository);
 
-            var result = await controller.LaNameCodes() as ViewResult;
+            var result = Assert.IsType<ViewResult> (await controller.LaNameCodes());
             var model = Assert.IsType<GuidanceLaNameCodeViewModel>(result.Model);
 
             Assert.Empty(model.EnglishLas);
@@ -85,7 +85,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
 
             var controller = CreateController(repository);
 
-            var result = await controller.LaNameCodes() as ViewResult;
+            var result = Assert.IsType<ViewResult> (await controller.LaNameCodes());
             var model = Assert.IsType<GuidanceLaNameCodeViewModel>(result.Model);
 
             Assert.Single(model.EnglishLas);
@@ -100,7 +100,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
 
             var controller = CreateController(repository);
 
-            var result = await controller.LaNameCodes() as ViewResult;
+            var result = Assert.IsType<ViewResult> (await controller.LaNameCodes());
             var model = Assert.IsType<GuidanceLaNameCodeViewModel>(result.Model);
 
             Assert.Empty(model.EnglishLas);
@@ -117,7 +117,6 @@ namespace Edubase.Web.UIUnitTests.Controllers
             var controller = CreateController(mock.Object);
 
             await controller.LaNameCodes();
-
             mock.Verify(x => x.GetAllAsync(), Times.Once);
         }
     }
