@@ -59,5 +59,28 @@ namespace Edubase.Web.UI.Controllers.Api
                 return await context.ApiRecorderSessionItems.ToListAsync();
             }
         }
+
+        public async Task UpsertBatchAsync(IList<SqlApiRecorderSessionItem> items)
+        {
+            using (var context = new ApiRecorderSessionItemsDbContext(new SqlConnection(BuildConnectionString())))
+            {
+                foreach (var item in items)
+                {
+                    if (string.IsNullOrWhiteSpace(item.PartitionKey))
+                        item.PartitionKey = string.Empty;
+
+                    var existing = await context.ApiRecorderSessionItems.FindAsync(item.PartitionKey, item.RowKey);
+                    if (existing == null)
+                    {
+                        context.ApiRecorderSessionItems.Add(item);
+                    }
+                    else
+                    {
+                        context.Entry(existing).CurrentValues.SetValues(item);
+                    }
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
     }
 }
