@@ -158,6 +158,9 @@
     <Compile Include="Entity\UserPreference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
+    <Compile Include="Repositories\EF\FrontEndDbContext.cs" />
+    <Compile Include="Repositories\EF\SqlUserPreferenceRepository.cs" />
+    <Compile Include="Repositories\EF\UserPreferenceConfiguration.cs" />
     <Compile Include="Repositories\WebLogItemRepository.cs" />
     <Compile Include="Repositories\FaqGroupRepository.cs" />
     <Compile Include="Repositories\FaqItemRepository.cs" />
