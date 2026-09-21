@@ -451,12 +451,14 @@
     <Compile Include="Controllers\Api\ISqlDataQualityStatusRepository.cs" />
     <Compile Include="Controllers\Api\ISqlGlossaryItemRepository.cs" />
     <Compile Include="Controllers\Api\ISqlFaqGroupRepository.cs" />
+    <Compile Include="Controllers\Api\ISqlLaNameCodeRepository.cs" />
     <Compile Include="Controllers\Api\ISqlLocalAuthoritySetRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
     <Compile Include="Controllers\Api\ISqlUserPreferenceRepository.cs" />
     <Compile Include="Controllers\Api\SqlApiRecorderSessionItemRepository.cs" />
     <Compile Include="Controllers\Api\SqlDataQualityStatusRepository.cs" />
     <Compile Include="Controllers\Api\SqlGlossaryItemRepository.cs" />
+    <Compile Include="Controllers\Api\SqlLaNameCodeRepository.cs" />
     <Compile Include="Controllers\Api\SqlLocalAuthoritySetRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNewsArticleRepository.cs" />
     <Compile Include="Controllers\Api\ISqlNotificationTemplateRepository.cs" />
@@ -528,6 +530,7 @@
     <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
     <Compile Include="Models\Guidance\LaNameCodes.cs" />
     <Compile Include="Controllers\Api\ISqlFaqItemRepository.cs" />
+    <Compile Include="Models\LaNameCodesDbContext.cs" />
     <Compile Include="Models\LocalAuthoritySetsDbContext.cs" />
     <Compile Include="Models\NewsArticlesDbContext.cs" />
     <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
@@ -606,6 +609,7 @@
     <Compile Include="Models\SqlFaqGroup.cs" />
     <Compile Include="Models\SqlFaqItem.cs" />
     <Compile Include="Models\SqlGlossaryItems.cs" />
+    <Compile Include="Models\SqlLaNameCode.cs" />
     <Compile Include="Models\SqlLocalAuthoritySet.cs" />
     <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlNotificationBanner.cs" />

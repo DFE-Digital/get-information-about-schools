@@ -238,6 +238,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<UserPreferencesMigrationService>().SingleInstance();
             builder.RegisterType<TokensMigrationService>().SingleInstance();
 
+            builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
+
             builder.RegisterType<SqlApiRecorderSessionItemRepository>().As<ISqlApiRecorderSessionItemRepository>().SingleInstance();
             builder.RegisterType<ApiRecorderSessionItemsMigrationService>().SingleInstance();
 

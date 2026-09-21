@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Edubase.Services;
+using Edubase.Web.UI.Controllers.Api;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Guidance;
 
 namespace Edubase.Web.UI.Controllers
@@ -16,14 +18,21 @@ namespace Edubase.Web.UI.Controllers
     public class GuidanceController : EduBaseController
     {
         private readonly IBlobService _blobService;
+        private readonly ISqlLaNameCodeRepository _laNameCodeRepository;
         private const string GUIDANCE_CONTAINER = "guidance";
         private const string ENGLISH_LA_NAME_CODES = "EnglishLaNameCodes.csv";
         private const string WELSH_LA_NAME_CODES = "WelshLaNameCodes.csv";
         private const string OTHER_LA_NAME_CODES = "OtherLaNameCodes.csv";
 
-        public GuidanceController(IBlobService blobService)
+        private static readonly Dictionary<string, string> GroupCodes = new Dictionary<string, string>
+        {
+            { "EnglishLaNameCodes", "english" }, { "WelshLaNameCodes", "welsh" }, { "OtherLaNameCodes", "other" }
+        };
+
+        public GuidanceController(IBlobService blobService, ISqlLaNameCodeRepository laNameCodeRepository)
         {
             _blobService = blobService;
+            _laNameCodeRepository = laNameCodeRepository;
         }
 
         [Route(Name = "Guidance")]
@@ -36,11 +45,13 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task<ActionResult> LaNameCodes()
         {
+            var all = await _laNameCodeRepository.GetAllAsync();
+
             return View(new GuidanceLaNameCodeViewModel()
             {
-                EnglishLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, ENGLISH_LA_NAME_CODES),
-                WelshLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, WELSH_LA_NAME_CODES),
-                OtherLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, OTHER_LA_NAME_CODES),
+                EnglishLas = MapByGroup(all, GroupCodes["EnglishLaNameCodes"]),
+                WelshLas = MapByGroup(all, GroupCodes["WelshLaNameCodes"]),
+                OtherLas = MapByGroup(all, GroupCodes["OtherLaNameCodes"])
             });
         }
 
@@ -90,29 +101,12 @@ namespace Edubase.Web.UI.Controllers
             };
         }
 
-
-        private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
+        private static List<LaNameCodes> MapByGroup(IEnumerable<SqlLaNameCode> source, string groupCode)
         {
-            var blob = _blobService.GetBlobReference(container, file);
-
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = false,
-            };
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await blob.DownloadToStreamAsync(memoryStream);
-                memoryStream.Position = 0;
-                using (var reader = new StreamReader(memoryStream))
-                using (var csv = new CsvReader(reader, config))
-                {
-                    csv.Read();
-                    var records = csv.GetRecords<LaNameCodes>().ToList();
-
-                    return records;
-                }
-            }
+            return source
+                .Where(x => x.GroupCode == groupCode)
+                .Select(x => new LaNameCodes { LaName = x.LaName, LaCode = x.LaCode, OnsLaCode = x.GsLaCode })
+                .ToList();
         }
     }
 }
