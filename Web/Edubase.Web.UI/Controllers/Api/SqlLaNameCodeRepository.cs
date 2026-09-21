@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 GetType().Name);
         }
 
-        private async Task<List<SqlLaNameCode>> QueryAllAsync()
+        private static async Task<List<SqlLaNameCode>> QueryAllAsync()
         {
             using (var context = new LaNameCodesDbContext(new SqlConnection(BuildConnectionString())))
             {
@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Controllers.Api
             }
         }
 
-        private async Task<List<SqlLaNameCode>> QueryByGroupAsync(string groupCode)
+        private static async Task<List<SqlLaNameCode>> QueryByGroupAsync(string groupCode)
         {
             using (var context = new LaNameCodesDbContext(new SqlConnection(BuildConnectionString())))
             {
