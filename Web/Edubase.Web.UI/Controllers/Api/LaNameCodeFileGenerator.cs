@@ -73,12 +73,12 @@ namespace Edubase.Web.UI.Controllers.Api
                 var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
 
                 var sheetData = new SheetData();
-                sheetData.Append(CreateTextRow(1, nameColumnHeader, GiasColumnHeader, OnsColumnHeader));
+                sheetData.AppendChild(CreateTextRow(1, nameColumnHeader, GiasColumnHeader, OnsColumnHeader));
 
                 uint rowIndex = 2;
                 foreach (var row in rows)
                 {
-                    sheetData.Append(CreateTextRow(rowIndex++, row.LaName, row.LaCode, row.OnsLaCode));
+                    sheetData.AppendChild(CreateTextRow(rowIndex++, row.LaName, row.LaCode, row.OnsLaCode));
                 }
 
                 worksheetPart.Worksheet = new Worksheet(
@@ -88,7 +88,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     sheetData);
 
                 var sheets = workbookPart.Workbook.AppendChild(new Sheets());
-                sheets.Append(new Sheet
+                sheets.AppendChild(new Sheet
                 {
                     Id      = workbookPart.GetIdOfPart(worksheetPart),
                     SheetId = 1,
@@ -107,11 +107,13 @@ namespace Edubase.Web.UI.Controllers.Api
             var row = new Row { RowIndex = rowIndex };
             foreach (var value in values)
             {
-                row.Append(new Cell(
-                    new InlineString(new Text(value ?? string.Empty)))
-                {
-                    DataType = CellValues.InlineString
-                });
+                var inlineString = new InlineString();
+                inlineString.AppendChild(new Text(value ?? string.Empty));
+
+                var cell = new Cell { DataType = CellValues.InlineString };
+                cell.AppendChild(inlineString);
+
+                row.AppendChild(cell);
             }
             return row;
         }
