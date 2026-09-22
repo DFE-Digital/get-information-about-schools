@@ -22,16 +22,18 @@ namespace Edubase.AcceptanceTests.Establishments
             urn = p0;
         }
 
-        [When("Establishment {string} is requested")]
-        public async Task WhenEstablishmentIsRequested(int p0)
+        [When("Establishment with URN {string} is requested")]
+        public async Task WhenEstablishmentWithURNIsRequested(int p0)
         {
             using (var httpClient = new HttpClient())
             {
-                //httpClient.BaseAddress = new Uri("localhost:44309");
+                httpClient.BaseAddress = new Uri("https://localhost:44309");
 
-                //var response = await httpClient.GetAsync($"api.example.com/establishments/{urn}");
+                var response = await httpClient.GetAsync($"api/establishment/{urn}");
 
+                var content = await response.Content.ReadAsStringAsync();
                 //establishment = await response.Content.ReadFromJsonAsync<Establishment>();
+
 
                 establishment = new Establishment
                 {

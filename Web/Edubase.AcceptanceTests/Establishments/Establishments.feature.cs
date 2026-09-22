@@ -158,7 +158,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
 await testRunner.GivenAsync("Establishment with URN \"123\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 5
-await testRunner.WhenAsync("Establishment \"123\" is requested", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+await testRunner.WhenAsync("Establishment with URN \"123\" is requested", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 6
 await testRunner.ThenAsync("the Establishment URN is \"123\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
