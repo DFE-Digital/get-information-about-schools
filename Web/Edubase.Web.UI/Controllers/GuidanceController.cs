@@ -18,21 +18,21 @@ namespace Edubase.Web.UI.Controllers
     public class GuidanceController : EduBaseController
     {
         private readonly IBlobService _blobService;
-        private readonly ISqlLaNameCodeRepository _laNameCodeRepository;
-        private const string GUIDANCE_CONTAINER = "guidance";
-        private const string ENGLISH_LA_NAME_CODES = "EnglishLaNameCodes.csv";
-        private const string WELSH_LA_NAME_CODES = "WelshLaNameCodes.csv";
-        private const string OTHER_LA_NAME_CODES = "OtherLaNameCodes.csv";
+        private readonly ISqlLaNameCodeRepository  _laNameCodeRepository;
+        private readonly ILaNameCodeFileGenerator _fileGenerator;
 
         private static readonly Dictionary<string, string> GroupCodes = new Dictionary<string, string>
         {
             { "EnglishLaNameCodes", "english" }, { "WelshLaNameCodes", "welsh" }, { "OtherLaNameCodes", "other" }
         };
 
-        public GuidanceController(IBlobService blobService, ISqlLaNameCodeRepository laNameCodeRepository)
+        public GuidanceController(IBlobService blobService,
+            ISqlLaNameCodeRepository laNameCodeRepository,
+            ILaNameCodeFileGenerator fileGenerator)
         {
             _blobService = blobService;
             _laNameCodeRepository = laNameCodeRepository;
+            _fileGenerator = fileGenerator;
         }
 
         [Route(Name = "Guidance")]
@@ -70,21 +70,27 @@ namespace Edubase.Web.UI.Controllers
         [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload", Name = "LaNameCodesGenerateDownload"), ValidateAntiForgeryToken]
         public async Task<ActionResult> LaNameCodesGenerateDownload(GuidanceLaNameCodeViewModel viewModel)
         {
-            var blobName = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();
+            if (viewModel.DownloadName == null ||
+                !GroupCodes.TryGetValue(viewModel.DownloadName, out var groupCode) ||
+                !viewModel.FileFormat.HasValue)
+            {
+                return View("Error");
+            }
 
-            var memoryStream = new MemoryStream();
+            var fileName = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();
 
             try
             {
-                var blob = _blobService.GetBlobReference(GUIDANCE_CONTAINER, blobName);
+                var entities = await _laNameCodeRepository.GetByGroupAsync(groupCode);
 
-                blob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
-                memoryStream.Position = 0;
-
-                TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(memoryStream, blobName);
+                using (var fileStream = _fileGenerator.Generate(Map(entities), viewModel.FileFormat.Value,
+                           ToNameColumnHeader(viewModel.DownloadName)))
+                {
+                    TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(fileStream, fileName);
+                    TempData["DownloadFileName"] = viewModel.DownloadName + ".zip";
+                }
 
                 return View("ReadyToDownload");
-
             }
             catch (Exception)
             {
@@ -97,17 +103,25 @@ namespace Edubase.Web.UI.Controllers
         {
             return new FileStreamResult((MemoryStream) TempData["ArchivedBlob"], "application/octet-stream")
             {
-                FileDownloadName = "Results.zip"
+                FileDownloadName = TempData["DownloadFileName"] as string ?? "Results.zip"
             };
         }
 
         private static List<LaNameCodes> MapByGroup(IEnumerable<SqlLaNameCode> source, string groupCode)
         {
+            return Map(source.Where(x => x.GroupCode == groupCode));
+        }
+
+        private static List<LaNameCodes> Map(IEnumerable<SqlLaNameCode> source)
+        {
             return source
-                .Where(x => x.GroupCode == groupCode)
                 .Select(x => new LaNameCodes { LaName = x.LaName, LaCode = x.LaCode, OnsLaCode = x.GsLaCode })
                 .ToList();
         }
+
+        private static string ToNameColumnHeader(string downloadName)
+        {
+            return downloadName.Replace("LaNameCodes", "") + " local authority (LA) name";
+        }
     }
 }
-
