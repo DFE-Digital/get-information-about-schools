@@ -1,4 +1,7 @@
 using System.Net.Http.Json;
+using Edubase.AcceptanceTests.Authentication;
+using Newtonsoft.Json;
+using Reqnroll.CommonModels;
 using Xunit;
 
 namespace Edubase.AcceptanceTests.Establishments
@@ -15,33 +18,52 @@ namespace Edubase.AcceptanceTests.Establishments
     {
         private int urn;
         private Establishment establishment;
-    
+
         [Given("Establishment with URN {string} exists")]
         public void GivenEstablishmentWithURNExists(int p0)
         {
             urn = p0;
         }
 
+        public class EstablishmentResponse
+        {
+            public string status;
+
+            public class ReturnValue
+            {
+                public string name;
+                public string typeName;
+                public string urn;
+            }
+
+            public ReturnValue returnValue;
+        }
+
+
         [When("Establishment with URN {string} is requested")]
         public async Task WhenEstablishmentWithURNIsRequested(int p0)
         {
-            using (var httpClient = new HttpClient())
+            var appSettings = new AppSettings();
+
+            //var client = new AuthenticatedHttpClient(appSettings).AuthenicatedClient();
+            var client = new HttpClient();
+
+            var signinSimulator = new LoginSignInSimulator(client, appSettings.UserConfig());
+
+            var response = await client.GetAsync($"https://localhost:44309/api/establishment/{urn}");
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var establishmentResponse = JsonConvert.DeserializeObject<EstablishmentResponse>(json);
+
+            establishment = new Establishment
             {
-                httpClient.BaseAddress = new Uri("https://localhost:44309");
+                Name = establishmentResponse.returnValue.name,
+                TypeName = establishmentResponse.returnValue.typeName,
+                Urn = int.Parse(establishmentResponse.returnValue.urn)
+            };
 
-                var response = await httpClient.GetAsync($"api/establishment/{urn}");
-
-                var content = await response.Content.ReadAsStringAsync();
-                //establishment = await response.Content.ReadFromJsonAsync<Establishment>();
-
-
-                establishment = new Establishment
-                {
-                    Name = "Name",
-                    Urn = urn,
-                    TypeName = "TypeName"
-                };
-            }
+            response.EnsureSuccessStatusCode();
         }
 
         [Then("the Establishment URN is {string}")]
@@ -50,16 +72,16 @@ namespace Edubase.AcceptanceTests.Establishments
             Assert.Equal(p0, establishment.Urn);
         }
 
-        [Then("the Establishment Name is not empty")]
-        public void ThenTheEstablishmentNameIsNotEmpty()
+        [Then("the Establishment Name is {string}")]
+        public void ThenTheEstablishmentNameIsNotEmpty(string p0)
         {
-            Assert.NotEmpty(establishment.Name);
+            Assert.Equal(p0, establishment.Name);
         }
 
-        [Then("the Establishment Type is not empty")]
-        public void ThenTheEstablishmentTypeIsNotEmpty()
+        [Then("the Establishment Type is {string}")]
+        public void ThenTheEstablishmentTypeIsNotEmpty(string p0)
         {
-            Assert.NotEmpty(establishment.TypeName);
+            Assert.Equal(p0, establishment.TypeName);
         }
     }
 }

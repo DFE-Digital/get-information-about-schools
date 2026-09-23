@@ -1,0 +1,46 @@
+namespace Edubase.AcceptanceTests.Authentication
+{
+    public sealed class AppSettings
+    {
+        public ApiOptions ApiConfig()
+        {
+            return new ApiOptions();
+        }
+
+        public TestOptions TestConfig()
+        {
+            return new TestOptions();
+        }
+
+        public UserOptions UserConfig()
+        {
+            var userCredentials = new UserCredentials
+            {
+                NameId = "user_20170322155311_3600154",
+                AttributeStatementValue = "3600154",
+                Comment = "GIAS Backoffice - TESTER ONLY"
+            };
+
+            return new UserOptions
+            {
+                Users = new Dictionary<string, UserCredentials>
+                {
+                    { userCredentials.NameId, userCredentials }
+                }
+            };
+        }
+
+        public WebOptions WebConfig()
+        {
+            return new WebOptions
+            {
+                Scheme = "https",
+                Domain = "localhost",
+                Port = 44309,
+                BasicAuthEnabled = false,
+                Username = "rest-api-user",
+                Password = "D9AhFU7Lfg4obErDO"                
+            };
+        }
+    }
+}

@@ -1,4 +1,3 @@
-using Reqnroll.CommonModels;
 using Xunit;
 
 namespace Edubase.AcceptanceTests.StepDefinitions
