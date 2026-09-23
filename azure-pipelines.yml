@@ -14,7 +14,8 @@ trigger:
       ##  - dev/sandbox environments are controlled via `variables` which can conditionally run the stage based on logic such as branch name.
       ##  - higher-than-dev must first go via dev, and then be manually approved/promoted to higher environments.
       - '*'
-
+    exclude:
+      - acceptance-tests
 
 pool:
   vmImage: 'windows-latest'
