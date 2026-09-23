@@ -83,14 +83,14 @@ namespace Edubase.Web.UI.Controllers
             {
                 var entities = await _laNameCodeRepository.GetByGroupAsync(groupCode);
 
-                var fileStream = _fileGenerator.Generate(Map(entities), viewModel.FileFormat.Value,
-                    ToNameColumnHeader(viewModel.DownloadName));
-
-                TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(fileStream, fileName);
-                TempData["DownloadFileName"] = viewModel.DownloadName + ".zip";
+                using (var fileStream = _fileGenerator.Generate(Map(entities), viewModel.FileFormat.Value,
+                           ToNameColumnHeader(viewModel.DownloadName)))
+                {
+                    TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(fileStream, fileName);
+                    TempData["DownloadFileName"] = viewModel.DownloadName + ".zip";
+                }
 
                 return View("ReadyToDownload");
-
             }
             catch (Exception)
             {
