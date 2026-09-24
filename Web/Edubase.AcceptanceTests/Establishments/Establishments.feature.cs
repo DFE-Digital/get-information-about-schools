@@ -155,18 +155,21 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             {
                 await this.ScenarioStartAsync();
 #line 4
-await testRunner.GivenAsync("Establishment with URN \"141491\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+await testRunner.GivenAsync("a back office user is signed in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 5
-await testRunner.WhenAsync("Establishment with URN \"141491\" is requested", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+await testRunner.AndAsync("an Establishment with URN \"141491\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 6
-await testRunner.ThenAsync("the Establishment URN is \"141491\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+await testRunner.WhenAsync("the user requests the Establishment with URN \"141491\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 7
-await testRunner.AndAsync("the Establishment Name is \"Landau Forte Academy Tamworth Sixth Form1\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+await testRunner.ThenAsync("the Establishment URN is \"141491\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 8
+await testRunner.AndAsync("the Establishment Name is \"Landau Forte Academy Tamworth Sixth Form1\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 9
 await testRunner.AndAsync("the Establishment Type is \"Academy 16 to 19 sponsor led\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }

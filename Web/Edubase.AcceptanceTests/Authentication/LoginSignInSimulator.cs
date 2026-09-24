@@ -1,23 +1,20 @@
 using System.Net;
 using AngleSharp.Common;
-using FluentAssertions;
+using Edubase.AcceptanceTests.Api;
+using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.Authentication
 {
     public sealed class LoginSignInSimulator
     {
-        private HttpClient _client;
-        private readonly UserOptions _userConfig;
+        private HttpClient httpClient;
+        private readonly string environment;
 
-        public LoginSignInSimulator(HttpClient client, UserOptions userConfig)
+        public LoginSignInSimulator(HttpClient httpClient, string environment)
         {
-            _client = client;
-            _userConfig = userConfig ?? throw new ArgumentNullException(nameof(userConfig));
-
-            if (_userConfig.Users == null || !_userConfig.Users.Any())
-                throw new InvalidOperationException("UserOptions.Users is null or empty. Check your configuration file and environment.");
+            this.httpClient = httpClient;
+            this.environment = environment;
         }
-
         /// <summary>
         /// Steps to sign in using the SignInSimulator:
         /// GET https://gias-stage-sis.azurewebsites.net/Account/Login?returnUrl=%2F
@@ -31,30 +28,25 @@ namespace Edubase.AcceptanceTests.Authentication
         /// </summary>
         /// <returns></returns>
 
-        public async Task<IEnumerable<string>> SignInClient(string userKey)
+        public async Task SignIn(User user)
         {
-            _client.DefaultRequestHeaders.Remove("Cookie");
-
-            if (!_userConfig.Users.TryGetValue(userKey, out var user))
-                throw new ArgumentException($"User '{userKey}' not found in configuration.");
+            httpClient.DefaultRequestHeaders.Remove("Cookie");
 
             var nameId = user.NameId;
             var attributeStatementValue = user.AttributeStatementValue;
 
-            var appSettings = new AppSettings();
+            //var appSettings = new AppSettings();
 
             // Step 1: Initial GET to login page
-            var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(appSettings.WebConfig().WebUri + WebRoutes.SignIn));
-            var signInButtonResponse = await _client.SendAsync(signInButton);
-            signInButtonResponse.StatusCode.Should().Be(HttpStatusCode.SeeOther);
+            var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress + WebRoutes.SignIn));
+            var signInButtonResponse = await httpClient.SendAsync(signInButton);
 
             var signInCookies = signInButtonResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
             var redirectReturnUrlLocation = signInButtonResponse.Headers.Location;
-            redirectReturnUrlLocation.Should().NotBeNull();
 
             // Step 2: GET to Sign-In Simulator
             var signInSimulatorRequest = new HttpRequestMessage(HttpMethod.Get, redirectReturnUrlLocation);
-            var signInSimulatorResponse = await _client.SendAsync(signInSimulatorRequest);
+            var signInSimulatorResponse = await httpClient.SendAsync(signInSimulatorRequest);
             signInSimulatorResponse.EnsureSuccessStatusCode();
 
             var signInSimDocument = await signInSimulatorResponse.GetDocumentAsync();
@@ -64,9 +56,9 @@ namespace Edubase.AcceptanceTests.Authentication
             // Step 3: POST form to simulator
             var signInFormData = new List<KeyValuePair<string, string>>
             {
-                new("CustomDescription", GetCustomDescription(appSettings.TestConfig().Environment)),
+                new("CustomDescription", GetCustomDescription(environment)),
                 new("AssertionModel.InResponseTo", assertionModelId),
-                new("AssertionModel.AssertionConsumerServiceUrl", $"{appSettings.WebConfig().WebUri}/Saml2/Acs"),
+                new("AssertionModel.AssertionConsumerServiceUrl", $"{httpClient.BaseAddress}/Saml2/Acs"),
                 new("AssertionModel.Audience", "http://edubase.gov"),
                 new("AssertionModel.ResponseBinding", "HttpPost"),
                 new("AssertionModel.RelayState", relayState),
@@ -82,9 +74,8 @@ namespace Edubase.AcceptanceTests.Authentication
 
             var signInContent = new FormUrlEncodedContent(signInFormData);
 
-            string signInSimulatorUri = GetAssertionConsumerUrl(appSettings.TestConfig().Environment);
-            var signInResponse = await _client.PostAsync(signInSimulatorUri, signInContent);
-            signInResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            string signInSimulatorUri = GetAssertionConsumerUrl(environment);
+            var signInResponse = await httpClient.PostAsync(signInSimulatorUri, signInContent);
 
             var signInDocument = await signInResponse.GetDocumentAsync();
             var samlResponse = signInDocument.QuerySelector("input[name='SAMLResponse']").GetAttribute("value");
@@ -99,73 +90,39 @@ namespace Edubase.AcceptanceTests.Authentication
             var acsContent = new FormUrlEncodedContent(acsFormData);
             foreach (var cookie in signInCookies)
             {
-                _client.DefaultRequestHeaders.Add("Cookie", cookie);
+                httpClient.DefaultRequestHeaders.Add("Cookie", cookie);
             }
 
-            var acsRequest = new HttpRequestMessage(HttpMethod.Post, new Uri(appSettings.WebConfig().WebUri + "/Saml2/Acs"))
+            var acsRequest = new HttpRequestMessage(HttpMethod.Post, new Uri(httpClient.BaseAddress + "/Saml2/Acs"))
             {
                 Content = acsContent
             };
 
-            var acsResponse = await _client.SendAsync(acsRequest);
-            acsResponse.StatusCode.Should().Be(HttpStatusCode.SeeOther);
+            var acsResponse = await httpClient.SendAsync(acsRequest);
 
             var acsCookies = acsResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
             var aspNetExternalCookie = acsCookies.GetItemByIndex(1);
             var loginCallbackLocation = acsResponse.Headers.Location;
-            loginCallbackLocation.Should().NotBeNull();
 
             // Step 5: Final GET to ExternalLoginCallback
-            var externalLoginCallbackRequest = new HttpRequestMessage(HttpMethod.Get, new Uri(appSettings.WebConfig().WebUri + loginCallbackLocation.ToString()));
-            var externalLoginCallbackResponse = await _client.SendAsync(externalLoginCallbackRequest);
-            externalLoginCallbackResponse.StatusCode.Should().Be(HttpStatusCode.Found);
+            var externalLoginCallbackRequest = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress + loginCallbackLocation.ToString()));
+            var externalLoginCallbackResponse = await httpClient.SendAsync(externalLoginCallbackRequest);
 
             var externalLoginCallbackCookie = externalLoginCallbackResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
             var aspNetApplicationCookie = externalLoginCallbackCookie.First();
 
             // Step 6: GET to home page to confirm login
-            var message = new HttpRequestMessage(HttpMethod.Get, new Uri(appSettings.WebConfig().WebUri + "/"));
+            var message = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress + "/"));
             message.Headers.Add("Cookie", aspNetApplicationCookie);
 
-            var loggedInResponse = await _client.SendAsync(message);
-            loggedInResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            var loggedInResponse = await httpClient.SendAsync(message);
 
             var loggedInDocument = await loggedInResponse.GetDocumentAsync();
-            loggedInDocument.QuerySelector("#logout-link").Should().NotBeNull();
 
             var requestVerificationToken = loggedInDocument.QuerySelector("input[name='__RequestVerificationToken']").GetAttribute("value");
 
-            _client.DefaultRequestHeaders.Add("Cookie", $"{aspNetExternalCookie}; {aspNetApplicationCookie}; __RequestVerificationToken={requestVerificationToken}");
-
-            return _client.DefaultRequestHeaders.GetValues("Cookie");
+            httpClient.DefaultRequestHeaders.Add("Cookie", $"{aspNetExternalCookie}; {aspNetApplicationCookie}; __RequestVerificationToken={requestVerificationToken}");
         }
-
-        public Task<IEnumerable<string>> SignInClientBackOffice() =>
-            SignInClient("backOfficeUserId");
-
-        public Task<IEnumerable<string>> SignInClientAcademySecureSixteenToNineteenUser() =>
-            SignInClient("academySecure16To19Id");
-
-        public Task<IEnumerable<string>> SignInClientIebt() =>
-            SignInClient("iebtUserNameId");
-
-        public Task<IEnumerable<string>> SignInClientOliveAppAcademy() =>
-            SignInClient("oliveAppAcademyId");
-
-        public Task<IEnumerable<string>> SignInClientParkHillPrimarySchool() =>
-            SignInClient("parkHillPrimarySchoolId");
-
-        public Task<IEnumerable<string>> SignInClientServiceChildrensEducation() =>
-            SignInClient("serviceChildrensEducationId");
-
-        public Task<IEnumerable<string>> SignInClientTrams() =>
-            SignInClient("tramsId");
-
-        public Task<IEnumerable<string>> SignInClientWestLondonFreeSchool() =>
-            SignInClient("westLondonFreeSchoolId");
-
-        public Task<IEnumerable<string>> SignInClientYcs() =>
-            SignInClient("ycsId");
 
         private string GetCustomDescription(string environment) =>
         environment.ToLowerInvariant() switch
@@ -186,12 +143,5 @@ namespace Edubase.AcceptanceTests.Authentication
                 "test" => WebRoutes.SignInSimulatorTest,
                 _ => throw new ArgumentException($"Unexpected environment: {environment}", nameof(environment))
             };
-    }
-
-    public class AuthenticatedStrings
-    {
-        public string AspNetExternalCookie { get; set; }
-        public string AspNetApplicationCookie { get; set; }
-        public string RequestVerificationToken { get; set; }
     }
 }

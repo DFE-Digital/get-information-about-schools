@@ -1,68 +1,46 @@
+using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
+using Edubase.AcceptanceTests.Api;
 using Edubase.AcceptanceTests.Authentication;
-using Newtonsoft.Json;
+using Edubase.AcceptanceTests.Users;
 using Xunit;
 
 namespace Edubase.AcceptanceTests.Establishments
 {
-    public class Establishment
-    {
-        public string Name { get; set; }
-        public int? Urn { get; set; }
-        public string TypeName { get; set; }
-    }
 
     [Binding]
-    public class EstablishmentsStepDefinitions
+    public partial class EstablishmentsStepDefinitions
     {
+        private string baseAddress = "https://localhost:44309";
+        private string environment = "dev";
+        private IUsers users = new HardCodedUsers();
         private int urn;
+        private IEstablishments establishments;
         private Establishment establishment;
 
-        [Given("Establishment with URN {string} exists")]
+        [Given("a back office user is signed in")]
+        public async Task GivenTheUserIsABackOfficeUser()
+        {
+            var user = users.GetBackOfficeUser();
+
+            var apiClient = new ApiClient(baseAddress, environment);
+
+            await apiClient.Signin(user);
+
+            establishments = new EstablishmentsViaApi(apiClient);
+        }
+
+        [Given("an Establishment with URN {string} exists")]
         public void GivenEstablishmentWithURNExists(int p0)
         {
             urn = p0;
         }
 
-        public class EstablishmentResponse
-        {
-            public string status;
-
-            public class ReturnValue
-            {
-                public string name;
-                public string typeName;
-                public string urn;
-            }
-
-            public ReturnValue returnValue;
-        }
-
-
-        [When("Establishment with URN {string} is requested")]
+        [When("the user requests the Establishment with URN {string}")]
         public async Task WhenEstablishmentWithURNIsRequested(int p0)
         {
-            var appSettings = new AppSettings();
-
-            var client = new AuthenticatedHttpClient(appSettings).AuthenicatedClient();
-
-            var signinSimulator = new LoginSignInSimulator(client, appSettings.UserConfig());
-
-            await signinSimulator.SignInClientBackOffice();
-
-            var response = await client.GetAsync($"https://localhost:44309/api/establishment/{urn}");
-
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-
-            var establishmentResponse = JsonConvert.DeserializeObject<EstablishmentResponse>(json);
-
-            establishment = new Establishment
-            {
-                Name = establishmentResponse.returnValue.name,
-                TypeName = establishmentResponse.returnValue.typeName,
-                Urn = int.Parse(establishmentResponse.returnValue.urn)
-            };
+            establishment = await establishments.GetEstablishment(urn);
         }
 
         [Then("the Establishment URN is {string}")]
