@@ -1,16 +1,14 @@
-using System.Net;
 using AngleSharp.Common;
-using Edubase.AcceptanceTests.Api;
 using Edubase.AcceptanceTests.Users;
 
-namespace Edubase.AcceptanceTests.Authentication
+namespace Edubase.AcceptanceTests.Api
 {
-    public sealed class LoginSignInSimulator
+    public sealed class SignInSimulator
     {
         private HttpClient httpClient;
         private readonly string environment;
 
-        public LoginSignInSimulator(HttpClient httpClient, string environment)
+        public SignInSimulator(HttpClient httpClient, string environment)
         {
             this.httpClient = httpClient;
             this.environment = environment;
@@ -49,7 +47,7 @@ namespace Edubase.AcceptanceTests.Authentication
             var signInSimulatorResponse = await httpClient.SendAsync(signInSimulatorRequest);
             signInSimulatorResponse.EnsureSuccessStatusCode();
 
-            var signInSimDocument = await signInSimulatorResponse.GetDocumentAsync();
+            var signInSimDocument = await signInSimulatorResponse.GetHtmlDocumentAsync();
             var assertionModelId = signInSimDocument.QuerySelector("#AssertionModel_InResponseTo").GetAttribute("value");
             var relayState = signInSimDocument.QuerySelector("#AssertionModel_RelayState").GetAttribute("value");
 
@@ -77,7 +75,7 @@ namespace Edubase.AcceptanceTests.Authentication
             string signInSimulatorUri = GetAssertionConsumerUrl(environment);
             var signInResponse = await httpClient.PostAsync(signInSimulatorUri, signInContent);
 
-            var signInDocument = await signInResponse.GetDocumentAsync();
+            var signInDocument = await signInResponse.GetHtmlDocumentAsync();
             var samlResponse = signInDocument.QuerySelector("input[name='SAMLResponse']").GetAttribute("value");
 
             // Step 4: POST SAML response to ACS
@@ -117,7 +115,7 @@ namespace Edubase.AcceptanceTests.Authentication
 
             var loggedInResponse = await httpClient.SendAsync(message);
 
-            var loggedInDocument = await loggedInResponse.GetDocumentAsync();
+            var loggedInDocument = await loggedInResponse.GetHtmlDocumentAsync();
 
             var requestVerificationToken = loggedInDocument.QuerySelector("input[name='__RequestVerificationToken']").GetAttribute("value");
 

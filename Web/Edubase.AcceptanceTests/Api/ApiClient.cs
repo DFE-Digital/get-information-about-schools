@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using Edubase.AcceptanceTests.Authentication;
 using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.Api
@@ -41,7 +40,7 @@ namespace Edubase.AcceptanceTests.Api
 
         internal async Task Signin(User user)
         {
-            var signinSimulator = new LoginSignInSimulator(HttpClient, environment);
+            var signinSimulator = new SignInSimulator(HttpClient, environment);
 
             await signinSimulator.SignIn(user);
         }

@@ -1,5 +1,3 @@
-using Edubase.AcceptanceTests.Users;
-
 namespace Edubase.AcceptanceTests.Establishments
 {
     public interface IEstablishments

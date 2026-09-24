@@ -1,8 +1,4 @@
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
 using Edubase.AcceptanceTests.Api;
-using Edubase.AcceptanceTests.Authentication;
 using Edubase.AcceptanceTests.Users;
 using Xunit;
 

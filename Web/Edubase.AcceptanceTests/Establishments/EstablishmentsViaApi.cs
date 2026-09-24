@@ -1,6 +1,5 @@
 using Edubase.AcceptanceTests.Api;
 using Newtonsoft.Json;
-using static Edubase.AcceptanceTests.Establishments.EstablishmentsStepDefinitions;
 
 namespace Edubase.AcceptanceTests.Establishments
 {

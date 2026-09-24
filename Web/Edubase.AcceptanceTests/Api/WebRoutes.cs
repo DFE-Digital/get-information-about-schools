@@ -1,4 +1,4 @@
-namespace Edubase.AcceptanceTests.Authentication
+namespace Edubase.AcceptanceTests.Api
 {
     public static class WebRoutes
     {
