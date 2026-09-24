@@ -4,7 +4,10 @@ namespace Edubase.AcceptanceTests.Authentication
     {
         public TestOptions TestConfig()
         {
-            return new TestOptions();
+            return new TestOptions
+            {
+                Environment = "dev"
+            };
         }
 
         public UserOptions UserConfig()
@@ -20,7 +23,7 @@ namespace Edubase.AcceptanceTests.Authentication
             {
                 Users = new Dictionary<string, UserCredentials>
                 {
-                    { userCredentials.NameId, userCredentials }
+                    { "backOfficeUserId", userCredentials }
                 }
             };
         }
@@ -33,8 +36,8 @@ namespace Edubase.AcceptanceTests.Authentication
                 Domain = "localhost",
                 Port = 44309,
                 BasicAuthEnabled = false,
-                Username = "rest-api-user",
-                Password = "D9AhFU7Lfg4obErDO"
+                Username = string.Empty,
+                Password = string.Empty
             };
         }
     }

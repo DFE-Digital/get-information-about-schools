@@ -10,7 +10,7 @@ using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
-    //[Authorize]
+    [Authorize]
     public class EstablishmentApiController : ApiController
     {
         private readonly IEstablishmentReadService _establishmentReadService;

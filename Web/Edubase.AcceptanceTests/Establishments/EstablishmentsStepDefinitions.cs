@@ -43,10 +43,11 @@ namespace Edubase.AcceptanceTests.Establishments
         {
             var appSettings = new AppSettings();
 
-            //var client = new AuthenticatedHttpClient(appSettings).AuthenicatedClient();
-            var client = new HttpClient();
+            var client = new AuthenticatedHttpClient(appSettings).AuthenicatedClient();
 
             var signinSimulator = new LoginSignInSimulator(client, appSettings.UserConfig());
+
+            await signinSimulator.SignInClientBackOffice();
 
             var response = await client.GetAsync($"https://localhost:44309/api/establishment/{urn}");
 

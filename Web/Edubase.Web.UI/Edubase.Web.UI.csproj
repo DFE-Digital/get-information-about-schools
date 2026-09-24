@@ -1056,7 +1056,6 @@
     <Content Include="Views\News\AuditArticle.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\_LegalDutySecureAcademyTrustStatement.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\_LegalDutyStatement.cshtml" />
-    <Content Include="devsecrets.gias.config 3.alwaysignore" />
     <None Include="packages.config" />
     <Content Include="Views\Guidance\LaNameCodes.cshtml" />
     <Content Include="Views\Guidance\SelectFormat.cshtml" />
