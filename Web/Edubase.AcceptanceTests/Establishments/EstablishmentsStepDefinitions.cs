@@ -1,7 +1,5 @@
-using System.Net.Http.Json;
 using Edubase.AcceptanceTests.Authentication;
 using Newtonsoft.Json;
-using Reqnroll.CommonModels;
 using Xunit;
 
 namespace Edubase.AcceptanceTests.Establishments
@@ -52,6 +50,8 @@ namespace Edubase.AcceptanceTests.Establishments
 
             var response = await client.GetAsync($"https://localhost:44309/api/establishment/{urn}");
 
+            response.EnsureSuccessStatusCode();
+
             var json = await response.Content.ReadAsStringAsync();
 
             var establishmentResponse = JsonConvert.DeserializeObject<EstablishmentResponse>(json);
@@ -62,8 +62,6 @@ namespace Edubase.AcceptanceTests.Establishments
                 TypeName = establishmentResponse.returnValue.typeName,
                 Urn = int.Parse(establishmentResponse.returnValue.urn)
             };
-
-            response.EnsureSuccessStatusCode();
         }
 
         [Then("the Establishment URN is {string}")]

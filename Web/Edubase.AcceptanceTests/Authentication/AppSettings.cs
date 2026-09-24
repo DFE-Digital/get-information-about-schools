@@ -2,11 +2,6 @@ namespace Edubase.AcceptanceTests.Authentication
 {
     public sealed class AppSettings
     {
-        public ApiOptions ApiConfig()
-        {
-            return new ApiOptions();
-        }
-
         public TestOptions TestConfig()
         {
             return new TestOptions();
@@ -39,7 +34,7 @@ namespace Edubase.AcceptanceTests.Authentication
                 Port = 44309,
                 BasicAuthEnabled = false,
                 Username = "rest-api-user",
-                Password = "D9AhFU7Lfg4obErDO"                
+                Password = "D9AhFU7Lfg4obErDO"
             };
         }
     }
