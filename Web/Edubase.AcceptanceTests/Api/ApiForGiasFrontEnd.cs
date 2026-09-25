@@ -15,7 +15,7 @@ namespace Edubase.AcceptanceTests.Api
         }
 
         public async Task Signin(User user)
-        { 
+        {
             await signinAuthority.SignIn(user);
         }
 

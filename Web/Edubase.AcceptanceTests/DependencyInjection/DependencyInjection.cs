@@ -1,6 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
 using Edubase.AcceptanceTests.Api;
 using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.SigninAuthorities;
