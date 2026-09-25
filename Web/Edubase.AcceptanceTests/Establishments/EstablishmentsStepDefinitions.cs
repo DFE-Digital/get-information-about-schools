@@ -10,7 +10,6 @@ namespace Edubase.AcceptanceTests.Establishments
     public partial class EstablishmentsStepDefinitions
     {
         private readonly IUsers users;
-        private readonly IApiClient apiClient;
         private readonly ISignInAuthority signinAuthority;
         private IEstablishments establishments;
         private Establishment establishment;
@@ -22,7 +21,6 @@ namespace Edubase.AcceptanceTests.Establishments
             IEstablishments establishments)
         {
             this.users = users;
-            this.apiClient = apiClient;
             this.signinAuthority = signinAuthority;
             this.establishments = establishments;
         }
