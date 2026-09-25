@@ -1,9 +1,10 @@
 using AngleSharp.Common;
+using Edubase.AcceptanceTests.Api;
 using Edubase.AcceptanceTests.Users;
 
-namespace Edubase.AcceptanceTests.Api
+namespace Edubase.AcceptanceTests.SigninAuthorities
 {
-    public sealed class SignInSimulator
+    public sealed class SignInSimulator : ISignInAuthority
     {
         private HttpClient httpClient;
         private readonly string environment;

@@ -1,23 +1,22 @@
+using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.Api
 {
-    public class ApiClientForEnvironment : IApiClient
+    public class ApiForGiasFrontEnd : IApiClient
     {
-        private readonly string environment;
-        private HttpClient httpClient { get; }
+        private HttpClient httpClient;
+        private readonly ISignInAuthority signinAuthority;
 
-        public ApiClientForEnvironment(HttpClient httpClient, string environment)
+        public ApiForGiasFrontEnd(HttpClient httpClient, ISignInAuthority signinAuthority)
         {
             this.httpClient = httpClient;
-            this.environment = environment;
+            this.signinAuthority = signinAuthority;
         }
 
         public async Task Signin(User user)
-        {
-            var signinSimulator = new SignInSimulator(httpClient, environment);
-
-            await signinSimulator.SignIn(user);
+        { 
+            await signinAuthority.SignIn(user);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string url)

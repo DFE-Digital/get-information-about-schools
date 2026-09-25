@@ -1,6 +1,6 @@
 namespace Edubase.AcceptanceTests.Users
 {
-    public class UsersHardCoded : IUsers
+    public class UsersFromHardCodedValues : IUsers
     {
         public User GetBackOfficeUser()
         {

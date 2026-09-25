@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Edubase.AcceptanceTests.Api;
 using Edubase.AcceptanceTests.Establishments;
+using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.Users;
 using Microsoft.Extensions.DependencyInjection;
 using Reqnroll.Microsoft.Extensions.DependencyInjection;
@@ -14,45 +15,63 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         [ScenarioDependencies]
         public static IServiceCollection CreateServices()
         {
+            var baseAddress = "https://localhost:44309";
+            var environment = "dev";
+
             var services = new ServiceCollection();
 
-            services.AddScoped<IUsers, UsersHardCoded>();
+            services.AddHardCodedUsers();
+            services.AddEstablishmentsFromFrontEnd();
+            services.AddGiasFrontEnd(baseAddress, environment);
 
-            services.AddHttpClient("Edubase", httpClient =>
+            return services;
+        }
+
+        private static void AddHardCodedUsers(this ServiceCollection services)
+        {
+            services.AddScoped<IUsers, UsersFromHardCodedValues>();
+        }
+
+        private static void AddEstablishmentsFromFrontEnd(this ServiceCollection services)
+        {
+            services.AddScoped<IEstablishments, EstablishmentsFromFrontEndApi>();
+        }
+
+        private static void AddGiasFrontEnd(this ServiceCollection services, string baseAddress, string environment)
+        {
+            services.AddHttpClient("GiasFrontEnd", client =>
             {
-                httpClient.BaseAddress = new Uri("https://localhost:44309");
-
-                var basicAuthorizationUserName = string.Empty;
-                var basicAuthorizationUserPassword = string.Empty;
-
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue(
-                        "Basic",
-                        Convert.ToBase64String(
-                            Encoding.UTF8.GetBytes($"{basicAuthorizationUserName}:{basicAuthorizationUserPassword}")
-                        )
-                    );
+                client.BaseAddress = new Uri(baseAddress);
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
-            new HttpClientHandler
+                new HttpClientHandler
+                {
+                    AllowAutoRedirect = false,
+                    UseDefaultCredentials = true,
+                    CookieContainer = new CookieContainer()
+                });
+
+            services.AddScoped<HttpClient>(sp =>
             {
-                AllowAutoRedirect = false,
-                UseDefaultCredentials = true,
-                CookieContainer = new CookieContainer()
+                var factory = sp.GetRequiredService<IHttpClientFactory>();
+
+                return factory.CreateClient("GiasFrontEnd");
+            });
+
+            services.AddScoped<ISignInAuthority>(sp =>
+            {
+                var httpClient = sp.GetRequiredService<HttpClient>();
+
+                return new SignInSimulator(httpClient, environment);
             });
 
             services.AddScoped<IApiClient>(sp =>
             {
-                var factory = sp.GetRequiredService<IHttpClientFactory>();
+                var httpClient = sp.GetRequiredService<HttpClient>();
+                var signinAuthority = sp.GetRequiredService<ISignInAuthority>();
 
-                return new ApiClientForEnvironment(
-                    factory.CreateClient("Edubase"),
-                    "dev");
+                return new ApiForGiasFrontEnd(httpClient, signinAuthority);
             });
-
-            services.AddScoped<IEstablishments, EstablishmentsFromFrontEndApi>();
-
-            return services;
         }
     }
 }
