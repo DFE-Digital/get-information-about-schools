@@ -1,6 +1,6 @@
-namespace Edubase.AcceptanceTests.Establishments
+namespace Edubase.AcceptanceTests.Api
 {
-    public class EstablishmentResponse
+    public class GetEstablishmentResponse
     {
         public string status;
 

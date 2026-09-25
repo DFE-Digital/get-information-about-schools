@@ -3,24 +3,24 @@ using Newtonsoft.Json;
 
 namespace Edubase.AcceptanceTests.Establishments
 {
-    internal class EstablishmentsViaApi : IEstablishments
+    internal class EstablishmentsFromFrontEndApi : IEstablishments
     {
-        private readonly ApiClient api;
+        private readonly IApiClient api;
 
-        public EstablishmentsViaApi(ApiClient api)
+        public EstablishmentsFromFrontEndApi(IApiClient api)
         {
             this.api = api;
         }
 
         public async Task<Establishment> GetEstablishment(int urn)
         {
-            var response = await api.HttpClient.GetAsync($"{api.HttpClient.BaseAddress}/api/establishment/{urn}");
+            var response = await api.GetAsync($"/api/establishment/{urn}");
 
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
 
-            var establishmentResponse = JsonConvert.DeserializeObject<EstablishmentResponse>(json);
+            var establishmentResponse = JsonConvert.DeserializeObject<GetEstablishmentResponse>(json);
 
             return new Establishment
             {
