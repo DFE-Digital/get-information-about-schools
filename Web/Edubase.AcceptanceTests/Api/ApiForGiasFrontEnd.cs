@@ -1,5 +1,6 @@
 using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.Users;
+using Newtonsoft.Json;
 
 namespace Edubase.AcceptanceTests.Api
 {
@@ -19,11 +20,17 @@ namespace Edubase.AcceptanceTests.Api
             await signinAuthority.SignIn(user);
         }
 
-        public async Task<HttpResponseMessage> GetAsync(string url)
+        public async Task<T> GetAsync<T>(string url)
         {
             var response = await httpClient.GetAsync($"{httpClient.BaseAddress}{url}");
 
-            return response;
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var responseType = JsonConvert.DeserializeObject<T>(json);
+            
+            return responseType;
         }
     }
 }

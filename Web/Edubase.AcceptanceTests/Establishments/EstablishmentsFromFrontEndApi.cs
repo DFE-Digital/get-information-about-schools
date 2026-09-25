@@ -14,13 +14,7 @@ namespace Edubase.AcceptanceTests.Establishments
 
         public async Task<Establishment> GetEstablishment(int urn)
         {
-            var response = await api.GetAsync($"/api/establishment/{urn}");
-
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-
-            var establishmentResponse = JsonConvert.DeserializeObject<GetEstablishmentResponse>(json);
+            var establishmentResponse = await api.GetAsync<GetEstablishmentResponse>($"/api/establishment/{urn}");
 
             return new Establishment
             {

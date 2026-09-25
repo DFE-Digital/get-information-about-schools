@@ -4,7 +4,7 @@ namespace Edubase.AcceptanceTests.Api
 {
     public interface IApiClient
     {
-        Task<HttpResponseMessage> GetAsync(string url);
+        Task<T> GetAsync<T>(string url);
         Task Signin(User user);
     }
 }
