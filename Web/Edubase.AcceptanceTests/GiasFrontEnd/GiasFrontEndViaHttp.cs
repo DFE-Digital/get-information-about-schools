@@ -1,18 +1,16 @@
 using AngleSharp.Common;
 using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.Users;
-using Newtonsoft.Json;
 
 namespace Edubase.AcceptanceTests.GiasFrontEnd
 {
-    public class ApiForGiasFrontEnd : IGiasFrontEnd
+    public class GiasFrontEndViaHttp : HttpApi, IGiasFrontEnd
     {
-        private readonly HttpClient httpClient;
         private readonly ISignInAuthority signInAuthority;
 
-        public ApiForGiasFrontEnd(HttpClient httpClient, ISignInAuthority signInAuthority)
+        public GiasFrontEndViaHttp(HttpClient httpClient, ISignInAuthority signInAuthority)
+            : base(httpClient)
         {
-            this.httpClient = httpClient;
             this.signInAuthority = signInAuthority;
         }
 
@@ -82,19 +80,6 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
             var requestVerificationToken = loggedInDocument.QuerySelector("input[name='__RequestVerificationToken']").GetAttribute("value");
 
             httpClient.DefaultRequestHeaders.Add("Cookie", $"{aspNetExternalCookie}; {aspNetApplicationCookie}; __RequestVerificationToken={requestVerificationToken}");
-        }
-
-        public async Task<T> GetAsync<T>(string url)
-        {
-            var response = await httpClient.GetAsync($"{httpClient.BaseAddress}{url}");
-
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-
-            var responseType = JsonConvert.DeserializeObject<T>(json);
-            
-            return responseType;
         }
     }
 }

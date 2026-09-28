@@ -74,7 +74,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             {
                 var httpClient = sp.GetRequiredService<HttpClient>();
                 var signInAuthority = sp.GetRequiredService<ISignInAuthority>();
-                return new ApiForGiasFrontEnd(httpClient, signInAuthority);
+                return new GiasFrontEndViaHttp(httpClient, signInAuthority);
             });
         }
     }

@@ -1,20 +1,19 @@
 using Edubase.AcceptanceTests.GiasFrontEnd;
-using Newtonsoft.Json;
 
 namespace Edubase.AcceptanceTests.Establishments
 {
     internal class EstablishmentsFromGiasFrontEnd : IEstablishments
     {
-        private readonly IGiasFrontEnd api;
+        private readonly IGiasFrontEnd gias;
 
-        public EstablishmentsFromGiasFrontEnd(IGiasFrontEnd api)
+        public EstablishmentsFromGiasFrontEnd(IGiasFrontEnd gias)
         {
-            this.api = api;
+            this.gias = gias;
         }
 
         public async Task<Establishment> GetEstablishment(int urn)
         {
-            var establishmentResponse = await api.GetAsync<GetEstablishmentResponse>($"/api/establishment/{urn}");
+            var establishmentResponse = await gias.GetAsync<GetEstablishmentResponse>($"/api/establishment/{urn}");
 
             return new Establishment
             {
