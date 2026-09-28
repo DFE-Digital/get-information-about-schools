@@ -4,6 +4,6 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
 {
     public interface ISignInAuthority
     {
-        Task SignIn(User user);
+        Task<(string SamlResponse, string RelayState)> SignIn(User user, Uri authorityLocation, Uri assertionConsumerServiceUrl);
     }
 }

@@ -1,4 +1,3 @@
-using AngleSharp.Common;
 using Edubase.AcceptanceTests.Api;
 using Edubase.AcceptanceTests.Users;
 
@@ -6,43 +5,19 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
 {
     public sealed class SignInSimulator : ISignInAuthority
     {
-        private readonly HttpClient giasFrontEndClient;
         private readonly HttpClient simulatorClient;
         private readonly string environment;
 
-        public SignInSimulator(HttpClient giasFrontEndClient, HttpClient simulatorClient, string environment)
+        public SignInSimulator(HttpClient simulatorClient, string environment)
         {
-            this.giasFrontEndClient = giasFrontEndClient;
             this.simulatorClient = simulatorClient;
             this.environment = environment;
         }
         // GIAS owns the login session; the Azure simulator generates the SAML assertion.
-        public async Task SignIn(User user)
+        public async Task<(string SamlResponse, string RelayState)> SignIn(User user, Uri authorityLocation, Uri assertionConsumerServiceUrl)
         {
-            giasFrontEndClient.DefaultRequestHeaders.Remove("Cookie");
-
-            var (simulatorLocation, signInCookies) = await StartGiasSignIn();
-            var (samlResponse, relayState) = await GetSimulatorSamlResponse(simulatorLocation, user);
-            await CompleteGiasSignIn(samlResponse, relayState, signInCookies);
-        }
-
-        private async Task<(Uri SimulatorLocation, IEnumerable<string> Cookies)> StartGiasSignIn()
-        {
-            // Step 1: Initial GET to login page
-            var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(giasFrontEndClient.BaseAddress!, WebRoutes.SignIn));
-            var signInButtonResponse = await giasFrontEndClient.SendAsync(signInButton);
-
-            var signInCookies = signInButtonResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
-            var redirectReturnUrlLocation = signInButtonResponse.Headers.Location;
-
-            return (redirectReturnUrlLocation!, signInCookies);
-        }
-
-        private async Task<(string SamlResponse, string RelayState)> GetSimulatorSamlResponse(Uri simulatorLocation, User user)
-        {
-
             // Step 2: GET to Sign-In Simulator
-            var signInSimulatorRequest = new HttpRequestMessage(HttpMethod.Get, simulatorLocation);
+            var signInSimulatorRequest = new HttpRequestMessage(HttpMethod.Get, authorityLocation);
             var signInSimulatorResponse = await simulatorClient.SendAsync(signInSimulatorRequest);
             signInSimulatorResponse.EnsureSuccessStatusCode();
 
@@ -55,7 +30,7 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             {
                 new("CustomDescription", GetCustomDescription(environment)),
                 new("AssertionModel.InResponseTo", assertionModelId),
-                new("AssertionModel.AssertionConsumerServiceUrl", new Uri(giasFrontEndClient.BaseAddress!, "/Saml2/Acs").AbsoluteUri),
+                new("AssertionModel.AssertionConsumerServiceUrl", assertionConsumerServiceUrl.AbsoluteUri),
                 new("AssertionModel.Audience", "http://edubase.gov"),
                 new("AssertionModel.ResponseBinding", "HttpPost"),
                 new("AssertionModel.RelayState", relayState),
@@ -79,52 +54,6 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             var samlResponse = signInDocument.QuerySelector("input[name='SAMLResponse']").GetAttribute("value");
 
             return (samlResponse!, relayState!);
-        }
-
-        private async Task CompleteGiasSignIn(string samlResponse, string relayState, IEnumerable<string> signInCookies)
-        {
-            // Step 4: POST SAML response to ACS
-            var acsFormData = new List<KeyValuePair<string, string>>
-            {
-                new("RelayState", relayState),
-                new("SAMLResponse", samlResponse)
-            };
-
-            var acsContent = new FormUrlEncodedContent(acsFormData);
-            foreach (var cookie in signInCookies)
-            {
-                giasFrontEndClient.DefaultRequestHeaders.Add("Cookie", cookie);
-            }
-
-            var acsRequest = new HttpRequestMessage(HttpMethod.Post, new Uri(giasFrontEndClient.BaseAddress!, "/Saml2/Acs"))
-            {
-                Content = acsContent
-            };
-
-            var acsResponse = await giasFrontEndClient.SendAsync(acsRequest);
-
-            var acsCookies = acsResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
-            var aspNetExternalCookie = acsCookies.GetItemByIndex(1);
-            var loginCallbackLocation = acsResponse.Headers.Location;
-
-            // Step 5: Final GET to ExternalLoginCallback
-            var externalLoginCallbackRequest = new HttpRequestMessage(HttpMethod.Get, new Uri(giasFrontEndClient.BaseAddress!, loginCallbackLocation!));
-            var externalLoginCallbackResponse = await giasFrontEndClient.SendAsync(externalLoginCallbackRequest);
-
-            var externalLoginCallbackCookie = externalLoginCallbackResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
-            var aspNetApplicationCookie = externalLoginCallbackCookie.First();
-
-            // Step 6: GET to home page to confirm login
-            var message = new HttpRequestMessage(HttpMethod.Get, new Uri(giasFrontEndClient.BaseAddress!, "/"));
-            message.Headers.Add("Cookie", aspNetApplicationCookie);
-
-            var loggedInResponse = await giasFrontEndClient.SendAsync(message);
-
-            var loggedInDocument = await loggedInResponse.GetHtmlDocumentAsync();
-
-            var requestVerificationToken = loggedInDocument.QuerySelector("input[name='__RequestVerificationToken']").GetAttribute("value");
-
-            giasFrontEndClient.DefaultRequestHeaders.Add("Cookie", $"{aspNetExternalCookie}; {aspNetApplicationCookie}; __RequestVerificationToken={requestVerificationToken}");
         }
 
         private string GetCustomDescription(string environment) =>

@@ -64,20 +64,17 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
             services.AddScoped<ISignInAuthority>(sp =>
             {
-                var httpClient = sp.GetRequiredService<HttpClient>();
-
                 var factory = sp.GetRequiredService<IHttpClientFactory>();
                 var simulatorClient = factory.CreateClient("AzureSignInSimulator");
 
-                return new SignInSimulator(httpClient, simulatorClient, environment);
+                return new SignInSimulator(simulatorClient, environment);
             });
 
-            services.AddScoped<IApiClient>(sp =>
+            services.AddScoped<IGiasFrontEnd>(sp =>
             {
                 var httpClient = sp.GetRequiredService<HttpClient>();
-                var signinAuthority = sp.GetRequiredService<ISignInAuthority>();
-
-                return new ApiForGiasFrontEnd(httpClient, signinAuthority);
+                var signInAuthority = sp.GetRequiredService<ISignInAuthority>();
+                return new ApiForGiasFrontEnd(httpClient, signInAuthority);
             });
         }
     }

@@ -1,5 +1,4 @@
 using Edubase.AcceptanceTests.Api;
-using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.Users;
 using Xunit;
 
@@ -10,18 +9,17 @@ namespace Edubase.AcceptanceTests.Establishments
     public partial class EstablishmentsStepDefinitions
     {
         private readonly IUsers users;
-        private readonly ISignInAuthority signinAuthority;
+        private readonly IGiasFrontEnd giasFrontEnd;
         private IEstablishments establishments;
         private Establishment establishment;
 
         public EstablishmentsStepDefinitions(
             IUsers users,
-            IApiClient apiClient,
-            ISignInAuthority signinAuthority,
+            IGiasFrontEnd giasFrontEnd,
             IEstablishments establishments)
         {
             this.users = users;
-            this.signinAuthority = signinAuthority;
+            this.giasFrontEnd = giasFrontEnd;
             this.establishments = establishments;
         }
 
@@ -30,7 +28,7 @@ namespace Edubase.AcceptanceTests.Establishments
         {
             var user = users.GetBackOfficeUser();
 
-            await signinAuthority.SignIn(user);
+            await giasFrontEnd.SignIn(user);
         }
 
         [Given("an Establishment with URN {string} exists")]

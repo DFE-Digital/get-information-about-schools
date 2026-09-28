@@ -2,9 +2,9 @@ using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.Api
 {
-    public interface IApiClient
+    public interface IGiasFrontEnd
     {
-        Task Signin(User user);
+        Task SignIn(User user);
         Task<T> GetAsync<T>(string url);
     }
 }

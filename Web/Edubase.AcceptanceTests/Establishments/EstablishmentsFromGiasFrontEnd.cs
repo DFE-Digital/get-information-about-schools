@@ -5,9 +5,9 @@ namespace Edubase.AcceptanceTests.Establishments
 {
     internal class EstablishmentsFromGiasFrontEnd : IEstablishments
     {
-        private readonly IApiClient api;
+        private readonly IGiasFrontEnd api;
 
-        public EstablishmentsFromGiasFrontEnd(IApiClient api)
+        public EstablishmentsFromGiasFrontEnd(IGiasFrontEnd api)
         {
             this.api = api;
         }
