@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Edubase.Web.UI.Models;
 using System.Configuration;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
-using Edubase.Data.Repositories.TableStorage;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -25,11 +22,11 @@ namespace Edubase.Web.UI.Controllers.Api
                 "encrypt=True;TrustServerCertificate=False;";
         }
 
-        public async Task CreateAsync(Token token)
+        public async Task CreateAsync(Token message)
         {
-            using (var context = new TokensDbContext(new System.Data.SqlClient.SqlConnection(BuildConnectionString())))
+            using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
             {
-                context.Tokens.Add(ToSqlToken(token));
+                context.Tokens.Add(ToSqlToken(message));
                 await context.SaveChangesAsync();
             }
         }
@@ -38,7 +35,7 @@ namespace Edubase.Web.UI.Controllers.Api
         {
             SplitId(id, out var partitionKey, out var rowKey);
 
-            using (var context = new TokensDbContext(new System.Data.SqlClient.SqlConnection(BuildConnectionString())))
+            using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
             {
                 var row = await context.Tokens.FindAsync(partitionKey, rowKey);
                 return row == null ? null : FromSqlToken(row);
@@ -47,11 +44,11 @@ namespace Edubase.Web.UI.Controllers.Api
 
         public Token Get(string id) => GetAsync(id).GetAwaiter().GetResult();
 
-        public async Task UpdateAsync(Token token)
+        public async Task UpdateAsync(Token message)
         {
-            using (var context = new TokensDbContext(new System.Data.SqlClient.SqlConnection(BuildConnectionString())))
+            using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
             {
-                var row = ToSqlToken(token);
+                var row = ToSqlToken(message);
                 context.Tokens.Attach(row);
                 context.Entry(row).State = EntityState.Modified;
                 await context.SaveChangesAsync();
@@ -62,7 +59,7 @@ namespace Edubase.Web.UI.Controllers.Api
         {
             SplitId(id, out var partitionKey, out var rowKey);
 
-            using (var context = new TokensDbContext(new System.Data.SqlClient.SqlConnection(BuildConnectionString())))
+            using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
             {
                 var row = await context.Tokens.FindAsync(partitionKey, rowKey);
                 if (row != null)
