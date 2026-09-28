@@ -1,6 +1,7 @@
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Edubase.AcceptanceTests.Establishments
 {
@@ -12,6 +13,8 @@ namespace Edubase.AcceptanceTests.Establishments
         private readonly IGiasFrontEnd giasFrontEnd;
         private IEstablishments establishments;
         private Establishment establishment;
+        private string errorMessage;
+        private int urn;
 
         public EstablishmentsStepDefinitions(
             IUsers users,
@@ -21,6 +24,11 @@ namespace Edubase.AcceptanceTests.Establishments
             this.users = users;
             this.giasFrontEnd = giasFrontEnd;
             this.establishments = establishments;
+        }
+
+        [Given("a user is not signed in")]
+        public void GivenAUserIsNotSignedIn()
+        {
         }
 
         [Given("a back office user is signed in")]
@@ -34,12 +42,26 @@ namespace Edubase.AcceptanceTests.Establishments
         [Given("an Establishment with URN {string} exists")]
         public void GivenEstablishmentWithURNExists(int p0)
         {
+            urn = p0;
         }
 
         [When("the user requests the Establishment with URN {string}")]
         public async Task WhenEstablishmentWithURNIsRequested(int p0)
         {
-            establishment = await establishments.GetEstablishment(p0);
+            try
+            {
+                establishment = await establishments.GetEstablishment(p0);
+            }
+            catch
+            {
+                errorMessage = $"Failed to retrieve establishment with URN {p0}.";
+            }
+        }
+
+        [Then("an error occurs")]
+        public void ThenAnErrorOccurs()
+        {
+            Assert.Equal(errorMessage, $"Failed to retrieve establishment with URN {urn}.");
         }
 
         [Then("the Establishment URN is {string}")]

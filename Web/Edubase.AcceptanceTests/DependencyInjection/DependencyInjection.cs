@@ -38,11 +38,9 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
         private static void AddGiasFrontEnd(this ServiceCollection services, string baseAddress, string environment)
         {
-            services.AddHttpClient("GiasFrontEnd", client =>
-            {
-                client.BaseAddress = new Uri(baseAddress);
-            })
-            .ConfigurePrimaryHttpMessageHandler(() =>
+            // Factory-pooled handlers share cookies across scenario scopes.
+            // Give each scenario its own handler and authenticated session.
+            services.AddScoped<HttpClientHandler>(_ =>
                 new HttpClientHandler
                 {
                     AllowAutoRedirect = false,
@@ -50,11 +48,10 @@ namespace Edubase.AcceptanceTests.DependencyInjection
                     CookieContainer = new CookieContainer()
                 });
 
-            services.AddScoped<HttpClient>(sp =>
+            services.AddScoped<HttpClient>(sp => new HttpClient(
+                sp.GetRequiredService<HttpClientHandler>(), disposeHandler: false)
             {
-                var factory = sp.GetRequiredService<IHttpClientFactory>();
-
-                return factory.CreateClient("GiasFrontEnd");
+                BaseAddress = new Uri(baseAddress)
             });
 
             services.AddHttpClient("AzureSignInSimulator")
