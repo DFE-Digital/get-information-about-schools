@@ -3,7 +3,7 @@ using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Io;
 
-namespace Edubase.AcceptanceTests.Api
+namespace Edubase.AcceptanceTests.GiasFrontEnd
 {
 
     public static class HttpResponseMessageExtensions

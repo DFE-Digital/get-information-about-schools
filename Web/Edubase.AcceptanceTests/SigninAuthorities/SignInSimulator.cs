@@ -1,4 +1,4 @@
-using Edubase.AcceptanceTests.Api;
+using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.SigninAuthorities

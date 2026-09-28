@@ -1,4 +1,4 @@
-namespace Edubase.AcceptanceTests.Api
+namespace Edubase.AcceptanceTests.GiasFrontEnd
 {
     public static class WebRoutes
     {

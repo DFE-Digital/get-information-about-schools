@@ -3,7 +3,7 @@ using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.Users;
 using Newtonsoft.Json;
 
-namespace Edubase.AcceptanceTests.Api
+namespace Edubase.AcceptanceTests.GiasFrontEnd
 {
     public class ApiForGiasFrontEnd : IGiasFrontEnd
     {

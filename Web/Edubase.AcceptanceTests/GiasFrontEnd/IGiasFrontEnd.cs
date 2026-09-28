@@ -1,6 +1,6 @@
 using Edubase.AcceptanceTests.Users;
 
-namespace Edubase.AcceptanceTests.Api
+namespace Edubase.AcceptanceTests.GiasFrontEnd
 {
     public interface IGiasFrontEnd
     {

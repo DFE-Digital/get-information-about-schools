@@ -1,6 +1,6 @@
 using System.Net;
-using Edubase.AcceptanceTests.Api;
 using Edubase.AcceptanceTests.Establishments;
+using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.Users;
 using Microsoft.Extensions.DependencyInjection;

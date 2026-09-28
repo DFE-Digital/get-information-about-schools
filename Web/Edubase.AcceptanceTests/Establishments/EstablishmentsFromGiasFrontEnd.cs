@@ -1,4 +1,4 @@
-using Edubase.AcceptanceTests.Api;
+using Edubase.AcceptanceTests.GiasFrontEnd;
 using Newtonsoft.Json;
 
 namespace Edubase.AcceptanceTests.Establishments
