@@ -1,4 +1,4 @@
-namespace Edubase.AcceptanceTests.GiasFrontEnd
+namespace Edubase.AcceptanceTests.Apis
 {
     public interface IApi
     {

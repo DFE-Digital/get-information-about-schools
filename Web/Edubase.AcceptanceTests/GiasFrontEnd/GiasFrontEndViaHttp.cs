@@ -1,4 +1,5 @@
 using AngleSharp.Common;
+using Edubase.AcceptanceTests.Apis;
 using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.Users;
 
