@@ -88,8 +88,6 @@ namespace Edubase.AcceptanceTests.Api
         public static string PredefinedLASet => "/independent-schools/predefined-local-authority-sets";
         public static string Privacy => "/Privacy";
         public static string SignIn => "/Account/Login?returnUrl=%2F";
-        public static string SignInSimulatorTest => "https://dfe-sign-in-simulator.azurewebsites.net/e00bdaf5-4cee-47c2-b76c-41b00bb59d02";
-        public static string SignInSimulatorDev => "https://dfe-sign-in-simulator.azurewebsites.net/c4cdae40-d07b-469e-b505-350e07ee2e32";
         public static string Search => "/Search";
         public static string SearchEstablishment => "/Search?SelectedTab=Establishments";
         public static string SearchEstablishmentGroup => "/Search?SelectedTab=Groups";

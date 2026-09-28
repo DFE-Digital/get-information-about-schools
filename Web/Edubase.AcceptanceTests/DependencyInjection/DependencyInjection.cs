@@ -56,11 +56,20 @@ namespace Edubase.AcceptanceTests.DependencyInjection
                 return factory.CreateClient("GiasFrontEnd");
             });
 
+            services.AddHttpClient("AzureSignInSimulator")
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    AllowAutoRedirect = false
+                });
+
             services.AddScoped<ISignInAuthority>(sp =>
             {
                 var httpClient = sp.GetRequiredService<HttpClient>();
 
-                return new SignInSimulator(httpClient, environment);
+                var factory = sp.GetRequiredService<IHttpClientFactory>();
+                var simulatorClient = factory.CreateClient("AzureSignInSimulator");
+
+                return new SignInSimulator(httpClient, simulatorClient, environment);
             });
 
             services.AddScoped<IApiClient>(sp =>
