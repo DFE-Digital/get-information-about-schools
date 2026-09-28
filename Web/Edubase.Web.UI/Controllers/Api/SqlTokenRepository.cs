@@ -44,11 +44,11 @@ namespace Edubase.Web.UI.Controllers.Api
 
         public Token Get(string id) => GetAsync(id).GetAwaiter().GetResult();
 
-        public async Task UpdateAsync(Token message)
+        public async Task UpdateAsync(Token item)
         {
             using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
             {
-                var row = ToSqlToken(message);
+                var row = ToSqlToken(item);
                 context.Tokens.Attach(row);
                 context.Entry(row).State = EntityState.Modified;
                 await context.SaveChangesAsync();
