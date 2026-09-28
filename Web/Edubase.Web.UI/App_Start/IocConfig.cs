@@ -272,6 +272,8 @@ namespace Edubase.Web.UI
             {
                 builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
             }
+            builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
+            builder.RegisterType<LaNameCodeFileGenerator>().As<ILaNameCodeFileGenerator>().SingleInstance();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()

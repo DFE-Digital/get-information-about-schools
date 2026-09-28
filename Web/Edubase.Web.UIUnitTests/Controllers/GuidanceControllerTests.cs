@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Castle.Core.Logging;
 using Edubase.Services;
+using Edubase.Services.Enums;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Models;
@@ -15,11 +18,18 @@ namespace Edubase.Web.UIUnitTests.Controllers
     public class GuidanceControllerTests
     {
         private static GuidanceController CreateController(
-            ISqlLaNameCodeRepository repository = null)
+            ISqlLaNameCodeRepository repository = null,
+            IBlobService blobService = null,
+            ILaNameCodeFileGenerator fileGenerator = null)
         {
+            var blobMock = new Mock<IBlobService>();
+            blobMock.Setup(x => x.ArchiveBlobAsync(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                .ReturnsAsync((MemoryStream ms, string name) => ms);
+
             return new GuidanceController(
-                Mock.Of<IBlobService>(),
-                repository ?? Mock.Of<ISqlLaNameCodeRepository>());
+                blobService ?? blobMock.Object,
+                repository ?? Mock.Of<ISqlLaNameCodeRepository>(),
+                fileGenerator ?? new LaNameCodeFileGenerator());
         }
 
         private static ISqlLaNameCodeRepository RepositoryReturning(
@@ -118,6 +128,88 @@ namespace Edubase.Web.UIUnitTests.Controllers
 
             await controller.LaNameCodes();
             mock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        [Theory]
+        [InlineData("EnglishLaNameCodes", "english")]
+        [InlineData("WelshLaNameCodes",   "welsh")]
+        [InlineData("OtherLaNameCodes",   "other")]
+        public async Task GenerateDownload_QueriesSqlForSelectedGroupOnly(string downloadName, string expectedGroupCode)
+        {
+            var repoMock = new Mock<ISqlLaNameCodeRepository>();
+            repoMock.Setup(x => x.GetByGroupAsync(expectedGroupCode))
+                    .ReturnsAsync(new List<SqlLaNameCode>
+                    {
+                        new SqlLaNameCode { LaName = "Cardiff", LaCode = "681", GsLaCode = "W06000015", GroupCode = expectedGroupCode }
+                    });
+
+            var controller = CreateController(repository: repoMock.Object);
+            controller.TempData = new TempDataDictionary();
+
+            var result = await controller.LaNameCodesGenerateDownload(
+                new GuidanceLaNameCodeViewModel { DownloadName = downloadName, FileFormat = eFileFormat.CSV });
+
+            Assert.Equal("ReadyToDownload", ((ViewResult) result).ViewName);
+            repoMock.Verify(x => x.GetByGroupAsync(expectedGroupCode), Times.Once);
+            repoMock.Verify(x => x.GetAllAsync(), Times.Never);
+            Assert.NotNull(controller.TempData["ArchivedBlob"]);
+            Assert.Equal(downloadName + ".zip", controller.TempData["DownloadFileName"]);
+        }
+
+        [Fact]
+        public async Task GenerateDownload_UnknownDownloadName_ReturnsError_AndNeverTouchesSql()
+        {
+            var repoMock = new Mock<ISqlLaNameCodeRepository>();
+            var generatorMock = new Mock<ILaNameCodeFileGenerator>();
+            var controller = CreateController(repository: repoMock.Object, fileGenerator: generatorMock.Object);
+            controller.TempData = new TempDataDictionary();
+
+            var result = await controller.LaNameCodesGenerateDownload(
+                new GuidanceLaNameCodeViewModel { DownloadName = "MartianLaNameCodes", FileFormat = eFileFormat.CSV });
+
+            Assert.Equal("Error", ((ViewResult) result).ViewName);
+            repoMock.VerifyNoOtherCalls();
+            generatorMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task GenerateDownload_MissingFileFormat_ReturnsError_BeforeAnyWork()
+        {
+            var repoMock = new Mock<ISqlLaNameCodeRepository>();
+            var controller = CreateController(repository: repoMock.Object);
+            controller.TempData = new TempDataDictionary();
+
+            var result = await controller.LaNameCodesGenerateDownload(
+                new GuidanceLaNameCodeViewModel { DownloadName = "EnglishLaNameCodes", FileFormat = null });
+
+            Assert.Equal("Error", ((ViewResult) result).ViewName);
+            repoMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task GenerateDownload_CsvFlow_ProducesZipContainingGeneratedCsv()
+        {
+            var repoMock = new Mock<ISqlLaNameCodeRepository>();
+            repoMock.Setup(x => x.GetByGroupAsync("english"))
+                    .ReturnsAsync(new List<SqlLaNameCode>
+                    {
+                        new SqlLaNameCode { LaName = "West Berkshire", LaCode = "869", GsLaCode = "E06000037", GroupCode = "english" }
+                    });
+
+            var blobMock = new Mock<IBlobService>();
+            string archivedEntryName = null;
+            blobMock.Setup(x => x.ArchiveBlobAsync(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                    .Callback<MemoryStream, string>((ms, name) => archivedEntryName = name)
+                    .ReturnsAsync((MemoryStream ms, string name) => ms);
+
+            var controller = CreateController(repository: repoMock.Object, blobService: blobMock.Object);
+            controller.TempData = new TempDataDictionary();
+
+            var result = await controller.LaNameCodesGenerateDownload(
+                new GuidanceLaNameCodeViewModel { DownloadName = "EnglishLaNameCodes", FileFormat = eFileFormat.CSV });
+
+            Assert.Equal("ReadyToDownload", ((ViewResult) result).ViewName);
+            Assert.Equal("EnglishLaNameCodes.csv", archivedEntryName);
         }
     }
 }
