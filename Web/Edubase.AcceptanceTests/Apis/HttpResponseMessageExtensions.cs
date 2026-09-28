@@ -25,7 +25,9 @@ namespace Edubase.AcceptanceTests.Apis
 
                 MapHeaders(response.Headers);
                 MapHeaders(response.Content.Headers);
+
                 htmlResponse.Content(content);
+
                 void MapHeaders(HttpHeaders headers)
                 {
                     foreach (var header in headers)

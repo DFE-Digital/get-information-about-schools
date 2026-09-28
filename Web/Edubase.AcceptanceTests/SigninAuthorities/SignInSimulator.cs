@@ -5,23 +5,19 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
 {
     public sealed class SignInSimulator : ISignInAuthority
     {
-        private readonly HttpClient simulatorClient;
+        private readonly IApi simulatorApi;
         private readonly string environment;
 
-        public SignInSimulator(HttpClient simulatorClient, string environment)
+        public SignInSimulator(IApi simulatorApi, string environment)
         {
-            this.simulatorClient = simulatorClient;
+            this.simulatorApi = simulatorApi;
             this.environment = environment;
         }
         // GIAS owns the login session; the Azure simulator generates the SAML assertion.
         public async Task<(string SamlResponse, string RelayState)> SignIn(User user, Uri authorityLocation, Uri assertionConsumerServiceUrl)
         {
             // Step 2: GET to Sign-In Simulator
-            var signInSimulatorRequest = new HttpRequestMessage(HttpMethod.Get, authorityLocation);
-            var signInSimulatorResponse = await simulatorClient.SendAsync(signInSimulatorRequest);
-            signInSimulatorResponse.EnsureSuccessStatusCode();
-
-            var signInSimDocument = await signInSimulatorResponse.GetHtmlDocumentAsync();
+            var signInSimDocument = await simulatorApi.GetHtmlAsync(authorityLocation.AbsoluteUri);
             var assertionModelId = signInSimDocument.QuerySelector("#AssertionModel_InResponseTo").GetAttribute("value");
             var relayState = signInSimDocument.QuerySelector("#AssertionModel_RelayState").GetAttribute("value");
 
@@ -44,13 +40,8 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
                 new("AssertionModel.AttributeStatements[1].Value", user.AttributeStatementValue)
             };
 
-            var signInContent = new FormUrlEncodedContent(signInFormData);
-
             string signInSimulatorUri = GetSimulatorUrl(environment);
-            var signInResponse = await simulatorClient.PostAsync(signInSimulatorUri, signInContent);
-            signInResponse.EnsureSuccessStatusCode();
-
-            var signInDocument = await signInResponse.GetHtmlDocumentAsync();
+            var signInDocument = await simulatorApi.PostFormAsync(signInSimulatorUri, signInFormData);
             var samlResponse = signInDocument.QuerySelector("input[name='SAMLResponse']").GetAttribute("value");
 
             return (samlResponse!, relayState!);

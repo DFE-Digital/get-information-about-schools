@@ -1,4 +1,5 @@
 using System.Net;
+using Edubase.AcceptanceTests.Apis;
 using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.SigninAuthorities;
@@ -62,18 +63,22 @@ namespace Edubase.AcceptanceTests.DependencyInjection
                     AllowAutoRedirect = false
                 });
 
-            services.AddScoped<ISignInAuthority>(sp =>
+            services.AddScoped<IApi>(sp =>
             {
                 var factory = sp.GetRequiredService<IHttpClientFactory>();
                 var simulatorClient = factory.CreateClient("AzureSignInSimulator");
 
-                return new SignInSimulator(simulatorClient, environment);
+                return new HttpApi(simulatorClient);
             });
+
+            services.AddScoped<ISignInAuthority>(sp =>
+                new SignInSimulator(sp.GetRequiredService<IApi>(), environment));
 
             services.AddScoped<IGiasFrontEnd>(sp =>
             {
                 var httpClient = sp.GetRequiredService<HttpClient>();
                 var signInAuthority = sp.GetRequiredService<ISignInAuthority>();
+
                 return new GiasFrontEndViaHttp(httpClient, signInAuthority);
             });
         }
