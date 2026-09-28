@@ -32,7 +32,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
         private static void AddEstablishmentsFromFrontEnd(this ServiceCollection services)
         {
-            services.AddScoped<IEstablishments, EstablishmentsFromFrontEndApi>();
+            services.AddScoped<IEstablishments, EstablishmentsFromGiasFrontEnd>();
         }
 
         private static void AddGiasFrontEnd(this ServiceCollection services, string baseAddress, string environment)

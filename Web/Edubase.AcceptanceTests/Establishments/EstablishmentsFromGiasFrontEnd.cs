@@ -3,11 +3,11 @@ using Newtonsoft.Json;
 
 namespace Edubase.AcceptanceTests.Establishments
 {
-    internal class EstablishmentsFromFrontEndApi : IEstablishments
+    internal class EstablishmentsFromGiasFrontEnd : IEstablishments
     {
         private readonly IApiClient api;
 
-        public EstablishmentsFromFrontEndApi(IApiClient api)
+        public EstablishmentsFromGiasFrontEnd(IApiClient api)
         {
             this.api = api;
         }
