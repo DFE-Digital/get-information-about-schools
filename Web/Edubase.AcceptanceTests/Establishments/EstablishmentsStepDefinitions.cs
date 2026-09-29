@@ -52,7 +52,7 @@ namespace Edubase.AcceptanceTests.Establishments
             {
                 establishment = await establishments.GetEstablishment(p0);
             }
-            catch
+            catch (Exception)
             {
                 errorMessage = $"Failed to retrieve establishment with URN {p0}.";
             }
