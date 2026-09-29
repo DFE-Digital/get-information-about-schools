@@ -12,5 +12,6 @@ namespace Edubase.Services.Enums
         ProposedToOpen = 5,
         Quarantine = 7,
         RejectedOpening = 9,
+        DeregisteredAsAnIndependentSchool = 11,
     }
 }

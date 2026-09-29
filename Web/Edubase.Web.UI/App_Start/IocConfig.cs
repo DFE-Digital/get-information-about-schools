@@ -238,6 +238,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<UserPreferencesMigrationService>().SingleInstance();
             builder.RegisterType<TokensMigrationService>().SingleInstance();
 
+            builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
+
             builder.RegisterType<SqlApiRecorderSessionItemRepository>().As<ISqlApiRecorderSessionItemRepository>().SingleInstance();
             builder.RegisterType<ApiRecorderSessionItemsMigrationService>().SingleInstance();
 
@@ -262,6 +264,9 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GovernorsGridViewModelFactory>().As<IGovernorsGridViewModelFactory>();
+
+            builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
+            builder.RegisterType<LaNameCodeFileGenerator>().As<ILaNameCodeFileGenerator>().SingleInstance();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
