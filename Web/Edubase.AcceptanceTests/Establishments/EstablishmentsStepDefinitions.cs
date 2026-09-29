@@ -11,7 +11,7 @@ namespace Edubase.AcceptanceTests.Establishments
     {
         private readonly IUsers users;
         private readonly IGiasFrontEnd giasFrontEnd;
-        private IEstablishments establishments;
+        private readonly IEstablishments establishments;
         private Establishment establishment;
         private string errorMessage;
         private int urn;
