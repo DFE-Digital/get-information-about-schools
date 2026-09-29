@@ -28,7 +28,7 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
             httpClient.DefaultRequestHeaders.Remove("Cookie");
 
             // Step 1: Initial GET to login page
-            var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, WebRoutes.SignIn));
+            using var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, WebRoutes.SignIn));
             var signInButtonResponse = await httpClient.SendAsync(signInButton);
 
             var signInCookies = signInButtonResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
@@ -52,7 +52,7 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
                 httpClient.DefaultRequestHeaders.Add("Cookie", cookie);
             }
 
-            var acsRequest = new HttpRequestMessage(HttpMethod.Post, new Uri(httpClient.BaseAddress!, "/Saml2/Acs"))
+            using var acsRequest = new HttpRequestMessage(HttpMethod.Post, new Uri(httpClient.BaseAddress!, "/Saml2/Acs"))
             {
                 Content = acsContent
             };
@@ -64,14 +64,14 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
             var loginCallbackLocation = acsResponse.Headers.Location;
 
             // Step 5: Final GET to ExternalLoginCallback
-            var externalLoginCallbackRequest = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, loginCallbackLocation!));
+            using var externalLoginCallbackRequest = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, loginCallbackLocation!));
             var externalLoginCallbackResponse = await httpClient.SendAsync(externalLoginCallbackRequest);
 
             var externalLoginCallbackCookie = externalLoginCallbackResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
             var aspNetApplicationCookie = externalLoginCallbackCookie.First();
 
             // Step 6: GET to home page to confirm login
-            var message = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, "/"));
+            using var message = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, "/"));
             message.Headers.Add("Cookie", aspNetApplicationCookie);
 
             var loggedInResponse = await httpClient.SendAsync(message);
