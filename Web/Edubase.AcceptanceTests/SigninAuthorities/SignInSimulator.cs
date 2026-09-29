@@ -47,24 +47,24 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             return (samlResponse!, relayState!);
         }
 
-        private string GetCustomDescription(string environment) =>
-        environment.ToLowerInvariant() switch
+        private string GetCustomDescription(string environmentName) =>
+        environmentName.ToLowerInvariant() switch
         {
             "sandbox1" => "GIAS - Dev / Exp",
             "sandbox2" => "GIAS - Dev / Exp",
             "dev" => "GIAS - Dev / Exp",
             "test" => "GIAS - Stage / Test",
-            _ => throw new ArgumentException($"Unexpected environment: {environment}", nameof(environment))
+            _ => throw new ArgumentException($"Unexpected environment: {environmentName}", nameof(environmentName))
         };
 
-        private string GetSimulatorUrl(string environment) =>
-            environment.ToLowerInvariant() switch
+        private string GetSimulatorUrl(string environmentName) =>
+            environmentName.ToLowerInvariant() switch
             {
                 "sandbox1" => "https://dfe-sign-in-simulator.azurewebsites.net/c4cdae40-d07b-469e-b505-350e07ee2e32",
                 "sandbox2" => "https://dfe-sign-in-simulator.azurewebsites.net/c4cdae40-d07b-469e-b505-350e07ee2e32",
                 "dev" => "https://dfe-sign-in-simulator.azurewebsites.net/c4cdae40-d07b-469e-b505-350e07ee2e32",
                 "test" => "https://dfe-sign-in-simulator.azurewebsites.net/e00bdaf5-4cee-47c2-b76c-41b00bb59d02",
-                _ => throw new ArgumentException($"Unexpected environment: {environment}", nameof(environment))
+                _ => throw new ArgumentException($"Unexpected environment: {environmentName}", nameof(environmentName))
             };
     }
 }
