@@ -21,12 +21,12 @@ namespace Edubase.Web.UI.Controllers.Api
 
         private static readonly char[] CsvSpecialChars = { ',', '"', '\r', '\n' };
 
-        public MemoryStream Generate(IEnumerable<LaNameCodes> rows, eFileFormat fileFormat, string nameColumnHeader)
+        public MemoryStream Generate(IEnumerable<LaNameCodes> rows, eFileFormat fileFormat, string nameColumnHeader, string sheetName)
         {
             switch (fileFormat)
             {
                 case eFileFormat.CSV:  return GenerateCsv(rows, nameColumnHeader);
-                case eFileFormat.XLSX: return GenerateXlsx(rows, nameColumnHeader);
+                case eFileFormat.XLSX: return GenerateXlsx(rows, nameColumnHeader, sheetName);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(fileFormat), fileFormat, "Unsupported file format");
             }
@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Controllers.Api
             return "\"" + value.Replace("\"", "\"\"") + "\"";
         }
 
-        private static MemoryStream GenerateXlsx(IEnumerable<LaNameCodes> rows, string nameColumnHeader)
+        private static MemoryStream GenerateXlsx(IEnumerable<LaNameCodes> rows, string nameColumnHeader, string sheetName)
         {
             var stream = new MemoryStream();
 
@@ -92,7 +92,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 {
                     Id      = workbookPart.GetIdOfPart(worksheetPart),
                     SheetId = 1,
-                    Name    = "LA name codes"
+                    Name    = sheetName
                 });
 
                 workbookPart.Workbook.Save();

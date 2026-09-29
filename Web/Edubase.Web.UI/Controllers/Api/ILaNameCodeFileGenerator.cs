@@ -7,6 +7,6 @@ namespace Edubase.Web.UI.Controllers.Api
 {
     public interface ILaNameCodeFileGenerator
     {
-        MemoryStream Generate(IEnumerable<LaNameCodes> rows, eFileFormat fileFormat, string nameColumnHeader);
+        MemoryStream Generate(IEnumerable<LaNameCodes> rows, eFileFormat fileFormat, string nameColumnHeader, string sheetName);
     }
 }
