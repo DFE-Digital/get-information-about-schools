@@ -83,8 +83,9 @@ namespace Edubase.Web.UI.Controllers.Api
 
                 worksheetPart.Worksheet = new Worksheet(
                     new Columns(
-                        new Column { Min = 1, Max = 1, Width = 45, CustomWidth = true },
-                        new Column { Min = 2, Max = 3, Width = 80, CustomWidth = true }),
+                        new Column { Min = 1, Max = 1, Width = 43, CustomWidth = true },
+                        new Column { Min = 2, Max = 2, Width = 64, CustomWidth = true },
+                        new Column { Min = 3, Max = 3, Width = 12, CustomWidth = true }),
                     sheetData);
 
                 var sheets = workbookPart.Workbook.AppendChild(new Sheets());
