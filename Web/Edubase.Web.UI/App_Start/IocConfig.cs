@@ -15,6 +15,7 @@ using AzureTableLogger;
 using AzureTableLogger.Services;
 using Edubase.Common;
 using Edubase.Common.Cache;
+using Edubase.Common.Config;
 using Edubase.Data;
 using Edubase.Data.Repositories;
 using Edubase.Services;
@@ -216,7 +217,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<DataQualityReadService>().As<IDataQualityReadService>();
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
             builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
-            builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
             builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
             builder.RegisterType<SqlUserPreferenceRepository>().As<ISqlUserPreferenceRepository>().SingleInstance();
             builder.RegisterType<SqlNotificationTemplateRepository>().As<ISqlNotificationTemplateRepository>().SingleInstance();
@@ -226,7 +226,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<SqlFaqGroupRepository>().As<ISqlFaqGroupRepository>().SingleInstance();
             builder.RegisterType<SqlFaqItemRepository>().As<ISqlFaqItemRepository>().SingleInstance();
             builder.RegisterType<SqlGlossaryItemRepository>().As<ISqlGlossaryItemRepository>().SingleInstance();
-            builder.RegisterType<SqlTokenRepository>().As<ISqlTokenRepository>().SingleInstance();
 
             builder.RegisterType<GlossaryItemsMigrationService>().SingleInstance();
             builder.RegisterType<FaqGroupsMigrationService>().SingleInstance();
@@ -236,7 +235,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationBannersMigrationService>().SingleInstance();
             builder.RegisterType<NotificationTemplatesMigrationService>().SingleInstance();
             builder.RegisterType<UserPreferencesMigrationService>().SingleInstance();
-            builder.RegisterType<TokensMigrationService>().SingleInstance();
 
             builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
 
@@ -265,6 +263,15 @@ namespace Edubase.Web.UI
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GovernorsGridViewModelFactory>().As<IGovernorsGridViewModelFactory>();
 
+            // 294913 - Tokens in SQL when the flag is on - falls back to table storage while off
+            if (Feature.IsEnabled("Feature_TokensMigration"))
+            {
+                builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().SingleInstance();
+            }
+            else
+            {
+                builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
+            }
             builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
             builder.RegisterType<LaNameCodeFileGenerator>().As<ILaNameCodeFileGenerator>().SingleInstance();
         }
