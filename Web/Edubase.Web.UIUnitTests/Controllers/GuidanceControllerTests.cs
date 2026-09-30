@@ -153,7 +153,6 @@ namespace Edubase.Web.UIUnitTests.Controllers
             repoMock.Verify(x => x.GetByGroupAsync(expectedGroupCode), Times.Once);
             repoMock.Verify(x => x.GetAllAsync(), Times.Never);
             Assert.NotNull(controller.TempData["ArchivedBlob"]);
-            Assert.Equal(downloadName + ".zip", controller.TempData["DownloadFileName"]);
         }
 
         [Fact]

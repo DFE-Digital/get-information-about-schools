@@ -87,7 +87,6 @@ namespace Edubase.Web.UI.Controllers
                            ToNameColumnHeader(viewModel.DownloadName)))
                 {
                     TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(fileStream, fileName);
-                    TempData["DownloadFileName"] = viewModel.DownloadName + ".zip";
                 }
 
                 return View("ReadyToDownload");
@@ -103,7 +102,7 @@ namespace Edubase.Web.UI.Controllers
         {
             return new FileStreamResult((MemoryStream) TempData["ArchivedBlob"], "application/octet-stream")
             {
-                FileDownloadName = TempData["DownloadFileName"] as string ?? "Results.zip"
+                FileDownloadName = "Results.zip"
             };
         }
 
