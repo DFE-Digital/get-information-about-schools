@@ -204,12 +204,12 @@
     <PackageReference Include="Microsoft.Data.Edm" Version="5.8.5" />
     <PackageReference Include="Microsoft.Data.OData" Version="5.8.5" />
     <PackageReference Include="Microsoft.Data.Services.Client" Version="5.8.5" />
-    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="7.6.3" />
-    <PackageReference Include="Microsoft.IdentityModel.Logging" Version="7.6.3" />
-    <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="7.6.3" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.6.3" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.6.3" />
-    <PackageReference Include="Microsoft.IdentityModel.Xml" Version="7.6.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.14.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="8.14.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.14.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Xml" Version="8.14.0" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.19" />
     <PackageReference Include="morelinq" Version="3.3.2" />
@@ -224,7 +224,6 @@
     <PackageReference Include="System.ComponentModel.EventBasedAsync" Version="4.3.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.10" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.1" />
     <PackageReference Include="System.DirectoryServices" Version="9.0.10" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
@@ -239,8 +238,6 @@
     <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
     <PackageReference Include="System.Spatial" Version="5.8.5" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.5" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="WebGrease" Version="1.6.0" />

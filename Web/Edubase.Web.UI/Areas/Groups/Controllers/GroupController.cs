@@ -840,7 +840,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var query = from groupType in GroupTypesFromRouteName(academyTrustRoute)
                         join permissionType in userPermissions.GroupTypes on groupType equals permissionType
                         select new { groupType };
-            return query.ToList().IsNullOrEmpty();
+            return !query.ToList().Any();
         }
 
         private async Task<IEnumerable<LookupDto>> GetAcademyTrustGroupTypes(string academyTrustRoute)
