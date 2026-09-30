@@ -262,9 +262,13 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GovernorsGridViewModelFactory>().As<IGovernorsGridViewModelFactory>();
+            builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
+            builder.RegisterType<LaNameCodeFileGenerator>().As<ILaNameCodeFileGenerator>().SingleInstance();
 
             // 294913 - Tokens in SQL when the flag is on - falls back to table storage while off
-            if (Feature.IsEnabled("Feature_TokensMigration"))
+            var tokensInSql =
+                bool.TryParse(ConfigurationManager.AppSettings["Feature_TokensMigration"], out var enabled) && enabled;
+            if (tokensInSql)
             {
                 builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().SingleInstance();
             }
@@ -272,8 +276,6 @@ namespace Edubase.Web.UI
             {
                 builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
             }
-            builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
-            builder.RegisterType<LaNameCodeFileGenerator>().As<ILaNameCodeFileGenerator>().SingleInstance();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
