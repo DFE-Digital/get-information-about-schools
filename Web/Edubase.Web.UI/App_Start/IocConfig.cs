@@ -50,6 +50,7 @@ using Edubase.Services.Texuna.Security;
 using Edubase.Services.Texuna.Serialization;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Areas;
+using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
@@ -226,6 +227,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
             
             builder.RegisterType<GovernorsGridViewModelFactory>().As<IGovernorsGridViewModelFactory>();
+            
+            builder.RegisterType<LaNameCodeFileGenerator>().As<ILaNameCodeFileGenerator>().SingleInstance();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
@@ -467,9 +470,17 @@ namespace Edubase.Web.UI
                 builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
             }
 
+            if (Feature.IsEnabled("Feature_TokensMigration"))
+            {
+                builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().SingleInstance();
+            }
+            else
+            {
+                builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
+            }
+
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
-            builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
-            builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();           
+            builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();                    
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
@@ -479,6 +490,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
 
+            builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
         }      
     }
 }
