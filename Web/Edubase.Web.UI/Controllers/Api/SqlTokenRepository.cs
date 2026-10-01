@@ -1,13 +1,15 @@
-using Edubase.Web.UI.Models;
+using System;
 using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
+using Edubase.Web.UI.Models;
 using System.Configuration;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using Edubase.Data.Entity;
+using Edubase.Data.Repositories;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
-    public class SqlTokenRepository : ISqlTokenRepository
+    public class SqlTokenRepository : ITokenRepository
     {
         private static string BuildConnectionString()
         {
@@ -20,44 +22,75 @@ namespace Edubase.Web.UI.Controllers.Api
                 "encrypt=True;TrustServerCertificate=False;";
         }
 
-        public async Task<SqlToken> GetAsync(string partitionKey, string rowKey)
+        public async Task CreateAsync(Token message)
         {
             using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
             {
-                return await context.Tokens.FindAsync(partitionKey, rowKey);
-            }
-        }
-
-        public SqlToken Get(string partitionKey, string rowKey) => GetAsync(partitionKey, rowKey).GetAwaiter().GetResult();
-
-        public async Task UpsertAsync(SqlToken item)
-        {
-            using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
-            {
-                if (string.IsNullOrWhiteSpace(item.PartitionKey))
-                {
-                    item.PartitionKey = string.Empty;
-                }
-
-                var existing = await context.Tokens.FindAsync(item.PartitionKey, item.RowKey);
-                if (existing == null)
-                {
-                    context.Tokens.Add(item);
-                }
-                else
-                {
-                    context.Entry(existing).CurrentValues.SetValues(item);
-                }
+                context.Tokens.Add(ToSqlToken(message));
                 await context.SaveChangesAsync();
             }
         }
 
-        public async Task<IEnumerable<SqlToken>> GetAllAsync()
+        public async Task<Token> GetAsync(string id)
+        {
+            SplitId(id, out var partitionKey, out var rowKey);
+
+            using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
+            {
+                var row = await context.Tokens.FindAsync(partitionKey, rowKey);
+                return row == null ? null : FromSqlToken(row);
+            }
+        }
+
+        public Token Get(string id) => GetAsync(id).GetAwaiter().GetResult();
+
+        public async Task UpdateAsync(Token item)
         {
             using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
             {
-                return await context.Tokens.ToListAsync();
+                var row = ToSqlToken(item);
+                context.Tokens.Attach(row);
+                context.Entry(row).State = EntityState.Modified;
+                await context.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteAsync(string id)
+        {
+            SplitId(id, out var partitionKey, out var rowKey);
+
+            using (var context = new TokensDbContext(new SqlConnection(BuildConnectionString())))
+            {
+                var row = await context.Tokens.FindAsync(partitionKey, rowKey);
+                if (row != null)
+                {
+                    context.Tokens.Remove(row);
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
+
+        public static void SplitId(string id, out string partitionKey, out string rowKey)
+        {
+            if (string.IsNullOrEmpty(id) || id.Length < 5)
+            {
+                throw new ArgumentException("Id is not valid", nameof(id));
+            }
+
+            partitionKey = id.Substring(0, 4);
+            rowKey = id.Substring(4);
+        }
+
+        public static SqlToken ToSqlToken(Token token) => new SqlToken
+        {
+            PartitionKey = token.PartitionKey ?? string.Empty, RowKey = token.RowKey, Data = token.Data
+        };
+
+        public static Token FromSqlToken(SqlToken row) => new Token
+        {
+            PartitionKey = row.PartitionKey,
+            RowKey = row.RowKey,
+            Data = row.Data
+        };
     }
 }
