@@ -25,7 +25,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
             var generator = new LaNameCodeFileGenerator();
 
             string content;
-            using (var stream = generator.Generate(Rows, eFileFormat.CSV, NameHeader))
+            using (var stream = generator.Generate(Rows, eFileFormat.CSV, NameHeader, "EnglishLaNameCodes"))
             using (var reader = new StreamReader(stream))
                 content = reader.ReadToEnd();
 
@@ -43,7 +43,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
             var rows = new[] { new LaNameCodes { LaName = "The Island, Republic of", LaCode = "999", OnsLaCode = "E01000073" } };
 
             string content;
-            using (var stream = generator.Generate(rows, eFileFormat.CSV, "name"))
+            using (var stream = generator.Generate(rows, eFileFormat.CSV, "name", "sheet"))
             using (var reader = new StreamReader(stream))
                 content = reader.ReadToEnd();
 
@@ -55,27 +55,45 @@ namespace Edubase.Web.UIUnitTests.Controllers
         {
             var generator = new LaNameCodeFileGenerator();
 
-            using (var stream = generator.Generate(Rows, eFileFormat.XLSX, NameHeader))
+            using (var stream = generator.Generate(Rows, eFileFormat.XLSX, NameHeader, "EnglishLaNameCodes"))
             using (var document = SpreadsheetDocument.Open(stream, false))
             {
-                var sheetData = document.WorkbookPart.WorksheetParts.First()
-                                        .Worksheet.Elements<SheetData>().First();
+                var workbookPart = document.WorkbookPart;
+                var workSheetPart = workbookPart.WorksheetParts.FirstOrDefault();
+                var sheet = workbookPart.Workbook.Descendants<Sheet>().FirstOrDefault();
+                var sheetData = workSheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
                 var rows = sheetData.Elements<Row>().ToList();
 
+                Assert.NotNull(workbookPart);
+                Assert.NotNull(workbookPart.Workbook);
+                Assert.NotNull(sheet);
+                Assert.NotNull(sheet.Name);
+                Assert.NotNull(workSheetPart);
+                Assert.NotNull(workSheetPart.Worksheet);
+                Assert.NotNull(sheetData);
+
+                Assert.Equal("EnglishLaNameCodes", sheet.Name.Value);
                 Assert.Equal(3, rows.Count);
                 Assert.Equal(NameHeader, CellText(rows[0], 0));
                 Assert.Equal("West Place", CellText(rows[1], 0));
                 Assert.Equal("123", CellText(rows[1], 1));
                 Assert.Equal("E06000037", CellText(rows[1], 2));
                 Assert.Equal("City of England", CellText(rows[2], 0));
+
                 Assert.All(rows.Skip(1).SelectMany(r => r.Elements<Cell>()),
-                           c => Assert.Equal(CellValues.InlineString, c.DataType.Value));
+                           c => Assert.Equal(CellValues.InlineString, c.DataType?.Value));
             }
         }
 
         private static string CellText(Row row, int cellIndex)
         {
-            return row.Elements<Cell>().ElementAt(cellIndex).InlineString.Text.Text;
+            var cell = row.Elements<Cell>().ElementAt(cellIndex);
+
+            Assert.NotNull(cell);
+            Assert.NotNull(cell.InlineString);
+            Assert.NotNull(cell.InlineString.Text);
+
+            return cell.InlineString.Text.Text;
         }
     }
 }

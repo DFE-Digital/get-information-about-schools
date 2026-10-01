@@ -84,7 +84,7 @@ namespace Edubase.Web.UI.Controllers
                 var entities = await _laNameCodeRepository.GetByGroupAsync(groupCode);
 
                 using (var fileStream = _fileGenerator.Generate(Map(entities), viewModel.FileFormat.Value,
-                           ToNameColumnHeader(viewModel.DownloadName)))
+                           ToNameColumnHeader(viewModel.DownloadName), viewModel.DownloadName))
                 {
                     TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(fileStream, fileName);
                 }
