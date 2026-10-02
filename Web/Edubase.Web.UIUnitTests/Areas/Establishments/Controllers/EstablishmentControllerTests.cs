@@ -277,7 +277,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         [InlineData(true, null, false)]
         [InlineData(true, "", false)]
         [InlineData(true, "   ", false)]
-        public async Task Estab_EditDetails_OfstedReport_Shows_For_OfstedLinkEstablishmentType(bool permitted, string url, bool shows)
+        public async Task Estab_EditDetails_OfstedReport_UsesApiUrlAndDisplayPolicy(bool permitted, string url, bool shows)
         {
             var urn = 100000;
             var establishment = new EstablishmentModel
