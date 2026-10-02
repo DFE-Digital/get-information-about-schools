@@ -290,7 +290,9 @@ namespace Edubase.Web.UI.Models
 
         public string OfstedReportUrl => Establishment.OfstedReportUrl;
 
-        public bool ShowOfstedReportLink => DisplayPolicy?.OfstedReportUrl == true && !string.IsNullOrWhiteSpace(OfstedReportUrl);            
+        public bool ShowOfstedReportLink => DisplayPolicy?.OfstedReportUrl == true
+            && Uri.TryCreate(OfstedReportUrl, UriKind.Absolute, out var uri)
+            && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
         public TabWarningsModel TabWarnings { get; set; }
         public string ClosedStatusMessage
