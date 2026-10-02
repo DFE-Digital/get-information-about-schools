@@ -272,20 +272,25 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         }
 
         [Theory]
-        [InlineData((int)eLookupEstablishmentType.FoundationSchool, true)]
-        [InlineData((int) eLookupEstablishmentType.Miscellaneous, false)]
-        public async Task Estab_EditDetails_OfstedReport_Shows_For_OfstedLinkEstablishmentType(int establishmentTypeId, bool shows)
+        [InlineData(true, "http://ofsted.report.test/123456", true)]
+        [InlineData(false, "http://ofsted.report.test/123456", false)]
+        [InlineData(true, null, false)]
+        [InlineData(true, "", false)]
+        [InlineData(true, "   ", false)]
+        public async Task Estab_EditDetails_OfstedReport_Shows_For_OfstedLinkEstablishmentType(bool permitted, string url, bool shows)
         {
             var urn = 100000;
             var establishment = new EstablishmentModel
             {
                 Urn = urn,
-                TypeId = establishmentTypeId              
+                TypeId = (int) eLookupEstablishmentType.FoundationSchool,
+                OfstedReportUrl = url
             };
 
             var editEstabModel = new EditEstablishmentModel
             {
-                Urn = urn
+                Urn = urn,
+                OfstedReportUrl = url
             };           
 
             mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
@@ -302,20 +307,22 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             mockMapper.Setup(m => m.Map(It.IsAny<IEBTModel>(), editEstabModel))
                 .Returns(editEstabModel);
             mockEstablishmentReadService.Setup(e => e.GetDisplayPolicyAsync(establishment, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(() => new EstablishmentDisplayEditPolicy());
+                .ReturnsAsync(() => new EstablishmentDisplayEditPolicy
+                {
+                    OfstedReportUrl = permitted
+                });
             mockEstablishmentReadService.Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new EstablishmentEditPolicyEnvelope
                 {
-                    EditPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() }
-                });           
-            mockExternalLookupService.Setup(x => x.OfstedReportUrl(urn)).Returns("ofsted_url");         
+                    EditPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy(), OfstedReportUrl = permitted }
+                });                             
 
             var response = await controller.EditDetails(urn, null);
 
             var viewResult = Assert.IsType<ViewResult>(response);
-            var model = Assert.IsType<EditEstablishmentModel>(viewResult.Model);
+            var model = Assert.IsType<EditEstablishmentModel>(viewResult.Model);            
+            Assert.Equal(url, model.OfstedReportUrl);
             Assert.Equal(shows, model.ShowOfstedReportLink);
-            Assert.Equal(shows ? "ofsted_url" : "", model.OfstedReportUrl);            
         }
 
         [Fact]
