@@ -46,6 +46,7 @@ namespace Edubase.Web.UI
             // local development if a SHA1 hash has been provided within configuration.
             AddTrustedCertificatesFromConfiguration();
 
+            Feature.Provider = new AppConfigFeatureFlagProvider();
 
             GlobalConfiguration.Configure(x =>
             {
@@ -75,9 +76,7 @@ namespace Edubase.Web.UI
             ModelBinders.Binders.DefaultBinder = new DefaultModelBinderEx();
             ValueProviderFactories.Factories.Add(new TokenValueProviderFactory());
 
-            MvcHandler.DisableMvcResponseHeader = true;
-
-            Feature.Provider = new AppConfigFeatureFlagProvider();
+            MvcHandler.DisableMvcResponseHeader = true;            
         }
 
 

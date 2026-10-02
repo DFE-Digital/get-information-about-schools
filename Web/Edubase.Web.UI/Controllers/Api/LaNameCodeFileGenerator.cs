@@ -21,12 +21,12 @@ namespace Edubase.Web.UI.Controllers.Api
 
         private static readonly char[] CsvSpecialChars = { ',', '"', '\r', '\n' };
 
-        public MemoryStream Generate(IEnumerable<LaNameCodes> rows, eFileFormat fileFormat, string nameColumnHeader)
+        public MemoryStream Generate(IEnumerable<LaNameCodes> rows, eFileFormat fileFormat, string nameColumnHeader, string sheetName)
         {
             switch (fileFormat)
             {
                 case eFileFormat.CSV:  return GenerateCsv(rows, nameColumnHeader);
-                case eFileFormat.XLSX: return GenerateXlsx(rows, nameColumnHeader);
+                case eFileFormat.XLSX: return GenerateXlsx(rows, nameColumnHeader, sheetName);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(fileFormat), fileFormat, "Unsupported file format");
             }
@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Controllers.Api
             return "\"" + value.Replace("\"", "\"\"") + "\"";
         }
 
-        private static MemoryStream GenerateXlsx(IEnumerable<LaNameCodes> rows, string nameColumnHeader)
+        private static MemoryStream GenerateXlsx(IEnumerable<LaNameCodes> rows, string nameColumnHeader, string sheetName)
         {
             var stream = new MemoryStream();
 
@@ -83,8 +83,9 @@ namespace Edubase.Web.UI.Controllers.Api
 
                 worksheetPart.Worksheet = new Worksheet(
                     new Columns(
-                        new Column { Min = 1, Max = 1, Width = 45, CustomWidth = true },
-                        new Column { Min = 2, Max = 3, Width = 80, CustomWidth = true }),
+                        new Column { Min = 1, Max = 1, Width = 43, CustomWidth = true },
+                        new Column { Min = 2, Max = 2, Width = 64, CustomWidth = true },
+                        new Column { Min = 3, Max = 3, Width = 12, CustomWidth = true }),
                     sheetData);
 
                 var sheets = workbookPart.Workbook.AppendChild(new Sheets());
@@ -92,7 +93,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 {
                     Id      = workbookPart.GetIdOfPart(worksheetPart),
                     SheetId = 1,
-                    Name    = "LA name codes"
+                    Name    = sheetName
                 });
 
                 workbookPart.Workbook.Save();
