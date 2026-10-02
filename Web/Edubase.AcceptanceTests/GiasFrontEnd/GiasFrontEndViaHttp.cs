@@ -17,6 +17,11 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
 
         public async Task SignIn(User user)
         {
+            if (await signInAuthority.TrySignInLocally(user))
+            {
+                return;
+            }
+
             var (authorityLocation, cookies) = await StartSignIn();
             var assertionConsumerServiceUrl = new Uri(httpClient.BaseAddress!, "/Saml2/Acs");
             var (samlResponse, relayState) = await signInAuthority.SignIn(user, authorityLocation, assertionConsumerServiceUrl);

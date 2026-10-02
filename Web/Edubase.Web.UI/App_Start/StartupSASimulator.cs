@@ -54,7 +54,13 @@ namespace Edubase.Web.UI
                 CookieSameSite = SameSiteMode.Lax
             });
 
-            app.UseSaml2Authentication(CreateAuthServicesOptions());
+#if DEBUG
+            // Local acceptance sign-in uses normal cookies without remote SAML metadata.
+            if (string.IsNullOrWhiteSpace(AppSettings["LocalTestSignInKey"]))
+#endif
+            {
+                app.UseSaml2Authentication(CreateAuthServicesOptions());
+            }
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
             app.Use((context, next) =>

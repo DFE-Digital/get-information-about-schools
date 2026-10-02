@@ -16,12 +16,15 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         {
             var baseAddress = "https://localhost:44309";
             var environment = "dev";
+            var runningInAzurePipeline = false;
+
+            var localSignInKey = runningInAzurePipeline ? null : "can-be-anything";
 
             var services = new ServiceCollection();
 
             services.AddHardCodedUsers();
             services.AddEstablishmentsFromFrontEnd();
-            services.AddGiasFrontEnd(baseAddress, environment);
+            services.AddGiasFrontEnd(baseAddress, environment, localSignInKey);
 
             return services;
         }
@@ -36,7 +39,11 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddScoped<IEstablishments, EstablishmentsFromGiasFrontEnd>();
         }
 
-        private static void AddGiasFrontEnd(this ServiceCollection services, string baseAddress, string environment)
+        private static void AddGiasFrontEnd(
+            this ServiceCollection services,
+            string baseAddress,
+            string environment,
+            string? localSignInKey)
         {
             // Factory-pooled handlers share cookies across scenario scopes.
             // Give each scenario its own handler and authenticated session.
@@ -68,8 +75,16 @@ namespace Edubase.AcceptanceTests.DependencyInjection
                 return new HttpApi(simulatorClient);
             });
 
-            services.AddScoped<ISignInAuthority>(sp =>
-                new SignInSimulator(sp.GetRequiredService<IApi>(), environment));
+            services.AddScoped<ISignInAuthority>(serviceProvider =>
+            {
+                if (!string.IsNullOrWhiteSpace(localSignInKey))
+                {
+                    return new LocalSignInAuthority(
+                        serviceProvider.GetRequiredService<HttpClient>(), localSignInKey);
+                }
+
+                return new SignInSimulator(serviceProvider.GetRequiredService<IApi>(), environment);
+            });
 
             services.AddScoped<IGiasFrontEnd>(sp =>
             {
