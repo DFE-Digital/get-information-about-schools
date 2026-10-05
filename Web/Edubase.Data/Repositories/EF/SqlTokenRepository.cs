@@ -13,9 +13,9 @@ namespace Edubase.Data.Repositories.EF
             _context = context;
         }
 
-        public async Task CreateAsync(Token item)
+        public async Task CreateAsync(Token message)
         {
-            _context.Tokens.Add(item);
+            _context.Tokens.Add(message);
             await _context.SaveChangesAsync();
         }
 
