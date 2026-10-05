@@ -476,7 +476,7 @@ namespace Edubase.Web.UI
             }
             else
             {
-                builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().SingleInstance();
+                builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
             }
 
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
