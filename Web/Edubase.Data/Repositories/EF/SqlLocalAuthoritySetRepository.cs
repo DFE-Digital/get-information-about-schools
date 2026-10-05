@@ -17,9 +17,9 @@ namespace Edubase.Data.Repositories.EF
             _context = context;
         }
 
-        public async Task CreateAsync(LocalAuthoritySet item)
+        public async Task CreateAsync(LocalAuthoritySet message)
         {
-            _context.LocalAuthoritySets.Add(item);
+            _context.LocalAuthoritySets.Add(message);
             await _context.SaveChangesAsync();
         }
 
