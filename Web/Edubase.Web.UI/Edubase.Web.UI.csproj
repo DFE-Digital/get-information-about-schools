@@ -500,7 +500,6 @@
     <Compile Include="Models\Guidance\LaNameCodes.cs" />
     <Compile Include="Controllers\Api\ISqlLaNameCodeRepository.cs" />
     <Compile Include="Controllers\Api\SqlLaNameCodeRepository.cs" />
-    <Compile Include="Controllers\Api\SqlTokenRepository.cs" />
     <Compile Include="Models\LaNameCodesDbContext.cs" />
     <Compile Include="Models\LocalAuthoritySetsDbContext.cs" />
     <Compile Include="Models\NewsArticlesDbContext.cs" />
@@ -585,9 +584,7 @@
     <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlNotificationBanner.cs" />
     <Compile Include="Models\SqlNotificationTemplate.cs" />
-    <Compile Include="Models\SqlToken.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
-    <Compile Include="Models\TokensDbContext.cs" />
     <Compile Include="Models\UserPreferencesDbContext.cs" />
     <Compile Include="Controllers\Api\UserRolesController.cs" />
     <Compile Include="Controllers\ChangeHistoryController.cs" />
