@@ -502,7 +502,6 @@
     <Compile Include="Controllers\Api\SqlLaNameCodeRepository.cs" />
     <Compile Include="Controllers\Api\SqlTokenRepository.cs" />
     <Compile Include="Models\LaNameCodesDbContext.cs" />
-    <Compile Include="Models\LocalAuthoritySetsDbContext.cs" />
     <Compile Include="Models\NewsArticlesDbContext.cs" />
     <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
@@ -581,7 +580,6 @@
     <Compile Include="Models\SqlFaqItem.cs" />
     <Compile Include="Models\SqlGlossaryItems.cs" />
     <Compile Include="Models\SqlLaNameCode.cs" />
-    <Compile Include="Models\SqlLocalAuthoritySet.cs" />
     <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlNotificationBanner.cs" />
     <Compile Include="Models\SqlNotificationTemplate.cs" />
