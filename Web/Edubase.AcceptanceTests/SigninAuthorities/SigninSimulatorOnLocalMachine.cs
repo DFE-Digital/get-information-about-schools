@@ -3,12 +3,12 @@ using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.SigninAuthorities
 {
-    public sealed class LocalSignInAuthority : ISignInAuthority
+    public sealed class SigninSimulatorOnLocalMachine : ISignInAuthority
     {
         private readonly HttpClient httpClient;
         private readonly string localSignInKey;
 
-        public LocalSignInAuthority(HttpClient httpClient, string localSignInKey)
+        public SigninSimulatorOnLocalMachine(HttpClient httpClient, string localSignInKey)
         {
             ArgumentNullException.ThrowIfNull(httpClient);
             ArgumentException.ThrowIfNullOrWhiteSpace(localSignInKey);
@@ -22,7 +22,7 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             this.localSignInKey = localSignInKey;
         }
 
-        public async Task<bool> TrySignInLocally(User user)
+        public async Task SignIn(User user)
         {
             ArgumentNullException.ThrowIfNull(user);
             ArgumentException.ThrowIfNullOrWhiteSpace(user.AttributeStatementValue);
@@ -41,13 +41,6 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
                 throw new InvalidOperationException("The website did not return the expected local sign-in response.");
             }
             // The shared, scenario-scoped handler retains the normal application cookie.
-            return true;
-        }
-
-        public Task<(string SamlResponse, string RelayState)> SignIn(
-            User user, Uri authorityLocation, Uri assertionConsumerServiceUrl)
-        {
-            throw new NotSupportedException("Use TrySignInLocally; this authority does not issue SAML responses.");
         }
     }
 }

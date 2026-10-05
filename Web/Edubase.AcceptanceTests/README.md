@@ -51,7 +51,7 @@ This keeps the endpoint and JSON representation out of the scenario bindings. Fu
 4. Follow the external login callback and retrieve the home page.
 5. Read the request verification token and retain authentication cookies for subsequent requests.
 
-The current authority is [SignInSimulator](SigninAuthorities/SignInSimulator.cs). It retrieves the Azure sign-in simulator's form, reads the request correlation values, and posts a form containing the selected user's identity and SAML attributes. It returns the generated SAML response to the GIAS adapter. Environment-specific simulator URLs and descriptions are selected inside this class.
+The current authority is [SigninSimulatorInAzure](SigninAuthorities/SigninSimulatorInAzure.cs). It retrieves the Azure sign-in simulator's form, reads the request correlation values, and posts a form containing the selected user's identity and SAML attributes. It returns the generated SAML response to the GIAS adapter. Environment-specific simulator URLs and descriptions are selected inside this class.
 
 [IUsers](Users/IUsers.cs) separates user selection from sign-in mechanics. [UsersFromHardCodedValues](Users/UsersFromHardCodedValues.cs) currently supplies a fixed back office test identity. These interfaces provide places to add other user sources or sign-in implementations as the pattern expands.
 
@@ -72,7 +72,7 @@ These are HTTP-based acceptance tests against a separately running application. 
 | `IUsers` | `UsersFromHardCodedValues` |
 | `IEstablishments` | `EstablishmentsFromGiasFrontEnd` |
 | `IGiasFrontEnd` | `GiasFrontEndViaHttp` |
-| `ISignInAuthority` | `SignInSimulator` |
+| `ISignInAuthority` | `SigninSimulatorInAzure` |
 | `IApi` for simulator requests | `HttpApi` using the named `AzureSignInSimulator` client |
 
 GIAS receives a scenario-scoped `HttpClient`, handler and cookie container. This prevents a signed-in scenario's GIAS session from leaking into another scenario through a pooled handler. Automatic redirects are disabled so the sign-in implementation can explicitly process each redirect. Simulator requests use a separate named client, also with automatic redirects disabled.

@@ -79,11 +79,13 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             {
                 if (!string.IsNullOrWhiteSpace(localSignInKey))
                 {
-                    return new LocalSignInAuthority(
+                    return new SigninSimulatorOnLocalMachine(
                         serviceProvider.GetRequiredService<HttpClient>(), localSignInKey);
                 }
 
-                return new SignInSimulator(serviceProvider.GetRequiredService<IApi>(), environment);
+                return new SigninSimulatorInAzure(
+                    serviceProvider.GetRequiredService<HttpClient>(),
+                    serviceProvider.GetRequiredService<IApi>(), environment);
             });
 
             services.AddScoped<IGiasFrontEnd>(sp =>
