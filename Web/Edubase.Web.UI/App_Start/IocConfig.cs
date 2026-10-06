@@ -479,8 +479,16 @@ namespace Edubase.Web.UI
                 builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
             }
 
+            if (Feature.IsEnabled("Feature_LocalAuthoritySetsMigration"))
+            {
+                builder.RegisterType<SqlLocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().SingleInstance();
+            }
+
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
-            builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
