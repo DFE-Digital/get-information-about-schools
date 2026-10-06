@@ -109,6 +109,8 @@ namespace Edubase.Services.Establishments.Models
 
         public virtual T OfstedInspectionDate { get; set; }
 
+        public virtual T OfstedReportUrl { get; set; }
+
         public virtual T InspectorateId { get; set; }
 
         public virtual T Section41ApprovedId { get; set; }

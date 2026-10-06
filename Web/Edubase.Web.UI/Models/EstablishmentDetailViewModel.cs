@@ -288,11 +288,11 @@ namespace Edubase.Web.UI.Models
 
         public bool ShowOfstedRatings { get; set; } = true;
 
-        public string OfstedReportUrl => extService.OfstedReportUrl(Establishment.Urn);
+        public string OfstedReportUrl => Establishment.OfstedReportUrl;
 
-        public bool ShowOfstedReportLink =>
-            Establishment != null && Establishment.TypeId.HasValue &&
-            EstablishmentUtility.IsOfstedLinkEstablishmentType(Establishment.TypeId.Value);
+        public bool ShowOfstedReportLink => DisplayPolicy?.OfstedReportUrl == true
+            && Uri.TryCreate(OfstedReportUrl, UriKind.Absolute, out var uri)
+            && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
         public TabWarningsModel TabWarnings { get; set; }
         public string ClosedStatusMessage
