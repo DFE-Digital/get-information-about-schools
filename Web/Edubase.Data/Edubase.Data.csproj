@@ -162,6 +162,7 @@
     <Compile Include="Repositories\EF\LocalAuthoritySetConfiguration.cs" />
     <Compile Include="Repositories\EF\SqlLocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\EF\SqlUserPreferenceRepository.cs" />
+    <Compile Include="Repositories\EF\TokenConfiguration.cs" />
     <Compile Include="Repositories\EF\UserPreferenceConfiguration.cs" />
     <Compile Include="Repositories\WebLogItemRepository.cs" />
     <Compile Include="Repositories\FaqGroupRepository.cs" />

@@ -472,7 +472,7 @@ namespace Edubase.Web.UI
 
             if (Feature.IsEnabled("Feature_TokensMigration"))
             {
-                builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().SingleInstance();
+                builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().InstancePerRequest();
             }
             else
             {

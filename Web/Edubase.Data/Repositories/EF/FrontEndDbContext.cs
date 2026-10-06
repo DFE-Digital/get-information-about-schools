@@ -12,6 +12,7 @@ namespace Edubase.Data.Repositories.EF
         }
 
         public DbSet<UserPreference> UserPreferences { get; set; }
+        public DbSet<Token> Tokens { get; set; }
 
 
         public DbSet<LocalAuthoritySet> LocalAuthoritySets { get; set; }
@@ -19,6 +20,7 @@ namespace Edubase.Data.Repositories.EF
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new UserPreferenceConfiguration());
+            modelBuilder.Configurations.Add(new TokenConfiguration());
 
 
             modelBuilder.Configurations.Add(new LocalAuthoritySetConfiguration());
