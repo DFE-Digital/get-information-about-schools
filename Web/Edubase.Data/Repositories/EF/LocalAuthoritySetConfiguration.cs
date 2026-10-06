@@ -7,7 +7,7 @@ namespace Edubase.Data.Repositories.EF
     {
         public LocalAuthoritySetConfiguration()
         {
-            ToTable("UserPreferences", "FrontEnd");
+            ToTable("LocalAuthoritySets", "FrontEnd");
 
             HasKey(x => new
             {
