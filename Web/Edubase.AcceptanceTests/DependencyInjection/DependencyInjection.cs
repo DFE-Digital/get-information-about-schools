@@ -16,15 +16,15 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         {
             var baseAddress = "https://localhost:44309";
             var environment = "dev";
-            var runningInAzurePipeline = false;
+            var runningInAzurePipeline = string.Equals(Environment.GetEnvironmentVariable("TF_BUILD"), "true", StringComparison.OrdinalIgnoreCase);
 
-            var localSignInKey = runningInAzurePipeline ? null : "can-be-anything";
+            var useLocalSimulator = !runningInAzurePipeline; // Set false to use Azure locally.
 
             var services = new ServiceCollection();
 
             services.AddHardCodedUsers();
             services.AddEstablishmentsFromFrontEnd();
-            services.AddGiasFrontEnd(baseAddress, environment, localSignInKey);
+            services.AddGiasFrontEnd(baseAddress, environment, useLocalSimulator);
 
             return services;
         }
@@ -43,7 +43,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             this ServiceCollection services,
             string baseAddress,
             string environment,
-            string? localSignInKey)
+            bool useLocalSimulator)
         {
             // Factory-pooled handlers share cookies across scenario scopes.
             // Give each scenario its own handler and authenticated session.
@@ -77,10 +77,10 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
             services.AddScoped<ISignInAuthority>(serviceProvider =>
             {
-                if (!string.IsNullOrWhiteSpace(localSignInKey))
+                if (useLocalSimulator)
                 {
                     return new SigninSimulatorOnLocalMachine(
-                        serviceProvider.GetRequiredService<HttpClient>(), localSignInKey);
+                        serviceProvider.GetRequiredService<HttpClient>());
                 }
 
                 return new SigninSimulatorInAzure(

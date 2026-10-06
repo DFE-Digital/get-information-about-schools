@@ -1,5 +1,7 @@
 # Signing in for acceptance tests
 
+> Local sign-in is self-contained and enabled through the ignored development config. See [local sign-in](LocalSamlSetup.md).
+
 The purpose of sign-in is to give one acceptance-test scenario an authenticated GIAS session for a selected user. The scenario calls [`IGiasFrontEnd.SignIn(user)`](../GiasFrontEnd/IGiasFrontEnd.cs); it does not need to know how that identity reaches the website. [`GiasFrontEndViaHttp`](../GiasFrontEnd/GiasFrontEndViaHttp.cs) coordinates the exchange with an [`ISignInAuthority`](ISignInAuthority.cs).
 
 These are HTTP exchanges against a separately running website and backend. No browser is launched, and the tests do not execute browser JavaScript. Signing in does not create or seed the backend user.
@@ -34,17 +36,10 @@ An unsigned-in scenario does not call `SignIn`. Sign-in completion is also separ
 
 ## How the interface expresses the model
 
-`GiasFrontEndViaHttp.SignIn(user)` first calls `ISignInAuthority.TrySignInLocally(user)`:
-
-- `true` means the local mechanism has completed sign-in using the shared GIAS client. The coordinator returns immediately.
-- `false` means the coordinator must start the external exchange. This is the interface's default implementation.
-- An exception means sign-in failed. It does not trigger a fallback to the other implementation.
-
-For the external exchange, the coordinator starts website login, then calls `ISignInAuthority.SignIn(user, authorityLocation, assertionConsumerServiceUrl)`. That method returns a SAML response and relay state; the coordinator submits them to GIAS and completes the website session. Thus the current interface has a local shortcut and a SAML-specific external contract, while the shared responsibilities above apply to both.
-
+`ISignInAuthority` exposes only `Task SignIn(User user)`. `GiasFrontEndViaHttp` delegates to the selected implementation. Each implementation completes its own authentication exchange using the scenario-scoped GIAS client; dependency injection chooses which one to use.
 ## SigninSimulatorInAzure
 
-[`SigninSimulatorInAzure`](SigninSimulatorInAzure.cs) supplies a SAML assertion through the Azure-hosted sign-in simulator. GIAS still owns the application session. Its `TrySignInLocally` uses the default `false`, so the coordinator performs the full exchange below.
+[`SigninSimulatorInAzure`](SigninSimulatorInAzure.cs) supplies a SAML assertion through the Azure-hosted sign-in simulator. GIAS still owns the application session. It performs the complete exchange below within its implementation.
 
 ### Start website login — shared step 2
 
@@ -74,44 +69,20 @@ The coordinator reads cookies from the ACS and callback responses, then explicit
 
 This describes the current adapter: it assumes particular response headers, cookie ordering and HTML fields rather than checking every sign-in response explicitly. The home-page fetch is not itself an assertion of the user's roles or correct landing-page navigation.
 
-The website must have compatible simulator/SAML configuration and reachable metadata, and the simulator environment must agree with that configuration. In Debug, a non-empty website `LocalTestSignInKey` disables SAML middleware registration, so clear that setting and restart the website when using this route. See [`StartupSASimulator`](../../Edubase.Web.UI/App_Start/StartupSASimulator.cs).
+The website must have compatible simulator/SAML configuration and reachable metadata, and the simulator environment must agree with that configuration. Restore the Azure SASimulatorUri and SASimulatorGuid values in the ignored development config when exercising Azure. See [`StartupSASimulator`](../../Edubase.Web.UI/App_Start/StartupSASimulator.cs).
 
 ## SigninSimulatorOnLocalMachine
 
-[`SigninSimulatorOnLocalMachine`](SigninSimulatorOnLocalMachine.cs) combines [steps 2–4](#2-establish-a-trusted-identity) in one request to the local website. It uses the same scenario-scoped HTTP client as `GiasFrontEndViaHttp`, so the resulting session is immediately available to the scenario.
+[`SigninSimulatorOnLocalMachine`](SigninSimulatorOnLocalMachine.cs) completes the same shared steps without a separate identity-provider process.
 
-### Submit the user to the local endpoint — shared steps 1–2
+For [step 2](#2-establish-a-trusted-identity), it requests normal GIAS login and retains the correlation cookie. It reads the SAML request and relay state from the redirect, checks that the request targets this local website, and generates a signed SAML response in the test process using the selected user's name ID and backend user ID. It never follows the placeholder identity-provider URL.
 
-The constructor requires a non-empty local sign-in key and an HTTP(S) loopback base address. `TrySignInLocally` requires a user with a non-empty `AttributeStatementValue`, then sends:
+The class posts the response and relay state to `/Saml2/Acs`, then follows the same-origin external callback. GIAS validates the signature, converts the claims, loads backend roles and issues the application cookie: shared steps 3 and 4. The scenario's cookie container retains the cookies for step 5.
 
-```text
-POST /Account/LocalSignIn
-X-Gias-Local-Sign-In-Key: <matching website key>
-Content-Type: application/x-www-form-urlencoded
+The acceptance-test project's local Debug build generates its signing certificate and public federation metadata, without modifying the ignored development config. Set the existing simulator settings manually to select local files or Azure. GIAS's existing federation loader establishes trust; the web app has no new bootstrap or trust code. See [local setup](LocalSamlSetup.md).
 
-userId=<URL-encoded User.AttributeStatementValue>
-```
+## Selecting an implementation
 
-`User.NameId` is not used by this mechanism. The endpoint in [`AccountController.LocalSignIn`](../../Edubase.Web.UI/Controllers/AccountController.cs) is compiled only in Debug. It returns 404 unless the request is local, `owin:appStartup` is `SASimulatorConfiguration`, and the header exactly matches a non-empty website `LocalTestSignInKey`. A blank user ID returns 400. These checks provide this development mechanism's trust boundary for [step 2](#2-establish-a-trusted-identity).
+The [composition root](../DependencyInjection/DependencyInjection.cs) selects local sign-in outside Azure Pipelines. A local Debug build prepares metadata automatically; simulator settings remain under your control; restart a website that was already running when those settings changed.
 
-### Build the identity and issue the cookie — shared steps 3–4
-
-The endpoint constructs an external identity containing an `SAUserId` claim from `userId`. It uses `StubClaimsIdConverter`, loads backend roles and adds them to the application identity, reproducing [step 3](#3-build-the-application-identity-and-load-roles) as performed by the simulator-mode external callback.
-
-It calls `AuthenticationManager.SignIn` and returns HTTP 204. The normal application cookie middleware implements [step 4](#4-issue-the-application-session); the local key is neither the application cookie nor a SAML signing key. Backend failures still fail sign-in.
-
-### Reuse the session — shared step 5
-
-The shared HTTP handler retains the application cookie from that response ([step 5](#5-retain-the-session-for-the-scenario)). The authority requires a successful response with status exactly 204 before returning `true`. The coordinator then returns without a SAML exchange, external callback or home-page token fetch. Calling this authority's SAML `SignIn` method directly throws `NotSupportedException`.
-
-This path exercises application identity conversion, backend role lookup and application cookie issuance. It does not exercise SAML validation, remote metadata, temporary external authentication, or the callback's landing-page selection. It does not fetch an anti-forgery token; a later operation needing one must obtain it separately.
-
-## Selecting and configuring an implementation
-
-The [composition root](../DependencyInjection/DependencyInjection.cs) selects the local authority when `localSignInKey` is non-blank; otherwise it selects Azure. At present, `CreateServices` hard-codes the website as `https://localhost:44309`, environment as `dev`, `runningInAzurePipeline` as `false`, and a non-empty local key. Consequently, the checked-in code selects local sign-in. It currently reads neither `TF_BUILD` nor `GIAS_LOCAL_SIGN_IN_KEY`.
-
-For local sign-in, run the website in Debug with `SASimulatorConfiguration` and configure its ignored local appSettings file with a `LocalTestSignInKey` matching the key passed by the composition root. Restart the website after configuration changes. Normal localhost HTTPS certificate trust still applies. In this mode, startup retains cookie middleware but skips remote SAML middleware and metadata.
-
-For Azure sign-in, pass a null or blank `localSignInKey`, select the matching simulator environment, and ensure the website registers SAML middleware as described above. Both implementations require the running website, backend and appropriate test-user data.
-
-The separate [local setup guide](SigninSimulatorOnLocalMachine.md) still describes environment-variable and pipeline detection. Those selection instructions do not match the current composition root; use the actual selection rules in this section until that configuration is reconciled.
+To exercise Azure locally, set the Azure simulator settings and set `useLocalSimulator` to false. Pipeline builds do not prepare local metadata or change the ignored config.

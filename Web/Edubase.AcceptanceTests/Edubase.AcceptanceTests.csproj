@@ -1,7 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="RunCodeAnalysis">
+<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="RunCodeAnalysis">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <StartupObject>Edubase.AcceptanceTests.SigninAuthorities.LocalSignInSetup</StartupObject>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <!-- Legacy FxCop cannot analyse .NET 8. Override the pipeline setting only for this project. -->
@@ -9,7 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="LocalSignInSimulator\**" />
+    <EmbeddedResource Remove="LocalSignInSimulator\**" />
+    <None Remove="LocalSignInSimulator\**" />
+    <ReqnrollFeatureFile Remove="LocalSignInSimulator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.8.2" />
+    <PackageReference Include="Sustainsys.Saml2" Version="2.10.0" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
@@ -22,4 +32,16 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ReqnrollObsoleteCodeBehindFiles Remove="LocalSignInSimulator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ReqnrollLegacyCodeBehindFiles Remove="LocalSignInSimulator\**" />
+  </ItemGroup>
+
+  <Target Name="PrepareLocalSaml" AfterTargets="Build"
+          Condition="'$(Configuration)' == 'Debug' And '$(TF_BUILD)' != 'True' And '$(CI)' != 'true' And '$(DesignTimeBuild)' != 'true' And '$(PrepareLocalSignIn)' != 'false'">
+    <Exec Command="dotnet &quot;$(TargetPath)&quot;" />
+  </Target>
 </Project>

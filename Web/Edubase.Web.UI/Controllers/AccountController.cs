@@ -46,32 +46,6 @@ namespace Edubase.Web.UI.Controllers
                 Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl.Clean() ?? "/" }));
         }
 
-#if DEBUG
-        [HttpPost, Route(nameof(LocalSignIn)), AllowAnonymous]
-        public async Task<ActionResult> LocalSignIn(string userId)
-        {
-            var configuredKey = ConfigurationManager.AppSettings["LocalTestSignInKey"];
-            if (!Request.IsLocal ||
-                ConfigurationManager.AppSettings["owin:appStartup"] != "SASimulatorConfiguration" ||
-                string.IsNullOrWhiteSpace(configuredKey) ||
-                !string.Equals(Request.Headers["X-Gias-Local-Sign-In-Key"], configuredKey, StringComparison.Ordinal))
-            {
-                return HttpNotFound();
-            }
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return new HttpStatusCodeResult(400, "A user ID is required.");
-            }
-
-            var externalIdentity = new ClaimsIdentity(new[] { new Claim(EduClaimTypes.SAUserId, userId) });
-            var applicationIdentity = new StubClaimsIdConverter().Convert(externalIdentity);
-            var principal = new ClaimsPrincipal(applicationIdentity);
-            var roles = await _securityService.GetRolesAsync(principal);
-            applicationIdentity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-            AuthenticationManager.SignIn(applicationIdentity);
-            return new HttpStatusCodeResult(204);
-        }
-#endif
 
         [Route(nameof(ExternalLoginCallback)), AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
