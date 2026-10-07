@@ -211,7 +211,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<ChangeHistoryService>().As<IChangeHistoryService>();
 
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
-            builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();            
+            builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
 
             builder.RegisterType<DataQualityWriteService>().As<IDataQualityWriteService>();
             builder.RegisterType<DataQualityReadService>().As<IDataQualityReadService>();
@@ -225,9 +225,9 @@ namespace Edubase.Web.UI
             builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>()
                 .InstancePerRequest();
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
-            
+
             builder.RegisterType<GovernorsGridViewModelFactory>().As<IGovernorsGridViewModelFactory>();
-            
+
             builder.RegisterType<LaNameCodeFileGenerator>().As<ILaNameCodeFileGenerator>().SingleInstance();
         }
 
@@ -472,15 +472,23 @@ namespace Edubase.Web.UI
 
             if (Feature.IsEnabled("Feature_TokensMigration"))
             {
-                builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().SingleInstance();
+                builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().InstancePerRequest();
             }
             else
             {
                 builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
             }
 
+            if (Feature.IsEnabled("Feature_LocalAuthoritySetsMigration"))
+            {
+                builder.RegisterType<SqlLocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().SingleInstance();
+            }
+
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
-            builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();                    
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
@@ -491,6 +499,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
 
             builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
-        }      
+        }
     }
 }
