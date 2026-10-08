@@ -10,7 +10,7 @@ namespace Edubase.Data.Repositories
     {
         Task CreateAsync(IEnumerable<FaqGroup> entities);
         Task CreateAsync(FaqGroup entity);
-        Task CreateAsync(params LocalAuthoritySet[] entities);
+        Task CreateAsync(params FaqGroup[] entities);
         Task<Page<FaqGroup>> GetAllAsync(int take, TableContinuationToken skip = null);
         Task<FaqGroup> GetAsync(string id);
         Task DeleteAsync(string id);
