@@ -15,10 +15,14 @@ namespace Edubase.Data.Repositories.EF
         public DbSet<Token> Tokens { get; set; }
         public DbSet<LocalAuthoritySet> LocalAuthoritySets { get; set; }
 
+        public DbSet<GlossaryItem> GlossaryItems { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new UserPreferenceConfiguration());
             modelBuilder.Configurations.Add(new TokenConfiguration());
+            modelBuilder.Configurations.Add(new LocalAuthoritySetConfiguration());
+
             modelBuilder.Configurations.Add(new LocalAuthoritySetConfiguration());
             base.OnModelCreating(modelBuilder);
         }

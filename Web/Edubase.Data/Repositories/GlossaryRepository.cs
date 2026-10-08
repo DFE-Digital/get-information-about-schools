@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Storage.Table.Queryable;
 
 namespace Edubase.Data.Repositories
 {
-    public class GlossaryRepository : TableStorageBase<GlossaryItem>
+    public class GlossaryRepository : TableStorageBase<GlossaryItem>, IGlossaryRepository
     {
         public GlossaryRepository()
             : base("DataConnectionString")
@@ -22,9 +22,9 @@ namespace Edubase.Data.Repositories
         public async Task CreateAsync(params GlossaryItem[] messages)
         {
             /*
-             * A batch operation is a collection of table operations which are executed by the Storage Service REST API as a 
-             * single atomic operation, by invoking an Entity Group Transaction. A batch operation may contain up to 100 individual table operations, 
-             * with the requirement that each operation entity must have same partition key. A batch with a retrieve operation cannot contain 
+             * A batch operation is a collection of table operations which are executed by the Storage Service REST API as a
+             * single atomic operation, by invoking an Entity Group Transaction. A batch operation may contain up to 100 individual table operations,
+             * with the requirement that each operation entity must have same partition key. A batch with a retrieve operation cannot contain
              * any other operations. Note that the total payload of a batch operation is limited to 4MB.
              */
             var partitionKeys = messages.Select(x => x.PartitionKey).Distinct();
@@ -64,6 +64,6 @@ namespace Edubase.Data.Repositories
         }
 
         public async Task UpdateAsync(GlossaryItem item) => await Table.ExecuteAsync(TableOperation.Replace(item));
-        
+
     }
 }
