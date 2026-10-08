@@ -495,7 +495,6 @@
     <Compile Include="Models\FaqItemsDbContext.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
-    <Compile Include="Models\GlossaryItemsDbContext.cs" />
     <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
     <Compile Include="Models\Guidance\LaNameCodes.cs" />
     <Compile Include="Controllers\Api\ISqlLaNameCodeRepository.cs" />
@@ -577,7 +576,6 @@
     <Compile Include="Models\SqlDataQualityStatus.cs" />
     <Compile Include="Models\SqlFaqGroup.cs" />
     <Compile Include="Models\SqlFaqItem.cs" />
-    <Compile Include="Models\SqlGlossaryItems.cs" />
     <Compile Include="Models\SqlLaNameCode.cs" />
     <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlNotificationBanner.cs" />

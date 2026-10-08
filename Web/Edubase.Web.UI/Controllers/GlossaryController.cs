@@ -16,9 +16,9 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("glossary"), Route("{action=index}")]
     public class GlossaryController : Controller
     {
-        private readonly GlossaryRepository _glossaryRepository;
+        private readonly IGlossaryRepository _glossaryRepository;
 
-        public GlossaryController(GlossaryRepository glossaryRepository)
+        public GlossaryController(IGlossaryRepository glossaryRepository)
         {
             _glossaryRepository = glossaryRepository;
         }
@@ -32,7 +32,7 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("Create", Name = "CreateGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public ActionResult Create() => View("CreateEdit", new GlossaryItemViewModel());
-        
+
         [Route("Edit/{id}", Name = "EditGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditAsync(string id)
         {

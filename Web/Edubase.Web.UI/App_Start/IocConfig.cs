@@ -488,10 +488,28 @@ namespace Edubase.Web.UI
                 builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().SingleInstance();
             }
 
+
+
+
+
+
+
+
+
+
+
+            if (Feature.IsEnabled("Feature_GlossaryItemsMigration"))
+            {
+                builder.RegisterType<SqlGlossaryItemRepository>().As<IGlossaryRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<GlossaryRepository>().As<IGlossaryRepository>().SingleInstance();
+            }
+
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqGroupRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
