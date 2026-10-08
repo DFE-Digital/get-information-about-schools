@@ -23,7 +23,7 @@ namespace Edubase.Data.Repositories.EF
             modelBuilder.Configurations.Add(new TokenConfiguration());
             modelBuilder.Configurations.Add(new LocalAuthoritySetConfiguration());
 
-            modelBuilder.Configurations.Add(new LocalAuthoritySetConfiguration());
+            modelBuilder.Configurations.Add(new GlossaryItemConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
