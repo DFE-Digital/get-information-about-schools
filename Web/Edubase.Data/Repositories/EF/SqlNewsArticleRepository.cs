@@ -44,9 +44,9 @@ namespace Edubase.Data.Repositories.EF
                 query = query.Where(x => x.ArticleDate <= DateTime.Now);
             }
 
-            if (year != null)
+            if (year is int yearValue)
             {
-                query = query.Where(x => x.ArticleDate >= new DateTime(year.Value, 1, 1) && x.ArticleDate < new DateTime(year.Value, 12, 31, 23, 59, 59));
+                query = query.Where(x => x.ArticleDate >= new DateTime(yearValue, 1, 1) && x.ArticleDate < new DateTime(yearValue, 12, 31, 23, 59, 59));
             }
 
             query = query.Take(take);
