@@ -15,9 +15,9 @@ namespace Edubase.Web.UI.Controllers
     public class FaqController : Controller
     {
         private readonly FaqItemRepository _FaqItemRepository;
-        private readonly FaqGroupRepository _FaqGroupRepository;
+        private readonly IFaqGroupRepository _FaqGroupRepository;
 
-        public FaqController(FaqItemRepository FaqItemRepository, FaqGroupRepository FaqGroupRepository)
+        public FaqController(FaqItemRepository FaqItemRepository, IFaqGroupRepository FaqGroupRepository)
         {
             _FaqItemRepository = FaqItemRepository;
             _FaqGroupRepository = FaqGroupRepository;

@@ -491,7 +491,6 @@
     <Compile Include="Models\DataQualityStatusDbContext.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
-    <Compile Include="Models\FaqGroupsDbContext.cs" />
     <Compile Include="Models\FaqItemsDbContext.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
@@ -575,7 +574,6 @@
     <Compile Include="Controllers\Api\SqlDataController.cs" />
     <Compile Include="Models\SqlApiRecorderSessionItem.cs" />
     <Compile Include="Models\SqlDataQualityStatus.cs" />
-    <Compile Include="Models\SqlFaqGroup.cs" />
     <Compile Include="Models\SqlFaqItem.cs" />
     <Compile Include="Models\SqlGlossaryItems.cs" />
     <Compile Include="Models\SqlLaNameCode.cs" />

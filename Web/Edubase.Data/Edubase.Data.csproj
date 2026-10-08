@@ -158,13 +158,16 @@
     <Compile Include="Entity\UserPreference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
+    <Compile Include="Repositories\EF\FaqGroupConfiguration.cs" />
     <Compile Include="Repositories\EF\FrontEndDbContext.cs" />
     <Compile Include="Repositories\EF\LocalAuthoritySetConfiguration.cs" />
+    <Compile Include="Repositories\EF\SqlFaqGroupRepository.cs" />
     <Compile Include="Repositories\EF\SqlLocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\EF\SqlTokenRepository.cs" />
     <Compile Include="Repositories\EF\SqlUserPreferenceRepository.cs" />
     <Compile Include="Repositories\EF\TokenConfiguration.cs" />
     <Compile Include="Repositories\EF\UserPreferenceConfiguration.cs" />
+    <Compile Include="Repositories\IFaqGroupRepository.cs" />
     <Compile Include="Repositories\WebLogItemRepository.cs" />
     <Compile Include="Repositories\FaqGroupRepository.cs" />
     <Compile Include="Repositories\FaqItemRepository.cs" />
