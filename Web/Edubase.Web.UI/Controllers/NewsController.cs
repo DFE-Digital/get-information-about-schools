@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Data;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
@@ -16,9 +16,9 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("News"), Route("{action=index}")]
     public class NewsController : EduBaseController
     {
-        private readonly NewsArticleRepository _newsRepository;
+        private readonly INewsArticleRepository _newsRepository;
 
-        public NewsController(NewsArticleRepository newsRepository)
+        public NewsController(INewsArticleRepository newsRepository)
         {
             _newsRepository = newsRepository;
         }
