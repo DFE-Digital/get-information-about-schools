@@ -1,6 +1,6 @@
 using AngleSharp.Common;
-using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Apis;
+using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.SigninAuthorities

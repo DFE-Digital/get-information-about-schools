@@ -14,17 +14,15 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         [ScenarioDependencies]
         public static IServiceCollection CreateServices()
         {
-            var baseAddress = "https://localhost:44309";
-            var environment = "dev";
-            var runningInAzurePipeline = string.Equals(Environment.GetEnvironmentVariable("TF_BUILD"), "true", StringComparison.OrdinalIgnoreCase);
-
-            var useLocalSimulator = !runningInAzurePipeline; // Set false to use Azure locally.
+            var settings = Settings.Load();
 
             var services = new ServiceCollection();
 
+            services.AddSingleton(settings);
+
             services.AddHardCodedUsers();
             services.AddEstablishmentsFromFrontEnd();
-            services.AddGiasFrontEnd(baseAddress, environment, useLocalSimulator);
+            services.AddGiasFrontEnd(settings.GiasFrontEndBaseAddress, settings.Environment, settings.UseLocalSignIn);
 
             return services;
         }

@@ -105,7 +105,7 @@ namespace Edubase.AcceptanceTests.Establishments
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Establishments/Establishments.feature.ndjson", 4);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Establishments/Establishments.feature.ndjson", 5);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -133,15 +133,15 @@ namespace Edubase.AcceptanceTests.Establishments
             await this.TestTearDownAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Get Establishment by URN without signing in")]
+        [global::Xunit.SkippableFactAttribute(DisplayName="Get an Establishment by URN for a back office user")]
         [global::Xunit.TraitAttribute("FeatureTitle", "Establishments")]
-        [global::Xunit.TraitAttribute("Description", "Get Establishment by URN without signing in")]
-        public async global::System.Threading.Tasks.Task GetEstablishmentByURNWithoutSigningIn()
+        [global::Xunit.TraitAttribute("Description", "Get an Establishment by URN for a back office user")]
+        public async global::System.Threading.Tasks.Task GetAnEstablishmentByURNForABackOfficeUser()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get Establishment by URN without signing in", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get an Establishment by URN for a back office user", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 3
@@ -155,7 +155,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             {
                 await this.ScenarioStartAsync();
 #line 4
-    await testRunner.GivenAsync("a user is not signed in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.GivenAsync("a back office user is signed in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 5
     await testRunner.AndAsync("an Establishment with URN \"141491\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -164,24 +164,30 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
     await testRunner.WhenAsync("the user requests the Establishment with URN \"141491\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 7
-    await testRunner.ThenAsync("an error occurs", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("the Establishment URN is \"141491\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 8
+    await testRunner.AndAsync("the Establishment Name is \"Landau Forte Academy Tamworth Sixth Form1\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 9
+    await testRunner.AndAsync("the Establishment Type is \"Academy 16 to 19 sponsor led\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Get an Establishment by URN for a back office user")]
+        [global::Xunit.SkippableFactAttribute(DisplayName="Get Establishment by URN without signing in")]
         [global::Xunit.TraitAttribute("FeatureTitle", "Establishments")]
-        [global::Xunit.TraitAttribute("Description", "Get an Establishment by URN for a back office user")]
-        public async global::System.Threading.Tasks.Task GetAnEstablishmentByURNForABackOfficeUser()
+        [global::Xunit.TraitAttribute("Description", "Get Establishment by URN without signing in")]
+        public async global::System.Threading.Tasks.Task GetEstablishmentByURNWithoutSigningIn()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get an Establishment by URN for a back office user", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get Establishment by URN without signing in", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 9
+#line 11
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -191,23 +197,54 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 10
-    await testRunner.GivenAsync("a back office user is signed in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 11
-    await testRunner.AndAsync("an Establishment with URN \"141491\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
 #line 12
-    await testRunner.WhenAsync("the user requests the Establishment with URN \"141491\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.GivenAsync("a user is not signed in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 13
-    await testRunner.ThenAsync("the Establishment URN is \"141491\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.AndAsync("an Establishment with URN \"141491\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 14
-    await testRunner.AndAsync("the Establishment Name is \"Landau Forte Academy Tamworth Sixth Form1\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.WhenAsync("the user requests the Establishment with URN \"141491\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 15
-    await testRunner.AndAsync("the Establishment Type is \"Academy 16 to 19 sponsor led\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.ThenAsync("an error occurs", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Get an Establishment by URN that does not exist")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Establishments")]
+        [global::Xunit.TraitAttribute("Description", "Get an Establishment by URN that does not exist")]
+        public async global::System.Threading.Tasks.Task GetAnEstablishmentByURNThatDoesNotExist()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "2";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get an Establishment by URN that does not exist", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 17
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 18
+    await testRunner.GivenAsync("a back office user is signed in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 19
+    await testRunner.AndAsync("an Establishment with URN \"0\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 20
+    await testRunner.WhenAsync("the user requests the Establishment with URN \"0\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 21
+    await testRunner.ThenAsync("the Establishment is not found", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

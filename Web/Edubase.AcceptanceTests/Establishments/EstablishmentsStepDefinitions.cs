@@ -1,7 +1,6 @@
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Edubase.AcceptanceTests.Establishments
 {
@@ -52,17 +51,12 @@ namespace Edubase.AcceptanceTests.Establishments
             {
                 establishment = await establishments.GetEstablishment(p0);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                errorMessage = $"Failed to retrieve establishment with URN {p0}.";
+                errorMessage = $"An error occurred. Failed to retrieve establishment with URN {p0}. {e.Message}";
             }
         }
 
-        [Then("an error occurs")]
-        public void ThenAnErrorOccurs()
-        {
-            Assert.Equal(errorMessage, $"Failed to retrieve establishment with URN {urn}.");
-        }
 
         [Then("the Establishment URN is {string}")]
         public void ThenTheEstablishmentURNIs(int p0)
@@ -80,6 +74,18 @@ namespace Edubase.AcceptanceTests.Establishments
         public void ThenTheEstablishmentTypeIsNotEmpty(string p0)
         {
             Assert.Equal(p0, establishment.TypeName);
+        }
+
+        [Then("an error occurs")]
+        public void ThenAnErrorOccurs()
+        {
+            Assert.Contains("An error occurred.", errorMessage);
+        }
+
+        [Then("the Establishment is not found")]
+        public void ThenTheEstablishmentIsNotFound()
+        {
+            Assert.Contains("Not Found", errorMessage);
         }
     }
 }

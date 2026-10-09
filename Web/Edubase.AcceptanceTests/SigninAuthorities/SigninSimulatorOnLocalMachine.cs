@@ -1,4 +1,3 @@
-using Edubase.LocalDevelopment;
 using System.IO.Compression;
 using System.Net;
 using System.Security.Claims;
@@ -9,6 +8,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
+using Edubase.LocalDevelopment;
 using Microsoft.IdentityModel.Tokens.Saml2;
 using Sustainsys.Saml2;
 using Sustainsys.Saml2.Metadata;
@@ -81,16 +81,18 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             using var inflated = new DeflateStream(compressed, CompressionMode.Decompress);
             using var reader = XmlReader.Create(inflated, new XmlReaderSettings
             {
-                DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null, MaxCharactersInDocument = 65536
+                DtdProcessing = DtdProcessing.Prohibit,
+                XmlResolver = null,
+                MaxCharactersInDocument = 65536
             });
             var request = XElement.Load(reader);
             XNamespace protocol = "urn:oasis:names:tc:SAML:2.0:protocol";
             XNamespace assertion = "urn:oasis:names:tc:SAML:2.0:assertion";
-            var requestId = (string?)request.Attribute("ID");
+            var requestId = (string?) request.Attribute("ID");
             if (request.Name != protocol + "AuthnRequest" || string.IsNullOrWhiteSpace(requestId) ||
-                (string?)request.Attribute("Destination") != Authority.AbsoluteUri ||
-                (string?)request.Attribute("AssertionConsumerServiceURL") != acs.AbsoluteUri ||
-                (string?)request.Element(assertion + "Issuer") != Audience)
+                (string?) request.Attribute("Destination") != Authority.AbsoluteUri ||
+                (string?) request.Attribute("AssertionConsumerServiceURL") != acs.AbsoluteUri ||
+                (string?) request.Element(assertion + "Issuer") != Audience)
                 throw new InvalidOperationException("The SAML request does not match the local GIAS website.");
 
             var identity = new ClaimsIdentity(new[]
@@ -113,7 +115,7 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
         {
             if ((response.StatusCode != HttpStatusCode.Redirect && response.StatusCode != HttpStatusCode.SeeOther) ||
                 response.Headers.Location is null)
-                throw new InvalidOperationException($"Expected a sign-in redirect, received {(int)response.StatusCode} from {response.RequestMessage?.RequestUri}.");
+                throw new InvalidOperationException($"Expected a sign-in redirect, received {(int) response.StatusCode} from {response.RequestMessage?.RequestUri}.");
             return response.Headers.Location;
         }
     }
