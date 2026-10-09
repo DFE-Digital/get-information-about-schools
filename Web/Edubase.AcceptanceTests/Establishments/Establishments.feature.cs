@@ -176,15 +176,15 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Get Establishment by URN without signing in")]
+        [global::Xunit.SkippableFactAttribute(DisplayName="Get an Establishment by URN without signing in")]
         [global::Xunit.TraitAttribute("FeatureTitle", "Establishments")]
-        [global::Xunit.TraitAttribute("Description", "Get Establishment by URN without signing in")]
-        public async global::System.Threading.Tasks.Task GetEstablishmentByURNWithoutSigningIn()
+        [global::Xunit.TraitAttribute("Description", "Get an Establishment by URN without signing in")]
+        public async global::System.Threading.Tasks.Task GetAnEstablishmentByURNWithoutSigningIn()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get Establishment by URN without signing in", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get an Establishment by URN without signing in", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 11
