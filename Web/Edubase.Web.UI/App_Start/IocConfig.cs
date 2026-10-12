@@ -497,6 +497,15 @@ namespace Edubase.Web.UI
                 builder.RegisterType<FaqGroupRepository>().As<IFaqGroupRepository>().SingleInstance();
             }
 
+            if (Feature.IsEnabled("Feature_FaqItemsMigration"))
+            {
+                builder.RegisterType<SqlFaqItemRepository>().As<IFaqItemRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<FaqItemRepository>().As<IFaqItemRepository>().SingleInstance();
+            }
+
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
