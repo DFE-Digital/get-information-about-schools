@@ -238,7 +238,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
     await testRunner.GivenAsync("a back office user is signed in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 19
-    await testRunner.AndAsync("an Establishment with URN \"0\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("an Establishment with URN \"0\" does not exist", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 20
     await testRunner.WhenAsync("the user requests the Establishment with URN \"0\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");

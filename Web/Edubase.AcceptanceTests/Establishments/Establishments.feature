@@ -16,6 +16,6 @@ Scenario: Get an Establishment by URN without signing in
 
 Scenario: Get an Establishment by URN that does not exist
     Given a back office user is signed in
-    And an Establishment with URN "0" exists
+    And an Establishment with URN "0" does not exist
     When the user requests the Establishment with URN "0"
     Then the Establishment is not found

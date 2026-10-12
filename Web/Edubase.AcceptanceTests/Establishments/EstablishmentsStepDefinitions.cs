@@ -13,7 +13,6 @@ namespace Edubase.AcceptanceTests.Establishments
         private readonly IEstablishments establishments;
         private Establishment establishment;
         private string errorMessage;
-        private int urn;
 
         public EstablishmentsStepDefinitions(
             IUsers users,
@@ -41,7 +40,11 @@ namespace Edubase.AcceptanceTests.Establishments
         [Given("an Establishment with URN {string} exists")]
         public void GivenEstablishmentWithURNExists(int p0)
         {
-            urn = p0;
+        }
+
+        [Given("an Establishment with URN {string} does not exist")]
+        public void GivenAnEstablishmentWithURNDoesNotExist(string p0)
+        {
         }
 
         [When("the user requests the Establishment with URN {string}")]
