@@ -488,12 +488,20 @@ namespace Edubase.Web.UI
                 builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().SingleInstance();
             }
 
+            if (Feature.IsEnabled("Feature_FaqGroupsMigration"))
+            {
+                builder.RegisterType<SqlFaqGroupRepository>().As<IFaqGroupRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<FaqGroupRepository>().As<IFaqGroupRepository>().SingleInstance();
+            }
+
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<FaqGroupRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
