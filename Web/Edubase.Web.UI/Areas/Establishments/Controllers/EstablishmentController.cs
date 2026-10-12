@@ -1171,7 +1171,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (!Feature.IsEnabled("gias.iebt.status"))
             {
-                establishmentTypes = establishmentTypes.Where(x => x.Name != "DeregisteredAsAnIndependentSchool");
+                establishmentTypes =
+                    establishmentTypes.Where(x => x.Name != "DeregisteredAsAnIndependentSchool");
             }
         }
 
