@@ -1,0 +1,4 @@
+Contact: https://vulnerability-reporting.service.security.gov.uk
+Expires: 2027-09-07T11:00:00.000Z
+Preferred-Languages: en
+Canonical: https://www.get-information-schools.service.gov.uk/.well-known/security.txt
