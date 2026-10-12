@@ -17,9 +17,9 @@ namespace Edubase.Data.Repositories.EF
             _context = context;
         }
 
-        public async Task CreateAsync(GlossaryItem message)
+        public async Task CreateAsync(GlossaryItem messages)
         {
-            _context.GlossaryItems.Add(message);
+            _context.GlossaryItems.Add(messages);
             await _context.SaveChangesAsync();
         }
 
