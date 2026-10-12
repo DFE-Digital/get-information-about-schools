@@ -6,7 +6,27 @@
 <div id="school-dashboard" class="tab-content">
     @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {
-        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
+        //For establishment user
+        //and other independent school and other independent special school with Deregistered status
+        //dont show edit details button
+
+        var hideEditDetails =
+            User.InRole(EdubaseRoles.ESTABLISHMENT) &&
+            Model.Establishment.TypeId.OneOfThese(
+                eLookupEstablishmentType.OtherIndependentSchool,
+                eLookupEstablishmentType.OtherIndependentSpecialSchool) &&
+            Model.Establishment.StatusId == (int)eLookupEstablishmentStatus.DeregisteredAsAnIndependentSchool;
+
+        if (!hideEditDetails)
+        {
+            @Html.ActionLink(
+                "Edit details",
+                "EditDetails",
+                "Establishment",
+                new { id = Model.Establishment.Urn },
+                new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" }
+            )
+        }
 
         if (!Model.MediumPriorityEstablishmentConfirmationPending &&
             !Model.HighPriorityEstablishmentConfirmationPending &&
@@ -171,11 +191,11 @@
 
             @if (Model.DisplayPolicy.AccreditationExpiryDate)
             {
-                    var accreditationExpiryDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Closed date";
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">@accreditationExpiryDateTitle</dt>
-                <dd class="govuk-summary-list__value">@(Model.Establishment.AccreditationExpiryDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
-            </div>
+                var accreditationExpiryDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Closed date";
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">@accreditationExpiryDateTitle</dt>
+                    <dd class="govuk-summary-list__value">@(Model.Establishment.AccreditationExpiryDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+                </div>
             }
 
             @if (Model.DisplayPolicy.CloseDate)
