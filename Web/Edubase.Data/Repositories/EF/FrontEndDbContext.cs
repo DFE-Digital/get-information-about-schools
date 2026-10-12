@@ -19,11 +19,14 @@ namespace Edubase.Data.Repositories.EF
 
         public DbSet<FaqGroup> FaqGroups { get; set; }
 
+        public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new UserPreferenceConfiguration());
             modelBuilder.Configurations.Add(new TokenConfiguration());
             modelBuilder.Configurations.Add(new LocalAuthoritySetConfiguration());
+            modelBuilder.Configurations.Add(new NotificationTemplateConfiguration());
 
 
             modelBuilder.Configurations.Add(new FaqGroupConfiguration());
