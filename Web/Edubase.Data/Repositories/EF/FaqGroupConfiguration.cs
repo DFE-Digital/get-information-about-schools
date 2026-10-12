@@ -7,7 +7,7 @@ namespace Edubase.Data.Repositories.EF
     {
         public FaqGroupConfiguration()
         {
-            ToTable("FaqGroupSets", "FrontEnd");
+            ToTable("FaqGroups", "FrontEnd");
 
             HasKey(x => new
             {

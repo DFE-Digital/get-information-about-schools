@@ -8,7 +8,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Edubase.Data.Repositories.EF
 {
-    public class SqlFaqGroupRepository
+    public class SqlFaqGroupRepository : IFaqGroupRepository
     {
         private readonly FrontEndDbContext _context;
 
