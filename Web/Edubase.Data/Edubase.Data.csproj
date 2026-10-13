@@ -164,7 +164,6 @@
     <Compile Include="Repositories\EF\NotificationBannerConfiguration.cs" />
     <Compile Include="Repositories\EF\SqlFaqGroupRepository.cs" />
     <Compile Include="Repositories\EF\SqlLocalAuthoritySetRepository.cs" />
-    <Compile Include="Repositories\EF\SqlNotificationBanner.cs" />
     <Compile Include="Repositories\EF\SqlNotificationBannerRepository.cs" />
     <Compile Include="Repositories\EF\SqlTokenRepository.cs" />
     <Compile Include="Repositories\EF\SqlUserPreferenceRepository.cs" />

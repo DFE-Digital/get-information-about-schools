@@ -14,7 +14,7 @@ namespace Edubase.Data.Repositories.EF
         public DbSet<UserPreference> UserPreferences { get; set; }
         public DbSet<Token> Tokens { get; set; }
         public DbSet<LocalAuthoritySet> LocalAuthoritySets { get; set; }
-        public DbSet<SqlNotificationBanner> NotificationBanners { get; set; }
+        public DbSet<NotificationBanner> NotificationBanners { get; set; }
 
 
 

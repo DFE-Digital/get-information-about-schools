@@ -31,14 +31,14 @@ namespace Edubase.Data.Repositories.EF
 
         public async Task CreateAsync(NotificationBanner entity)
         {
-            _context.NotificationBanners.Add(ToSql(entity));
+            _context.NotificationBanners.Add(entity);
             await _context.SaveChangesAsync();
             _cache.Remove(CurrentNotificationBannersCacheKey);
         }
 
         public async Task CreateAsync(params NotificationBanner[] entities)
         {
-            _context.NotificationBanners.AddRange(entities.Select(ToSql));
+            _context.NotificationBanners.AddRange(entities);
             await _context.SaveChangesAsync();
             _cache.Remove(CurrentNotificationBannersCacheKey);
         }
@@ -70,20 +70,18 @@ namespace Edubase.Data.Repositories.EF
 
         private IList<NotificationBanner> GetActiveBanners(DateTime forDateTime)
         {
-            var activeBanners = _context.NotificationBanners
-                .Where(x => x.PartitionKey == eNotificationBannerPartition.Current.ToString()
+            return _context.NotificationBanners
+                .Where(x => x.PartitionKey == nameof(eNotificationBannerPartition.Current)
                             && x.Start <= forDateTime.AddSeconds(_notificationBannerCacheExpirationInSeconds)
                             && x.End >= forDateTime)
                 .Take(2)
                 .ToList();
-
-            return activeBanners.Select(ToDomain).ToList();
         }
 
         public async Task<Page<NotificationBanner>> GetAllAsync(int take, TableContinuationToken skip = null,
             bool excludeExpired = false, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
         {
-            var query = _context.NotificationBanners
+            IQueryable<NotificationBanner> query = _context.NotificationBanners
                 .Where(x => x.PartitionKey == partitionKey.ToString());
 
             if (excludeExpired)
@@ -94,14 +92,13 @@ namespace Edubase.Data.Repositories.EF
             query = query.Take(take);
 
             var results = await query.ToListAsync();
-            return new Page<NotificationBanner>(results.Select(ToDomain), null);
+            return new Page<NotificationBanner>(results, null);
         }
 
         public async Task<NotificationBanner> GetAsync(string id,
             eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
         {
-            var row = await _context.NotificationBanners.FindAsync(partitionKey.ToString(), id);
-            return row == null ? null : ToDomain(row);
+            return await _context.NotificationBanners.FindAsync(partitionKey.ToString(), id);
         }
 
         private async Task ArchiveAsync(string id, string auditUser = "")
@@ -114,7 +111,7 @@ namespace Edubase.Data.Repositories.EF
             {
                 archive.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
             }
-            _context.NotificationBanners.Add(ToSql(archive));
+            _context.NotificationBanners.Add(archive);
 
             if (!string.IsNullOrEmpty(auditUser))
             {
@@ -125,7 +122,7 @@ namespace Edubase.Data.Repositories.EF
                 deleteEntry.AuditUser = auditUser;
                 deleteEntry.AuditTimestamp = DateTime.Now;
                 deleteEntry.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
-                _context.NotificationBanners.Add(ToSql(deleteEntry));
+                _context.NotificationBanners.Add(deleteEntry);
             }
 
             await _context.SaveChangesAsync();
@@ -153,17 +150,17 @@ namespace Edubase.Data.Repositories.EF
             var existing = await _context.NotificationBanners.FindAsync(nameof(eNotificationBannerPartition.Current), item.RowKey);
             if (existing != null)
             {
-                existing.Importance = (byte) item.Importance;
+                existing.Importance = item.Importance;
                 existing.Content = item.Content;
                 existing.Start = item.Start;
                 existing.End = item.End;
                 existing.Version++;
-                existing.AuditUser = ParseAuditUser(item.AuditUser);
+                existing.AuditUser = item.AuditUser;
                 existing.AuditEvent = item.AuditEvent;
                 existing.AuditTimestamp = item.AuditTimestamp;
-            }
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
             _cache.Remove(CurrentNotificationBannersCacheKey);
         }
 
@@ -185,40 +182,5 @@ namespace Edubase.Data.Repositories.EF
             LinkUrl2 = item.LinkUrl2,
             LinkText2 = item.LinkText2
         };
-
-        private static SqlNotificationBanner ToSql(NotificationBanner item) => new SqlNotificationBanner
-        {
-            PartitionKey = item.PartitionKey,
-            RowKey = item.RowKey,
-            Importance = (byte) item.Importance,
-            Content = item.Content,
-            Start = item.Start,
-            End = item.End,
-            Version = (byte) item.Version,
-            Tracker = item.Tracker,
-            AuditUser = ParseAuditUser(item.AuditUser),
-            AuditEvent = item.AuditEvent,
-            AuditTimestamp = item.AuditTimestamp
-        };
-
-        private static NotificationBanner ToDomain(SqlNotificationBanner row) => new NotificationBanner
-        {
-            PartitionKey = row.PartitionKey,
-            RowKey = row.RowKey,
-            Importance = row.Importance,
-            Content = row.Content,
-            Start = row.Start,
-            End = row.End,
-            Version = row.Version,
-            Tracker = row.Tracker,
-            AuditUser = row.AuditUser.ToString(),
-            AuditEvent = row.AuditEvent,
-            AuditTimestamp = row.AuditTimestamp
-        };
-
-        private static int ParseAuditUser(string auditUser)
-        {
-            return int.TryParse(auditUser, out var id) ? id : 0;
-        }
     }
 }

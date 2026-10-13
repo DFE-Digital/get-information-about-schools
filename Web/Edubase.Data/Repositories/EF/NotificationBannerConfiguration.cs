@@ -1,8 +1,9 @@
 using System.Data.Entity.ModelConfiguration;
+using Edubase.Data.Entity;
 
 namespace Edubase.Data.Repositories.EF
 {
-    public class NotificationBannerConfiguration : EntityTypeConfiguration<SqlNotificationBanner>
+    public class NotificationBannerConfiguration : EntityTypeConfiguration<NotificationBanner>
     {
         public NotificationBannerConfiguration()
         {
@@ -13,6 +14,13 @@ namespace Edubase.Data.Repositories.EF
                 x.PartitionKey,
                 x.RowKey
             });
+
+            Ignore(x => x.ETag);
+            Ignore(x => x.Timestamp);
+            Ignore(x => x.LinkUrl1);
+            Ignore(x => x.LinkText1);
+            Ignore(x => x.LinkUrl2);
+            Ignore(x => x.LinkText2);
         }
     }
 }
