@@ -40,8 +40,4 @@
     <ReqnrollLegacyCodeBehindFiles Remove="LocalSignInSimulator\**" />
   </ItemGroup>
 
-  <Target Name="PrepareLocalSaml" AfterTargets="Build"
-          Condition="'$(Configuration)' == 'Debug' And '$(TF_BUILD)' != 'True' And '$(CI)' != 'true' And '$(DesignTimeBuild)' != 'true' And '$(PrepareLocalSignIn)' != 'false'">
-    <Exec Command="dotnet &quot;$(TargetPath)&quot;" />
-  </Target>
 </Project>

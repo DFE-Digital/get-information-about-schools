@@ -12,7 +12,7 @@ internal static class LocalSignInSetup
             return 0;
 
         var directory = LocalSignInCertificate.DirectoryPath;
-        using var certificate = LocalSignInCertificate.GetOrCreate(directory);
+        using var certificate = LocalSignInCertificate.Load();
         LocalSamlMetadata.Write(directory, LocalSamlMetadata.Issuer, certificate);
 
         Console.WriteLine("Local SAML metadata is ready. Website configuration has not been changed.");

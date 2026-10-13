@@ -4,11 +4,12 @@ All simulator code is in the acceptance-test project. GIAS uses its existing SAM
 
 ## Run locally
 
-Build the acceptance-test project in Debug (a normal local test run also builds it). Its post-build preparation automatically:
+Run `Web/LocalSetup.ps1` from the repository root (or `./LocalSetup.ps1` from
+`Web`). It generates the signing certificate and metadata directly and installs/starts
+Azurite. Application configuration is shared manually; the script does not edit
+it. Leave its terminal open, then start or restart the Debug website.
 
-1. Generates or reuses `.local-signin/signing.pfx` inside the acceptance-test project.
-2. Writes public `Metadata` and `Federation` XML alongside it.
-It does not read or modify the website configuration. Set `SASimulatorUri` manually in the repository-root `devsecrets.gias.config.alwaysignore` to the local file URI printed by the build, and set `SASimulatorGuid` to an empty string. Your chosen values are preserved on every build and test run.
+The script and acceptance tests read the shared repository-root `devsecrets.gias.signing.pfx.alwaysignore` directly. The script writes only public `Metadata` and `Federation` XML into `Web/Edubase.AcceptanceTests/.local-signin`. No project build is required. The shared configuration must point `SASimulatorUri` to this directory's file URI and have an empty `SASimulatorGuid`. Nothing is installed in the Windows certificate store.
 
 Then start the usual Debug website and run the acceptance tests. If the website was already running when its settings changed, restart it once. Existing website/backend setup and localhost HTTPS trust are still required. 
 
@@ -18,7 +19,7 @@ Keys and metadata are ignored by Git. The private key is used only by the tests;
 
 ## Azure and pipelines
 
-Preparation runs only for local Debug builds, never pipeline/CI builds. Simulator settings are never changed by builds. `/p:PrepareLocalSignIn=false` optionally skips certificate/metadata preparation. For Azure sign-in, also restore the usual Azure simulator entries in the ignored config and select `useLocalSimulator = false` in dependency injection. Restart GIAS after changing its settings. Azure Pipelines selects Azure automatically.
+Preparation is explicit through LocalSetup.ps1 and is no longer a post-build step. The script does not modify simulator settings. For Azure sign-in, also restore the usual Azure simulator entries in the ignored config and select `useLocalSimulator = false` in dependency injection. Restart GIAS after changing its settings. Azure Pipelines selects Azure automatically.
 
 ## Checks
 

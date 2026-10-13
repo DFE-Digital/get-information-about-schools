@@ -21,7 +21,7 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
         internal static string Issuer => LocalSamlMetadata.Issuer;
         private const string Audience = "http://edubase.gov";
         private static readonly Uri Authority = new("http://localhost/local-signin");
-        private static readonly Lazy<X509Certificate2> LocalCertificate = new(() => LocalSignInCertificate.GetOrCreate(LocalSignInCertificate.DirectoryPath));
+        private static readonly Lazy<X509Certificate2> LocalCertificate = new(() => LocalSignInCertificate.Load());
         private readonly HttpClient httpClient;
         private readonly X509Certificate2 certificate;
 
@@ -47,7 +47,7 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             using var login = await httpClient.GetAsync(WebRoutes.SignIn);
             var authorityLocation = GetRedirect(login);
             if (!authorityLocation.IsAbsoluteUri || authorityLocation.GetLeftPart(UriPartial.Path) != Authority.AbsoluteUri)
-                throw new InvalidOperationException("Local SAML requires a local acceptance-test build to prepare metadata and a restarted Debug website using devsecrets.gias.config.alwaysignore.");
+                throw new InvalidOperationException($"Expected local SAML redirect to {Authority}, received {(authorityLocation.IsAbsoluteUri ? authorityLocation.GetLeftPart(UriPartial.Path) : "a relative redirect")}. Run LocalSetup.ps1, set SASimulatorUri to the local metadata directory and SASimulatorGuid to an empty string, then restart the Debug website.");
             var query = HttpUtility.ParseQueryString(authorityLocation.Query);
             var samlRequest = query["SAMLRequest"] ?? throw new InvalidOperationException("GIAS returned no SAML request.");
             var relayState = query["RelayState"] ?? throw new InvalidOperationException("GIAS returned no relay state.");

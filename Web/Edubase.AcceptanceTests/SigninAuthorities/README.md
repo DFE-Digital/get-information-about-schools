@@ -79,10 +79,10 @@ For [step 2](#2-establish-a-trusted-identity), it requests normal GIAS login and
 
 The class posts the response and relay state to `/Saml2/Acs`, then follows the same-origin external callback. GIAS validates the signature, converts the claims, loads backend roles and issues the application cookie: shared steps 3 and 4. The scenario's cookie container retains the cookies for step 5.
 
-The acceptance-test project's local Debug build generates its signing certificate and public federation metadata, without modifying the ignored development config. Set the existing simulator settings manually to select local files or Azure. GIAS's existing federation loader establishes trust; the web app has no new bootstrap or trust code. See [local setup](LocalSamlSetup.md).
+Run `Web/LocalSetup.ps1` to prepare the signing certificate and public federation metadata and start Azurite. Application configuration is shared manually and is not modified by the script. Certificate and metadata generation runs directly in PowerShell and does not require a project build. GIAS's existing federation loader establishes trust; see [local setup](LocalSamlSetup.md) for troubleshooting.
 
 ## Selecting an implementation
 
-The [composition root](../DependencyInjection/DependencyInjection.cs) selects local sign-in outside Azure Pipelines. A local Debug build prepares metadata automatically; simulator settings remain under your control; restart a website that was already running when those settings changed.
+The [composition root](../DependencyInjection/DependencyInjection.cs) selects local sign-in outside Azure Pipelines. Run LocalSetup.ps1 to prepare metadata before starting the website; simulator settings are supplied in the shared configuration. Restart a website that was already running when those settings changed.
 
-To exercise Azure locally, set the Azure simulator settings and set `useLocalSimulator` to false. Pipeline builds do not prepare local metadata or change the ignored config.
+To exercise Azure locally, set the Azure simulator settings and set `useLocalSimulator` to false. Builds do not prepare local metadata or change the ignored config.
