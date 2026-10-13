@@ -14,12 +14,18 @@ namespace Edubase.Data.Repositories.EF
         public DbSet<UserPreference> UserPreferences { get; set; }
         public DbSet<Token> Tokens { get; set; }
         public DbSet<LocalAuthoritySet> LocalAuthoritySets { get; set; }
+        public DbSet<FaqGroup> FaqGroups { get; set; }
+        public DbSet<FaqItem> FaqItems { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new UserPreferenceConfiguration());
             modelBuilder.Configurations.Add(new TokenConfiguration());
             modelBuilder.Configurations.Add(new LocalAuthoritySetConfiguration());
+
+
+            modelBuilder.Configurations.Add(new FaqGroupConfiguration());
+            modelBuilder.Configurations.Add(new FaqItemConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
