@@ -505,7 +505,6 @@
     <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesViewModel.cs" />
     <Compile Include="Models\News\NewsArticleViewModel.cs" />
-    <Compile Include="Models\NotificationBannersDbContext.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerAuditViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannersAuditViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
@@ -577,7 +576,6 @@
     <Compile Include="Models\SqlGlossaryItems.cs" />
     <Compile Include="Models\SqlLaNameCode.cs" />
     <Compile Include="Models\SqlNewsArticle.cs" />
-    <Compile Include="Models\SqlNotificationBanner.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
     <Compile Include="Models\UserPreferencesDbContext.cs" />
     <Compile Include="Controllers\Api\UserRolesController.cs" />
