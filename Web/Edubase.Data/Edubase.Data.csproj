@@ -163,7 +163,6 @@
     <Compile Include="Repositories\EF\LocalAuthoritySetConfiguration.cs" />
     <Compile Include="Repositories\EF\NewsArticleConfiguration.cs" />
     <Compile Include="Repositories\EF\SqlLocalAuthoritySetRepository.cs" />
-    <Compile Include="Repositories\EF\SqlNewsArticle.cs" />
     <Compile Include="Repositories\EF\SqlNewsArticleRepository.cs" />
     <Compile Include="Repositories\EF\SqlTokenRepository.cs" />
     <Compile Include="Repositories\EF\SqlUserPreferenceRepository.cs" />

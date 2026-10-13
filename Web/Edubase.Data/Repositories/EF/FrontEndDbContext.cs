@@ -14,7 +14,7 @@ namespace Edubase.Data.Repositories.EF
         public DbSet<UserPreference> UserPreferences { get; set; }
         public DbSet<Token> Tokens { get; set; }
         public DbSet<LocalAuthoritySet> LocalAuthoritySets { get; set; }
-        public DbSet<SqlNewsArticle> NewsArticles { get; set; }
+        public DbSet<NewsArticle> NewsArticles { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

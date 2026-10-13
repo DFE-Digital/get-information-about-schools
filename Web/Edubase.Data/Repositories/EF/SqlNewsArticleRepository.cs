@@ -20,13 +20,13 @@ namespace Edubase.Data.Repositories.EF
 
         public async Task CreateAsync(NewsArticle entity)
         {
-            _context.NewsArticles.Add(ToSql(entity));
+            _context.NewsArticles.Add(entity);
             await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(params NewsArticle[] entities)
         {
-            _context.NewsArticles.AddRange(entities.Select(ToSql));
+            _context.NewsArticles.AddRange(entities);
             await _context.SaveChangesAsync();
         }
 
@@ -37,7 +37,7 @@ namespace Edubase.Data.Repositories.EF
 
         public async Task<Page<NewsArticle>> GetAllAsync(int take, bool visible = true, int? year = null, TableContinuationToken skip = null, eNewsArticlePartition partitionKey = eNewsArticlePartition.Current)
         {
-            IQueryable<SqlNewsArticle> query = _context.NewsArticles.Where(x => x.PartitionKey == partitionKey.ToString());
+            var query = _context.NewsArticles.Where(x => x.PartitionKey == partitionKey.ToString());
 
             if (visible)
             {
@@ -52,13 +52,12 @@ namespace Edubase.Data.Repositories.EF
             query = query.Take(take);
 
             var results = await query.ToListAsync();
-            return new Page<NewsArticle>(results.Select(ToDomain), null);
+            return new Page<NewsArticle>(results, null);
         }
 
         public async Task<NewsArticle> GetAsync(string id, eNewsArticlePartition partitionKey = eNewsArticlePartition.Current)
         {
-            var row = await _context.NewsArticles.FindAsync(partitionKey.ToString(), id);
-            return row == null ? null : ToDomain(row);
+            return await _context.NewsArticles.FindAsync(partitionKey.ToString(), id);
         }
 
         private async Task ArchiveAsync(string id, string auditUser = "")
@@ -66,23 +65,23 @@ namespace Edubase.Data.Repositories.EF
             var item = await GetAsync(id);
 
             var archive = Clone(item);
-            archive.PartitionKey = eNewsArticlePartition.Archive.ToString();
+            archive.PartitionKey = nameof(eNewsArticlePartition.Archive);
             if (archive.Version > 1)
             {
                 archive.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
             }
-            _context.NewsArticles.Add(ToSql(archive));
+            _context.NewsArticles.Add(archive);
 
             if (!string.IsNullOrEmpty(auditUser))
             {
                 var deleteEntry = Clone(item);
-                deleteEntry.PartitionKey = eNewsArticlePartition.Archive.ToString();
+                deleteEntry.PartitionKey = nameof(eNewsArticlePartition.Archive);
                 deleteEntry.Version++;
-                deleteEntry.AuditEvent = eNewsArticleEvent.Delete.ToString();
+                deleteEntry.AuditEvent = nameof(eNewsArticleEvent.Delete);
                 deleteEntry.AuditUser = auditUser;
                 deleteEntry.AuditTimestamp = DateTime.Now;
                 deleteEntry.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
-                _context.NewsArticles.Add(ToSql(deleteEntry));
+                _context.NewsArticles.Add(deleteEntry);
             }
 
             await _context.SaveChangesAsync();
@@ -92,7 +91,7 @@ namespace Edubase.Data.Repositories.EF
         {
             await ArchiveAsync(id, auditUser);
 
-            var row = await _context.NewsArticles.FindAsync(eNewsArticlePartition.Current.ToString(), id);
+            var row = await _context.NewsArticles.FindAsync(nameof(eNewsArticlePartition.Current), id);
             if (row != null)
             {
                 _context.NewsArticles.Remove(row);
@@ -104,15 +103,18 @@ namespace Edubase.Data.Repositories.EF
         {
             await ArchiveAsync(item.RowKey);
 
-            var existing = await _context.NewsArticles.FindAsync(eNewsArticlePartition.Current.ToString(), item.RowKey);
-            existing.Title = item.Title;
-            existing.Content = item.Content;
-            existing.ArticleDate = item.ArticleDate;
-            existing.ShowDate = item.ShowDate;
-            existing.Version++;
-            existing.AuditUser = ParseAuditUser(item.AuditUser);
-            existing.AuditEvent = item.AuditEvent;
-            existing.AuditTimestamp = item.AuditTimestamp;
+            var existing = await _context.NewsArticles.FindAsync(nameof(eNewsArticlePartition.Current), item.RowKey);
+            if (existing != null)
+            {
+                existing.Title = item.Title;
+                existing.Content = item.Content;
+                existing.ArticleDate = item.ArticleDate;
+                existing.ShowDate = item.ShowDate;
+                existing.Version++;
+                existing.AuditUser = item.AuditUser;
+                existing.AuditEvent = item.AuditEvent;
+                existing.AuditTimestamp = item.AuditTimestamp;
+            }
 
             await _context.SaveChangesAsync();
         }
@@ -131,40 +133,5 @@ namespace Edubase.Data.Repositories.EF
             AuditEvent = item.AuditEvent,
             AuditTimestamp = item.AuditTimestamp
         };
-
-        private static SqlNewsArticle ToSql(NewsArticle item) => new SqlNewsArticle
-        {
-            PartitionKey = item.PartitionKey,
-            RowKey = item.RowKey,
-            Title = item.Title,
-            ArticleDate = item.ArticleDate,
-            ShowDate = item.ShowDate,
-            Content = item.Content,
-            Version = (byte) item.Version,
-            Tracker = item.Tracker,
-            AuditUser = ParseAuditUser(item.AuditUser),
-            AuditEvent = item.AuditEvent,
-            AuditTimestamp = item.AuditTimestamp
-        };
-
-        private static NewsArticle ToDomain(SqlNewsArticle row) => new NewsArticle
-        {
-            PartitionKey = row.PartitionKey,
-            RowKey = row.RowKey,
-            Title = row.Title,
-            ArticleDate = row.ArticleDate,
-            ShowDate = row.ShowDate,
-            Content = row.Content,
-            Version = row.Version,
-            Tracker = row.Tracker,
-            AuditUser = row.AuditUser.ToString(),
-            AuditEvent = row.AuditEvent,
-            AuditTimestamp = row.AuditTimestamp
-        };
-
-        private static int ParseAuditUser(string auditUser)
-        {
-            return int.TryParse(auditUser, out var id) ? id : 0;
-        }
     }
 }
