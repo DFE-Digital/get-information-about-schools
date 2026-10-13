@@ -492,7 +492,6 @@
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
-    <Compile Include="Models\GlossaryItemsDbContext.cs" />
     <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
     <Compile Include="Models\Guidance\LaNameCodes.cs" />
     <Compile Include="Controllers\Api\ISqlLaNameCodeRepository.cs" />
@@ -569,7 +568,6 @@
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
     <Compile Include="Controllers\Api\SqlDataController.cs" />
     <Compile Include="Models\SqlApiRecorderSessionItem.cs" />
-    <Compile Include="Models\SqlGlossaryItems.cs" />
     <Compile Include="Models\SqlLaNameCode.cs" />
     <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
