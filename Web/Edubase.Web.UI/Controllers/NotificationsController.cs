@@ -19,12 +19,12 @@ namespace Edubase.Web.UI.Controllers
     [Route("{action=index}")]
     public class NotificationsController : EduBaseController
     {
-        private readonly NotificationBannerRepository _BannerRepository;
+        private readonly INotificationBannerRepository _BannerRepository;
         private readonly NotificationTemplateRepository _TemplateRepository;
 
         public NotificationsController(
             NotificationTemplateRepository TemplateRepository,
-            NotificationBannerRepository BannerRepository)
+            INotificationBannerRepository BannerRepository)
         {
             _TemplateRepository = TemplateRepository;
             _BannerRepository = BannerRepository;
