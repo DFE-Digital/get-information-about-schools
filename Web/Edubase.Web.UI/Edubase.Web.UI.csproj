@@ -570,7 +570,6 @@
     <Compile Include="Controllers\Api\SqlDataController.cs" />
     <Compile Include="Models\SqlApiRecorderSessionItem.cs" />
     <Compile Include="Models\SqlDataQualityStatus.cs" />
-    <Compile Include="Models\SqlGlossaryItems.cs" />
     <Compile Include="Models\SqlLaNameCode.cs" />
     <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
