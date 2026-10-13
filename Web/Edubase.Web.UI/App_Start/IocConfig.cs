@@ -506,11 +506,19 @@ namespace Edubase.Web.UI
                 builder.RegisterType<NotificationTemplateRepository>().As<INotificationTemplateRepository>().SingleInstance();
             }
 
+            if (Feature.IsEnabled("Feature_FaqItemsMigration"))
+            {
+                builder.RegisterType<SqlFaqItemRepository>().As<IFaqItemRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<FaqItemRepository>().As<IFaqItemRepository>().SingleInstance();
+            }
+
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
 
