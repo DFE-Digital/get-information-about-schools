@@ -510,7 +510,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
