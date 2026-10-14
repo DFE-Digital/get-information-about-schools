@@ -16,7 +16,6 @@ namespace Edubase.Data.Repositories.EF
             });
 
             Ignore(x => x.ETag);
-            Ignore(x => x.Timestamp);
         }
     }
 }
