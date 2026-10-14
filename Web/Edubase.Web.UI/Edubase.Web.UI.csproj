@@ -568,7 +568,6 @@
     <Compile Include="Controllers\Api\SqlDataController.cs" />
     <Compile Include="Models\SqlApiRecorderSessionItem.cs" />
     <Compile Include="Models\SqlLaNameCode.cs" />
-    <Compile Include="Models\SqlNotificationBanner.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
     <Compile Include="Models\UserPreferencesDbContext.cs" />
     <Compile Include="Controllers\Api\UserRolesController.cs" />
