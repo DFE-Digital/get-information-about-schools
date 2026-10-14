@@ -156,6 +156,7 @@
     <Compile Include="Entity\ApiRecorderSessionItem.cs" />
     <Compile Include="Entity\DataQualityStatus.cs" />
     <Compile Include="Entity\UserPreference.cs" />
+    <Compile Include="INewsArticleRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusConfiguration.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
@@ -164,6 +165,9 @@
     <Compile Include="Repositories\EF\FrontEndDbContext.cs" />
     <Compile Include="Repositories\EF\GlossaryItemConfiguration.cs" />
     <Compile Include="Repositories\EF\LocalAuthoritySetConfiguration.cs" />
+    <Compile Include="Repositories\EF\NewsArticleConfiguration.cs" />
+    <Compile Include="Repositories\EF\SqlLocalAuthoritySetRepository.cs" />
+    <Compile Include="Repositories\EF\SqlNewsArticleRepository.cs" />
     <Compile Include="Repositories\EF\SqlGlossaryItemRepository.cs" />
     <Compile Include="Repositories\EF\NotificationTemplateConfiguration.cs" />
     <Compile Include="Repositories\EF\SqlDataQualityStatusRepository.cs" />

@@ -497,7 +497,6 @@
     <Compile Include="Controllers\Api\ISqlLaNameCodeRepository.cs" />
     <Compile Include="Controllers\Api\SqlLaNameCodeRepository.cs" />
     <Compile Include="Models\LaNameCodesDbContext.cs" />
-    <Compile Include="Models\NewsArticlesDbContext.cs" />
     <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesViewModel.cs" />
@@ -569,7 +568,6 @@
     <Compile Include="Controllers\Api\SqlDataController.cs" />
     <Compile Include="Models\SqlApiRecorderSessionItem.cs" />
     <Compile Include="Models\SqlLaNameCode.cs" />
-    <Compile Include="Models\SqlNewsArticle.cs" />
     <Compile Include="Models\SqlUserPreference.cs" />
     <Compile Include="Models\UserPreferencesDbContext.cs" />
     <Compile Include="Controllers\Api\UserRolesController.cs" />
