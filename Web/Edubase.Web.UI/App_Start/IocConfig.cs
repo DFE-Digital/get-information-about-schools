@@ -487,7 +487,16 @@ namespace Edubase.Web.UI
             {
                 builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().SingleInstance();
             }
-
+          
+            if (Feature.IsEnabled("Feature_GlossaryItemsMigration"))
+            {
+                builder.RegisterType<SqlGlossaryItemRepository>().As<IGlossaryRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<GlossaryRepository>().As<IGlossaryRepository>().SingleInstance();
+            }
+          
             if (Feature.IsEnabled("Feature_FaqGroupsMigration"))
             {
                 builder.RegisterType<SqlFaqGroupRepository>().As<IFaqGroupRepository>().InstancePerRequest();
@@ -496,12 +505,49 @@ namespace Edubase.Web.UI
             {
                 builder.RegisterType<FaqGroupRepository>().As<IFaqGroupRepository>().SingleInstance();
             }
+          
+
+            if (Feature.IsEnabled("Feature_NotificationTemplatesMigration"))
+            {
+                builder.RegisterType<SqlNotificationTemplateRepository>().As<INotificationTemplateRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<NotificationTemplateRepository>().As<INotificationTemplateRepository>().SingleInstance();
+            }
+
+            if (Feature.IsEnabled("Feature_FaqItemsMigration"))
+            {
+                builder.RegisterType<SqlFaqItemRepository>().As<IFaqItemRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<FaqItemRepository>().As<IFaqItemRepository>().SingleInstance();
+            }
+
+            if (Feature.IsEnabled("Feature_DataQualityStatusMigration"))
+            {
+                builder.RegisterType<SqlDataQualityStatusRepository>().As<IDataQualityStatusRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
+            }
+
+            if (Feature.IsEnabled("Feature_NewsArticlesMigration"))
+            {
+                builder.RegisterType<SqlNewsArticleRepository>().As<INewsArticleRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<NewsArticleRepository>().As<INewsArticleRepository>().SingleInstance();
+            }
 
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
