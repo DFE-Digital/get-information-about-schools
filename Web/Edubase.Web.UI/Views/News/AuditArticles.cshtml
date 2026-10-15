@@ -101,7 +101,7 @@
                     var articleEvent = (eNewsArticleEvent)Enum.Parse(typeof(eNewsArticleEvent), article.AuditEvent, true);
                     <tr class="govuk-table__row">
                         <td data-label="News article ID" class="govuk-table__cell">@article.Tracker</td>
-                        <td data-label="Time and date" class="govuk-table__cell">@(article.Timestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br /> @article.Timestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                        <td data-label="Time and date" class="govuk-table__cell">@(article.EffectiveTimestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br /> @article.Timestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
                         <td data-label="Status" class="govuk-table__cell">
                             @if (articleEvent == eNewsArticleEvent.Delete)
                             {
