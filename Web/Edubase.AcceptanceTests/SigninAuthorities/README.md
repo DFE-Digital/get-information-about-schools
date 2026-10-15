@@ -1,6 +1,6 @@
 # Sign-in for acceptance tests
 
-For setup and configuration, see the [acceptance-test README](../README.md).
+For setup and configuration, see the Acceptance Tests [README](../README.md).
 
 ## How it works
 
