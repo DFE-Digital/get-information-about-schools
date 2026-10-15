@@ -12,7 +12,7 @@ using MoreLinq;
 
 namespace Edubase.Data.Repositories
 {
-    public class NotificationBannerRepository : TableStorageBase<NotificationBanner> // INotificationBannerRepository
+    public class NotificationBannerRepository : TableStorageBase<NotificationBanner>, INotificationBannerRepository
     {
         private const string CurrentNotificationBannersCacheKey = "currentNotificationBanners";
         private readonly MemoryCache _cache = MemoryCache.Default;
