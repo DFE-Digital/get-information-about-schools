@@ -1,43 +1,192 @@
-# Acceptance tests
+# Acceptance Tests
 
-These tests use Reqnroll and xUnit on .NET 10 to call a running GIAS website over HTTP. They do not launch a browser or start the website/backend.
+## Prerequistes
+For running these tests Reqnroll must be installed. A running GIAS application is also
+required with its backing services and a compatible authenticator simulator. The tests
+do not start or seed the application; they assume that the data resources contain
+required user and establishment data.
 
-To ensure Visual Studio is set up for running these tests instal lthe VS extension Reqnroll. The build will also restore Reqnroll NuGet packages used as part of the build and later execution.
+### Reqnroll
+Ensure you have the Reqnroll extension installed in Visual Studio.
 
-[Establishments.feature](Establishments/Establishments.feature) covers retrieving an establishment as a back-office user, retrieval without signing in, and a URN that does not exist.
+### Java back end
+For the initial rollout the Acceptance Tests assume that the Java back end is running
+and accessible in Azure. A local back-end will follow as soon as it can be verified.
+Follow the instructions for setting up a local Java back end from the Wiki.
 
-## Prepare a local run
+### SQL Server database
+For the initial rollout the Acceptance Tests assume that the SQL Server database is
+running and accessible in Azure. A local SQL Server instance will be created and
+seeded as part of the Java back end installation, again, once it has all been verified.
 
-You need the .NET 10 SDK, Node/npm, a populated local SQL database, and the local Tomcat backend.
+### GIAS web application - *Edubase.Web.UI*
+Ensure the Web UI configuration file `devsecrets.gias.config.alwaysignore` is correct by copying a
+known working config file from another developer. This file should be placed in the root f
+older - the same level as the *.git* folder. This file is never committed to GIT as it
+could be a security risk. The inital config file should point to the Azure dependencies.
 
-1. Put the shared config files and `devsecrets.gias.signing.pfx.alwaysignore` in the repository root. These files are ignored by Git.
-2. Manually copy the contents of `devsecrets.gias.config.local.alwaysignore` into `devsecrets.gias.config.alwaysignore`. Use the remote variant instead when testing with Azure services.
-3. For local sign-in, ensure `SASimulatorUri` points to your checkout's `Web/Edubase.AcceptanceTests/.local-signin` directory as a `file:///` URI, and `SASimulatorGuid` is empty. Check that the website/API addresses and SQL connection match your machine. When the Java API uses a self-signed HTTPS certificate, set `ApiCertificateSha1` to that certificate's SHA-1 thumbprint in the active config; the website validates this pin in `localdev`. Use host-published ports for a website running outside Docker.
-4. From the repository root, run:
+Ensure the Web UI app is running and accessible, usually at `https://localhost:44309`.
+The acceptance tests will use this URL to interact with the application. This usually
+means opening a separate Visual Studio instance and starting up *Edubase.Web.UI*.
 
-   ```powershell
-   .\Web\LocalSetup.ps1
-   ```
+## Features and scenarios
+Start with [Establishments.feature](Establishments/Establishments.feature).
+It describes behaviour in Gherkin, using the domain language of Users and Establishments.
+The main example is:
 
-   This generates public SAML metadata from the shared PFX and installs/starts Azurite. Leave the terminal open. It does not build a project or change your config.
-5. With Docker, start SQL Server first and wait until the container and target database are ready before starting or restarting Tomcat. If Flyway reports SQL Server error 904 (`Database 5 cannot be autostarted during server shutdown or startup`), restart Tomcat after SQL Server is ready. Then start the Debug website. Restart the website whenever you change the active config.
+```gherkin
+Scenario: Get an Establishment by URN for a back office user
+    Given a back office user is signed in
+    And an Establishment with URN "141491" exists
+    When the user requests the Establishment with URN "141491"
+    Then the Establishment URN is "141491"
+    And the Establishment Name is "Landau Forte Academy Tamworth Sixth Form1"
+    And the Establishment Type is "Academy 16 to 19 sponsor led"
+```
 
-Local sign-in uses `UseLocalSignIn=true`; the remote variant uses `false` to select the Azure sign-in simulator. The active config must contain the complete selected variant before the website or tests run.
+These tests make acceptance criteria executable against a running GIAS application.
+They connect a readable description of a user's intent to the application's observable
+behaviour, giving us regression checks across authentication and establishment retrieval.
 
-## Run the tests
+**The initial implementation primarily establishes a pattern to roll out across
+acceptance scenarios.** The two existing Get Establishment scenarios are the first
+examples of that pattern, rather than a comprehensive specification of establishment
+retrieval or access control. The main deliverable is a reusable structure in which more
+behaviours can be expressed without putting HTTP, authentication or response-parsing
+details into feature files.
 
-Use Visual Studio Test Explorer, or run from the repository root:
+## From the feature to executable steps
 
-```powershell
+The project targets .NET 8 and uses Reqnroll with xUnit. Reqnroll generates the
+executable test glue in `Establishments.feature.cs` and connects the Gherkin steps
+to methods marked with `[Given]`, `[When]` and `[Then]` in
+[EstablishmentsStepDefinitions](Establishments/EstablishmentsStepDefinitions.cs).
+Edit the feature and bindings, rather than the generated file.
+
+For the main scenario, the bindings perform these operations:
+
+1. Ask `IUsers` for a back office user and call `IGiasFrontEnd.SignIn(user)`.
+2. Record the URN from the establishment precondition. Currently, this step neither creates the establishment nor checks that it exists; the environment must already contain it.
+3. Call `IEstablishments.GetEstablishment(urn)` and retain the returned establishment for the assertions.
+4. Use xUnit assertions to compare its URN, name and type with the feature's expected values.
+
+The bindings depend on interfaces supplied through constructor injection. They coordinate
+the scenario and assert outcomes; the classes below them handle how those operations reach
+GIAS.
+
+## Domain operations and response mapping
+
+[IEstablishments](Establishments/IEstablishments.cs) exposes the domain operation
+`GetEstablishment(int urn)`.
+Its current implementation, [EstablishmentsFromGiasFrontEnd](Establishments/EstablishmentsFromGiasFrontEnd.cs), calls:
+
+```text
+GET /api/establishment/{urn}
+```
+
+It uses `IGiasFrontEnd.GetAsync<GetEstablishmentResponse>()` to obtain the JSON response,
+then maps `returnValue.name`, `returnValue.typeName` and `returnValue.urn` into the small
+[Establishment](Establishments/Establishment.cs) model used by the steps. The URN is
+converted from a string to an integer.
+
+This keeps the endpoint and JSON representation out of the scenario bindings. Future
+scenarios can reuse domain operations, while changes to the application's response
+shape can be handled in the adapter and [response model](GiasFrontEnd/GetEstablishmentResponse.cs).
+The response's `status` field is currently not asserted.
+
+## The GIAS session and sign-in
+
+[IGiasFrontEnd](GiasFrontEnd/IGiasFrontEnd.cs) combines the HTTP operations of `IApi`
+with `SignIn(User)`. [GiasFrontEndViaHttp](GiasFrontEnd/GiasFrontEndViaHttp.cs) owns
+the GIAS session and coordinates the sign-in exchange:
+
+1. GET the GIAS login route, retaining its cookies and redirect to the sign-in authority.
+2. Delegate to `ISignInAuthority` to obtain a SAML response and relay state.
+3. POST those values to GIAS at `/Saml2/Acs`.
+4. Follow the external login callback and retrieve the home page.
+5. Read the request verification token and retain authentication cookies for subsequent requests.
+
+The current authority is [SignInSimulator](SigninAuthorities/SignInSimulator.cs).
+It retrieves the Azure sign-in simulator's form, reads the request correlation values,
+and posts a form containing the selected user's identity and SAML attributes. It returns
+the generated SAML response to the GIAS adapter. Environment-specific simulator URLs and
+descriptions are selected inside this class.
+
+[IUsers](Users/IUsers.cs) separates user selection from sign-in mechanics.
+[UsersFromHardCodedValues](Users/UsersFromHardCodedValues.cs) currently supplies a
+fixed back office test identity. These interfaces provide places to add other user
+sources or sign-in implementations as the pattern expands.
+
+## HTTP and HTML infrastructure
+
+[HttpApi](Apis/HttpApi.cs) implements the shared `IApi` operations using `HttpClient`:
+JSON GET, HTML GET and form POST. It checks for successful HTTP status codes before
+deserialising JSON with Newtonsoft.Json or parsing HTML.
+
+[HttpResponseMessageExtensions](Apis/HttpResponseMessageExtensions.cs) turns an HTTP
+response into an AngleSharp HTML document, retaining its address, status and headers.
+The sign-in code uses selectors against these documents to extract form values and tokens.
+
+These are HTTP-based acceptance tests against a separately running application. They do
+not launch a browser or exercise browser rendering and JavaScript. HTML parsing supports
+the sign-in flow; establishment assertions use the front end's JSON endpoint.
+
+## Wiring and scenario isolation
+
+[DependencyInjection.CreateServices](DependencyInjection/DependencyInjection.cs) is
+marked with Reqnroll's `[ScenarioDependencies]` attribute and assembles the implementations
+for each scenario:
+
+| Interface | Current implementation |
+| --- | --- |
+| `IUsers` | `UsersFromHardCodedValues` |
+| `IEstablishments` | `EstablishmentsFromGiasFrontEnd` |
+| `IGiasFrontEnd` | `GiasFrontEndViaHttp` |
+| `ISignInAuthority` | `SignInSimulator` |
+| `IApi` for simulator requests | `HttpApi` using the named `AzureSignInSimulator` client |
+
+GIAS receives a scenario-scoped `HttpClient`, handler and cookie container. This prevents a
+signed-in scenario's GIAS session from leaking into another scenario through a pooled handler.
+Automatic redirects are disabled so the sign-in implementation can explicitly process each
+redirect. Simulator requests use a separate named client, also with automatic redirects
+disabled.
+
+The unsigned-in scenario relies on this fresh GIAS session: its `Given a user is not signed in`
+binding is empty. Its request step catches any exception and records a generic retrieval error.
+Consequently, `Then an error occurs` currently proves only that retrieval failed, not that GIAS
+returned a particular authentication status or message. Network, parsing and other failures can
+also satisfy that assertion.
+
+## Running the examples
+
+The current composition root hard-codes `https://localhost:44309` as the GIAS base address
+and `dev` as the simulator environment. Before running, start GIAS with its required
+backing services and compatible simulator authentication configuration, ensure its
+HTTPS certificate is trusted, and ensure the configured test identity and establishment
+data are available. The runner does not start or seed the application.
+
+From the repository root, with the .NET 8 SDK installed:
+
+```shell
 dotnet test Web/Edubase.AcceptanceTests/Edubase.AcceptanceTests.csproj
 ```
 
-The tests do not seed data. The backend needs the test user `user_20170322155311_3600154` with sign-in ID `3600154` and back-office permissions. Establishment `141491` must have name `Landau Forte Academy Tamworth Sixth Form1` and type `Academy 16 to 19 sponsor led`. URN `0` must not exist.
+The main scenario compares exact data, including the trailing `1` in the establishment
+name shown above. Changes to that environment's data can therefore cause failures
+independently of application changes. To target another environment, update the
+composition root and ensure the user, data and simulator configuration agree; there is
+currently no environment-variable or command-line configuration layer in this project.
 
-These are interim data dependencies. As the Acceptance Tests evolve more and more data will be seeded and torn down to ensure Later data will be seeded to ensure intergity and repeatability of tests.
+## Applying the pattern to more scenarios
 
-## Add a scenario
+Add new acceptance behaviours in Gherkin first, then implement thin bindings that call
+domain operations and assert business outcomes. Reuse existing operations where appropriate;
+add domain interfaces and adapters where a new capability needs them. Keep routes, payload
+mapping, HTML selectors and authentication mechanics below the bindings, and register new
+implementations in the scenario composition root.
 
-Write the behaviour in a `.feature` file and implement its steps in the matching step definitions. Reuse the domain interfaces and register new implementations in [DependencyInjection.cs](DependencyInjection/DependencyInjection.cs). Do not edit generated `.feature.cs` files.
-
-See [sign-in](SigninAuthorities/README.md) for the authentication flow and common failures.
+As coverage grows, make data preconditions reliable and expected failure assertions specific.
+Preserve scenario isolation and keep environment choices behind the infrastructure interfaces.
+The aim of this first slice is to make that wider rollout consistent and maintainable; the
+existing scenarios demonstrate the structure, while fuller behavioural coverage is still to
+be added.

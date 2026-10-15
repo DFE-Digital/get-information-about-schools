@@ -11,8 +11,8 @@ namespace Edubase.AcceptanceTests.Establishments
         private readonly IUsers users;
         private readonly IGiasFrontEnd giasFrontEnd;
         private readonly IEstablishments establishments;
-        private Establishment establishment;
-        private string errorMessage;
+        private Establishment establishment = new();
+        private string errorMessage = string.Empty;
 
         public EstablishmentsStepDefinitions(
             IUsers users,
@@ -60,6 +60,11 @@ namespace Edubase.AcceptanceTests.Establishments
             }
         }
 
+        [Then("an error occurs")]
+        public void ThenAnErrorOccurs()
+        {
+            Assert.Equal($"Failed to retrieve establishment with URN {urn}.", errorMessage);
+        }
 
         [Then("the Establishment URN is {string}")]
         public void ThenTheEstablishmentURNIs(int p0)
