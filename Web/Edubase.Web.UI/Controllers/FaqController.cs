@@ -14,10 +14,10 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Faq"), Route("{action=index}")]
     public class FaqController : Controller
     {
-        private readonly FaqItemRepository _FaqItemRepository;
-        private readonly FaqGroupRepository _FaqGroupRepository;
+        private readonly IFaqItemRepository _FaqItemRepository;
+        private readonly IFaqGroupRepository _FaqGroupRepository;
 
-        public FaqController(FaqItemRepository FaqItemRepository, FaqGroupRepository FaqGroupRepository)
+        public FaqController(IFaqItemRepository FaqItemRepository, IFaqGroupRepository FaqGroupRepository)
         {
             _FaqItemRepository = FaqItemRepository;
             _FaqGroupRepository = FaqGroupRepository;
