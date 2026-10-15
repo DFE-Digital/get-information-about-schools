@@ -14,7 +14,7 @@ namespace Edubase.AcceptanceTests.Apis
 
         public async Task<T> GetAsync<T>(string url)
         {
-            var response = await httpClient.GetAsync($"{httpClient.BaseAddress}{url}");
+            using var response = await httpClient.GetAsync(url);
 
             response.EnsureSuccessStatusCode();
 
