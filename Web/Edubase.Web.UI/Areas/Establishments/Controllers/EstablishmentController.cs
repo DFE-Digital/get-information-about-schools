@@ -1083,6 +1083,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
             var establishmentTypes = await _cachedLookupService.EstablishmentTypesGetAllAsync();
+            var establishmentStatuses = await _lookupService.EstablishmentStatusesGetAllAsync(User);
 
             viewModel.AccommodationChanges = (await _cachedLookupService.AccommodationChangedGetAllAsync()).ToSelectList(viewModel.AccommodationChangedId);
             viewModel.FurtherEducationTypes = (await _cachedLookupService.FurtherEducationTypesGetAllAsync()).ToSelectList(viewModel.FurtherEducationTypeId);
@@ -1090,7 +1091,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.LocalAuthorities = localAuthorities.ToSelectList(viewModel.LocalAuthorityId);
             viewModel.EstablishmentTypes = establishmentTypes.ToSelectList(viewModel.TypeId);
             viewModel.HeadTitles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.HeadTitleId);
-            viewModel.Statuses = (await _lookupService.EstablishmentStatusesGetAllAsync(User)).ToSelectList(viewModel.StatusId);
+            viewModel.Statuses = establishmentStatuses.ToSelectList(viewModel.StatusId);
             viewModel.AdmissionsPolicies = (await _cachedLookupService.AdmissionsPoliciesGetAllAsync()).ToSelectList(viewModel.AdmissionsPolicyId);
             viewModel.Inspectorates = (await _cachedLookupService.InspectoratesGetAllAsync()).ToSelectList(viewModel.InspectorateId);
             viewModel.IndependentSchoolTypes = (await _cachedLookupService.IndependentSchoolTypesGetAllAsync()).ToSelectList(viewModel.IndependentSchoolTypeId);
@@ -1170,9 +1171,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (!Feature.IsEnabled("gias.iebt.status"))
             {
-                establishmentTypes =
-                    establishmentTypes.Where(x => x.Name != "DeregisteredAsAnIndependentSchool");
+                establishmentStatuses =
+                    establishmentStatuses.Where(x => x.Name != "Deregistered as an independent school");
             }
+            viewModel.Statuses = establishmentStatuses.ToSelectList(viewModel.TypeId);
         }
 
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
