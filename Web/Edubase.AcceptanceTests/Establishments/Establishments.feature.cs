@@ -26,7 +26,7 @@ namespace Edubase.AcceptanceTests.Establishments
         
         private static readonly global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Establishments", "Establishments", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-        private global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
+        private readonly global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
 #line 1 "Establishments.feature"
 #line hidden
