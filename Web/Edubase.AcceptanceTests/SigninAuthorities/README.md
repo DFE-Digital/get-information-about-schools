@@ -1,6 +1,10 @@
 # Sign-in for acceptance tests
 
 For setup and configuration, see the Acceptance Tests [README](../README.md).
+For local certificate and metadata setup, see [Local SAML setup](LocalSamlSetup.md).
+
+`UseLocalSignIn` in the shared `devsecrets.gias.config.alwaysignore` selects
+`SigninSimulatorOnLocalMachine` (`true`) or `SigninSimulatorInAzure` (`false`).
 
 ## How it works
 
