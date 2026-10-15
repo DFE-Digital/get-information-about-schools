@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
 using Edubase.Data.Entity;
 
@@ -16,6 +17,10 @@ namespace Edubase.Data.Repositories.EF
             });
 
             Ignore(x => x.ETag);
+            Ignore(x => x.Timestamp);
+            Property(x => x.SqlTimestamp)
+                .HasColumnName("Timestamp")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed);
         }
     }
 }
