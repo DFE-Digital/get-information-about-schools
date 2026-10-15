@@ -123,13 +123,15 @@ jobs:
           packageType: 'sdk'
           version: '8.0.x'
 
-      - task: NuGetToolInstaller@1
-        displayName: 'Install NuGet'
-
-      - task: NuGetCommand@2
+      # Use the same MSBuild as the build for legacy PackageReference projects.
+      # Also restore the projects that still use packages.config.
+      - task: VSBuild@1
         displayName: Restore C# solution
         inputs:
-          restoreSolution: '$(solution)'
+          solution: '$(solution)'
+          msbuildArgs: /t:Restore /p:RestorePackagesConfig=true
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
 
       - task: VSBuild@1
         displayName: Build C# solution
