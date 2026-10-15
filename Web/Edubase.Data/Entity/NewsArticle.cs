@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Edubase.Data.Entity
@@ -31,7 +32,7 @@ namespace Edubase.Data.Entity
     public class NewsArticle : TableEntity
     {
         public string Title { get; set; }
-       
+
         private DateTime _articleDate;
         public DateTime ArticleDate
         {
@@ -60,5 +61,12 @@ namespace Edubase.Data.Entity
             ArticleDate <= DateTime.Now ?
                 (eNewsArticleStatus) eNewsArticleStatus.Live :
                 (eNewsArticleStatus) eNewsArticleStatus.Future;
+
+        [IgnoreProperty]
+        public DateTime SqlTimestamp { get; set; }
+
+        [IgnoreProperty]
+        [NotMapped]
+        public DateTime EffectiveTimestamp => SqlTimestamp != default(DateTime)? SqlTimestamp : Timestamp.DateTime;
     }
 }
