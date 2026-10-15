@@ -60,12 +60,6 @@ namespace Edubase.AcceptanceTests.Establishments
             }
         }
 
-        [Then("an error occurs")]
-        public void ThenAnErrorOccurs()
-        {
-            Assert.Equal($"Failed to retrieve establishment with URN {urn}.", errorMessage);
-        }
-
         [Then("the Establishment URN is {string}")]
         public void ThenTheEstablishmentURNIs(int p0)
         {
