@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Edubase.Data.Entity
@@ -88,5 +89,12 @@ namespace Edubase.Data.Entity
         public string LinkUrl2 { get; set; }
         [Display(Name = "Textbox for link 2")]
         public string LinkText2 { get; set; }
+
+        [IgnoreProperty]
+        public DateTime SqlTimestamp { get; set; }
+
+        [IgnoreProperty]
+        [NotMapped]
+        public DateTime EffectiveTimestamp => SqlTimestamp != default(DateTime) ? SqlTimestamp : Timestamp.DateTime;
     }
 }

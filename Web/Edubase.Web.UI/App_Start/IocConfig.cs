@@ -543,6 +543,15 @@ namespace Edubase.Web.UI
                 builder.RegisterType<NewsArticleRepository>().As<INewsArticleRepository>().SingleInstance();
             }
 
+            if (Feature.IsEnabled("Feature_NotificationBannersMigration"))
+            {
+                builder.RegisterType<SqlNotificationBannerRepository>().As<INotificationBannerRepository>().InstancePerRequest();
+            }
+            else
+            {
+                builder.RegisterType<NotificationBannerRepository>().As<INotificationBannerRepository>().SingleInstance();
+            }
+
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
