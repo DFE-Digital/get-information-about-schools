@@ -2,6 +2,8 @@
 # SAML is the format used to share these sign-in details.
 # The application configuration is shared separately; this script does not edit it.
 
+Write-Host "Setting up local environment for acceptance testing. Please wait..."
+
 # Stop if a PowerShell step fails, so we do not carry on with an incomplete setup.
 $ErrorActionPreference = 'Stop'
 

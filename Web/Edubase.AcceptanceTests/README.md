@@ -20,19 +20,33 @@ running and accessible in Azure. A local SQL Server instance will be created and
 seeded as part of the Java back end installation, again, once it has all been verified.
 
 ### GIAS web application - *Edubase.Web.UI*
-Ensure the Web UI configuration file `devsecrets.gias.config.alwaysignore` is correct by copying a
-known working config file from another developer. This file should be placed in the root
-folder - the same level as the `.git` folder. This file is never committed to GIT as it
-could be a security risk. The initial config file should point to the required dependencies.
+Ensure the Web UI configuration file `devsecrets.gias.config.alwaysignore` is correct by
+copying a known working config file from another developer. This file should be placed
+in the root folder - the same level as the `.git` folder. There are two configs available:
+
+- one pointing to remote (Azure) services - `devsecrets.gias.config.remote.alwaysignore`-
+- the other pointing to local services `devsecrets.gias.config.local.alwaysignore`.
+
+These files should never be committed to GIT as they may contain secrets.
 
 For local sign-in, also obtain the shared `devsecrets.gias.signing.pfx.alwaysignore`
 and place it in the repository root. Run `Web/LocalSetup.ps1` to write local SAML
-metadata and install/start Azurite. See [local SAML setup](SigninAuthorities/LocalSamlSetup.md)
-for the website configuration.
+metadata and install/start Azurite.
+See [local SAML setup](SigninAuthorities/LocalSamlSetup.md) for the website
+configuration. Also, ensure the setting `SASimulatorUri` in the local config file is set
+to the local directory for the repository.
 
 Ensure the Web UI app is running and accessible, usually at `https://localhost:44309`.
 The acceptance tests will use this URL to interact with the application. This usually
 means opening a separate Visual Studio instance and starting up *Edubase.Web.UI*.
+
+## Final Checklist
+If runtime issues occur during the execution of acceptance tests check the following:
+- Has the correct config file been copied to the root directory?
+- Is the SQL Server database stated in the config file available?
+- Is the Java back end stated in the config file available?
+- Has `.\LocalSetup.ps1` been run and is the window still open?
+- Is an instance of the Web app running locally?
 
 ## Features and scenarios
 Start with [Establishments.feature](Establishments/Establishments.feature).
@@ -169,17 +183,16 @@ The third scenario requests URN `0` and checks that the recorded error contains
 
 ## Running the examples
 
-The composition root reads `GiasFrontEndBaseAddress`, `Environment` and `UseLocalSignIn`
-from the repository-root `devsecrets.gias.config.alwaysignore`. Before running, start GIAS with its required
-backing services and compatible simulator authentication configuration, ensure its
-HTTPS certificate is trusted, and ensure the configured test identity and establishment
-data are available. The runner does not start or seed the application.
+On start-up the Web app and the Acceptance Tests read `GiasFrontEndBaseAddress`, `Environment` and `UseLocalSignIn`
+from the repository-root `devsecrets.gias.config.alwaysignore`. Before running, start GIAS - 
+start up from a separate Visual Studio instance is normally the best approach as it can be
+debugged when necessary. Ensure its required backing services and compatible simulator
+authentication configuration, ensure its HTTPS certificate is trusted, and ensure the
+configured test identity and establishment data are available.
+The runner does not start or seed the application.
 
-From the repository root, with the .NET 10 SDK installed:
-
-```shell
-dotnet test Web/Edubase.AcceptanceTests/Edubase.AcceptanceTests.csproj
-```
+From a separate Visual Studio instance open Test Explorer and execute the Acceptance Tests
+as required in the usual way. That tests should issue HTTP requests to the running Web app.
 
 The main scenario compares exact data, including the trailing `1` in the establishment
 name shown above. Changes to that environment's data can therefore cause failures
