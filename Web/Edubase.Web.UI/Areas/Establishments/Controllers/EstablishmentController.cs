@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using Edubase.Common;
+using Edubase.Common.Config;
 using Edubase.Common.Reflection;
 using Edubase.Services;
 using Edubase.Services.Domain;
@@ -36,9 +37,9 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using MoreLinq;
-using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
 using EnumExtensions = Edubase.Services.Establishments.EnumExtensions;
+using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
@@ -1081,14 +1082,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private async Task PopulateSelectLists(ViewModel viewModel)
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
+            var establishmentTypes = await _cachedLookupService.EstablishmentTypesGetAllAsync();
+            var establishmentStatuses = await _lookupService.EstablishmentStatusesGetAllAsync(User);
 
             viewModel.AccommodationChanges = (await _cachedLookupService.AccommodationChangedGetAllAsync()).ToSelectList(viewModel.AccommodationChangedId);
             viewModel.FurtherEducationTypes = (await _cachedLookupService.FurtherEducationTypesGetAllAsync()).ToSelectList(viewModel.FurtherEducationTypeId);
             viewModel.Genders = (await _cachedLookupService.GendersGetAllAsync()).ToSelectList(viewModel.GenderId);
             viewModel.LocalAuthorities = localAuthorities.ToSelectList(viewModel.LocalAuthorityId);
-            viewModel.EstablishmentTypes = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).ToSelectList(viewModel.TypeId);
+            viewModel.EstablishmentTypes = establishmentTypes.ToSelectList(viewModel.TypeId);
             viewModel.HeadTitles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.HeadTitleId);
-            viewModel.Statuses = (await _lookupService.EstablishmentStatusesGetAllAsync(User)).ToSelectList(viewModel.StatusId);
+            viewModel.Statuses = establishmentStatuses.ToSelectList(viewModel.StatusId);
             viewModel.AdmissionsPolicies = (await _cachedLookupService.AdmissionsPoliciesGetAllAsync()).ToSelectList(viewModel.AdmissionsPolicyId);
             viewModel.Inspectorates = (await _cachedLookupService.InspectoratesGetAllAsync()).ToSelectList(viewModel.InspectorateId);
             viewModel.IndependentSchoolTypes = (await _cachedLookupService.IndependentSchoolTypesGetAllAsync()).ToSelectList(viewModel.IndependentSchoolTypeId);
@@ -1165,6 +1168,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                                                 where la.Id == viewModel.LocalAuthorityId.Value
                                                 select la.Code).FirstOrDefault();
             }
+
+            if (!Feature.IsEnabled("gias.iebt.status"))
+            {
+                establishmentStatuses =
+                    establishmentStatuses.Where(x => x.Name != "Deregistered as an independent school");
+            }
+            viewModel.Statuses = establishmentStatuses.ToSelectList(viewModel.TypeId);
         }
 
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
