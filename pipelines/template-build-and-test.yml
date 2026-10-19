@@ -147,9 +147,10 @@ jobs:
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
 
-      - task: VSTest@2
+      - task: VSTest@3
         displayName: Run C# tests
         inputs:
+          vsTestVersion: '18.0'
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
           testAssemblyVer2: >-
