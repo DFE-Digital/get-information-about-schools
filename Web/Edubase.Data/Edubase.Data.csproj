@@ -165,6 +165,7 @@
     <Compile Include="Repositories\EF\FrontEndDbContext.cs" />
     <Compile Include="Repositories\EF\GlossaryItemConfiguration.cs" />
     <Compile Include="Repositories\EF\LocalAuthoritySetConfiguration.cs" />
+    <Compile Include="Repositories\EF\NotificationBannerConfiguration.cs" />
     <Compile Include="Repositories\EF\NewsArticleConfiguration.cs" />
     <Compile Include="Repositories\EF\SqlLocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\EF\SqlNewsArticleRepository.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="Repositories\EF\SqlFaqGroupRepository.cs" />
     <Compile Include="Repositories\EF\SqlFaqItemRepository.cs" />
     <Compile Include="Repositories\EF\SqlLocalAuthoritySetRepository.cs" />
+    <Compile Include="Repositories\EF\SqlNotificationBannerRepository.cs" />
     <Compile Include="Repositories\EF\SqlNotificationTemplateRepository.cs" />
     <Compile Include="Repositories\EF\SqlTokenRepository.cs" />
     <Compile Include="Repositories\EF\SqlUserPreferenceRepository.cs" />
@@ -181,6 +183,7 @@
     <Compile Include="Repositories\EF\UserPreferenceConfiguration.cs" />
     <Compile Include="Repositories\IGlossaryRepository.cs" />
     <Compile Include="Repositories\IFaqGroupRepository.cs" />
+    <Compile Include="Repositories\INotificationBannerRepository.cs" />
     <Compile Include="Repositories\INotificationTemplateRepository.cs" />
     <Compile Include="Repositories\IFaqItemRepository.cs" />
     <Compile Include="Repositories\WebLogItemRepository.cs" />
