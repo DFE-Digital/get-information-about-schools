@@ -22,11 +22,11 @@ namespace Edubase.AcceptanceTests.Establishments
         
         private global::Reqnroll.ITestRunner testRunner;
         
-        private static readonly string[] featureTags = ((string[])(null));
+        private static string[] featureTags = ((string[])(null));
         
-        private static readonly global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Establishments", "Establishments", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Establishments", "Establishments", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-        private readonly global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
+        private global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
 #line 1 "Establishments.feature"
 #line hidden
