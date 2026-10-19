@@ -122,7 +122,7 @@
                     var bannerEvent = (eNotificationBannerEvent) Enum.Parse(typeof(eNotificationBannerEvent), banner.AuditEvent, true);
 
                     <tr class="govuk-table__row">
-                        <td data-label="Time and date" class="govuk-table__cell">@(banner.Timestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br/> @banner.Timestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                        <td data-label="Time and date" class="govuk-table__cell">@(banner.EffectiveTimestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br/> @banner.EffectiveTimestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
                         <td data-label="Status" class="govuk-table__cell">
                             @if (bannerEvent == eNotificationBannerEvent.Delete)
                             {
