@@ -98,10 +98,6 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             {
                 throw new AcceptanceTestSetupException("Ensure all set up steps have been followed", e);
             }
-            catch (Exception e)
-            {
-                throw new AcceptanceTestSetupException("Ensure all set up steps have been followed", e);
-            }
         }
 
         internal string CreateSamlResponse(User user, string encodedRequest, Uri acs)
