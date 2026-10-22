@@ -29,12 +29,11 @@ in the root folder - the same level as the `.git` folder. There are two configs 
 
 These files should never be committed to GIT as they may contain secrets.
 
-For local sign-in, also obtain the shared `devsecrets.gias.signing.pfx.alwaysignore`
-and place it in the repository root. Run `Web/LocalSetup.ps1` to write local SAML
-metadata and install/start Azurite.
-See [local SAML setup](SigninAuthorities/LocalSamlSetup.md) for the website
-configuration. Also, ensure the setting `SASimulatorUri` in the local config file is set
-to the local directory for the repository.
+For local execution, run `Web/LocalSetup.ps1` to prepare the local machine for local execution
+including creating `devsecrets.gias.signing.pfx.alwaysignore` if it is missing and writing
+local SAML metadata. The script also installs Azurite. Run `Web/StartLocalServices.ps1` thereafter
+to start Azurite and leave that terminal open while the application is running.
+
 
 Ensure the Web UI app is running and accessible, usually at `https://localhost:44309`.
 The acceptance tests will use this URL to interact with the application. This usually
@@ -45,7 +44,8 @@ If runtime issues occur during the execution of acceptance tests check the follo
 - Has the correct config file been copied to the root directory?
 - Is the SQL Server database stated in the config file available?
 - Is the Java back end stated in the config file available?
-- Has `.\LocalSetup.ps1` been run and is the window still open?
+- Has `Web/LocalSetup.ps1` been run?
+- Is Azurite running in a window started by `Web/StartLocalServices.ps1`?
 - Is an instance of the Web app running locally?
 
 ## Features and scenarios
@@ -126,7 +126,7 @@ sign-in to `ISignInAuthority`, which uses the shared GIAS session to:
 
 The authority is selected by `UseLocalSignIn` in the shared configuration.
 [SigninSimulatorOnLocalMachine](SigninAuthorities/SigninSimulatorOnLocalMachine.cs)
-signs the response using the shared development certificate without contacting a sign-in server.
+signs the response using the repository's local development certificate without contacting a sign-in server.
 [SigninSimulatorInAzure](SigninAuthorities/SigninSimulatorInAzure.cs)
 retrieves the Azure sign-in simulator's form, reads the request correlation values,
 and posts a form containing the selected user's identity and SAML attributes. It returns

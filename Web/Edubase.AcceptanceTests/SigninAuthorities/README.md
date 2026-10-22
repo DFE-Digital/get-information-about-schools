@@ -9,7 +9,7 @@ For local certificate and metadata setup, see [Local SAML setup](LocalSamlSetup.
 ## How it works
 
 1. The test requests the website's login page.
-2. With local sign-in, it signs a SAML response using the shared development certificate. With remote sign-in, the Azure simulator provides the response.
+2. With local sign-in, it signs a SAML response using the repository's local development certificate. With remote sign-in, the Azure simulator provides the response.
 3. The website validates the response, asks the backend for the user's roles, and issues a session cookie.
 4. The test uses that cookie for subsequent requests.
 
