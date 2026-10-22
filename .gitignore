@@ -211,4 +211,7 @@ Web/Web.UI/
 /Web/.nuget/NuGet.Config
 Web/packages
 /Web/report
+
+# Reqnroll generated code
+*.feature.cs
 /Web/.local-signin/
