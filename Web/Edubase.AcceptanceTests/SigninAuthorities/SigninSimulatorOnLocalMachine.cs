@@ -39,6 +39,8 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
 
         public async Task SignIn(User user)
         {
+            try
+            {
             ArgumentNullException.ThrowIfNull(user);
             ArgumentException.ThrowIfNullOrWhiteSpace(user.NameId);
             ArgumentException.ThrowIfNullOrWhiteSpace(user.AttributeStatementValue);
@@ -72,7 +74,21 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             if (!completed.Headers.TryGetValues("Set-Cookie", out var cookies) ||
                 !cookies.Any(cookie => cookie.StartsWith(".AspNet.ApplicationCookie=", StringComparison.Ordinal)))
                 throw new InvalidOperationException("GIAS did not issue an application cookie.");
-            // DI gives this client a scenario-scoped CookieContainer, shared with the front end.
+                // DI gives this client a scenario-scoped CookieContainer, shared with the front end.
+
+            }
+            catch (HttpRequestException e)
+            {
+                throw new AcceptanceTestSetupException("Ensure the Web App Edubase.Web.UI is running", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new AcceptanceTestSetupException("Ensure the Java back end is running", e);
+            }
+            catch (Exception e)
+            {
+                throw new AcceptanceTestSetupException("Ensure all set up steps have been followed", e);
+            }
         }
 
         internal string CreateSamlResponse(User user, string encodedRequest, Uri acs)
