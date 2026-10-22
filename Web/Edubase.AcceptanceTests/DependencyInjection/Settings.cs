@@ -32,7 +32,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             // Locate the repository configuration without copying secrets into build output.
             for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory != null; directory = directory.Parent)
             {
-                var path = Path.Combine(directory.FullName, fileName);
+                var path = Path.Join(directory.FullName, fileName);
                 if (!File.Exists(path)) continue;
 
                 using var reader = XmlReader.Create(path, new XmlReaderSettings

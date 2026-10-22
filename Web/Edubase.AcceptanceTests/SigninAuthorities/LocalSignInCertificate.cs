@@ -11,7 +11,7 @@ namespace Edubase.LocalDevelopment
                 var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
                 while (directory != null)
                 {
-                    if (File.Exists(Path.Combine(directory.FullName, "EdubaseWeb.sln")))
+                    if (File.Exists(Path.Join(directory.FullName, "EdubaseWeb.sln")))
                         return directory.FullName;
                     directory = directory.Parent;
                 }
@@ -20,12 +20,12 @@ namespace Edubase.LocalDevelopment
         }
 
         internal static string DirectoryPath =>
-            Path.Combine(WebDirectory, "Edubase.AcceptanceTests", ".local-signin");
+            Path.Join(WebDirectory, "Edubase.AcceptanceTests", ".local-signin");
 
         // Read the shared development certificate directly; never copy or generate a private key.
         internal static X509Certificate2 Load()
         {
-            var path = Path.Combine(Directory.GetParent(WebDirectory)!.FullName,
+            var path = Path.Join(Directory.GetParent(WebDirectory)!.FullName,
                 "devsecrets.gias.signing.pfx.alwaysignore");
             return new X509Certificate2(path, string.Empty, X509KeyStorageFlags.EphemeralKeySet);
         }

@@ -21,7 +21,7 @@ internal static class LocalSamlMetadata
                 new XElement(md + "SingleSignOnService",
                     new XAttribute("Binding", "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"),
                     new XAttribute("Location", "http://localhost/local-signin"))));
-        File.WriteAllText(Path.Combine(directory, "Metadata"), entity.ToString());
-        File.WriteAllText(Path.Combine(directory, "Federation"), new XElement(md + "EntitiesDescriptor", entity).ToString());
+        File.WriteAllText(Path.Join(directory, "Metadata"), entity.ToString());
+        File.WriteAllText(Path.Join(directory, "Federation"), new XElement(md + "EntitiesDescriptor", entity).ToString());
     }
 }
