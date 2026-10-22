@@ -41,49 +41,62 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
         {
             try
             {
-            ArgumentNullException.ThrowIfNull(user);
-            ArgumentException.ThrowIfNullOrWhiteSpace(user.NameId);
-            ArgumentException.ThrowIfNullOrWhiteSpace(user.AttributeStatementValue);
+                ArgumentNullException.ThrowIfNull(user);
+                ArgumentException.ThrowIfNullOrWhiteSpace(user.NameId);
+                ArgumentException.ThrowIfNullOrWhiteSpace(user.AttributeStatementValue);
 
-            // GIAS creates its normal SAML request and correlation cookie.
-            using var login = await httpClient.GetAsync(WebRoutes.SignIn);
-            var authorityLocation = GetRedirect(login);
-            if (!authorityLocation.IsAbsoluteUri || authorityLocation.GetLeftPart(UriPartial.Path) != Authority.AbsoluteUri)
-                throw new InvalidOperationException($"Expected local SAML redirect to {Authority}, received {(authorityLocation.IsAbsoluteUri ? authorityLocation.GetLeftPart(UriPartial.Path) : "a relative redirect")}. Run LocalSetup.ps1, set SASimulatorUri to the local metadata directory and SASimulatorGuid to an empty string, then restart the Debug website.");
-            var query = HttpUtility.ParseQueryString(authorityLocation.Query);
-            var samlRequest = query["SAMLRequest"] ?? throw new InvalidOperationException("GIAS returned no SAML request.");
-            var relayState = query["RelayState"] ?? throw new InvalidOperationException("GIAS returned no relay state.");
-            var acs = new Uri(httpClient.BaseAddress!, "/Saml2/Acs");
+                // GIAS creates its normal SAML request and correlation cookie.
+                using var login = await httpClient.GetAsync(WebRoutes.SignIn);
+                var authorityLocation = GetRedirect(login);
+                if (!authorityLocation.IsAbsoluteUri || authorityLocation.GetLeftPart(UriPartial.Path) != Authority.AbsoluteUri)
+                    throw new SamlRequestException($"Expected local SAML redirect to {Authority}, received {(authorityLocation.IsAbsoluteUri ? authorityLocation.GetLeftPart(UriPartial.Path) : "a relative redirect")}. Run LocalSetup.ps1, set SASimulatorUri to the local metadata directory and SASimulatorGuid to an empty string, then restart the Debug website.");
+                var query = HttpUtility.ParseQueryString(authorityLocation.Query);
+                var samlRequest = query["SAMLRequest"] ?? throw new InvalidOperationException("GIAS returned no SAML request.");
+                var relayState = query["RelayState"] ?? throw new InvalidOperationException("GIAS returned no relay state.");
+                var acs = new Uri(httpClient.BaseAddress!, "/Saml2/Acs");
 
-            // No request goes to the authority URL: create the signed response here.
-            var response = CreateSamlResponse(user, samlRequest, acs);
-            using var form = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                ["SAMLResponse"] = response,
-                ["RelayState"] = relayState
-            });
-            using var accepted = await httpClient.PostAsync(acs, form);
-            var callback = new Uri(httpClient.BaseAddress!, GetRedirect(accepted));
-            if (callback.GetLeftPart(UriPartial.Authority) != httpClient.BaseAddress!.GetLeftPart(UriPartial.Authority) ||
-                callback.AbsolutePath != "/Account/ExternalLoginCallback")
-                throw new InvalidOperationException("GIAS returned an unexpected SAML callback.");
+                // No request goes to the authority URL: create the signed response here.
+                var response = CreateSamlResponse(user, samlRequest, acs);
+                using var form = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    ["SAMLResponse"] = response,
+                    ["RelayState"] = relayState
+                });
+                using var accepted = await httpClient.PostAsync(acs, form);
+                var callback = new Uri(httpClient.BaseAddress!, GetRedirect(accepted));
+                if (callback.GetLeftPart(UriPartial.Authority) != httpClient.BaseAddress!.GetLeftPart(UriPartial.Authority) ||
+                    callback.AbsolutePath != "/Account/ExternalLoginCallback")
+                    throw new SignedResponseException("GIAS returned an unexpected SAML callback.");
 
-            // The regular callback loads backend roles and issues the application cookie.
-            using var completed = await httpClient.GetAsync(callback);
-            GetRedirect(completed);
-            if (!completed.Headers.TryGetValues("Set-Cookie", out var cookies) ||
-                !cookies.Any(cookie => cookie.StartsWith(".AspNet.ApplicationCookie=", StringComparison.Ordinal)))
-                throw new InvalidOperationException("GIAS did not issue an application cookie.");
+                // The regular callback loads backend roles and issues the application cookie.
+                using var completed = await httpClient.GetAsync(callback);
+                GetRedirect(completed);
+                if (!completed.Headers.TryGetValues("Set-Cookie", out var cookies) ||
+                    !cookies.Any(cookie => cookie.StartsWith(".AspNet.ApplicationCookie=", StringComparison.Ordinal)))
+                    throw new CookieException("GIAS did not issue an application cookie.");
                 // DI gives this client a scenario-scoped CookieContainer, shared with the front end.
 
             }
             catch (HttpRequestException e)
             {
-                throw new AcceptanceTestSetupException("Ensure the Web App Edubase.Web.UI is running", e);
+                if (e.HttpRequestError == HttpRequestError.ConnectionError)
+                {
+                    throw new AcceptanceTestSetupException("Ensure the Web App Edubase.Web.UI is running and StartLocalServices.ps1 has been run and has an open window", e);
+                }
+
+                throw;
             }
-            catch (InvalidOperationException e)
+            catch (SamlRequestException e)
             {
-                throw new AcceptanceTestSetupException("Ensure the Java back end is running", e);
+                throw new AcceptanceTestSetupException("Ensure all set up steps have been followed", e);
+            }
+            catch (SignedResponseException e)
+            {
+                throw new AcceptanceTestSetupException("Ensure all set up steps have been followed", e);
+            }
+            catch (CookieException e)
+            {
+                throw new AcceptanceTestSetupException("Ensure all set up steps have been followed", e);
             }
             catch (Exception e)
             {
