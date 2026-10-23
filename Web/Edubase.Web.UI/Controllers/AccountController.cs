@@ -46,6 +46,7 @@ namespace Edubase.Web.UI.Controllers
                 Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl.Clean() ?? "/" }));
         }
 
+
         [Route(nameof(ExternalLoginCallback)), AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {

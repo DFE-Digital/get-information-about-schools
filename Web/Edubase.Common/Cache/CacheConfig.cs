@@ -42,7 +42,11 @@ namespace Edubase.Common.Cache
             CacheDomain = ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
 
             if (CacheDomain.Equals("localdev", StringComparison.OrdinalIgnoreCase))
+            {
+                // LocalSetup selects localdev: use memory caching rather than remote Redis.
+                IsCentralCacheEnabled = false;
                 CacheDomain += "_" + Environment.MachineName; //Guid.NewGuid().ToString().Substring(0, 5);
+            }
 
             CacheDomain = CacheDomain?.ToLower();
         }
