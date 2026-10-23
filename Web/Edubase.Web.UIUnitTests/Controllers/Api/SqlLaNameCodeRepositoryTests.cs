@@ -1,4 +1,6 @@
+using System;
 using System.Configuration;
+using System.Reflection;
 using Xunit;
 
 namespace Edubase.Web.UI.Controllers.Api.UnitTests
@@ -11,13 +13,13 @@ namespace Edubase.Web.UI.Controllers.Api.UnitTests
         {
             ConfigurationManager.AppSettings["Environment"] = "dev";
 
-            var connectionStrings = new ConnectionStringSettingsCollection();
-
-            connectionStrings.Add(new ConnectionStringSettings("FrontEndDatabase", "FrontEndDatabaseConnectionString"));
+            AddConnectionStringToConfigurationManager("FrontEndDatabase", "FrontEndTestConnectionString");
 
             var expected = "Server=tcp:,1433;database=;authentication=Active Directory Default;encrypt=True;TrustServerCertificate=False;";
 
-            Assert.Equal(expected, SqlLaNameCodeRepository.BuildConnectionString(ConfigurationManager.ConnectionStrings));
+            Assert.Equal(expected, SqlLaNameCodeRepository.BuildConnectionString());
+
+            RemoveConnectionStringFromConfigurationManager("FrontEndDatabase");
         }
 
         [Fact]
@@ -25,11 +27,43 @@ namespace Edubase.Web.UI.Controllers.Api.UnitTests
         {
             ConfigurationManager.AppSettings["Environment"] = "localdev";
 
-            var connectionStrings = new ConnectionStringSettingsCollection();
+            AddConnectionStringToConfigurationManager("FrontEndDatabase", "FrontEndTestConnectionString");
 
-            connectionStrings.Add(new ConnectionStringSettings("FrontEndDatabase", "FrontEndDatabaseConnectionString"));
+            var expected = "FrontEndTestConnectionString";
 
-            Assert.Equal("FrontEndDatabaseConnectionString", SqlLaNameCodeRepository.BuildConnectionString(connectionStrings));
+            Assert.Equal(expected, SqlLaNameCodeRepository.BuildConnectionString());
+
+            RemoveConnectionStringFromConfigurationManager("FrontEndDatabase");
+        }
+
+        private void AddConnectionStringToConfigurationManager(string key, string value)
+        {
+            var connections = GetConfigurationManagerConnectionStrings();
+
+            connections.Remove(key);
+            connections.Add(new ConnectionStringSettings(key, value));
+        }
+
+        private void RemoveConnectionStringFromConfigurationManager(string key)
+        {
+            var connections = GetConfigurationManagerConnectionStrings();
+
+            connections.Remove(key);
+        }
+
+        private ConnectionStringSettingsCollection GetConfigurationManagerConnectionStrings()
+        {
+            var connections = ConfigurationManager.ConnectionStrings;
+
+            var readOnlyField = typeof(ConfigurationElementCollection)
+                .GetField("bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (readOnlyField == null)
+                throw new InvalidOperationException("Configuration read-only field not found.");
+
+            readOnlyField.SetValue(connections, false);
+
+            return connections;
         }
     }
 }

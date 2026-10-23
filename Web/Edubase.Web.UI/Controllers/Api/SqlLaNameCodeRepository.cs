@@ -36,7 +36,7 @@ namespace Edubase.Web.UI.Controllers.Api
 
         private static async Task<List<SqlLaNameCode>> QueryAllAsync()
         {
-            using (var context = new LaNameCodesDbContext(new SqlConnection(BuildConnectionString(ConfigurationManager.ConnectionStrings))))
+            using (var context = new LaNameCodesDbContext(new SqlConnection(BuildConnectionString())))
             {
                 return await context.LaNameCodes
                     .AsNoTracking()
@@ -48,7 +48,7 @@ namespace Edubase.Web.UI.Controllers.Api
 
         private static async Task<List<SqlLaNameCode>> QueryByGroupAsync(string groupCode)
         {
-            using (var context = new LaNameCodesDbContext(new SqlConnection(BuildConnectionString(ConfigurationManager.ConnectionStrings))))
+            using (var context = new LaNameCodesDbContext(new SqlConnection(BuildConnectionString())))
             {
                 return await context.LaNameCodes
                     .AsNoTracking()
@@ -58,11 +58,11 @@ namespace Edubase.Web.UI.Controllers.Api
             }
         }
 
-        internal static string BuildConnectionString(ConnectionStringSettingsCollection connectionStrings)
+        internal static string BuildConnectionString()
         {
             // LocalSetup supplies Windows-authenticated local SQL; hosted runs use Azure authentication.
             if (string.Equals(ConfigurationManager.AppSettings["Environment"], "localdev", System.StringComparison.OrdinalIgnoreCase))
-                return connectionStrings["FrontEndDatabase"]?.ConnectionString;
+                return ConfigurationManager.ConnectionStrings["FrontEndDatabase"].ConnectionString;
 
             var serverName = ConfigurationManager.AppSettings["SQLServer"];
             var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
