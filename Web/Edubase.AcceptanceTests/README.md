@@ -29,11 +29,11 @@ in the root folder - the same level as the `.git` folder. There are two configs 
 
 These files should never be committed to GIT as they may contain secrets.
 
+### Local Execution
 For local execution, run `Web/LocalSetup.ps1` to prepare the local machine for local execution
 including creating `devsecrets.gias.signing.pfx.alwaysignore` if it is missing and writing
 local SAML metadata. The script also installs Azurite. Run `Web/StartLocalServices.ps1` thereafter
 to start Azurite and leave that terminal open while the application is running.
-
 
 Ensure the Web UI app is running and accessible, usually at `https://localhost:44309`.
 The acceptance tests will use this URL to interact with the application. This usually
