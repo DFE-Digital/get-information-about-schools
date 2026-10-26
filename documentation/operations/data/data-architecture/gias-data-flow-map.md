@@ -1,12 +1,12 @@
 # Where GIAS data goes
 
-A  map of every discovered live system we found that uses GIAS data, and how the data reaches it. Some systems may be undiscovered at time of writing.
+A map of the systems we found that use GIAS data, and how the data reaches them. Some systems may be undiscovered at time of writing. Source evidence describes the implementation; it does not by itself confirm that a particular production job or route is active.
 
 
 ## Key
 
-- **Solid line.** We can see the code that moves the data.
-- **Dashed line.** The data moves, but the loader is private, so we can't see how.
+- **Solid line.** We can see the code that reads, transforms or serves the data.
+- **Dashed line.** The transfer implementation or active production route remains unverified. See the route notes for the evidence gap.
 - **Cylinder.** A database that holds a copy of GIAS data.
 
 ## The whole picture
@@ -20,7 +20,7 @@ flowchart LR
     GIAS --> SOAP[SOAP web service]
     GIAS --> HAND[Downloaded by hand]
     GIAS -.-> ADB[(Academies DB)]
-    GIAS -.-> DSI[(DfE Sign-in)]
+    GIAS -.-> PP[(Provider Profile - Databricks)]
     GIAS -.-> FDZ[(Funding Data Zone)]
 
     subgraph P1 [12 services]
@@ -53,10 +53,14 @@ flowchart LR
 
     ADB --> a01[11 academies and trusts services, see next diagram]
 
+    PP --> PPEX[Provider source-extract API]
+    PPEX -.-> DSI[(DfE Sign-in)]
     DSI --> d01[Every service that uses DfE Sign-in organisations]
 
     FDZ --> f01[Calculate funding service]
 ```
+
+
 
 ## Through the Academies DB
 
@@ -119,7 +123,7 @@ Notes:
 | SOAP web service | 1 |
 | Downloaded by hand | 6 |
 | Academies DB, through FIAT, the Academies API or the Persons API | 11 |
-| DfE Sign-in | Every service that uses its organisations |
+| Provider Profile → DfE Sign-in; active production endpoint to confirm | Every service that uses Sign-in organisations |
 | Funding Data Zone | 1 |
 
 Complete is counted twice, once by hand and once through the Academies DB.
@@ -132,7 +136,7 @@ Complete is counted twice, once by hand and once through the Academies DB.
 
 ## Repositories
 
-The live systems on the map, in the order they appear. Some services have more than one repository. These are the ones that handle GIAS data.
+The systems on the map, in the order they appear. Some services have more than one repository. These are the repositories that handle GIAS data; access to the Provider Profile repositories requires the relevant Azure DevOps permissions.
 
 | Service | Repository |
 | --- | --- |
@@ -169,5 +173,7 @@ The live systems on the map, in the order they appear. Some services have more t
 | School Account | [SchoolAccount-Web](https://github.com/DFE-Digital/SchoolAccount-Web) |
 | External applications | [external-applications-web](https://github.com/DFE-Digital/external-applications-web) |
 | FlexForms | [flexforms-web](https://github.com/DFE-Digital/flexforms-web) |
-| DfE Sign-in | [login.dfe.organisations](https://github.com/DFE-Digital/login.dfe.organisations) |
+| Provider Profile transformations | [s219-provider-profile-databricks](https://dfe-ssp.visualstudio.com/s219-Provider-Profile-service/_git/s219-provider-profile-databricks) |
+| Provider source-extract API | [s219-provider-source-extract-app](https://dfe-ssp.visualstudio.com/s219-Provider-Profile-service/_git/s219-provider-source-extract-app) |
+| DfE Sign-in | [login.dfe.organisations](https://github.com/DFE-Digital/login.dfe.organisations) and [dsi-platform](https://github.com/DFE-Digital/dsi-platform) |
 | Calculate funding service | [funding-service-cfs-backend](https://github.com/DFE-Digital/funding-service-cfs-backend) |
