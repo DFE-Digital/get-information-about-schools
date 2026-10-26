@@ -11,10 +11,10 @@ namespace Edubase.Web.UI.Controllers
 {
     public class FaqController : Controller
     {
-        private readonly FaqItemRepository _FaqItemRepository;
-        private readonly FaqGroupRepository _FaqGroupRepository;
+        private readonly IFaqItemRepository _FaqItemRepository;
+        private readonly IFaqGroupRepository _FaqGroupRepository;
 
-        public FaqController(FaqItemRepository FaqItemRepository, FaqGroupRepository FaqGroupRepository)
+        public FaqController(IFaqItemRepository FaqItemRepository, IFaqGroupRepository FaqGroupRepository)
         {
             _FaqItemRepository = FaqItemRepository;
             _FaqGroupRepository = FaqGroupRepository;
@@ -25,14 +25,14 @@ namespace Edubase.Web.UI.Controllers
         {
             var faqs = await _FaqItemRepository.GetAllAsync(1000);
             var groups = await _FaqGroupRepository.GetAllAsync(1000);
-            return View(new FaqViewModel(faqs, groups) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
+            return View(new FaqViewModel(faqs.Items, groups.Items) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
         }
 
         [Route("Faq/Create", Name = "CreateItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> Create()
         {
             var groups = await _FaqGroupRepository.GetAllAsync(1000);
-            return View("CreateEdit", new FaqItemViewModel(groups));
+            return View("CreateEdit", new FaqItemViewModel(groups.Items));
         }
 
         [Route("Create", Name = "PostCreateItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
@@ -53,7 +53,7 @@ namespace Edubase.Web.UI.Controllers
                 Content = item.Content,
                 Title = item.Title,
                 GroupId = item.GroupId,
-                Groups = groups
+                Groups = groups.Items
             });
         }
 
@@ -81,7 +81,7 @@ namespace Edubase.Web.UI.Controllers
 
             var newOrder = item.DisplayOrder + (order == "down" ? 1 : -1);
             var list = await _FaqItemRepository.GetAllAsync(1000);
-            var swap = list.FirstOrDefault(x => x.GroupId == item.GroupId && x.DisplayOrder == newOrder);
+            var swap = list.Items.FirstOrDefault(x => x.GroupId == item.GroupId && x.DisplayOrder == newOrder);
             if (swap == null) return NotFound();
 
             swap.DisplayOrder = item.DisplayOrder;
@@ -105,7 +105,7 @@ namespace Edubase.Web.UI.Controllers
                         Title = viewModel.Title,
                         Content = viewModel.Content.Trim(),
                         GroupId = viewModel.GroupId,
-                        DisplayOrder = (await _FaqItemRepository.GetAllAsync(1000)).Count(x => x.GroupId == viewModel.GroupId) + 1
+                        DisplayOrder = (await _FaqItemRepository.GetAllAsync(1000)).Items.Count(x => x.GroupId == viewModel.GroupId) + 1
                     };
                     await _FaqItemRepository.CreateAsync(item);
                 }
@@ -119,7 +119,7 @@ namespace Edubase.Web.UI.Controllers
                     if (oldModel.GroupId != viewModel.GroupId)
                     {
                         item.DisplayOrder =
-                            (await _FaqItemRepository.GetAllAsync(1000)).Count(x => x.GroupId == viewModel.GroupId) + 1;
+                            (await _FaqItemRepository.GetAllAsync(1000)).Items.Count(x => x.GroupId == viewModel.GroupId) + 1;
                     }
 
                     await _FaqItemRepository.UpdateAsync(item);
@@ -134,7 +134,7 @@ namespace Edubase.Web.UI.Controllers
             }
 
             var groups = await _FaqGroupRepository.GetAllAsync(1000);
-            viewModel.Groups = groups;
+            viewModel.Groups = groups.Items;
             return View("CreateEdit", viewModel);
         }
 
@@ -142,10 +142,10 @@ namespace Edubase.Web.UI.Controllers
         {
             var allItems = (await _FaqItemRepository.GetAllAsync(1000));
 
-            if (allItems.Any(x => x.GroupId == groupId))
+            if (allItems.Items.Any(x => x.GroupId == groupId))
             {
                 // reorder the old list
-                foreach (var faqItem in allItems.Where(x => x.GroupId == groupId && x.DisplayOrder > reorderFrom).OrderBy(x => x.DisplayOrder))
+                foreach (var faqItem in allItems.Items.Where(x => x.GroupId == groupId && x.DisplayOrder > reorderFrom).OrderBy(x => x.DisplayOrder))
                 {
                     faqItem.DisplayOrder -= 1;
                     await _FaqItemRepository.UpdateAsync(faqItem);
@@ -161,7 +161,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var result = await _FaqGroupRepository.GetAllAsync(1000);
 
-            var model = new FaqGroupsViewModel(result);
+            var model = new FaqGroupsViewModel(result.Items);
 
             if (TempData["ShowSaved"] != null)
             {
@@ -187,7 +187,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var item = await _FaqGroupRepository.GetAsync(id);
             if (item == null) return NotFound();
-            var empty = (await _FaqItemRepository.GetAllAsync(1000)).All(x => x.GroupId != item.RowKey);
+            var empty = (await _FaqItemRepository.GetAllAsync(1000)).Items.All(x => x.GroupId != item.RowKey);
 
             return View("EditGroup", new FaqGroupViewModel
             {
@@ -225,7 +225,7 @@ namespace Edubase.Web.UI.Controllers
 
             var newOrder = item.DisplayOrder + (order == "down" ? 1 : -1);
             var groups = await _FaqGroupRepository.GetAllAsync(1000);
-            var swap = groups.FirstOrDefault(x => x.DisplayOrder == newOrder);
+            var swap = groups.Items.FirstOrDefault(x => x.DisplayOrder == newOrder);
             if (swap == null) return NotFound();
 
             swap.DisplayOrder = item.DisplayOrder;
@@ -241,7 +241,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var allItems = (await _FaqGroupRepository.GetAllAsync(1000));
 
-            foreach (var group in allItems.Where(x => x.DisplayOrder > reorderFrom).OrderBy(x => x.DisplayOrder))
+            foreach (var group in allItems.Items.Where(x => x.DisplayOrder > reorderFrom).OrderBy(x => x.DisplayOrder))
             {
                 group.DisplayOrder -= 1;
                 await _FaqGroupRepository.UpdateAsync(group);
@@ -259,7 +259,7 @@ namespace Edubase.Web.UI.Controllers
                     var item = new FaqGroup()
                     {
                         GroupName = viewModel.GroupName,
-                        DisplayOrder = (await _FaqGroupRepository.GetAllAsync(1000)).Count() + 1
+                        DisplayOrder = (await _FaqGroupRepository.GetAllAsync(1000)).Items.Count() + 1
                     };
                     await _FaqGroupRepository.CreateAsync(item);
                 }

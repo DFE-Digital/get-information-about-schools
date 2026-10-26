@@ -17,12 +17,12 @@ namespace Edubase.Web.UI.Controllers
     [Route("Notifications")]
     public class NotificationsController : EduBaseController
     {
-        private readonly NotificationBannerRepository _BannerRepository;
-        private readonly NotificationTemplateRepository _TemplateRepository;
+        private readonly INotificationBannerRepository _BannerRepository;
+        private readonly INotificationTemplateRepository _TemplateRepository;
 
         public NotificationsController(
-            NotificationTemplateRepository TemplateRepository,
-            NotificationBannerRepository BannerRepository)
+            INotificationTemplateRepository TemplateRepository,
+            INotificationBannerRepository BannerRepository)
         {
             _TemplateRepository = TemplateRepository;
             _BannerRepository = BannerRepository;
@@ -40,7 +40,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Banners()
         {
             var result = await _BannerRepository.GetAllAsync(2);
-            var model = new NotificationsBannersViewModel(result);
+            var model = new NotificationsBannersViewModel(result.Items);
 
             if (TempData["ShowSaved"] != null)
             {
@@ -56,9 +56,9 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> AuditBanners(string sortBy)
         {
             var result = await _BannerRepository.GetAllAsync(1000);
-            var audit = await _BannerRepository.GetAllAsync(1000, false, eNotificationBannerPartition.Archive);
-            var items = result.ToList();
-            items.AddRange(audit);
+            var audit = await _BannerRepository.GetAllAsync(1000, null, false, eNotificationBannerPartition.Archive);
+            var items = result.Items.ToList();
+            items.AddRange(audit.Items);
 
             var distinct = items.GroupBy(x => x.Tracker)
                 .Select(grp => new { tracker = grp.Key, banners = grp.OrderByDescending(x => x.Version) })
@@ -73,9 +73,9 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> AuditBanner(string id, string sortBy)
         {
             var result = await _BannerRepository.GetAllAsync(1000);
-            var audit = await _BannerRepository.GetAllAsync(1000, false, eNotificationBannerPartition.Archive);
-            var items = result.ToList();
-            items.AddRange(audit);
+            var audit = await _BannerRepository.GetAllAsync(1000, null, false, eNotificationBannerPartition.Archive);
+            var items = result.Items.ToList();
+            items.AddRange(audit.Items);
 
             var distinct = items.Where(x => x.Tracker == id);
 
@@ -88,12 +88,12 @@ namespace Edubase.Web.UI.Controllers
         [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> CreateBanner()
         {
-            var banners = await _BannerRepository.GetAllAsync(1000, true);
+            var banners = await _BannerRepository.GetAllAsync(1000, null, true);
             var newBanner = new NotificationsBannerViewModel
             {
-                TotalBanners = banners.Count(),
-                TotalLiveBanners = banners.Count(x => x.Visible),
-                Counter = banners.Count() + 1
+                TotalBanners = banners.Items.Count(),
+                TotalLiveBanners = banners.Items.Count(x => x.Visible),
+                Counter = banners.Items.Count() + 1
             };
             return View("EditBanner", newBanner);
         }
@@ -117,7 +117,7 @@ namespace Edubase.Web.UI.Controllers
                 return NotFound();
             }
 
-            var banners = await _BannerRepository.GetAllAsync(1000, true);
+            var banners = await _BannerRepository.GetAllAsync(1000, null, true);
 
             if (TempData["ShowSaved"] != null)
             {
@@ -136,8 +136,8 @@ namespace Edubase.Web.UI.Controllers
 
             // Content is already set in set() - Do not change or the user will see raw HTML
             //   model.Content = item.Content;
-            model.TotalBanners = banners.Count();
-            model.TotalLiveBanners = banners.Count(x => x.Visible);
+            model.TotalBanners = banners.Items.Count();
+            model.TotalLiveBanners = banners.Items.Count(x => x.Visible);
 
             return View("EditBanner", model);
         }
@@ -175,7 +175,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     // populate the templates, we need to do this the usual route through, and also if they have clicked the back button
                     var result = await _TemplateRepository.GetAllAsync(1000);
-                    viewModel.Templates = result;
+                    viewModel.Templates = result.Items;
                 }
 
                 if (viewModel.Action == eNotificationBannerAction.TypeChoice)
@@ -271,7 +271,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var result = await _TemplateRepository.GetAllAsync(1000);
 
-            var model = new NotificationsTemplatesViewModel(result);
+            var model = new NotificationsTemplatesViewModel(result.Items);
 
             if (TempData["ShowSaved"] != null)
             {

@@ -6,6 +6,7 @@ using Edubase.Data.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 
 /// <summary>
@@ -15,8 +16,7 @@ using Microsoft.Extensions.Primitives;
 /// This factory looks for a "tok" parameter in the query string, fetches the token from the repository,
 /// and exposes its data as query string values for model binding.
 /// </remarks>
-public class TokenValueProviderFactory(
-    ITokenRepository tokenRepository) : IValueProviderFactory
+public class TokenValueProviderFactory : IValueProviderFactory
 {
     /// <summary>
     /// Creates a value provider that supplies values from a token if present in the query string.
@@ -35,6 +35,8 @@ public class TokenValueProviderFactory(
 
         if (!string.IsNullOrEmpty(tokenId))
         {
+            var tokenRepository = context.ActionContext.HttpContext.RequestServices.GetRequiredService<ITokenRepository>();
+
             Token token = await tokenRepository.GetAsync(tokenId);
 
             if (token != null)

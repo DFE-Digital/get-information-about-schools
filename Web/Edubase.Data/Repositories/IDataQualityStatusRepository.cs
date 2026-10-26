@@ -7,7 +7,7 @@ namespace Edubase.Data.Repositories;
 
 public interface IDataQualityStatusRepository
 {
-    Task<IEnumerable<DataQualityStatus>> GetAllAsync();
+    Task<List<DataQualityStatus>> GetAllAsync();
     Task UpdateDataQualityAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated);
     Task UpdateDataQualityDataOwnerDetailsAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, string dataOwnerName, string dataOwnerEmail);
 }

@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Edubase.Data.Entity;
 
-namespace Edubase.Data.Repositories;
-
-public interface IUserPreferenceRepository
+namespace Edubase.Data.Repositories
 {
-    Task UpsertAsync(UserPreference item);
-    UserPreference Get(string userId);
-    Task<UserPreference> GetAsync(string userId);
+    public interface IUserPreferenceRepository
+    {
+        Task UpsertAsync(UserPreference item);
+        Task<UserPreference> GetAsync(string userId);
+    }
 }

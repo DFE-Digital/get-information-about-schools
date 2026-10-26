@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using Azure;
 using Azure.Data.Tables;
@@ -50,10 +51,15 @@ public class NewsArticle : ITableEntity
     public string Content { get; set; }
 
     public int Version { get; set; } = 1;
-    public string Tracker { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public string Tracker { get; set; }
     public string AuditUser { get; set; }
     public string AuditEvent { get; set; }
     public DateTime AuditTimestamp { get; set; }
+
+    public NewsArticle()
+    {
+        Tracker = RowKey;
+    }
 
     [IgnoreDataMember]
     public bool Visible => Status == eNewsArticleStatus.Live;
@@ -63,4 +69,14 @@ public class NewsArticle : ITableEntity
         ArticleDate <= DateTime.Now
             ? eNewsArticleStatus.Live
             : eNewsArticleStatus.Future;
+
+    [IgnoreDataMember]
+    public DateTime SqlTimestamp { get; set; }
+
+    [IgnoreDataMember]
+    [NotMapped]
+    public DateTime EffectiveTimestamp =>
+        SqlTimestamp != default(DateTime)
+            ? SqlTimestamp
+            : Timestamp?.DateTime ?? default(DateTime);
 }

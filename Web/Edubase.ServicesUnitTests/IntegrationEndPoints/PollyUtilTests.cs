@@ -1,100 +1,97 @@
 using System;
 using Xunit;
 using Edubase.Services.IntegrationEndPoints;
-using Polly.NoOp;
-using Polly.Wrap;
-using System.Configuration;
 using Polly.Timeout;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.Extensions.Configuration;
 using Polly;
 
 namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 {
     public class PollyUtilTests
     {
-        //[Fact]
-        //public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenNullIntervalsPassedIn()
-        //{
-        //    var policy = PollyUtil.CreateRetryPolicy(null,"");
-        //    Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
-        //}
+        private readonly IConfiguration _configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
 
-        //[Fact]
-        //public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenEmptyIntervalsPassedIn()
-        //{
-        //    var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[0],"");
-        //    Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
-        //}
+        [Fact]
+        public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenNullIntervalsPassedIn()
+        {
+            var policy = PollyUtil.CreateRetryPolicy(_configuration, null, "");
+            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
+        }
 
-        //[Fact]
-        //public void CreateRetryPolicy_ReturnsPolicyWrap_WhenIntervalsPassedIn()
-        //{
-        //    var retryIntervals = new[] { TimeSpan.FromSeconds(1) };
-        //    var settingsKey = "AzureMapService_Timeout";
+        [Fact]
+        public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenEmptyIntervalsPassedIn()
+        {
+            var policy = PollyUtil.CreateRetryPolicy(_configuration, new TimeSpan[0], "");
+            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
+        }
 
-        //    var policy = PollyUtil.CreateRetryPolicy(retryIntervals, settingsKey);
+        [Fact]
+        public void CreateRetryPolicy_ReturnsPolicyWrap_WhenIntervalsPassedIn()
+        {
+            var retryIntervals = new[] { TimeSpan.FromSeconds(1) };
+            var settingsKey = "AzureMapService_Timeout";
 
-        //    Assert.NotNull(policy);
-        //    Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
-        //}
+            var policy = PollyUtil.CreateRetryPolicy(_configuration, retryIntervals, settingsKey);
 
-        ////Note: Polly doesn't expose the timeout settings once the policy is created
-        ////Note: Due to pipeline issues we are not measuring with precise timing, but asserting on the occurence of 'TimeoutRejectedException'
-        //[Fact]
-        //public async Task CreateTimeoutPolicy_ShouldTriggerTimeout()
-        //{
-        //    var validKey = "AzureMapService_Timeout";
-        //    ConfigurationManager.AppSettings[validKey] = "5";
+            Assert.NotNull(policy);
+            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
+        }
 
-        //    var policy = PollyUtil.CreateTimeoutPolicy(validKey);
+        // Note: Polly doesn't expose the timeout settings once the policy is created
+        // Note: Due to pipeline issues we are not measuring with precise timing, but asserting on the occurrence of 'TimeoutRejectedException'
+        [Fact]
+        public async Task CreateTimeoutPolicy_ShouldTriggerTimeout()
+        {
+            var validKey = "AzureMapService_Timeout";
+            _configuration[validKey] = "5";
 
-        //    Func<CancellationToken, Task<HttpResponseMessage>> operation = async (ct) =>
-        //    {
-        //        await Task.Delay(6000, ct);
-        //        return new HttpResponseMessage(HttpStatusCode.OK);
-        //    };
+            var policy = PollyUtil.CreateTimeoutPolicy(_configuration, validKey);
 
-        //    await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
-        //        await policy.ExecuteAsync(operation, CancellationToken.None));
-        //    Assert.NotNull(policy);
-        //}
+            Func<CancellationToken, Task<HttpResponseMessage>> operation = async (ct) =>
+            {
+                await Task.Delay(6000, ct);
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            };
 
+            await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
+                await policy.ExecuteAsync(operation, CancellationToken.None));
+            Assert.NotNull(policy);
+        }
 
-        //[Fact]
-        //public async Task CreateRetryPolicy_DefaultsTo10Seconds()
-        //{
-        //    var invalidKey = "InvalidAzureMapService_Timeout";
-        //    ConfigurationManager.AppSettings[invalidKey] = "invalid";
+        [Fact]
+        public async Task CreateRetryPolicy_DefaultsTo10Seconds()
+        {
+            var invalidKey = "InvalidAzureMapService_Timeout";
+            _configuration[invalidKey] = "invalid";
 
-        //    var policy = PollyUtil.CreateTimeoutPolicy(invalidKey);
+            var policy = PollyUtil.CreateTimeoutPolicy(_configuration, invalidKey);
 
-        //    var sw = Stopwatch.StartNew();
-        //    Exception thrownException = null;
-        //        try
-        //        {
-        //            await policy.ExecuteAsync(async (ct) =>
-        //            {
-        //                await Task.Delay(11000, ct);
-        //                return new HttpResponseMessage(HttpStatusCode.OK);
-        //            }, CancellationToken.None);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            thrownException = ex;
-        //        }
+            var sw = Stopwatch.StartNew();
+            Exception thrownException = null;
+            try
+            {
+                await policy.ExecuteAsync(async (ct) =>
+                {
+                    await Task.Delay(11000, ct);
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                thrownException = ex;
+            }
 
-        //    sw.Stop();
+            sw.Stop();
 
-        //    Assert.NotNull(policy);
-        //    Assert.IsType<TimeoutRejectedException>(thrownException);
-        //    Assert.True(sw.Elapsed.Seconds >= 10 && sw.Elapsed.Seconds < 12, $"Timeout expected Elapsed >= 10 && Elapsed < 12 Actual: {sw.Elapsed.Seconds}");
-        //}
-
-
+            Assert.NotNull(policy);
+            Assert.IsType<TimeoutRejectedException>(thrownException);
+            Assert.True(sw.Elapsed.Seconds >= 10 && sw.Elapsed.Seconds < 12, $"Timeout expected Elapsed >= 10 && Elapsed < 12 Actual: {sw.Elapsed.Seconds}");
+        }
 
         [Fact]
         public void CsvSecondsToTimeSpans_ReturnsCorrectTimeSpans()
@@ -119,7 +116,6 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             var timeSpans = PollyUtil.CsvSecondsToTimeSpans(csvSeconds);
 
             Assert.Single(timeSpans);
-
             Assert.Equal(TimeSpan.FromSeconds(100), timeSpans[0]);
         }
 
@@ -130,7 +126,6 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             var timeSpans = PollyUtil.CsvSecondsToTimeSpans(csvSeconds);
 
             Assert.Equal(2, timeSpans.Length);
-
             Assert.Equal(TimeSpan.FromSeconds(100), timeSpans[0]);
             Assert.Equal(TimeSpan.FromSeconds(101), timeSpans[1]);
         }
@@ -142,10 +137,8 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             var timeSpans = PollyUtil.CsvSecondsToTimeSpans(csvSeconds);
 
             Assert.Single(timeSpans);
-
             Assert.Equal(TimeSpan.FromSeconds(0), timeSpans[0]);
         }
-
 
         [Theory]
         [InlineData("", 0)]
@@ -175,6 +168,73 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         {
             var timeSpans = PollyUtil.CsvSecondsToTimeSpans(csvSeconds);
             Assert.Equal(expectedCount, timeSpans.Length);
+        }
+
+        [Fact]
+        public async Task CreateRetryPolicy_ShouldHandleTimeoutRejectedException_WhenTimeout()
+        {
+            var retryIntervals = new[] { TimeSpan.FromMilliseconds(10) };
+            var settingsKey = "TestTimeoutSetting";
+            _configuration[settingsKey] = "1";
+
+            var policy = PollyUtil.CreateRetryPolicy(_configuration, retryIntervals, settingsKey);
+
+            await Assert.ThrowsAsync<TimeoutRejectedException>(() => throw new TimeoutRejectedException());
+         }
+
+        [Fact]
+        public async Task CreateRetryPolicy_ShouldRetry_OnHttpRequestException()
+        {
+            var retryIntervals = new[] { TimeSpan.FromMilliseconds(10) };
+            var policy = PollyUtil.CreateRetryPolicy(_configuration, retryIntervals, "TestTimeoutSetting");
+
+            var attempts = 0;
+
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
+                policy.ExecuteAsync(async () =>
+                {
+                    attempts++;
+                    throw new HttpRequestException("Simulated failure");
+                }));
+
+            Assert.True(attempts > 1);
+        }
+
+        [Fact]
+        public async Task CreateRetryPolicy_ShouldThrowTimeoutRejectedException_WhenOperationExceedsTimeout()
+        {
+            _configuration["TestTimeoutSetting"] = "1"; // 1 second
+            var retryIntervals = new[] { TimeSpan.FromMilliseconds(10) };
+            var policy = PollyUtil.CreateRetryPolicy(_configuration, retryIntervals, "TestTimeoutSetting");
+
+            await Assert.ThrowsAsync<TimeoutRejectedException>(() =>
+                policy.ExecuteAsync(async () =>
+                {
+                    await Task.Delay(2000);
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }));
+        }
+
+        [Fact]
+        public async Task CreateRetryPolicy_ShouldCancel_WhenUserCancellationRequested()
+        {
+            _configuration["TestTimeoutSetting"] = "10";
+            var retryIntervals = new[] { TimeSpan.FromMilliseconds(10) };
+            var policy = PollyUtil.CreateRetryPolicy(_configuration, retryIntervals, "TestTimeoutSetting");
+
+            using (var cts = new CancellationTokenSource())
+            {
+                cts.CancelAfter(50);
+
+                await Assert.ThrowsAsync<TaskCanceledException>(async () =>
+                {
+                    await policy.ExecuteAsync(async ct =>
+                    {
+                        await Task.Delay(1000, ct);
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }, cts.Token);
+                });
+            }
         }
     }
 }

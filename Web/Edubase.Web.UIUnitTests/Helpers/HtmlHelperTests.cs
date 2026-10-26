@@ -1,6 +1,9 @@
 using System;
+using System.Net;
 using Xunit;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Moq;
 
 namespace Edubase.Web.UI.Helpers.Tests
 {
@@ -51,5 +54,24 @@ namespace Edubase.Web.UI.Helpers.Tests
 
         //    Assert.Equal("", result);
         //}
+
+        [Theory]
+        [InlineData("Line1\nLine2", "Line1<br/>Line2")]
+        [InlineData("Line1\rLine2", "Line1<br/>Line2")]
+        [InlineData("Line1\r\nLine2", "Line1<br/>Line2")]
+        [InlineData("Line1\n\nLine2", "Line1<br/><br/>Line2")]
+        [InlineData("Line1", "Line1")]
+        public void HtmlNewLines_CorrectFormatting(string input, string expected)
+        {
+            var htmlHelper = new Mock<IHtmlHelper>();
+            htmlHelper.Setup(x => x.Encode(It.IsAny<string>()))
+                .Returns((string value) => WebUtility.HtmlEncode(value));
+
+            var result = htmlHelper.Object.HtmlNewlines(input);
+
+            Assert.Equal(expected, result.ToString());
+        }
+
     }
 }
+    

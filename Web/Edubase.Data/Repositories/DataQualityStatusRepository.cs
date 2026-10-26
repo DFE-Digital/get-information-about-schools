@@ -33,7 +33,7 @@ public class DataQualityStatusRepository : IDataQualityStatusRepository
         }
     }
 
-    public async Task<IEnumerable<DataQualityStatus>> GetAllAsync()
+    public async Task<List<DataQualityStatus>> GetAllAsync()
     {
         var results = new List<DataQualityStatus>();
 

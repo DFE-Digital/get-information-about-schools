@@ -210,7 +210,11 @@ Web/Web.UI/
 
 /Web/.nuget/NuGet.Config
 Web/packages
+/Web/report
+
 /.vscode/launch.json
 /Web/Edubase.Web.UI/appsettings.Development.json
-/Web/Edubase.Web.UI/appsettings.Development.json
 /Web/Edubase.Web.UI/wwwroot/assets/scripts
+
+# Reqnroll generated code
+*.feature.cs

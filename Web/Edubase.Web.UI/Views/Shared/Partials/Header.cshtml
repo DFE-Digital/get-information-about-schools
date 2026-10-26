@@ -1,6 +1,7 @@
 @using Edubase.Web.UI.Models
 @using Edubase.Web.UI.ValueConverters;
 @using Edubase.Web.UI.Areas.Establishments.Models.Search;
+@using Edubase.Web.UI.Helpers
 @using Edubase.Common;
 @using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 @model EstablishmentDetailViewModel
@@ -154,7 +155,7 @@
     </dd>
 </div>
 
-@if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
+@if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended && Html.FeatureEnabled("gias.iebt.suspended"))
 {
     <div class="govuk-summary-list__row">
         <dt id="registration-suspended-key" class="govuk-summary-list__key">Registration suspended</dt>

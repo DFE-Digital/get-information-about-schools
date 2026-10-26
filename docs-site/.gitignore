@@ -1,0 +1,6 @@
+output/
+tmp/
+.nanoc/
+.bundle/
+vendor/
+crash.log

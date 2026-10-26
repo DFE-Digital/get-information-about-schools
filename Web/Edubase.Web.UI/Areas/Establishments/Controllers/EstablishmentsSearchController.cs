@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Common;
+using Edubase.Common.Config;
 using Edubase.Data.Repositories;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
@@ -154,7 +157,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.CustomFields == null)
             {
-                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
+                var customFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
+
+                if(!Feature.IsEnabled("gias.iebt.suspended"))
+                {
+                    customFields.RemoveAll(f => f.Name == "RegistrationSuspended (code)");
+                    customFields.RemoveAll(f => f.Name == "RegistrationSuspended (name)");
+                }
+
+                viewModel.CustomFields = customFields;
             }
 
             if (viewModel.Dataset == eDataSet.Custom && !viewModel.SelectedCustomFields.Any())
@@ -164,9 +175,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     ModelState.AddModelError("CustomFieldsByCategory", "Select at least one field");
                 }
 
-                viewModel.SearchQueryString = Request.QueryString.Value;
-                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User))
+                // the SearchQueryString is used for the breadcrumb response. We dont want to retain the Dataset selection as part of that
+                var queryString = Microsoft.AspNetCore.Http.QueryString.Create(Request.Query.Where(x =>
+                            !string.Equals(x.Key, "Dataset", StringComparison.OrdinalIgnoreCase)));
+                viewModel.SearchQueryString = queryString.ToString().TrimStart('?');
+                var customFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User))
                     .OrderBy(x => x.Name).ToList();
+
+                if (!Feature.IsEnabled("gias.iebt.suspended"))
+                {
+                    customFields.RemoveAll(f => f.Name == "RegistrationSuspended (code)");
+                    customFields.RemoveAll(f => f.Name == "RegistrationSuspended (name)");
+                }
+
+                viewModel.CustomFields = customFields;
+
                 return View("Downloads/SelectCustomFields", viewModel);
             }
 
@@ -340,7 +363,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (model.SearchType == eSearchType.Text || model.SearchType == eSearchType.EstablishmentAll)
             {
-                if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.UKPRN)
+                if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.UKPRN && model.TextSearchModel.Text.IsInteger())
                 {
                     filters.UKPRN = model.TextSearchModel.Text;
                 }
@@ -379,7 +402,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             filters.EducationPhaseIds = model.SelectedEducationPhaseIds.ToArray();
             filters.StatusIds = model.SelectedEstablishmentStatusIds.ToArray();
-            filters.TypeIds = model.SelectedEstablishmentTypeIds.ToArray();
+            filters.TypeIds = model.SelectedEstablishmentTypeIds.Distinct().ToArray();   // Some types appear in more than one section so can be duplicated
             if (!filters.LocalAuthorityIds.Any()) filters.LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray();
             filters.ReligiousCharacterIds = model.SelectedReligiousCharacterIds.ToArray();
 
@@ -456,22 +479,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 return NoResults(model);
             }
-            else
+
+            PopulateSelectList(payload); // select only fields we use in this context
+
+            var results = await _establishmentReadService.SearchAsync(payload, User);
+
+            if (payload.Skip == 0) model.Count = results.Count;
+            model.Results = results.Items ?? new List<EstablishmentSearchResultModel>();
+            if (results.Count > 0)
             {
-                PopulateSelectList(payload); // select only fields we use in this context
-
-                var results = await _establishmentReadService.SearchAsync(payload, User);
-
-                if (payload.Skip == 0) model.Count = results.Count;
-                model.Results = results.Items;
-
-                if (results.Count == 0)
-                {
-                    return NoResults(model);
-                }
-
                 var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
-
                 foreach (var item in model.Results)
                 {
                     model.Addresses.Add(item, await item.GetAddressAsync(_lookupService));
@@ -481,7 +498,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         var code = localAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)?.Code;
                         if (code != null) laEstab = string.Concat(code, "/", item.EstablishmentNumber?.ToString("D4"));
                     }
-
                     model.LAESTABs.Add(item, laEstab);
                 }
             }

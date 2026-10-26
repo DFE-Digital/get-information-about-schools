@@ -6,7 +6,7 @@ using Edubase.Data.Entity;
 
 namespace Edubase.Data.Repositories;
 
-public class TokenRepository : ITokenRepository
+public class TokenRepository
 {
     private const string TableNameKey = "Tokens";
 

@@ -154,6 +154,8 @@ namespace Edubase.Services.Establishments.Models
 
         public DateTime? OfstedInspectionDate { get; set; }
 
+        public string OfstedReportUrl { get; set; }
+
         public int? InspectorateId { get; set; }
 
         public int? Section41ApprovedId { get; set; }

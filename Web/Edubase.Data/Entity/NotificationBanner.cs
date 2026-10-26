@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Azure;
 using Azure.Data.Tables;
 using System.Runtime.Serialization;
@@ -58,10 +59,15 @@ public class NotificationBanner : ITableEntity
     }
 
     public int Version { get; set; } = 1;
-    public string Tracker { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public string Tracker { get; set; }
     public string AuditUser { get; set; }
     public string AuditEvent { get; set; }
     public DateTime AuditTimestamp { get; set; }
+
+    public NotificationBanner()
+    {
+        Tracker = RowKey;
+    }
 
     [IgnoreDataMember]
     public bool Visible => Status == eNotificationBannerStatus.Live;
@@ -92,4 +98,14 @@ public class NotificationBanner : ITableEntity
         public string LinkUrl2 { get; set; }
         [Display(Name = "Textbox for link 2")]
         public string LinkText2 { get; set; }
+
+    [IgnoreDataMember]
+    public DateTime SqlTimestamp { get; set; }
+
+    [IgnoreDataMember]
+    [NotMapped]
+    public DateTime EffectiveTimestamp =>
+        SqlTimestamp != default(DateTime)
+            ? SqlTimestamp
+            : Timestamp?.DateTime ?? default(DateTime);
 }

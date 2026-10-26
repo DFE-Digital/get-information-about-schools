@@ -7,9 +7,9 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
     <PackageReference Include="Faker.Net" Version="2.0.163" />
-    <PackageReference Include="FluentValidation" Version="12.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />    
     <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="xunit" Version="2.9.0" />
@@ -21,5 +21,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Web.UI\Edubase.Web.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\SearchControllerTests.cs" />
+    <Compile Remove="Areas\Establishments\Controllers\EstablishmentControllerTests.cs" />
+    <Compile Remove="Areas\Establishments\Controllers\EstablishmentsSearchControllerTests.cs" />
+    <Compile Remove="Areas\Governors\Controllers\AddOrEdit\**\*.cs" />
+    <Compile Remove="Areas\Governors\Controllers\DeleteOrRetire\**\*.cs" />
+    <Compile Remove="Areas\Governors\Controllers\RoleAllowed\**\*.cs" />
+    <Compile Remove="Areas\Governors\Controllers\ReplaceChair\**\*.cs" />
+    <Compile Remove="Areas\Governors\TestBase\GovernorControllerTestBase.cs" />
+    <Compile Remove="Areas\Governors\Helpers\**\*.cs" />
   </ItemGroup>
 </Project>

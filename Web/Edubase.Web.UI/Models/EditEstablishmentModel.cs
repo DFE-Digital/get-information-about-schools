@@ -16,7 +16,7 @@ namespace Edubase.Web.UI.Models
     using ET = Services.Enums.eLookupEstablishmentType;
 
     public class EditEstablishmentModel : IEstablishmentPageViewModel
-    {
+    {      
         /// <summary>
         /// Action Specifiers (AS)
         /// </summary>
@@ -454,6 +454,10 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> Countries { get; internal set; }
         public IEnumerable<SelectListItem> OfstedRatings { get; internal set; }
         public List<LookupDto> SENProvisions { get; internal set; }
+        
+        public bool ShowOfstedReportLink { get; set; }
+
+        public string OfstedReportUrl { get; set; }
 
         [DisplayName("Helpdesk notes")]
         public string HelpdeskNotes { get; set; }
@@ -517,6 +521,6 @@ namespace Edubase.Web.UI.Models
         public EditEstablishmentModel()
         {
 
-        }
+        }       
     }
 }

@@ -79,7 +79,7 @@ class GiasSearchMap {
         window.setTimeout(function () {
           $('.map-header').removeClass('loading');
           const count = $('#map-count').text();
-          self.$resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in map view.');
+          self.$resultsNotification.text('Search results loaded. Showing ' + count + ' establishments in map view.');
         }, 1500);
       }
 
@@ -181,7 +181,7 @@ class GiasSearchMap {
       $('#results-container').removeClass('hidden');
       $('#option-select-sort-by').removeClass('hidden');
       const count = $('#list-count').text();
-      this.$resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in list view.');
+      this.$resultsNotification.text('Search results loaded. Showing ' + count + ' establishments in list view.');
       this.config.currentView = 'list';
     });
 

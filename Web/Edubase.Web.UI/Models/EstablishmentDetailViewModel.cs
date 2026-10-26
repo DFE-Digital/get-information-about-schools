@@ -39,43 +39,7 @@ namespace Edubase.Web.UI.Models
             [(int) eLookupGroupType.UmbrellaTrust] = "Umbrella trust",
             [(int) eLookupGroupType.ChildrensCentresCollaboration] = "Childrens' centres collaboration",
             [(int) eLookupGroupType.ChildrensCentresGroup] = "Childrens' centre group"
-        };
-
-        private static readonly int[] OfstedLinkEstablishmentTypes =
-        {
-            (int) eLookupEstablishmentType.Academy1619SponsorLed,
-            (int) eLookupEstablishmentType.Academy1619Converter,
-            (int) eLookupEstablishmentType.AcademyAlternativeProvisionConverter,
-            (int) eLookupEstablishmentType.AcademyAlternativeProvisionSponsorLed,
-            (int) eLookupEstablishmentType.AcademyConverter,
-            (int) eLookupEstablishmentType.AcademySpecialConverter,
-            (int) eLookupEstablishmentType.AcademySpecialSponsorLed,
-            (int) eLookupEstablishmentType.AcademySponsorLed,
-            (int) eLookupEstablishmentType.ChildrensCentre,
-            (int) eLookupEstablishmentType.ChildrensCentreLinkedSite,
-            (int) eLookupEstablishmentType.CityTechnologyCollege,
-            (int) eLookupEstablishmentType.CommunitySchool,
-            (int) eLookupEstablishmentType.CommunitySpecialSchool,
-            (int) eLookupEstablishmentType.FoundationSchool,
-            (int) eLookupEstablishmentType.FoundationSpecialSchool,
-            (int) eLookupEstablishmentType.FreeSchools,
-            (int) eLookupEstablishmentType.FreeSchools1619,
-            (int) eLookupEstablishmentType.FreeSchoolsAlternativeProvision,
-            (int) eLookupEstablishmentType.FreeSchoolsSpecial,
-            (int) eLookupEstablishmentType.FurtherEducation,
-            (int) eLookupEstablishmentType.HigherEducationInstitutions,
-            (int) eLookupEstablishmentType.LANurserySchool,
-            (int) eLookupEstablishmentType.NonmaintainedSpecialSchool,
-            (int) eLookupEstablishmentType.OtherIndependentSchool,
-            (int) eLookupEstablishmentType.OtherIndependentSpecialSchool,
-            (int) eLookupEstablishmentType.PupilReferralUnit,
-            (int) eLookupEstablishmentType.ServiceChildrensEducation,
-            (int) eLookupEstablishmentType.SpecialPost16Institution,
-            (int) eLookupEstablishmentType.StudioSchools,
-            (int) eLookupEstablishmentType.UniversityTechnicalCollege,
-            (int) eLookupEstablishmentType.VoluntaryAidedSchool,
-            (int) eLookupEstablishmentType.VoluntaryControlledSchool
-        };
+        };       
 
         private static readonly int[] FscpdLinkEstablishmentTypes =
         {
@@ -329,11 +293,11 @@ namespace Edubase.Web.UI.Models
 
         public bool ShowOfstedRatings { get; set; } = true;
 
-        public string OfstedReportUrl => extService.OfstedReportUrl(Establishment.Urn);
+        public string OfstedReportUrl => Establishment.OfstedReportUrl;
 
-        public bool ShowOfstedReportLink =>
-            Establishment != null && Establishment.TypeId.HasValue &&
-            OfstedLinkEstablishmentTypes.Contains(Establishment.TypeId.Value);
+        public bool ShowOfstedReportLink => DisplayPolicy?.OfstedReportUrl == true
+            && Uri.TryCreate(OfstedReportUrl, UriKind.Absolute, out var uri)
+            && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
         public TabWarningsModel TabWarnings { get; set; }
         public string ClosedStatusMessage

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+  <%= render '/partials/head.*' %>
+
+  <body class="govuk-template__body">
+    <%= render '/partials/header.*' %>
+
+    <div class="govuk-width-container ">
+      <main class="govuk-main-wrapper" id="main-content">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl"><%= item[:title] %></h1>
+          </div>
+        </div>
+        <%= yield %>
+      </main>
+    </div>
+    <%= render '/partials/footer.*' %>
+  </body>
+</html>

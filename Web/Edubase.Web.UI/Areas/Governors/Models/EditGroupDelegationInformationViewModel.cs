@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
@@ -11,7 +11,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
     public class EditGroupCorporateContactViewModel : GroupPageViewModelBase
     {
-        [Display(Name = "Contact details")]
+        [Display(Name = "Contact details"), MaxLength(150)]
         public string CorporateContact { get; set; }
     }
 

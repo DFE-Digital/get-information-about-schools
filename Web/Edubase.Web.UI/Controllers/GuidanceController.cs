@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Edubase.Services;
+using Edubase.Web.UI.Controllers.Api;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Guidance;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +18,21 @@ namespace Edubase.Web.UI.Controllers
     public class GuidanceController : EduBaseController
     {
         private readonly IBlobService _blobService;
-        private const string GUIDANCE_CONTAINER = "guidance";
-        private const string ENGLISH_LA_NAME_CODES = "EnglishLaNameCodes.csv";
-        private const string WELSH_LA_NAME_CODES = "WelshLaNameCodes.csv";
-        private const string OTHER_LA_NAME_CODES = "OtherLaNameCodes.csv";
+        private readonly ISqlLaNameCodeRepository  _laNameCodeRepository;
+        private readonly ILaNameCodeFileGenerator _fileGenerator;
 
-        public GuidanceController(IBlobService blobService)
+        private static readonly Dictionary<string, string> GroupCodes = new Dictionary<string, string>
+        {
+            { "EnglishLaNameCodes", "english" }, { "WelshLaNameCodes", "welsh" }, { "OtherLaNameCodes", "other" }
+        };
+
+        public GuidanceController(IBlobService blobService,
+            ISqlLaNameCodeRepository laNameCodeRepository,
+            ILaNameCodeFileGenerator fileGenerator)
         {
             _blobService = blobService;
+            _laNameCodeRepository = laNameCodeRepository;
+            _fileGenerator = fileGenerator;
         }
 
         [HttpGet("guidance", Name = "Guidance")]
@@ -46,11 +55,13 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task<ActionResult> LaNameCodes()
         {
+            var all = await _laNameCodeRepository.GetAllAsync();
+
             return View(new GuidanceLaNameCodeViewModel()
             {
-                EnglishLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, ENGLISH_LA_NAME_CODES),
-                WelshLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, WELSH_LA_NAME_CODES),
-                OtherLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, OTHER_LA_NAME_CODES),
+                EnglishLas = MapByGroup(all, GroupCodes["EnglishLaNameCodes"]),
+                WelshLas = MapByGroup(all, GroupCodes["WelshLaNameCodes"]),
+                OtherLas = MapByGroup(all, GroupCodes["OtherLaNameCodes"])
             });
         }
 
@@ -69,18 +80,24 @@ namespace Edubase.Web.UI.Controllers
         [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload", Name = "LaNameCodesGenerateDownload"), ValidateAntiForgeryToken]
         public async Task<ActionResult> LaNameCodesGenerateDownload(GuidanceLaNameCodeViewModel viewModel)
         {
-            var blobName = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();
+            if (viewModel.DownloadName == null ||
+                !GroupCodes.TryGetValue(viewModel.DownloadName, out var groupCode) ||
+                !viewModel.FileFormat.HasValue)
+            {
+                return View("Error");
+            }
 
-            var memoryStream = new MemoryStream();
+            var fileName = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();
 
             try
             {
-                var blob = _blobService.GetBlobClient(GUIDANCE_CONTAINER, blobName);
+                var entities = await _laNameCodeRepository.GetByGroupAsync(groupCode);
 
-                await blob.DownloadToAsync(memoryStream);
-                memoryStream.Position = 0;
-
-                TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(memoryStream, blobName);
+                using (var fileStream = _fileGenerator.Generate(Map(entities), viewModel.FileFormat.Value,
+                           ToNameColumnHeader(viewModel.DownloadName), viewModel.DownloadName))
+                {
+                    TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(fileStream, fileName);
+                }
 
                 return View("ReadyToDownload");
             }
@@ -99,24 +116,21 @@ namespace Edubase.Web.UI.Controllers
             };
         }
 
-        private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
+        private static List<LaNameCodes> MapByGroup(IEnumerable<SqlLaNameCode> source, string groupCode)
         {
-            var blob = _blobService.GetBlobClient(container, file);
+            return Map(source.Where(x => x.GroupCode == groupCode));
+        }
 
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = false,
-            };
+        private static List<LaNameCodes> Map(IEnumerable<SqlLaNameCode> source)
+        {
+            return source
+                .Select(x => new LaNameCodes { LaName = x.LaName, LaCode = x.LaCode, OnsLaCode = x.GsLaCode })
+                .ToList();
+        }
 
-            using var memoryStream = new MemoryStream();
-            await blob.DownloadToAsync(memoryStream);
-            memoryStream.Position = 0;
-
-            using var reader = new StreamReader(memoryStream);
-            using var csv = new CsvReader(reader, config);
-            csv.Read();
-            var records = csv.GetRecords<LaNameCodes>().ToList();
-            return records;
+        private static string ToNameColumnHeader(string downloadName)
+        {
+            return downloadName.Replace("LaNameCodes", "") + " local authority (LA) name";
         }
     }
 }

@@ -392,7 +392,7 @@ namespace Edubase.Web.UI.Helpers
 
         private static HtmlString ConvertRawNewlineToHtmlBr(string input)
         {
-            var newlinePattern = "\r|\n|\r\n";
+            var newlinePattern = "\r\n|\r|\n";
             var htmlNewlineString = "<br/>";
 
             var replace = Regex.Replace(input, newlinePattern, htmlNewlineString);

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Common.Cache;
+using Edubase.Data;
 using Edubase.Data.Repositories;
 using Edubase.Services;
 using Edubase.Services.Lookup;
@@ -22,9 +23,9 @@ namespace Edubase.Web.UI.Controllers
         private readonly ILookupService _lookup;
         private readonly IBlobService _blobService;
         private readonly ICacheAccessor _cacheAccessor;
-        private readonly NewsArticleRepository _newsRepository;
+        private readonly INewsArticleRepository _newsRepository;
 
-        public HomeController(ILookupService lookup, IBlobService blobService, ICacheAccessor cacheAccessor, NewsArticleRepository newsRepository)
+        public HomeController(ILookupService lookup, IBlobService blobService, ICacheAccessor cacheAccessor, INewsArticleRepository newsRepository)
         {
             _lookup = lookup;
             _blobService = blobService;
@@ -36,7 +37,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Index()
         {
             var results = await _newsRepository.GetAllAsync(1000);
-            var items = results.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
+            var items = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
             return View(new HomepageViewModel(items));
         }
 
@@ -165,5 +166,8 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/Contact")]
         public ActionResult Contact() => View();
+
+        [Route("~/AcceptableUsePolicy")]
+        public ActionResult AcceptableUsePolicy() => View();
     }
 }

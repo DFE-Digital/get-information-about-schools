@@ -52,6 +52,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<IActionResult> GroupEditCorporateContact(EditGroupCorporateContactViewModel model)
         {
             var result = await new EditGroupCorporateContactViewModelValidator().ValidateAsync(model);
+            result.EduBaseAddToModelState(ModelState, null);
 
             if (ModelState.IsValid)
             {
@@ -71,12 +72,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                     validation.ApplyToModelState(ControllerContext);
                 }
-            }
-            else
-            {
-                result.EduBaseAddToModelState(ModelState, null);
-            }
-
+            }            
+            
             await _layoutHelper.PopulateLayoutProperties(model, null, model.GroupUId, User);
             return View(model);
         }

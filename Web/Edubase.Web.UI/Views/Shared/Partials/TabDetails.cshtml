@@ -1,6 +1,7 @@
 @using Edubase.Common;
 @using Edubase.Services.Enums
 @using Edubase.Services.Security
+@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @using System.Web.WebPages
 @model EstablishmentDetailViewModel
@@ -8,7 +9,27 @@
 <div id="school-dashboard" class="tab-content">
     @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {
-        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
+        //For establishment user
+        //and other independent school and other independent special school with Deregistered status
+        //dont show edit details button
+
+        var hideEditDetails =
+            User.InRole(EdubaseRoles.ESTABLISHMENT) &&
+            Model.Establishment.TypeId.OneOfThese(
+                eLookupEstablishmentType.OtherIndependentSchool,
+                eLookupEstablishmentType.OtherIndependentSpecialSchool) &&
+            Model.Establishment.StatusId == (int)eLookupEstablishmentStatus.DeregisteredAsAnIndependentSchool;
+
+        if (!hideEditDetails)
+        {
+            @Html.ActionLink(
+                "Edit details",
+                "EditDetails",
+                "Establishment",
+                new { id = Model.Establishment.Urn },
+                new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" }
+            )
+        }
 
         if (!Model.MediumPriorityEstablishmentConfirmationPending &&
             !Model.HighPriorityEstablishmentConfirmationPending &&
@@ -179,11 +200,11 @@
 
             @if (Model.DisplayPolicy.AccreditationExpiryDate)
             {
-                    var accreditationExpiryDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Closed date";
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">@accreditationExpiryDateTitle</dt>
-                <dd class="govuk-summary-list__value">@(Model.Establishment.AccreditationExpiryDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
-            </div>
+                var accreditationExpiryDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Closed date";
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">@accreditationExpiryDateTitle</dt>
+                    <dd class="govuk-summary-list__value">@(Model.Establishment.AccreditationExpiryDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+                </div>
             }
 
             @if (Model.DisplayPolicy.CloseDate)
@@ -391,6 +412,16 @@
                 </div>
             }
 
+            @if (Model.DisplayPolicy.SENIds && (Html.FeatureEnabled("gias.iebt.sen") || Model.Establishment.TypeId != (int)eLookupEstablishmentType.OtherIndependentSpecialSchool))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt id="sen-type-key" class="govuk-summary-list__key">Type of SEN provision</dt>
+                    <dd id="sen-type-value" class="govuk-summary-list__value">
+                        @Model.SENNames
+                    </dd>
+                </div>
+            }
+
             @if (Model.DisplayPolicy.LastChangedDate)
             {
                 <div class="govuk-summary-list__row">
@@ -432,16 +463,6 @@
                 </div>
             }
             <!-- Online Provider content -->
-
-            @if (Model.DisplayPolicy.SENIds)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Type of SEN provision</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.SENNames
-                    </dd>
-                </div>
-            }
 
             @if (Model.DisplayPolicy.TeenageMothersProvisionId)
             {
@@ -589,11 +610,29 @@
 
     @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {
-        <div class="govuk-!-padding-top-4">
-            @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
-        </div>
-    }
+        //For establishment user
+        //and other independent school and other independent special school with Deregistered status
+        //dont show edit details button
 
+        var hideEditDetails =
+            User.InRole(EdubaseRoles.ESTABLISHMENT) &&
+            Model.Establishment.TypeId.OneOfThese(
+                eLookupEstablishmentType.OtherIndependentSchool,
+                eLookupEstablishmentType.OtherIndependentSpecialSchool) &&
+            Model.Establishment.StatusId == (int)eLookupEstablishmentStatus.DeregisteredAsAnIndependentSchool;
+
+        if (!hideEditDetails)
+        {
+            <div class="govuk-!-padding-top-4">
+                @Html.ActionLink(
+               "Edit details",
+               "EditDetails",
+               "Establishment", new { id = Model.Establishment.Urn },
+               new { id = "edit-details-button",
+                   @class = "govuk-button govuk-button--secondary" })
+            </div>
+        }
+    }
     <back-to-top-link />
 </div>
 

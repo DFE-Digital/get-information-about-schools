@@ -8,7 +8,7 @@ using Edubase.Data.Entity;
 
 namespace Edubase.Data.Repositories;
 
-public class LocalAuthoritySetRepository : ILocalAuthoritySetRepository
+public class LocalAuthoritySetRepository
 {
     private const string PartitionKey = "LocalAuthoritySet";
     private const string TableNameKey = "LocalAuthoritySets";

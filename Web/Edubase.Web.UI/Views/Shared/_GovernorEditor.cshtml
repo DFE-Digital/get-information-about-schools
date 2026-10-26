@@ -79,7 +79,7 @@
                             <!-- Normal edit/replace/remove buttons. -->
                             <div class="button-row govuk-!-margin-bottom-9">
                                 @* Edit person *@
-                                @if (Model.GovernorPermissions.Update)
+                                @if (Model.GovernorPermissions.Update && row.IsEditable)
                                 {
                                     if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
                                     {
@@ -195,7 +195,7 @@
                     else
                     {
                         <!-- Historic governor branch. -->
-                        @if (Model.GovernorPermissions.Update)
+                        @if (Model.GovernorPermissions.Update && row.IsEditable)
                         {
                             <div class="button-wrapper">
                                 @if (Model.EstablishmentUrn.HasValue

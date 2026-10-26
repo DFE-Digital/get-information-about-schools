@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
@@ -11,3 +11,4 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("a50fd61b-935e-4486-a989-a09579d33f13")]
+[assembly: InternalsVisibleTo("Edubase.Web.UIUnitTests")]

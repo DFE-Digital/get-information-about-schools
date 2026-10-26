@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Edubase.Web.UI.Controllers
 {
     using System.Collections.Generic;
+    using System.Web;
     using Common.Spatial;
     using Edubase.Services.Geo;
     using Microsoft.AspNetCore.WebUtilities;
@@ -264,32 +265,17 @@ namespace Edubase.Web.UI.Controllers
 
                             return Redirect(urlWithQuery);
                         }
+                        
 
-                        if (viewModel.SearchType.OneOfThese(
-                                eSearchType.Governor,
-                                eSearchType.GovernorReference,
-                                eSearchType.GovernorAll))
+                        if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
                         {
-                            var baseUrl = Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" });
+                            string[] allowedKeys = { "SelectedTab", "SearchType", "searchtype", "gsearch", "GovernorSearchModel.Forename", "GovernorSearchModel.Surname", "GovernorSearchModel.RoleId", "GovernorSearchModel.IncludeHistoric", "GovernorSearchModel.Gid" };
 
-                            // Start with existing query parameters
-                            var query = new Dictionary<string, string?>();
-                            foreach (var kvp in Request.Query)
-                            {
-                                query[kvp.Key] = kvp.Value;
-                            }
+                            var qs = CleanQueryString(allowedKeys);
 
-                            // Add multiple role IDs
-                            foreach (var roleId in viewModel.GovernorSearchModel.RoleId)
-                            {
-                                query.Add(
-                                    Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID,
-                                    roleId.ToString());
-                            }
+                            var redirectUrl = $"{Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" })}?{qs}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}";
 
-                            var finalUrl = QueryHelpers.AddQueryString(baseUrl!, query);
-
-                            return Redirect(finalUrl);
+                            return Redirect(redirectUrl);
                         }
 
 
@@ -299,6 +285,28 @@ namespace Edubase.Web.UI.Controllers
             }
 
             return await Index(viewModel);
+        }
+
+        /// <summary>
+        /// Extract an allowed list of query string parameters with the keys contained in allowedKeys.
+        /// </summary>
+        /// <param name="allowedKeys"></param>
+        /// <returns></returns>
+        public string CleanQueryString(string[] allowedKeys)
+        {
+            var cleanQuery = HttpUtility.ParseQueryString(string.Empty);
+
+            foreach (var key in allowedKeys)
+            {
+                if (Request.Query.TryGetValue(key, out var value))
+                {
+                    cleanQuery[key] = value.ToString();
+                }
+            }
+
+            var nqs = cleanQuery.ToString();
+
+            return nqs;
         }
 
         [HttpGet("search/suggest")]

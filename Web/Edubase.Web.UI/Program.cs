@@ -1,4 +1,6 @@
 using System;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -11,6 +13,7 @@ using Azure.Data.Tables;
 using Edubase.Common.Cache;
 using Edubase.Data;
 using Edubase.Data.Repositories;
+using Edubase.Data.Repositories.EF;
 using Edubase.Services;
 using Edubase.Services.Approvals;
 using Edubase.Services.Core;
@@ -48,6 +51,7 @@ using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Authentication;
+using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Helpers.ModelBinding;
@@ -71,6 +75,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -82,6 +87,8 @@ using Microsoft.Extensions.Logging;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+Edubase.Common.Config.Feature.Provider =  new ConfigurationFeatureFlagProvider(builder.Configuration);
+DbConfiguration.SetConfiguration(new MicrosoftSqlDbConfiguration());
 
 static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
 {
@@ -243,22 +250,11 @@ builder.Services.AddTransient<IResourcesHelper, ResourcesHelper>();
 builder.Services.AddTransient<ICompaniesHouseService, CompaniesHouseService>();
 builder.Services.AddTransient<IDataQualityWriteService, DataQualityWriteService>();
 builder.Services.AddTransient<IDataQualityReadService, DataQualityReadService>();
-builder.Services.AddTransient<IDataQualityStatusRepository, DataQualityStatusRepository>();
-builder.Services.AddTransient<ILocalAuthoritySetRepository, LocalAuthoritySetRepository>();
-builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
-builder.Services.AddSingleton<IUserPreferenceRepository, UserPreferenceRepository>();
 builder.Services.AddTransient<ILayoutHelper, LayoutHelper>();
 builder.Services.AddScoped<HttpContextBase>(_ => new HttpContextWrapper(System.Web.HttpContext.Current));
 builder.Services.AddScoped<IClientStorage, BrowserClientStorage>();
 builder.Services.AddSingleton<ApiRecorderSessionItemRepository>();
 builder.Services.AddSingleton<WebLogItemRepository>();
-builder.Services.AddSingleton<GlossaryRepository>();
-builder.Services.AddSingleton<FaqItemRepository>();
-builder.Services.AddSingleton<FaqGroupRepository>();
-builder.Services.AddSingleton<NotificationBannerRepository>();
-builder.Services.AddSingleton<NotificationTemplateRepository>();
-builder.Services.AddSingleton<NewsArticleRepository>();
-builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IGovernorsGridViewModelFactory, GovernorsGridViewModelFactory>();
 builder.Services.AddTransient<ISmtpEndPoint, MockSmtpEndPoint>();
 builder.Services.AddScoped<ICachedLookupService, CachedLookupService>();
@@ -269,6 +265,21 @@ builder.Services.AddScoped<IClientStorage, BrowserClientStorage>();
 builder.Services.AddScoped<IGovernorDownloadService, GovernorDownloadApiService>();
 builder.Services.AddScoped<IDownloadsService, DownloadsApiService>();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddSingleton<ISqlLaNameCodeRepository, SqlLaNameCodeRepository>();
+builder.Services.AddSingleton<ILaNameCodeFileGenerator, LaNameCodeFileGenerator>();
+builder.Services.AddScoped<FrontEndDbContext>(sp => new FrontEndDbContext(new SqlConnection(sp.GetRequiredService<IConfiguration>().GetConnectionString("FrontEndDatabase"))));
+
+// Repository registrations
+builder.Services.AddScoped<IUserPreferenceRepository, SqlUserPreferenceRepository>();
+builder.Services.AddScoped<ITokenRepository, SqlTokenRepository>();
+builder.Services.AddScoped<ILocalAuthoritySetRepository, SqlLocalAuthoritySetRepository>();
+builder.Services.AddScoped<IGlossaryRepository, SqlGlossaryItemRepository>();
+builder.Services.AddScoped<IFaqGroupRepository, SqlFaqGroupRepository>();
+builder.Services.AddScoped<IFaqItemRepository, SqlFaqItemRepository>();
+builder.Services.AddScoped<INotificationTemplateRepository, SqlNotificationTemplateRepository>();
+builder.Services.AddScoped<IDataQualityStatusRepository, SqlDataQualityStatusRepository>();
+builder.Services.AddScoped<INewsArticleRepository, SqlNewsArticleRepository>();
+builder.Services.AddScoped<INotificationBannerRepository, SqlNotificationBannerRepository>();
 
 //Default model binder registrations
 builder.Services.AddSingleton<ICollectionFactory, CollectionFactory>();
@@ -311,8 +322,7 @@ builder.Services.AddSingleton<ILoggingService>(provider =>
 builder.Services.AddControllersWithViews(options =>
 {
     ServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
-    options.ValueProviderFactories.Add(
-        new TokenValueProviderFactory(serviceProvider.GetRequiredService<ITokenRepository>()));
+    options.ValueProviderFactories.Add(new TokenValueProviderFactory());        
     options.ModelBinderProviders.Insert(0, new DefaultModelBinderProvider(serviceProvider));
 });
 
@@ -525,6 +535,13 @@ builder.Services.AddAuthorization(options =>
 
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromDays(365);
+    options.IncludeSubDomains = true;
+    options.Preload = true;
+});
 
 var app = builder.Build();
 

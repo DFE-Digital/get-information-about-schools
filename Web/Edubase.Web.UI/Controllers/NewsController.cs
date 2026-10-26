@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Edubase.Data;
 using Edubase.Data.Entity;
-using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
@@ -15,9 +15,9 @@ namespace Edubase.Web.UI.Controllers
     [Route("News")]
     public class NewsController : EduBaseController
     {
-        private readonly NewsArticleRepository _newsRepository;
+        private readonly INewsArticleRepository _newsRepository;
 
-        public NewsController(NewsArticleRepository newsRepository)
+        public NewsController(INewsArticleRepository newsRepository)
         {
             _newsRepository = newsRepository;
         }
@@ -27,7 +27,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, true, lookupYear);
-            var model = new NewsArticlesViewModel(result, lookupYear);
+            var model = new NewsArticlesViewModel(result.Items, lookupYear);
             return View(model);
         }
 
@@ -62,7 +62,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, false, lookupYear);
-            var model = new NewsArticlesViewModel(result, lookupYear, true);
+            var model = new NewsArticlesViewModel(result.Items, lookupYear, true);
             return View(nameof(Index), model);
         }
 
@@ -71,7 +71,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var lookupYear = year ?? DateTime.Now.Year;
             var result = await _newsRepository.GetAllAsync(1000, false, lookupYear);
-            var model = new NewsArticlesViewModel(result, lookupYear, true, true);
+            var model = new NewsArticlesViewModel(result.Items, lookupYear, true, true);
             return View(nameof(Index), model);
         }
 
@@ -194,9 +194,9 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> AuditArticles(string sortBy)
         {
             var result = await _newsRepository.GetAllAsync(1000, false);
-            var audit = await _newsRepository.GetAllAsync(1000, false,null,eNewsArticlePartition.Archive);
-            var items = result.ToList();
-            items.AddRange(audit);
+            var audit = await _newsRepository.GetAllAsync(1000, false,null,null,eNewsArticlePartition.Archive);
+            var items = result.Items.ToList();
+            items.AddRange(audit.Items);
 
             var distinct = items.GroupBy(x => x.Tracker)
                 .Select(grp => new { tracker = grp.Key, banners = grp.OrderByDescending(x => x.Version) })
@@ -210,9 +210,9 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> AuditArticle(string id, string sortBy)
         {
             var result = await _newsRepository.GetAllAsync(1000, false);
-            var audit = await _newsRepository.GetAllAsync(1000, false, null, eNewsArticlePartition.Archive);
-            var items = result.ToList();
-            items.AddRange(audit);
+            var audit = await _newsRepository.GetAllAsync(1000, false, null, null, eNewsArticlePartition.Archive);
+            var items = result.Items.ToList();
+            items.AddRange(audit.Items);
 
             var distinct = items.Where(x => x.Tracker == id);
 

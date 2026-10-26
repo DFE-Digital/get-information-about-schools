@@ -27,6 +27,9 @@ namespace Edubase.Web.UI.Controllers
     using Services.Lookup;
     using Services.Security;
     using GT = Services.Enums.eLookupGroupType;
+    using R = Edubase.Services.Security.EdubaseRoles;
+    using ES = Edubase.Services.Enums.EnumSets;
+    using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 
     [Authorize(Policy = "EdubasePolicy")]
     public class ToolsController : Controller
@@ -38,6 +41,18 @@ namespace Edubase.Web.UI.Controllers
         private readonly IClientStorage _clientStorage;
         private readonly ILocalAuthoritySetRepository _localAuthoritySetRepository;
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
+
+        private readonly Dictionary<ET, List<ET>> establishmentToConvertMap = new Dictionary<ET, List<ET>>
+        {
+            [ET.CommunitySchool] = new List<ET> { ET.AcademyConverter },
+            [ET.CommunitySpecialSchool] = new List<ET> { ET.AcademySpecialConverter },
+            [ET.FoundationSchool] = new List<ET> { ET.AcademyConverter },
+            [ET.FoundationSpecialSchool] = new List<ET> { ET.AcademySpecialConverter },
+            [ET.VoluntaryAidedSchool] = new List<ET> { ET.AcademyConverter },
+            [ET.VoluntaryControlledSchool] = new List<ET> { ET.AcademyConverter },
+            [ET.PupilReferralUnit] = new List<ET> { ET.AcademyAlternativeProvisionConverter },
+            [ET.FurtherEducation] = new List<ET> { ET.Academy1619Converter }
+        };
 
         public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService,
             IEstablishmentWriteService establishmentWriteService, ICachedLookupService lookup,
@@ -112,7 +127,7 @@ namespace Edubase.Web.UI.Controllers
             model.ItemTypes = establishmentTypeFullList.ToSelectList();
             EstablishmentModel est = null;
 
-            SelectListItem[] filteredItems = null;
+            SelectListItem[] validateAllowedAcademyTypes = null;
 
             // validation
             if (action == "search")
@@ -140,11 +155,24 @@ namespace Edubase.Web.UI.Controllers
                     {
                         ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                     }
+                    else if (!ES.AllowedEstablishmentTypeForBulkCreateAcademies.Any(x => x == est.TypeId))
+                    {
+
+                        ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
+                    }
                     else
                     {
-                        filteredItems = (await GetFilteredBulkAcademyTypes((int) est.Urn, establishmentTypeFullList))
-                            .ToSelectList(est?.TypeId)?.ToArray();
-                        if (filteredItems?.Length == 0)
+                        var allowedTypes = establishmentToConvertMap.TryGetValue((ET) est.TypeId, out var mappedEnumList)
+                            ? establishmentTypeFullList
+                                .Where(dto => mappedEnumList.Contains((ET) dto.Id))
+                                .ToList()
+                            : establishmentTypeFullList;
+
+                        validateAllowedAcademyTypes = (await GetFilteredBulkAcademyTypes((int) est.Urn, allowedTypes))
+                           .ToSelectList(est?.TypeId)
+                           ?.ToArray();
+
+                        if (validateAllowedAcademyTypes?.Length == 0)
                         {
                             ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                         }
@@ -201,7 +229,7 @@ namespace Edubase.Web.UI.Controllers
                 }
                 else
                 {
-                    model.FilteredItemTypes = filteredItems;
+                    model.FilteredItemTypes = validateAllowedAcademyTypes;
                     model.FoundItem = new BulkAcademyViewModel()
                     {
                         Urn = est.Urn,
@@ -257,7 +285,6 @@ namespace Edubase.Web.UI.Controllers
 
             return View(model);
         }
-
 
         private async Task<Tuple<Guid, List<BulkAcademyViewModel>>> ProcessBulkAcademies(
             List<BulkAcademyViewModel> itemsToAdd)
@@ -419,7 +446,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync())
+            viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync()).Items
                 .OrderBy(x => x.Title)
                 .Select(x => new IndSchoolsSearchViewModel.LASetViewModel(x));
 
@@ -480,7 +507,8 @@ namespace Edubase.Web.UI.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
-                    status = "error", redirect = string.Concat("/independent-schools/download/", id)
+                    status = "error",
+                    redirect = string.Concat("/independent-schools/download/", id)
                 }));
             }
 
@@ -496,7 +524,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
         {
             viewModel.LocalAuthorities = await _lookup.LocalAuthorityGetAllAsync();
-            var items = (await _localAuthoritySetRepository.GetAllAsync()).OrderBy(x => x.Title);
+            var items = (await _localAuthoritySetRepository.GetAllAsync()).Items.OrderBy(x => x.Title);
             viewModel.Results = new PaginatedResult<LocalAuthoritySet>(viewModel.Skip, 100, items.Count(),
                 items.Skip(viewModel.Skip).Take(100).ToList());
             return View(viewModel);
@@ -540,7 +568,7 @@ namespace Edubase.Web.UI.Controllers
             if (ModelState.IsValid)
             {
                 var sets = await _localAuthoritySetRepository.GetAllAsync();
-                var duplicate = sets
+                var duplicate = sets.Items
                     .Where(x => x.Title == viewModel.Title && (viewModel.IsNewEntity || viewModel.Id != x.RowKey))
                     .Select(x => x.RowKey).FirstOrDefault();
 
