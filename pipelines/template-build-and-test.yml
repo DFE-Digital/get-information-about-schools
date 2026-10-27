@@ -116,6 +116,13 @@ jobs:
       
       ## BUILD AND TEST THE C# CODE
 
+      # The solution includes .NET 8 acceptance tests alongside .NET Framework projects.
+      - task: UseDotNet@2
+        displayName: 'Install .NET 8 SDK'
+        inputs:
+          packageType: 'sdk'
+          version: '8.0.x'
+
       - task: NuGetToolInstaller@1
         displayName: 'Install NuGet'
 
@@ -131,6 +138,7 @@ jobs:
           ## Auto-suggested args:
           #msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
           ## Old/previous args:
+          # The .NET 8 acceptance-test project locally opts out of legacy FxCop analysis.
           msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:UseMerge=true /p:SingleAssemblyName=AppCode /p:RunCodeAnalysis=true
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'

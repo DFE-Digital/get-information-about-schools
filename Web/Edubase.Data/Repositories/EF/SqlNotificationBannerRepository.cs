@@ -70,12 +70,13 @@ namespace Edubase.Data.Repositories.EF
 
         private IList<NotificationBanner> GetActiveBanners(DateTime forDateTime)
         {
-            return _context.NotificationBanners
-                .Where(x => x.PartitionKey == nameof(eNotificationBannerPartition.Current)
-                            && x.Start <= forDateTime.AddSeconds(_notificationBannerCacheExpirationInSeconds)
-                            && x.End >= forDateTime)
-                .Take(2)
-                .ToList();
+            var cacheWindowEnd = forDateTime.AddSeconds(_notificationBannerCacheExpirationInSeconds);
+                return _context.NotificationBanners
+                    .Where(x => x.PartitionKey == nameof(eNotificationBannerPartition.Current)
+                                && x.Start <= cacheWindowEnd
+                                && x.End >= forDateTime)
+                    .Take(2)
+                    .ToList();
         }
 
         public async Task<Page<NotificationBanner>> GetAllAsync(int take, TableContinuationToken skip = null,
