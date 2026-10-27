@@ -53,14 +53,14 @@ namespace Edubase.CommonUnitTests.Cache
             var config = new CacheConfig();
 
             Assert.Null(config.ConnectionString);
-            Assert.Equal("localdev" + "_" + Environment.MachineName.ToLower(), config.CacheDomain);
+            Assert.Equal($"localdev_{ Environment.MachineName.ToLower()}", config.CacheDomain);
             Assert.False(config.IsCentralCacheEnabled);
             Assert.True(config.IsDistributedCachingEnabled);
             Assert.True(config.IsPayloadCompressionEnabled);
             Assert.False(config.IsAuditingEnabled);
             Assert.False(config.IsExceptionPropagationEnabled);
             Assert.False(string.IsNullOrEmpty(config.Name));
-            Assert.Equal("localdev_sl635592_testkey", config.ProcessKey("testkey"));
+            Assert.Equal($"localdev_{Environment.MachineName.ToLower()}_testkey", config.ProcessKey("testkey"));
         }
     }
 }
