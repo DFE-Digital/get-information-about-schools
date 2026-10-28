@@ -30,11 +30,6 @@ namespace Edubase.Web.UI.Controllers.Api
         {
             var serverName = ConfigurationManager.AppSettings["SQLServer"];
             var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
-            var connectionString =
-                $"Server=tcp:{serverName},1433;" +
-                $"database={databaseName};" +
-                "authentication=Active Directory Default;" +
-                "encrypt=True;TrustServerCertificate=False;";
 
             try
             {
