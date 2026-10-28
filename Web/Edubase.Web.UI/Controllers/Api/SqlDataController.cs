@@ -28,9 +28,6 @@ namespace Edubase.Web.UI.Controllers.Api
         [Route("api/sql"), HttpGet]
         public async Task<IHttpActionResult> Sql()
         {
-            var serverName = ConfigurationManager.AppSettings["SQLServer"];
-            var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
-
             try
             {
                 var serverDate = await _frontEndDbContext.Database
