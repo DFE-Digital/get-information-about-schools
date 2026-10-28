@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using Microsoft.Data.SqlClient;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -14,7 +15,7 @@ namespace Edubase.Web.UI.Controllers.Api
     {
         private readonly IAzLogger _logger;
         private readonly FrontEndDbContext _frontEndDbContext;
-       
+
         public SqlDataController(
             IAzLogger logger,
             FrontEndDbContext frontEndDbContext)           
@@ -27,6 +28,14 @@ namespace Edubase.Web.UI.Controllers.Api
         [Route("api/sql"), HttpGet]
         public async Task<IHttpActionResult> Sql()
         {
+            var serverName = ConfigurationManager.AppSettings["SQLServer"];
+            var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
+            var connectionString =
+                $"Server=tcp:{serverName},1433;" +
+                $"database={databaseName};" +
+                "authentication=Active Directory Default;" +
+                "encrypt=True;TrustServerCertificate=False;";
+
             try
             {
                 var serverDate = await _frontEndDbContext.Database
@@ -47,6 +56,6 @@ namespace Edubase.Web.UI.Controllers.Api
 
                 return StatusCode(HttpStatusCode.ServiceUnavailable);
             }
-        }      
+        }
     }
 }
