@@ -3,6 +3,7 @@ using Edubase.AcceptanceTests.Apis;
 using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.SigninAuthorities;
+using Edubase.AcceptanceTests.UserPreferences;
 using Edubase.AcceptanceTests.Users;
 using Microsoft.Extensions.DependencyInjection;
 using Reqnroll.Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         private static void AddEstablishmentsFromFrontEnd(this ServiceCollection services)
         {
             services.AddScoped<IEstablishments, EstablishmentsFromGiasFrontEnd>();
+            services.AddScoped<IEstablishmentSearchResultsScreen, EstablishmentSearchResultsScreenGiasFrontEnd>();
         }
 
         private static void AddGiasFrontEnd(this ServiceCollection services, string baseAddress, string environment)

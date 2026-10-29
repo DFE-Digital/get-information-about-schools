@@ -1,0 +1,16 @@
+Feature: User Preferences
+
+Scenario: A GIAS user can save a filter set
+Given I am a logged-in GIAS user
+When I filter records on the establishment search results screen
+Then I can save the filter set to create a saved filter
+
+Scenario: A GIAS user can apply a saved filter
+Given I have a saved filter
+When I select My saved filter set on the establishment search results screen
+Then the saved filters are applied to the list of establishments
+
+Scenario: A GIAS user can delete a saved filter
+Given I have a saved filter
+When I select the option My saved filter set
+Then I can delete my saved filter

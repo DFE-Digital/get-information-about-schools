@@ -22,4 +22,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="UserPreferences\UserPReferences.feature.cs">
+      <DependentUpon>UserPreferences.feature</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>
