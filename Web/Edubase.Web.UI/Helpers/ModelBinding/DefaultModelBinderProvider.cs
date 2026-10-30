@@ -36,6 +36,12 @@ public class DefaultModelBinderProvider : IModelBinderProvider
     /// </returns>
     public IModelBinder GetBinder(ModelBinderProviderContext context)
     {
+        // Allow the built-in body binder to handle Json requests(eg FromBody paramters)
+        if (context.BindingInfo.BindingSource?.CanAcceptDataFrom(BindingSource.Body) == true)
+        {
+            return null;
+        }
+
         // Resolve a scope factory from the root service provider.
         IServiceScopeFactory scopeFactory =
             _services.GetRequiredService<IServiceScopeFactory>();

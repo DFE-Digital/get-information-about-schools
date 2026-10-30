@@ -270,7 +270,10 @@ new Vue({
           rejectionReason: document.getElementById('reason').value
         };
 
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
         const headers = {
+          'RequestVerificationToken': token,
           'Content-Type': 'application/json; charset=utf-8',
           'Data-Type': 'json',
         }

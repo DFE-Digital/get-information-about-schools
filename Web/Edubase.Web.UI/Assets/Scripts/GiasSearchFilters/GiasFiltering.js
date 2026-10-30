@@ -519,7 +519,7 @@ class GiasFiltering {
       if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
-    const verifyToken = getCookie('__RequestVerificationToken');
+    const verifyToken = $('input[name="__RequestVerificationToken"]').val();
 
     $.ajax({
       url: "/api/save-search-token",

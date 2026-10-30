@@ -133,7 +133,12 @@ const config = {
 
     new VueLoaderPlugin(),
 
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [
+        'assets/scripts/**',
+        'stylesheets/**'
+      ]
+    }),
 
     new webpack.ProvidePlugin({
       $: "jquery",
@@ -159,7 +164,12 @@ module.exports = (env, argv) => {
         context: "./Assets/Sass"
       }),
 
-      new CleanWebpackPlugin(),
+      new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: [
+          'assets/scripts/**',
+          'stylesheets/**'
+        ]
+      }),
 
       new webpack.SourceMapDevToolPlugin({
         filename: '[file].map[query]',

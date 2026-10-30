@@ -1,8 +1,0 @@
-﻿{
-  "$schema": "http://schemastore.org/schemas/json/webjobs-list.json",
-  "WebJobs": [
-    {
-      "filePath": "../Edubase.Indexer/Edubase.Indexer.csproj"
-    }
-  ]
-}
