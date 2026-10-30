@@ -22,7 +22,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             var services = new ServiceCollection();
 
             services.AddHardCodedUsers();
-            services.AddEstablishmentsFromFrontEnd();
+            services.AddEstablishmentsFromGiasFrontEnd();
             services.AddUserPreferencesInPersistentStorage();
             services.AddGiasFrontEnd(baseAddress, environment);
 
@@ -34,7 +34,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddScoped<IUsers, UsersFromHardCodedValues>();
         }
 
-        private static void AddEstablishmentsFromFrontEnd(this ServiceCollection services)
+        private static void AddEstablishmentsFromGiasFrontEnd(this ServiceCollection services)
         {
             services.AddScoped<IEstablishments, EstablishmentsFromGiasFrontEnd>();
             services.AddScoped<IEstablishmentSearchResultsScreen, EstablishmentSearchResultsScreenFromGiasFrontEnd>();

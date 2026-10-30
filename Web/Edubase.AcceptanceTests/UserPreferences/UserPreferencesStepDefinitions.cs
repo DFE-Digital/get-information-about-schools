@@ -26,6 +26,25 @@ namespace Edubase.AcceptanceTests.UserPreferences
             this.userPreferencesInPersistentStorage = userPreferencesInPersistentStorage;
         }
 
+        [Given("the required data extracted from table storage")]
+        public void GivenTheRequiredDataExtractedFromTableStorage()
+        {
+            throw new PendingStepException();
+        }
+
+        [When("the migration runs")]
+        public void WhenTheMigrationRuns()
+        {
+            throw new PendingStepException();
+        }
+
+        [Then("all the existing UserPreferencesRepository data extracted from the table storage should be migrated to the SQL table.")]
+        public void ThenAllTheExistingUserPreferencesRepositoryDataExtractedFromTheTableStorageShouldBeMigratedToTheSQLTable_()
+        {
+            throw new PendingStepException();
+        }
+
+
         [Given("I am a logged-in GIAS user")]
         public async Task GivenIAmALoggedInGIASUser()
         {

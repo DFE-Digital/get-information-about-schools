@@ -1,5 +1,10 @@
 Feature: User Preferences
 
+Scenario: Check that User Preferences have been migrated from Table Storage to SQL Server 
+Given the required data extracted from table storage
+When the migration runs
+Then all the existing UserPreferencesRepository data extracted from the table storage should be migrated to the SQL table.
+
 Scenario: A GIAS user can save a filter set
 Given I am a logged-in GIAS user
 When I filter records on the establishment search results screen
