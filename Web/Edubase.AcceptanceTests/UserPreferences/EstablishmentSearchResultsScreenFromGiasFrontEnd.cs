@@ -2,11 +2,11 @@ using Edubase.AcceptanceTests.GiasFrontEnd;
 
 namespace Edubase.AcceptanceTests.UserPreferences
 {
-    public class EstablishmentSearchResultsScreenGiasFrontEnd : IEstablishmentSearchResultsScreen
+    public class EstablishmentSearchResultsScreenFromGiasFrontEnd : IEstablishmentSearchResultsScreen
     {
         private readonly IGiasFrontEnd giasFrontEnd;
 
-        public EstablishmentSearchResultsScreenGiasFrontEnd(IGiasFrontEnd giasFrontEnd)
+        public EstablishmentSearchResultsScreenFromGiasFrontEnd(IGiasFrontEnd giasFrontEnd)
         {
             this.giasFrontEnd = giasFrontEnd;
         }
@@ -16,11 +16,13 @@ namespace Edubase.AcceptanceTests.UserPreferences
             return await Task.FromResult(new EstablishmentSearchResults());
         }
 
-        public async Task SaveFilterSet(EstablishmentSearchFilter establishmentSearchFilter)
+        public async Task<string> SaveFilterSet(EstablishmentSearchFilter establishmentSearchFilter)
         {
             var token = await giasFrontEnd.TokenizeEstablishmentSearchFilter(establishmentSearchFilter);
 
             await giasFrontEnd.SaveEstablishmentSearchFilter(token);
+
+            return token;
         }   
     }
 }

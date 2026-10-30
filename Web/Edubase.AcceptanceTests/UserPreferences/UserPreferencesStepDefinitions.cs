@@ -1,5 +1,6 @@
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
+using Xunit;
 
 namespace Edubase.AcceptanceTests.UserPreferences
 {
@@ -9,7 +10,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
         private readonly IUsers users;
         private readonly IGiasFrontEnd giasFrontEnd;
         private readonly IEstablishmentSearchResultsScreen establishmentSearchResultsScreen;
-        private readonly IUserPreferencesInPersitentStorage userPreferencesInPersistentStorage;
+        private readonly IUserPreferencesInPersistentStorage userPreferencesInPersistentStorage;
         private EstablishmentSearchFilter establishmentSearchFilter;
         private User user;
 
@@ -17,7 +18,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
             IUsers users,
             IGiasFrontEnd giasFrontEnd,
             IEstablishmentSearchResultsScreen establishmentSearchResultsScreen,
-            IUserPreferencesInPersitentStorage userPreferencesInPersistentStorage)
+            IUserPreferencesInPersistentStorage userPreferencesInPersistentStorage)
         {
             this.users = users;
             this.giasFrontEnd = giasFrontEnd;
@@ -44,9 +45,11 @@ namespace Edubase.AcceptanceTests.UserPreferences
         [Then("I can save the filter set to create a saved filter")]
         public async Task ThenICanSaveTheFilterSetToCreateASavedFilter()
         {
-            await establishmentSearchResultsScreen.SaveFilterSet(establishmentSearchFilter);
+            var expectedSavedSearchToken = await establishmentSearchResultsScreen.SaveFilterSet(establishmentSearchFilter);
 
-            var actualEstablishmentSearchFilter = await userPreferencesInPersistentStorage.GetEstablishmentSearchFilterForUser(user);
+            var actualSavedSearchToken = await userPreferencesInPersistentStorage.GetSavedSearchTokenForUser(user);
+
+            Assert.Equal(expectedSavedSearchToken, actualSavedSearchToken);
         }
 
         [Given("I have a saved filter")]

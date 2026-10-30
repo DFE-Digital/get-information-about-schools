@@ -5,6 +5,7 @@ using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.UserPreferences;
 using Edubase.AcceptanceTests.Users;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Reqnroll.Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +23,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
             services.AddHardCodedUsers();
             services.AddEstablishmentsFromFrontEnd();
+            services.AddUserPreferencesInPersistentStorage();
             services.AddGiasFrontEnd(baseAddress, environment);
 
             return services;
@@ -35,7 +37,15 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         private static void AddEstablishmentsFromFrontEnd(this ServiceCollection services)
         {
             services.AddScoped<IEstablishments, EstablishmentsFromGiasFrontEnd>();
-            services.AddScoped<IEstablishmentSearchResultsScreen, EstablishmentSearchResultsScreenGiasFrontEnd>();
+            services.AddScoped<IEstablishmentSearchResultsScreen, EstablishmentSearchResultsScreenFromGiasFrontEnd>();
+        }
+
+        private static void AddUserPreferencesInPersistentStorage(this ServiceCollection services)
+        {
+            var connectionString = UserPreferencesInSQLServer.LoadFrontEndDatabaseConnectionString();
+
+            services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInSQLServer>();
         }
 
         private static void AddGiasFrontEnd(this ServiceCollection services, string baseAddress, string environment)
