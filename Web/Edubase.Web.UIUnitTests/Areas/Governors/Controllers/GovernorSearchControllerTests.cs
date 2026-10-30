@@ -19,7 +19,7 @@
 //{
 //    public class GovernorSearchControllerTests
 //    {
-//        [Fact()]
+//        [Fact]
 //        public async Task GovernorSearch_Index_ReturnsAllByDefault()
 //        {
 //            var gds = new Mock<IGovernorDownloadService>();
@@ -54,7 +54,7 @@
 //            Assert.Equal("jim", vm.Results[1].Person_FirstName);
 //        }
 
-//        [Fact()]
+//        [Fact]
 //        public async Task GovernorSearch_Index_ProcessesFilters()
 //        {
 //            var gds = new Mock<IGovernorDownloadService>();

@@ -1,0 +1,28 @@
+require_relative "lib/helpers"
+require_relative "lib/filters/govuk_markdown"
+
+compile "/**/*.md" do
+  filter :govuk_markdown, source_identifier: @item.identifier.to_s
+  layout "/default.*"
+end
+
+route "/**/*.md" do
+  identifier = @item.identifier.without_ext.to_s
+  if identifier == "/index"
+    "/index.html"
+  elsif identifier.end_with?("/index")
+    "#{identifier.sub(%r{/index$}, "")}/index.html"
+  else
+    "#{identifier}/index.html"
+  end
+end
+
+compile "/**/*" do
+  write item.identifier.to_s
+end
+
+route "/**/*" do
+  item.identifier.to_s
+end
+
+layout "/**/*", :erb

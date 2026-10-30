@@ -122,7 +122,7 @@
             </div>
         }
 
-        @if (Model.IsSuspended)
+        @if (Model.IsSuspended && Html.FeatureEnabled("gias.iebt.suspended"))
         {
             <div id="gias-establishment-suspended-message" class="gias-establishment-closed-message">
                 <p>@Model.SuspendedStatusMessage</p>

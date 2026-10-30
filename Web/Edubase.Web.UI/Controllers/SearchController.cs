@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using System.Web;
     using System.Collections.Generic;
     using Common.Spatial;
     using Edubase.Services.Geo;
@@ -279,29 +280,51 @@ namespace Edubase.Web.UI.Controllers
                                 query[kvp.Key] = kvp.Value;
                             }
 
-                            // Add multiple role IDs
-                            foreach (var roleId in viewModel.GovernorSearchModel.RoleId)
+                            if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
                             {
-                                query.Add(
-                                    Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID,
-                                    roleId.ToString());
+                                string[] allowedKeys = { "SelectedTab", "SearchType", "searchtype", "gsearch", "GovernorSearchModel.Forename", "GovernorSearchModel.Surname", "GovernorSearchModel.RoleId", "GovernorSearchModel.IncludeHistoric", "GovernorSearchModel.Gid" };
+
+                                var qs = CleanQueryString(allowedKeys);
+
+                                var redirectUrl = $"{Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" })}?{qs}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}";
+
+                                return Redirect(redirectUrl);
                             }
 
-                            var finalUrl = QueryHelpers.AddQueryString(baseUrl!, query);
 
-                            return Redirect(finalUrl);
+                            throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
                         }
-
-
-                        throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
                     }
-                }
+                }                
             }
 
             return await Index(viewModel);
         }
 
-        [HttpGet("search/suggest")]
+        /// <summary>
+        /// Extract an allowed list of query string parameters with the keys contained in allowedKeys.
+        /// </summary>
+        /// <param name="allowedKeys"></param>
+        /// <returns></returns>
+        public string CleanQueryString(string[] allowedKeys)
+        {
+            var cleanQuery = HttpUtility.ParseQueryString(string.Empty);
+
+            foreach (var key in allowedKeys)
+            {
+                var value = Request.Query[key];
+                if (!string.IsNullOrEmpty(value))
+                {
+                    cleanQuery[key] = value;
+                }
+            }
+
+            var nqs = cleanQuery.ToString();
+
+            return nqs;
+        }
+
+        [Route("Suggest"), HttpGet]
         public async Task<ActionResult> Suggest(string text)
         {
             var suggestions = (await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User)).ToArray();

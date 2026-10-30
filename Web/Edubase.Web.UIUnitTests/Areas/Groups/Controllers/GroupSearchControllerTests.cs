@@ -60,7 +60,7 @@
 //            context.SetupGet(x => x.Request).Returns(request.Object);
 //            context.SetupGet(x => x.User).Returns(new GenericPrincipal(new GenericIdentity("bob"), new[] { "superhuman" }));
 
-//            grs.Setup(x => x.SearchAsync(It.IsAny<GroupSearchPayload>(),  It.IsAny<IPrincipal>()))
+//            grs.Setup(x => x.SearchAsync(It.IsAny<GroupSearchPayload>(), It.IsAny<IPrincipal>()))
 //                .ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>()
 //                {
 //                    new SearchGroupDocument{ Name="Group 1", GroupUId = 123 }

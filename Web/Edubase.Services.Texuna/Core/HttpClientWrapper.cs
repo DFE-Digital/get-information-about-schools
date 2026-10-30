@@ -369,14 +369,31 @@ public class HttpClientWrapper : IHttpClientWrapper
     private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage message, string requestUri)
     {
         AssertJsonContent(message);
-        if (typeof(T) == typeof(string)) return (T) (object) await message.Content.ReadAsStringAsync();
-        else if (typeof(T) == typeof(int?)) return (T) (object) (await message.Content.ReadAsStringAsync()).ToInteger();
-        else
+
+        if (message.Content == null ||
+            message.Content.Headers?.ContentLength == 0)
         {
-            var errorLogger = new FormatterErrorLogger();
-            var retVal = await message.Content.ReadAsAsync<T>(new[] { _formatter }, errorLogger);
-            if (errorLogger.Errors.Any()) throw new TexunaApiSystemException($"Error parsing the JSON returned by the API; (Request URI: {requestUri}) details: {errorLogger.Errors.First().ErrorMessage}");
-            return retVal;
+            return default(T);
+        }
+
+        try
+        {
+            if (typeof(T) == typeof(string)) return (T) (object) await message.Content.ReadAsStringAsync();
+            else if (typeof(T) == typeof(int?))
+                return (T) (object) (await message.Content.ReadAsStringAsync()).ToInteger();
+            else
+            {
+                var errorLogger = new FormatterErrorLogger();
+                var retVal = await message.Content.ReadAsAsync<T>(new[] { _formatter }, errorLogger);
+                if (errorLogger.Errors.Any())
+                    throw new TexunaApiSystemException(
+                        $"Error parsing the JSON returned by the API; (Request URI: {requestUri}) details: {errorLogger.Errors.First().ErrorMessage}");
+                return retVal;
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            return default(T);
         }
     }
 
@@ -394,8 +411,15 @@ public class HttpClientWrapper : IHttpClientWrapper
 
         try
         {
-            response = await _httpClient.SendAsync(requestMessage);
+            response = await _httpClient.SendAsync(
+                requestMessage,
+                HttpCompletionOption.ResponseHeadersRead
+            );
             return response;
+        }
+        catch (HttpRequestException)
+        {
+            throw;
         }
         catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
         {
@@ -409,9 +433,13 @@ public class HttpClientWrapper : IHttpClientWrapper
             // and the development/"full error detail" error page does not have the exception details.
             // For this reason we introduce this new catch block to catch all TaskCanceledExceptions that
             // aren't caught by the above (pre-existing) catch block.
-            throw new TexunaApiSystemException(
-                $"Task/request cancelled before completion, possibly due to a slow API response (Request URI: {requestMessage.RequestUri.PathAndQuery})",
-                GetRequestJsonBody(requestMessage));
+            var aborted = new HttpResponseMessage((HttpStatusCode)499)
+            {
+                ReasonPhrase = "ClientClosedRequest",
+                RequestMessage = requestMessage
+            };
+            response = aborted;
+            return aborted;
         }
         finally
         {
@@ -422,25 +450,25 @@ public class HttpClientWrapper : IHttpClientWrapper
 
             if (response?.Content != null)
             {
-                responseMessage = await response.Content?.ReadAsStringAsync();
+                responseMessage = await response.Content.ReadAsStringAsync();
             }
-#if DEBUG
+    #if DEBUG
             var data = new ApiTraceData
             {
                 StartTime = startTime,
-                DurationMillis = (int) Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
+                DurationMillis = (int)Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
                 Method = requestMessage.Method.Method,
                 Url = requestMessage.RequestUri.ToString(),
                 Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
                 Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
-                ResponseCode = response != null ? (int) response.StatusCode : 0,
+                ResponseCode = response != null ? (int)response.StatusCode : 0,
                 ClientIpAddress = context?.Request.UserHostAddress,
                 UserId = context?.User?.GetUserId(),
                 UserName = context?.User?.Identity?.Name
             };
 
             ApiTrace.Data.Add(data);
-#endif
+    #endif
 
             await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, context?.User?.GetUserId());
         }

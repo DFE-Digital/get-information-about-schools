@@ -329,38 +329,48 @@
                 </div>
             }
 
-            @if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
+            @if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended && Html.FeatureEnabled("gias.iebt.suspended"))
             {
-                var editable = Model.EditPolicy.IEBTDetail.RegistrationSuspended;
-                var currentStatus = Model.RegistrationSuspended?.EnumDisplayNameFor() ?? "Not recorded";
+                var canEdit = Model.EditPolicy.IEBTDetail.RegistrationSuspended;
 
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RegistrationSuspended)">
                     @Html.LabelFor(x => x.RegistrationSuspended, new { @class = "govuk-label" })
 
-                    @if (editable)
+                    @{
+                        var items = Enum.GetValues(typeof(Edubase.Services.Enums.RegistrationSuspendedStatus))
+                            .Cast<Edubase.Services.Enums.RegistrationSuspendedStatus>()
+                            .Select(e => new SelectListItem
+                            {
+                                Value = ((int)e).ToString(),
+                                Text = e.EnumDisplayNameFor(),
+                                Selected = (Model.RegistrationSuspended.HasValue && (int)Model.RegistrationSuspended == (int)e)
+                            });
+
+                        var selectedValue = Model.RegistrationSuspended.HasValue
+                            ? ((int)Model.RegistrationSuspended.Value).ToString()
+                            : null;
+                    }
+
+                    @if (canEdit)
                     {
                         @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(
                             x => x.RegistrationSuspended,
-                            new SelectList(
-                                Enum.GetValues(typeof(Edubase.Services.Enums.RegistrationSuspendedStatus))
-                                    .Cast<Edubase.Services.Enums.RegistrationSuspendedStatus>()
-                                    .Select(e => new SelectListItem
-                                    {
-                                        Value = ((int)e).ToString(),
-                                        Text = e.EnumDisplayNameFor(),
-                                        Selected = (Model.RegistrationSuspended.HasValue && (int)Model.RegistrationSuspended == (int)e)
-                                    }),
-                                "Value",
-                                "Text",
-                                Model.RegistrationSuspended.HasValue ? ((int)Model.RegistrationSuspended).ToString() : null
-                            ),
+                            new SelectList(items, "Value", "Text", selectedValue),
                             new { @class = "govuk-select" }
                         )
                     }
                     else
                     {
-                        <p class="govuk-body">@currentStatus</p>
+                        @Html.DropDownList(
+                            "RegistrationSuspended_readonly",
+                            new SelectList(items, "Value", "Text", selectedValue),
+                            new { @class = "govuk-select", disabled = "disabled", aria_disabled = "true" }
+                        )
+                        @Html.Hidden(
+                            nameof(Model.RegistrationSuspended),
+                            selectedValue
+                        )
                     }
                 </div>
             }
@@ -398,11 +408,14 @@
                     @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new { @class = "govuk-select" })
                 </div>
 
-                @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection", fieldsetClassName = "edit-date-fieldset" })
+                @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection", fieldsetClassName = "edit-date-fieldset" })                
+            }
 
+            @if (Model.ShowOfstedReportLink)
+            {                               
                 <div class="govuk-form-group">
-                    <label for="ofsted-report" class="govuk-label">Ofsted report link</label>
-                    <input type="text" class="govuk-input" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
+                    <label for="ofsted-report" class="govuk-label">Ofsted report</label>
+                    <input type="text" class="govuk-input" id="ofsted-report" disabled="disabled" value="@Model.OfstedReportUrl" />
                 </div>
             }
 
@@ -725,7 +738,7 @@
             }
 
 
-            @if (Model.EditPolicy.SENIds)
+            @if (Model.EditPolicy.SENIds && (Html.FeatureEnabled("gias.iebt.sen") || Model.TypeId != (int)eLookupEstablishmentType.OtherIndependentSpecialSchool))
             {
                 <div class="govuk-form-group sen-provision">
                     <fieldset class="govuk-fieldset">

@@ -1,6 +1,7 @@
 @using Edubase.Common;
 @using Edubase.Services.Enums
 @using Edubase.Services.Security
+@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @using System.Web.WebPages
 @model EstablishmentDetailViewModel
@@ -391,6 +392,16 @@
                 </div>
             }
 
+            @if (Model.DisplayPolicy.SENIds && (Html.FeatureEnabled("gias.iebt.sen") || Model.Establishment.TypeId != (int)eLookupEstablishmentType.OtherIndependentSpecialSchool))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt id="sen-type-key" class="govuk-summary-list__key">Type of SEN provision</dt>
+                    <dd id="sen-type-value" class="govuk-summary-list__value">
+                        @Model.SENNames
+                    </dd>
+                </div>
+            }
+
             @if (Model.DisplayPolicy.LastChangedDate)
             {
                 <div class="govuk-summary-list__row">
@@ -432,16 +443,6 @@
                 </div>
             }
             <!-- Online Provider content -->
-
-            @if (Model.DisplayPolicy.SENIds)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Type of SEN provision</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.SENNames
-                    </dd>
-                </div>
-            }
 
             @if (Model.DisplayPolicy.TeenageMothersProvisionId)
             {

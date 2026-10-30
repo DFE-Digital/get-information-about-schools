@@ -197,7 +197,7 @@
 //            }).ToList();
 //        }
 
-//   [Theory]
+//        [Theory]
 //        [InlineData(true, true, "Group Detail; User logged on and can edit")]
 //        [InlineData(true, false, "Group Detail; on and cannot edit")]
 //        [InlineData(false, false, "Group Detail; Anonymous user")]
@@ -212,15 +212,15 @@
 
 //            id.Setup(x => x.IsAuthenticated).Returns(isUserLoggedOn);
 
-//        var groupModel = new GroupModel
-//        {
-//            GroupUId = 1,
-//            Name = "grp",
-//            GroupTypeId = (int) eLookupGroupType.MultiacademyTrust,
-//            StatusId = (int) eLookupGroupStatus.Open,
-//            Address = new AddressDto { PostCode = "AA1 1AA", Line1 = "Street" },
-//            UKPRN = "12345"
-//        };
+//            var groupModel = new GroupModel
+//            {
+//                GroupUId = 1,
+//                Name = "grp",
+//                GroupTypeId = (int) eLookupGroupType.MultiacademyTrust,
+//                StatusId = (int) eLookupGroupStatus.Open,
+//                Address = new AddressDto { PostCode = "AA1 1AA", Line1 = "Street" },
+//                UKPRN = "12345"
+//            };
 
 //            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(groupModel));
 //            grs.Setup(x => x.GetLinksAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(Enumerable.Empty<LinkedGroupModel>());
@@ -965,7 +965,7 @@
 //                OpenDate = DateTime.Now,
 //                GroupId = "54243"
 //            };
-//            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm,"academy-trust");
+//            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm, "academy-trust");
 //            Assert.Equal("Details", result.RouteValues["action"]);
 //            Assert.Equal(123, result.RouteValues["id"]);
 //        }

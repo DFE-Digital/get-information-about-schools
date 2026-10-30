@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         /// <summary>
-        /// Treating myself in this one to a really nice URL. I deserve it. And so does Jon.
+        /// Returns a paginated list of academy openings filtered by date range and establishment type.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>

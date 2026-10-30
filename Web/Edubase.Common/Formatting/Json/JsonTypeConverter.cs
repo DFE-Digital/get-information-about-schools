@@ -1,43 +1,84 @@
-﻿using AutoMapper;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using Newtonsoft.Json;
+using AutoMapper;
 
-namespace Edubase.Common.Formatting.Json
+public class JsonTypeConverter<T> : TypeConverter
 {
-    public class JsonTypeConverter<T> : TypeConverter
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        => sourceType == typeof(string) || sourceType == typeof(T);
+
+    public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        => destinationType == typeof(string);
+
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-            => sourceType == typeof(T);
+        if (value == null) return default(T);
 
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-            => destinationType == typeof(string);
-
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-            => JsonConvert.DeserializeObject<T>(value?.ToString());
-
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-            => JsonConvert.SerializeObject(value);
-    }
-
-    public class ToJsonTypeConverter<T> : ITypeConverter<T, string>
-    {
-        string ITypeConverter<T, string>.Convert(T source, string destination, ResolutionContext context)
+        try
         {
-            if (source == null) return null;
-            else return JsonConvert.SerializeObject(source);
+            var str = value.ToString();
+            if (string.IsNullOrWhiteSpace(str)) return default(T);
+
+            return JsonConvert.DeserializeObject<T>(str);
+        }
+        catch (JsonException ex)
+        {
+            // Safe fallback: return default and optionally trace the issue
+            Debug.WriteLine($"[JsonTypeConverter<{typeof(T).Name}>] Deserialization failed: {ex.Message}");
+            return default(T);
         }
     }
 
-
-    public class FromJsonTypeConverter<T> : ITypeConverter<string, T>
+    public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
     {
-        T ITypeConverter<string, T>.Convert(string source, T destination, ResolutionContext context)
+        try
         {
-            if (source.Clean() == null) return default(T);
-            else return JsonConvert.DeserializeObject<T>(source);
+            if (value == null) return null;
+            return JsonConvert.SerializeObject(value);
+        }
+        catch (JsonException ex)
+        {
+            Debug.WriteLine($"[JsonTypeConverter<{typeof(T).Name}>] Serialization failed: {ex.Message}");
+            return null;
         }
     }
+}
 
+public class ToJsonTypeConverter<T> : ITypeConverter<T, string>
+{
+    public string Convert(T source, string destination, ResolutionContext context)
+    {
+        if (source == null) return null;
+
+        try
+        {
+            return JsonConvert.SerializeObject(source);
+        }
+        catch (JsonException ex)
+        {
+            Debug.WriteLine($"[ToJsonTypeConverter<{typeof(T).Name}>] Serialization failed: {ex.Message}");
+            return null;
+        }
+    }
+}
+
+public class FromJsonTypeConverter<T> : ITypeConverter<string, T>
+{
+    public T Convert(string source, T destination, ResolutionContext context)
+    {
+        if (string.IsNullOrWhiteSpace(source)) return default(T);
+
+        try
+        {
+            return JsonConvert.DeserializeObject<T>(source);
+        }
+        catch (JsonException ex)
+        {
+            Debug.WriteLine($"[FromJsonTypeConverter<{typeof(T).Name}>] Deserialization failed: {ex.Message}");
+            return default(T);
+        }
+    }
 }

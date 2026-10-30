@@ -1,5 +1,6 @@
 @using Edubase.Services.Enums
 @using Edubase.Web.UI.Areas.Governors.Models
+@using Edubase.Web.UI.Helpers
 @model GovernorsGridViewModel
 
 <h2 class="govuk-heading-s">Corporate contact</h2>
@@ -17,7 +18,7 @@
     </div>
 </details>
 
-<p class="govuk-body-s">@(Model.CorporateContact ?? "Not recorded")</p>
+<p class="govuk-body-s">@(Model.CorporateContact != null ? Html.HtmlNewlines(Model.CorporateContact) : Html.Raw("Not recorded"))</p>
 
 @if (Model.EditMode)
 {

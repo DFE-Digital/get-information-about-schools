@@ -52,6 +52,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<IActionResult> GroupEditCorporateContact(EditGroupCorporateContactViewModel model)
         {
             var result = await new EditGroupCorporateContactViewModelValidator().ValidateAsync(model);
+            result.EduBaseAddToModelState(ModelState, null);
 
             if (ModelState.IsValid)
             {
