@@ -218,3 +218,4 @@ Web/packages
 
 # Reqnroll generated code
 *.feature.cs
+/Web/.local-signin/

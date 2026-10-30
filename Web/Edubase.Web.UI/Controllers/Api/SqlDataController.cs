@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +13,7 @@ namespace Edubase.Web.UI.Controllers.Api
     {
         private readonly ILoggingService _logger;
         private readonly FrontEndDbContext _frontEndDbContext;
-       
+
         public SqlDataController(
             ILoggingService logger,
             FrontEndDbContext frontEndDbContext)           
@@ -40,6 +39,6 @@ namespace Edubase.Web.UI.Controllers.Api
                 await _logger.LogAsync($"[api/sql] connection failed. {ex}", "Error");
                 return StatusCode((int) HttpStatusCode.ServiceUnavailable);
             }
-        }      
+        }
     }
 }

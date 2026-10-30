@@ -102,4 +102,19 @@ public class DefaultModelBinderProviderTests
         Assert.Throws<InvalidOperationException>(
             () => provider.GetBinder(context));
     }
+
+    [Fact]
+    public void GetBinder_BodyBinding_ReturnsNull()
+    {
+        // Arrange
+        using var services = new ServiceCollection().BuildServiceProvider();
+        var provider = new DefaultModelBinderProvider(services);
+
+        var context = new ModelBinderProviderContextTestDoubles(typeof(string));       
+
+        context.BindingInfo.BindingSource = BindingSource.Body;
+
+        // Act & Assert
+        Assert.Null(provider.GetBinder(context));
+    }
 }

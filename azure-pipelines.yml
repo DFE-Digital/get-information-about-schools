@@ -94,7 +94,7 @@ stages:
       - template: 'pipelines/template-build-and-test.yml'
         parameters:
           enabled: 'true'
-          vmImage: 'windows-latest'   ## Uses .NET Framework, therefore must use Windows runner
+          vmImage: 'windows-2025-vs2026'   ## Build .NET Framework and .NET 10 with VS2026
           thisJobName: 'BuildTestAndPackageJob'
           version: $(version)
           artifactReference: 'BuiltAndPackagedWebUiZip'

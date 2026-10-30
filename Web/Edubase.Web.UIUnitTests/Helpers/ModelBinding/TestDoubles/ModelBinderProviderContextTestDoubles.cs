@@ -17,9 +17,9 @@ internal class ModelBinderProviderContextTestDoubles(
         new EmptyModelMetadataProvider().GetMetadataForType(modelType);
 
     /// <summary>
-    /// Binding info is not used in most tests; returns null.
+    /// Provides binding info that tests can configure
     /// </summary>
-    public override BindingInfo BindingInfo => null;
+    public override BindingInfo BindingInfo { get; } = new();
 
     /// <summary>
     /// Returns the metadata provider used to generate <see cref="Metadata"/>.

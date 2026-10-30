@@ -4,7 +4,7 @@
   - name: enabled
     default: 'true'
   - name: vmImage
-    default: 'windows-latest'  ## Uses .NET Framework, therefore must use Windows runner
+    default: 'windows-2025-vs2026'  ## .NET Framework and .NET 10 require Windows with VS2026
 
   # Naming settings
   - name: thisJobName
@@ -22,6 +22,8 @@ jobs:
   - job: ${{ parameters.thisJobName }}
     displayName: Build, Test, and Package - ${{ parameters.thisJobName }}
     condition: eq(${{ parameters.enabled }}, 'true')
+    pool:
+      vmImage: ${{ parameters.vmImage }}
     variables:
       BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
       BRANCH_NAME_NORMALISED: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '_')]
@@ -116,20 +118,22 @@ jobs:
       
       ## BUILD AND TEST THE C# CODE
 
-      # The solution includes .NET 8 acceptance tests alongside .NET Framework projects.
+      # The solution includes .NET 10 acceptance tests alongside .NET Framework projects.
       - task: UseDotNet@2
-        displayName: 'Install .NET 8 SDK'
+        displayName: 'Install .NET 10 SDK'
         inputs:
           packageType: 'sdk'
-          version: '8.0.x'
+          version: '10.0.x'
 
-      - task: NuGetToolInstaller@1
-        displayName: 'Install NuGet'
-
-      - task: NuGetCommand@2
+      # Use the same MSBuild as the build for legacy PackageReference projects.
+      # Also restore the projects that still use packages.config.
+      - task: VSBuild@1
         displayName: Restore C# solution
         inputs:
-          restoreSolution: '$(solution)'
+          solution: '$(solution)'
+          msbuildArgs: /t:Restore /p:RestorePackagesConfig=true
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
 
       - task: VSBuild@1
         displayName: Build C# solution
@@ -138,14 +142,15 @@ jobs:
           ## Auto-suggested args:
           #msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
           ## Old/previous args:
-          # The .NET 8 acceptance-test project locally opts out of legacy FxCop analysis.
+          # The .NET 10 acceptance-test project locally opts out of legacy FxCop analysis.
           msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:UseMerge=true /p:SingleAssemblyName=AppCode /p:RunCodeAnalysis=true
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
 
-      - task: VSTest@2
+      - task: VSTest@3
         displayName: Run C# tests
         inputs:
+          vsTestVersion: '18.0'
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
           testAssemblyVer2: >-

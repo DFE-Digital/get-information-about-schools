@@ -61,8 +61,11 @@ namespace Edubase.Web.UI.Controllers.Api
             }
         }
 
-        private string BuildConnectionString()
+        internal string BuildConnectionString()
         {
+            // LocalSetup supplies Windows-authenticated local SQL; hosted runs use Azure authentication.
+            if (string.Equals(_configuration["Environment"], "localdev", System.StringComparison.OrdinalIgnoreCase))
+                return _configuration.GetConnectionString("FrontEndDatabase");
             var serverName = _configuration["SQLServer"];
             var databaseName = _configuration["SQLDatabase"];
             return
