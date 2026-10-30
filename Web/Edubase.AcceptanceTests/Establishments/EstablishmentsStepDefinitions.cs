@@ -1,7 +1,6 @@
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Edubase.AcceptanceTests.Establishments
 {
@@ -14,7 +13,6 @@ namespace Edubase.AcceptanceTests.Establishments
         private readonly IEstablishments establishments;
         private Establishment establishment = new();
         private string errorMessage = string.Empty;
-        private int urn;
 
         public EstablishmentsStepDefinitions(
             IUsers users,
@@ -42,7 +40,11 @@ namespace Edubase.AcceptanceTests.Establishments
         [Given("an Establishment with URN {string} exists")]
         public void GivenEstablishmentWithURNExists(int p0)
         {
-            urn = p0;
+        }
+
+        [Given("an Establishment with URN {string} does not exist")]
+        public void GivenAnEstablishmentWithURNDoesNotExist(string p0)
+        {
         }
 
         [When("the user requests the Establishment with URN {string}")]
@@ -52,16 +54,10 @@ namespace Edubase.AcceptanceTests.Establishments
             {
                 establishment = await establishments.GetEstablishment(p0);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                errorMessage = $"Failed to retrieve establishment with URN {p0}.";
+                errorMessage = $"An error occurred. Failed to retrieve establishment with URN {p0}. {e.Message}";
             }
-        }
-
-        [Then("an error occurs")]
-        public void ThenAnErrorOccurs()
-        {
-            Assert.Equal($"Failed to retrieve establishment with URN {urn}.", errorMessage);
         }
 
         [Then("the Establishment URN is {string}")]
@@ -80,6 +76,18 @@ namespace Edubase.AcceptanceTests.Establishments
         public void ThenTheEstablishmentTypeIsNotEmpty(string p0)
         {
             Assert.Equal(p0, establishment.TypeName);
+        }
+
+        [Then("an error occurs")]
+        public void ThenAnErrorOccurs()
+        {
+            Assert.Contains("An error occurred.", errorMessage);
+        }
+
+        [Then("the Establishment is not found")]
+        public void ThenTheEstablishmentIsNotFound()
+        {
+            Assert.Contains("Not Found", errorMessage);
         }
     }
 }
