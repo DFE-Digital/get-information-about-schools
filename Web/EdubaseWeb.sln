@@ -19,9 +19,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		..\.gitignore = ..\.gitignore
+		.tfignore = .tfignore
 		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		CodeCoverage.runsettings = CodeCoverage.runsettings
 		..\devsecrets.gias.config.alwaysignore = ..\devsecrets.gias.config.alwaysignore
+		..\devsecrets.gias.config.local.alwaysignore = ..\devsecrets.gias.config.local.alwaysignore
+		..\devsecrets.gias.config.remote.alwaysignore = ..\devsecrets.gias.config.remote.alwaysignore
+		..\devsecrets.gias.signing.pfx.alwaysignore = ..\devsecrets.gias.signing.pfx.alwaysignore
+		LocalSetup.ps1 = LocalSetup.ps1
+		StartLocalServices.ps1 = StartLocalServices.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F2669A17-B808-472E-ADE7-0BE8E61BDAE3}"
