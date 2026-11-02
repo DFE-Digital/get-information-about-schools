@@ -14,9 +14,9 @@ namespace Edubase.Web.UI.Controllers.Api.UnitTests
         {
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                ["Environment"] = "dev",
-                ["SQLServer"] = "test-server",
-                ["SQLDatabase"] = "test-database",
+                ["AppSettings:Environment"] = "dev",
+                ["AppSettings:SQLServer"] = "test-server",
+                ["AppSettings:SQLDatabase"] = "test-database",
                 ["ConnectionStrings:FrontEndDatabase"] = "FrontEndTestConnectionString"
             }).Build();
 
@@ -32,7 +32,7 @@ namespace Edubase.Web.UI.Controllers.Api.UnitTests
         {
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                ["Environment"] = "localdev",                
+                ["AppSettings:Environment"] = "localdev",                
                 ["ConnectionStrings:FrontEndDatabase"] = "FrontEndTestConnectionString"
             }).Build();
 
