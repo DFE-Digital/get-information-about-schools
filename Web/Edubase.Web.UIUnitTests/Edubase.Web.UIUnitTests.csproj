@@ -23,15 +23,12 @@
     <ProjectReference Include="..\Edubase.Web.UI\Edubase.Web.UI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Controllers\SearchControllerTests.cs" />
+  <ItemGroup>    
     <Compile Remove="Areas\Establishments\Controllers\EstablishmentControllerTests.cs" />
     <Compile Remove="Areas\Establishments\Controllers\EstablishmentsSearchControllerTests.cs" />
     <Compile Remove="Areas\Governors\Controllers\AddOrEdit\**\*.cs" />
-    <Compile Remove="Areas\Governors\Controllers\DeleteOrRetire\**\*.cs" />
-    <Compile Remove="Areas\Governors\Controllers\RoleAllowed\**\*.cs" />
-    <Compile Remove="Areas\Governors\Controllers\ReplaceChair\**\*.cs" />
-    <Compile Remove="Areas\Governors\TestBase\GovernorControllerTestBase.cs" />
+    <Compile Remove="Areas\Governors\Controllers\DeleteOrRetire\**\*.cs" />    
+    <Compile Remove="Areas\Governors\Controllers\ReplaceChair\**\*.cs" />    
     <Compile Remove="Areas\Governors\Helpers\**\*.cs" />
   </ItemGroup>
 </Project>
