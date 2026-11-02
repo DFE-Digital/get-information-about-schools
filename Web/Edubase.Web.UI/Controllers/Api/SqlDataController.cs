@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using Microsoft.Data.SqlClient;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -14,7 +15,7 @@ namespace Edubase.Web.UI.Controllers.Api
     {
         private readonly IAzLogger _logger;
         private readonly FrontEndDbContext _frontEndDbContext;
-       
+
         public SqlDataController(
             IAzLogger logger,
             FrontEndDbContext frontEndDbContext)           
@@ -47,6 +48,6 @@ namespace Edubase.Web.UI.Controllers.Api
 
                 return StatusCode(HttpStatusCode.ServiceUnavailable);
             }
-        }      
+        }
     }
 }

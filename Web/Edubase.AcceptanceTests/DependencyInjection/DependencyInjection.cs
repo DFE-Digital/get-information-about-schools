@@ -14,14 +14,15 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         [ScenarioDependencies]
         public static IServiceCollection CreateServices()
         {
-            var baseAddress = "https://localhost:44309";
-            var environment = "dev";
+            var settings = Settings.Load();
 
             var services = new ServiceCollection();
 
+            services.AddSingleton(settings);
+
             services.AddHardCodedUsers();
             services.AddEstablishmentsFromFrontEnd();
-            services.AddGiasFrontEnd(baseAddress, environment);
+            services.AddGiasFrontEnd(settings.GiasFrontEndBaseAddress, settings.Environment, settings.UseLocalSignIn);
 
             return services;
         }
@@ -36,7 +37,11 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddScoped<IEstablishments, EstablishmentsFromGiasFrontEnd>();
         }
 
-        private static void AddGiasFrontEnd(this ServiceCollection services, string baseAddress, string environment)
+        private static void AddGiasFrontEnd(
+            this ServiceCollection services,
+            string baseAddress,
+            string environment,
+            bool useLocalSimulator)
         {
             // Factory-pooled handlers share cookies across scenario scopes.
             // Give each scenario its own handler and authenticated session.
@@ -68,8 +73,18 @@ namespace Edubase.AcceptanceTests.DependencyInjection
                 return new HttpApi(simulatorClient);
             });
 
-            services.AddScoped<ISignInAuthority>(sp =>
-                new SignInSimulator(sp.GetRequiredService<IApi>(), environment));
+            services.AddScoped<ISignInAuthority>(serviceProvider =>
+            {
+                if (useLocalSimulator)
+                {
+                    return new SigninSimulatorOnLocalMachine(
+                        serviceProvider.GetRequiredService<HttpClient>());
+                }
+
+                return new SigninSimulatorInAzure(
+                    serviceProvider.GetRequiredService<HttpClient>(),
+                    serviceProvider.GetRequiredService<IApi>(), environment);
+            });
 
             services.AddScoped<IGiasFrontEnd>(sp =>
             {
