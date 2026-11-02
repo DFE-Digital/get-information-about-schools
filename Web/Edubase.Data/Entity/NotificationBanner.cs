@@ -33,7 +33,17 @@ namespace Edubase.Data.Entity
 
     public class NotificationBanner : TableEntity
     {
+        [NotMapped] // ef ignores
         public int Importance { get; set; }
+
+        [IgnoreProperty] // table storage ignores #332710
+        [Column("Importance")]
+        public byte ImportanceSql
+        {
+            get => (byte) Importance;
+            set => Importance = value;
+        }
+
         public string Content { get; set; }
 
         private DateTime _start;
