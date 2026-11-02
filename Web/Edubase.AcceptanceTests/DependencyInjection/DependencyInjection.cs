@@ -23,7 +23,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddSingleton(settings);
 
             services.AddHardCodedUsers();
-            services.AddEstablishmentsFromFrontEnd();
+            services.AddEstablishmentsFromGiasFrontEnd();
             services.AddGiasFrontEnd(settings.GiasFrontEndBaseAddress, settings.Environment, settings.UseLocalSignIn);
             services.AddUserPreferencesInPersistentStorage();
 
