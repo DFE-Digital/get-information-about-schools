@@ -13,6 +13,9 @@ namespace Edubase.AcceptanceTests.UserPreferences
         private readonly IUserPreferencesInPersistentStorage userPreferencesInPersistentStorage;
         private EstablishmentSearchFilter establishmentSearchFilter;
         private User user;
+        private string savedSearchToken;
+        private EstablishmentSearchResults? searchResults;
+        private string selectedSaveFilter;
 
         public UserPreferencesStepDefinitions(
             IUsers users,
@@ -58,35 +61,47 @@ namespace Edubase.AcceptanceTests.UserPreferences
         { 
             establishmentSearchFilter = new EstablishmentSearchFilter { };
 
-            var results = await  establishmentSearchResultsScreen.GetSearchResults(establishmentSearchFilter);
+            searchResults = await establishmentSearchResultsScreen.GetSearchResults(establishmentSearchFilter);
         }
 
         [Then("I can save the filter set to create a saved filter")]
         public async Task ThenICanSaveTheFilterSetToCreateASavedFilter()
         {
-            var expectedSavedSearchToken = await establishmentSearchResultsScreen.SaveFilterSet(establishmentSearchFilter);
+            savedSearchToken = await establishmentSearchResultsScreen.SaveFilterSet(establishmentSearchFilter);
 
-            var actualSavedSearchToken = await userPreferencesInPersistentStorage.GetSavedSearchTokenForUser(user);
+            var persistedSearchToken = await userPreferencesInPersistentStorage.GetSavedSearchTokenForUser(user);
 
-            Assert.Equal(expectedSavedSearchToken, actualSavedSearchToken);
+            Assert.Equal(savedSearchToken, persistedSearchToken);
         }
 
         [Given("I have a saved filter")]
-        public void GivenIHaveASavedFilter()
+        public async Task GivenIHaveASavedFilter()
         {
-            throw new PendingStepException();
+            await GivenIAmALoggedInGIASUser();
+            await WhenIFilterRecordsOnTheEstablishmentSearchResultsScreen();
+            await ThenICanSaveTheFilterSetToCreateASavedFilter();
         }
 
         [When("I select My saved filter set on the establishment search results screen")]
-        public void WhenISelectMySavedFilterSetOnTheEstablishmentSearchResultsScreen()
+        public async Task WhenISelectMySavedFilterSetOnTheEstablishmentSearchResultsScreen()
         {
-            throw new PendingStepException();
+            selectedSaveFilter = savedSearchToken;
         }
 
         [Then("the saved filters are applied to the list of establishments")]
-        public void ThenTheSavedFiltersAreAppliedToTheListOfEstablishments()
+        public async Task ThenTheSavedFiltersAreAppliedToTheListOfEstablishments()
         {
-            throw new PendingStepException();
+            var actualSearchResults = await establishmentSearchResultsScreen.GetSearchResults(selectedSaveFilter);
+
+            var expectedUrns = searchResults!.Establishments
+                .Select(establishment => establishment.Urn)
+                .OrderBy(urn => urn);
+
+            var actualUrns = actualSearchResults!.Establishments
+                .Select(establishment => establishment.Urn)
+                .OrderBy(urn => urn);
+
+            Assert.Equal(expectedUrns, actualUrns);
         }
 
         [When("I select the option My saved filter set")]

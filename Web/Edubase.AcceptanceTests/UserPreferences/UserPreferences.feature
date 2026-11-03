@@ -10,8 +10,7 @@ Scenario: A GIAS user can save a filter set
 Given I am a logged-in GIAS user
 When I filter records on the establishment search results screen
 Then I can save the filter set to create a saved filter
-
-@ignore
+                   
 Scenario: A GIAS user can apply a saved filter
 Given I have a saved filter
 When I select My saved filter set on the establishment search results screen

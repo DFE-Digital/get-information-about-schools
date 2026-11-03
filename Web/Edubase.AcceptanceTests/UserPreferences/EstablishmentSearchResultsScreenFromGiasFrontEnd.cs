@@ -10,10 +10,16 @@ namespace Edubase.AcceptanceTests.UserPreferences
         {
             this.giasFrontEnd = giasFrontEnd;
         }
-        
+
+        public async Task<EstablishmentSearchResults> GetSearchResults(string token)
+        {
+            var results = await giasFrontEnd.GetEstablishmentSearchResults(token);
+
+            return await Task.FromResult(results);
+        }
         public async Task<EstablishmentSearchResults> GetSearchResults(EstablishmentSearchFilter filter)
         {
-            return await Task.FromResult(new EstablishmentSearchResults());
+            return await giasFrontEnd.GetEstablishmentSearchResults(filter);
         }
 
         public async Task<string> SaveFilterSet(EstablishmentSearchFilter establishmentSearchFilter)

@@ -6,7 +6,9 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
 {
     public interface IGiasFrontEnd : IApi
     {
-        Task SaveEstablishmentSearchFilter(string tokens);
+        Task<EstablishmentSearchResults> GetEstablishmentSearchResults(string token);
+        Task<EstablishmentSearchResults> GetEstablishmentSearchResults(EstablishmentSearchFilter filter);
+        Task SaveEstablishmentSearchFilter(string token);
         Task SignIn(User user);
         Task<string> TokenizeEstablishmentSearchFilter(EstablishmentSearchFilter establishmentSearchFilter);
     }
