@@ -4,6 +4,6 @@ namespace Edubase.AcceptanceTests.UserPreferences
 {
     public interface IUserPreferencesInPersistentStorage
     {
-        Task<string?> GetSavedSearchTokenForUser(User user);
+        Task<string> GetSavedSearchTokenForUser(User user);
     }
 }

@@ -24,8 +24,8 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
             services.AddHardCodedUsers();
             services.AddEstablishmentsFromGiasFrontEnd();
-            services.AddGiasFrontEnd(settings.GiasFrontEndBaseAddress, settings.Environment, settings.UseLocalSignIn);
-            services.AddUserPreferencesInPersistentStorage();
+            services.AddGiasFrontEnd(settings);
+            services.AddUserPreferencesInPersistentStorage(settings);
 
 
             return services;
@@ -42,19 +42,24 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddScoped<IEstablishmentSearchResultsScreen, EstablishmentSearchResultsScreenFromGiasFrontEnd>();
         }
 
-        private static void AddUserPreferencesInPersistentStorage(this ServiceCollection services)
+        private static void AddUserPreferencesInPersistentStorage(this ServiceCollection services, Settings settings)
         {
-            var connectionString = UserPreferencesInSQLServer.LoadFrontEndDatabaseConnectionString();
+            if (settings.Feature_UserPreferencesMigration == false)
+            {
+                services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInAzureTableStorage>();
+            }
+            else
+            {
+                services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInAzureTableStorage>();
 
-            services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInSQLServer>();
+                var connectionString = settings.FrontEndDatabase;
+
+                services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(connectionString));
+                services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInSQLServer>();
+            }
         }
 
-        private static void AddGiasFrontEnd(
-            this ServiceCollection services,
-            string baseAddress,
-            string environment,
-            bool useLocalSimulator)
+        private static void AddGiasFrontEnd(this ServiceCollection services, Settings settings)
         {
             // Factory-pooled handlers share cookies across scenario scopes.
             // Give each scenario its own handler and authenticated session.
@@ -69,7 +74,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddScoped<HttpClient>(sp => new HttpClient(
                 sp.GetRequiredService<HttpClientHandler>(), disposeHandler: false)
             {
-                BaseAddress = new Uri(baseAddress)
+                BaseAddress = new Uri(settings.GiasFrontEndBaseAddress)
             });
 
             services.AddHttpClient("AzureSignInSimulator")
@@ -88,7 +93,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
             services.AddScoped<ISignInAuthority>(serviceProvider =>
             {
-                if (useLocalSimulator)
+                if (settings.UseLocalSignIn)
                 {
                     return new SigninSimulatorOnLocalMachine(
                         serviceProvider.GetRequiredService<HttpClient>());
@@ -96,7 +101,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
                 return new SigninSimulatorInAzure(
                     serviceProvider.GetRequiredService<HttpClient>(),
-                    serviceProvider.GetRequiredService<IApi>(), environment);
+                    serviceProvider.GetRequiredService<IApi>(), settings.Environment);
             });
 
             services.AddScoped<IGiasFrontEnd>(sp =>

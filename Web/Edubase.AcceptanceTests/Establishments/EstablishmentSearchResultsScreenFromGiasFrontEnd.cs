@@ -29,6 +29,6 @@ namespace Edubase.AcceptanceTests.Establishments
             await giasFrontEnd.SaveEstablishmentSearchFilter(token);
 
             return token;
-        }   
+        }
     }
 }

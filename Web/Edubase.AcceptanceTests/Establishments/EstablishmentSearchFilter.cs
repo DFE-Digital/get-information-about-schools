@@ -1,5 +1,4 @@
 using System.Globalization;
-using static System.Net.WebRequestMethods;
 
 namespace Edubase.AcceptanceTests.Establishments
 {

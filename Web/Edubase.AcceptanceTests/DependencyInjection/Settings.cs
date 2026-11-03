@@ -25,6 +25,10 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         public string? LookupApiPassword { get; set; }
         public string? SASimulatorUri { get; set; }
         public bool UseLocalSignIn { get; set; }
+        public bool Feature_UserPreferencesMigration { get; private set; }
+        public bool Feature_TokensMigration { get; private set; }
+        public bool Feature_LocalAuthoritySetsMigration { get; private set; }
+        public string? FrontEndDatabase { get; private set; }
 
         internal static Settings Load()
         {
@@ -61,6 +65,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
                 {
                     case "DataConnectionString": settings.DataConnectionString = value; break;
                     case "Redis": settings.Redis = value; break;
+                    case "FrontEndDatabase": settings.FrontEndDatabase = value; break;
                 }
             }
 
@@ -87,9 +92,10 @@ namespace Edubase.AcceptanceTests.DependencyInjection
                     case "LookupApiBaseAddress": settings.LookupApiBaseAddress = value; break;
                     case "LookupApiPassword": settings.LookupApiPassword = value; break;
                     case "SASimulatorUri": settings.SASimulatorUri = value; break;
-                    case "UseLocalSignIn":
-                        settings.UseLocalSignIn = bool.Parse(value);
-                        break;
+                    case "UseLocalSignIn": settings.UseLocalSignIn = bool.Parse(value); break;
+                    case "Feature_UserPreferencesMigration": settings.Feature_UserPreferencesMigration = bool.Parse(value); break;
+                    case "Feature_TokensMigration": settings.Feature_TokensMigration = bool.Parse(value); break;
+                    case "Feature_LocalAuthoritySetsMigration": settings.Feature_LocalAuthoritySetsMigration = bool.Parse(value); break;
                 }
             }
 

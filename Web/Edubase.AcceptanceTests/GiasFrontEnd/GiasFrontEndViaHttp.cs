@@ -1,6 +1,4 @@
-using System.Globalization;
 using System.Text;
-using AngleSharp.Common;
 using Edubase.AcceptanceTests.Apis;
 using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.SigninAuthorities;
@@ -27,18 +25,10 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
 
         public async Task<string> TokenizeEstablishmentSearchFilter(EstablishmentSearchFilter establishmentSearchFilter)
         {
-            var page = await GetHtmlAsync("/Establishments/Search?SearchType=EstablishmentAll&SelectedTab=Establishments");
-
-            var csrfToken = page.QuerySelector("meta[name='csrf-token']")
-                ?.GetAttribute("content")
-                ?? throw new InvalidOperationException("CSRF token not found.");
-
             using var request = new HttpRequestMessage(HttpMethod.Post, "/api/tokenize")
             {
                 Content = establishmentSearchFilter.AsFormUrlEncodedContent()
             };
-
-            request.Headers.Add("RequestVerificationToken", csrfToken);
 
             using var response = await httpClient.SendAsync(request);
 
@@ -53,22 +43,12 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
 
         public async Task SaveEstablishmentSearchFilter(string token)
         {
-            var page = await GetHtmlAsync("/Establishments/Search?SearchType=EstablishmentAll&SelectedTab=Establishments");
-
-            var csrfToken = page.QuerySelector("meta[name='csrf-token']")
-                ?.GetAttribute("content")
-                ?? throw new InvalidOperationException("CSRF token not found.");
-
             var json = JsonConvert.SerializeObject(new { token });
 
-            using var request = new HttpRequestMessage(
-                HttpMethod.Post,
-                "/api/save-search-token")
+            using var request = new HttpRequestMessage(HttpMethod.Post, "/api/save-search-token")
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
-
-            request.Headers.Add("RequestVerificationToken", csrfToken);
 
             using var response = await httpClient.SendAsync(request);
 
@@ -78,6 +58,7 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
         public async Task<EstablishmentSearchResults> GetEstablishmentSearchResults(string token)
         {
             var escapedToken = Uri.EscapeDataString(token);
+
             return await GetEstablishmentSearchResultsFromJsonAsync($"?tok={escapedToken}");
         }
 

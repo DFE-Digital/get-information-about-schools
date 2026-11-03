@@ -59,7 +59,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
 
         [When("I filter records on the establishment search results screen")]
         public async Task WhenIFilterRecordsOnTheEstablishmentSearchResultsScreen()
-        { 
+        {
             establishmentSearchFilter = new EstablishmentSearchFilter { };
 
             searchResults = await establishmentSearchResultsScreen.GetSearchResults(establishmentSearchFilter);
