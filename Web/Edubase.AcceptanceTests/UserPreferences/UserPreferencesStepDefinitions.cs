@@ -1,3 +1,4 @@
+using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
 using Xunit;

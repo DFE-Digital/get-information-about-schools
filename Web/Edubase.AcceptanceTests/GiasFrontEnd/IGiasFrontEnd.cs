@@ -1,5 +1,5 @@
 using Edubase.AcceptanceTests.Apis;
-using Edubase.AcceptanceTests.UserPreferences;
+using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.GiasFrontEnd

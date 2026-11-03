@@ -1,4 +1,4 @@
-namespace Edubase.AcceptanceTests.UserPreferences
+namespace Edubase.AcceptanceTests.Establishments
 {
     public sealed class EstablishmentSearchResults
     {

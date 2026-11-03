@@ -1,7 +1,7 @@
 using System.Globalization;
 using static System.Net.WebRequestMethods;
 
-namespace Edubase.AcceptanceTests.UserPreferences
+namespace Edubase.AcceptanceTests.Establishments
 {
     public sealed class EstablishmentSearchFilter
     {

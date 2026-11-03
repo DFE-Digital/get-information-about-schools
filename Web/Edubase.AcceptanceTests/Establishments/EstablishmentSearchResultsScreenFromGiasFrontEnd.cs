@@ -1,6 +1,6 @@
 using Edubase.AcceptanceTests.GiasFrontEnd;
 
-namespace Edubase.AcceptanceTests.UserPreferences
+namespace Edubase.AcceptanceTests.Establishments
 {
     public class EstablishmentSearchResultsScreenFromGiasFrontEnd : IEstablishmentSearchResultsScreen
     {
