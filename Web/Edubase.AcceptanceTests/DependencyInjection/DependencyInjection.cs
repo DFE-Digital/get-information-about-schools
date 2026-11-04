@@ -64,12 +64,18 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             // Factory-pooled handlers share cookies across scenario scopes.
             // Give each scenario its own handler and authenticated session.
             services.AddScoped<HttpClientHandler>(_ =>
-                new HttpClientHandler
+            {
+                var credentials = settings.HttpAuthModuleCredentials.Split(':');
+
+                var networkCredentials = new NetworkCredential(credentials[0], credentials[1]);
+
+                return new HttpClientHandler
                 {
                     AllowAutoRedirect = false,
-                    UseDefaultCredentials = true,
+                    Credentials = networkCredentials,
                     CookieContainer = new CookieContainer()
-                });
+                };
+            });
 
             services.AddScoped<HttpClient>(sp => new HttpClient(
                 sp.GetRequiredService<HttpClientHandler>(), disposeHandler: false)

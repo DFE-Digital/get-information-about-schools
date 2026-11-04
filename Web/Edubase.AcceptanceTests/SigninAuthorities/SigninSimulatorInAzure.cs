@@ -65,12 +65,22 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
 
             // Step 1: Initial GET to login page
             using var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, WebRoutes.SignIn));
-            var signInButtonResponse = await httpClient.SendAsync(signInButton);
+            using var signInButtonResponse = await httpClient.SendAsync(signInButton);
 
             var signInCookies = signInButtonResponse.Headers.SingleOrDefault(h => h.Key == "Set-Cookie").Value;
             var redirectReturnUrlLocation = signInButtonResponse.Headers.Location;
 
-            return (redirectReturnUrlLocation!, signInCookies);
+            if (redirectReturnUrlLocation is null)
+            {
+                var finalResponseUri = signInButtonResponse.RequestMessage?.RequestUri;
+                throw new InvalidOperationException(
+                    $"Expected the sign-in endpoint to return a redirect Location, but it did not. " +
+                    $"Request URI: '{signInButton.RequestUri}', final response URI: '{finalResponseUri}', " +
+                    $"status: {(int)signInButtonResponse.StatusCode} {signInButtonResponse.StatusCode} " +
+                    $"({signInButtonResponse.ReasonPhrase}).");
+            }
+
+            return (redirectReturnUrlLocation, signInCookies);
         }
 
         private async Task CompleteSignIn(string samlResponse, string relayState, IEnumerable<string> signInCookies)

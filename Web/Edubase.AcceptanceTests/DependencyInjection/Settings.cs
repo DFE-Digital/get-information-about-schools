@@ -5,30 +5,30 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 {
     public class Settings
     {
-        public string? GiasFrontEndBaseAddress { get; set; }
-        public string? Environment { get; set; }
-        public string? DataConnectionString { get; set; }
-        public string? Redis { get; set; }
-        public string? CompaniesHouseApiKey { get; set; }
-        public string? GoogleApiKeyClientSide { get; set; }
-        public string? GoogleTagManagerKey { get; set; }
-        public string? AzureMapsApiKey { get; set; }
-        public string? HttpAuthModuleCredentials { get; set; }
-        public string? OSPlacesApiKey { get; set; }
-        public string? CscpUsername { get; set; }
-        public string? CscpPassword { get; set; }
-        public string? SASimulatorGuid { get; set; }
-        public string? GetGroupByIdFAKey { get; set; }
-        public string? TexunaApiBaseAddress { get; set; }
-        public string? ApiPassword { get; set; }
-        public string? LookupApiBaseAddress { get; set; }
-        public string? LookupApiPassword { get; set; }
-        public string? SASimulatorUri { get; set; }
+        public string GiasFrontEndBaseAddress { get; set; }
+        public string Environment { get; set; }
+        public string DataConnectionString { get; set; }
+        public string Redis { get; set; }
+        public string CompaniesHouseApiKey { get; set; }
+        public string GoogleApiKeyClientSide { get; set; }
+        public string GoogleTagManagerKey { get; set; }
+        public string AzureMapsApiKey { get; set; }
+        public string HttpAuthModuleCredentials { get; set; }
+        public string OSPlacesApiKey { get; set; }
+        public string CscpUsername { get; set; }
+        public string CscpPassword { get; set; }
+        public string SASimulatorGuid { get; set; }
+        public string GetGroupByIdFAKey { get; set; }
+        public string TexunaApiBaseAddress { get; set; }
+        public string ApiPassword { get; set; }
+        public string LookupApiBaseAddress { get; set; }
+        public string LookupApiPassword { get; set; }
+        public string SASimulatorUri { get; set; }
         public bool UseLocalSignIn { get; set; }
         public bool Feature_UserPreferencesMigration { get; private set; }
         public bool Feature_TokensMigration { get; private set; }
         public bool Feature_LocalAuthoritySetsMigration { get; private set; }
-        public string? FrontEndDatabase { get; private set; }
+        public string FrontEndDatabase { get; private set; }
 
         internal static Settings Load()
         {
@@ -60,8 +60,8 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             var settings = new Settings();
             foreach (var entry in configuration.Element("connectionStrings")?.Elements() ?? Enumerable.Empty<XElement>())
             {
-                var value = (string?) entry.Attribute("connectionString");
-                switch ((string?) entry.Attribute("name") ?? entry.Name.LocalName)
+                var value = (string) entry.Attribute("connectionString");
+                switch ((string) entry.Attribute("name") ?? entry.Name.LocalName)
                 {
                     case "DataConnectionString": settings.DataConnectionString = value; break;
                     case "Redis": settings.Redis = value; break;
@@ -72,8 +72,8 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             // Apply entries in order so the last duplicate key wins.
             foreach (var entry in configuration.Element("appSettings")?.Elements("add") ?? Enumerable.Empty<XElement>())
             {
-                var value = (string?) entry.Attribute("value");
-                switch ((string?) entry.Attribute("key"))
+                var value = (string) entry.Attribute("value");
+                switch ((string) entry.Attribute("key"))
                 {
                     case "GiasFrontEndBaseAddress": settings.GiasFrontEndBaseAddress = value; break;
                     case "Environment": settings.Environment = value; break;
