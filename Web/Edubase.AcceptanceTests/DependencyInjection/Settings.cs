@@ -32,7 +32,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
         internal static Settings Load()
         {
-            const string fileName = "devsecrets.gias.config.alwaysignore";
+            const string fileName = "acceptance.tests.config.alwaysignore";
             // Locate the repository configuration without copying secrets into build output.
             for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory != null; directory = directory.Parent)
             {
