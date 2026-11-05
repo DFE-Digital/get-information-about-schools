@@ -108,8 +108,6 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task SaveAsync(EstablishmentModel model, bool overrideCR, DateTime? effectiveDate, IPrincipal principal)
         {
-            if (!model.HelpdeskPreviousLocalAuthorityId.HasValue)
-                model.HelpdeskPreviousLocalAuthorityId = 189; // marcel: for the timebeing lets just hack it and put it in tech debt to resolve. At this stage it feels like we have more pressing matters
 
             var parameters = new Dictionary<string, string>
             {
@@ -135,8 +133,6 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<ValidationEnvelopeDto> ValidateAsync(EstablishmentModel model, IPrincipal principal)
         {
-            if (!model.HelpdeskPreviousLocalAuthorityId.HasValue)
-                model.HelpdeskPreviousLocalAuthorityId = 189; // marcel: for the timebeing lets just hack it and put it in tech debt to resolve. At this stage it feels like we have more pressing matters
 
             if (model.SENIds != null && !model.SENIds.Any()) model.SENIds = null; // they don't like an empty array.
 
