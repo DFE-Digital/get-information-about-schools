@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Edubase.Common;
 using Edubase.Services.Core;
@@ -50,7 +50,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
-        private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
+        private readonly Mock<IUrlHelper> mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Loose);
         private readonly Mock<IFSCPDService> mockFscpdService = new Mock<IFSCPDService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
         private readonly Mock<IOfstedService> mockOfstedService = new Mock<IOfstedService>(MockBehavior.Strict);
@@ -94,11 +94,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             mockHttpContextBase.SetupGet(x => x.User)
                 .Returns(mockPrincipal.Object);
             mockControllerContext.SetupGet(x => x.HttpContext)
-                .Returns(mockHttpContextBase.Object);
-            mockControllerContext.SetupGet(x => x.IsChildAction)
-                .Returns(false);
+                .Returns(mockHttpContextBase.Object);            
             mockControllerContext.SetupGet(x => x.RouteData)
-                .Returns(new System.Web.Routing.RouteData());
+                .Returns(new Microsoft.AspNetCore.Routing.RouteData());
             mockPrincipal.SetupGet(x => x.Identity)
                 .Returns(mockIdentity.Object);
         }
@@ -106,8 +104,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         protected void SetupController()
         {
             SetupHttpRequest();
-            controller.ControllerContext = mockControllerContext.Object;
-            mockControllerContext.SetupGet(c => c.Controller).Returns(controller);
+            controller.ControllerContext = mockControllerContext.Object;            
             controller.Url = mockUrlHelper.Object;
         }
 
@@ -125,7 +122,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditHelpdesk(null as int?);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Fact]
@@ -142,7 +139,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditIEBT(null as int?);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Fact]
@@ -159,7 +156,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditLocation(null as int?);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Fact]
@@ -268,7 +265,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditDetails(null, null);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Theory]
@@ -339,7 +336,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditLinks(null);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Fact]
@@ -404,7 +401,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.SearchForEstablishment(null, null);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
 [Theory]

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using System.Collections.Specialized;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
@@ -12,7 +12,7 @@ using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UIUnitTests.Areas.Governors.TestBase.Edubase.Web.UIUnitTests.Areas.Governors.TestBase;
+using Edubase.Web.UIUnitTests.Areas.Governors.TestBase;
 using Moq;
 using Xunit;
 
@@ -382,7 +382,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
                 Person_TitleId = 1
             };
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["rgid"] = "202";
             controller = BuildController(qs);
 
@@ -452,7 +452,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
             var estabUrn = 7777;
             var existingChairId = 123;
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["d"] = "10";
             qs["m"] = "11";
             qs["y"] = "2030";
@@ -598,7 +598,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
                     It.IsAny<Action<GroupModel>>()))
                 .Returns(Task.CompletedTask);
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["rgid"] = replacementId.ToString();
 
             // Act

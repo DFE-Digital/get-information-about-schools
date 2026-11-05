@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @model CorporateContactViewModel
 
@@ -16,7 +17,7 @@
     </div>
 </details>
 
-<p class="govuk-body-s">@(!string.IsNullOrWhiteSpace(Model.CorporateContact) ? Model.CorporateContact : "Not recorded")</p>
+<p class="govuk-body-s">@(!string.IsNullOrWhiteSpace(Model.CorporateContact) ? Html.HtmlNewlines(Model.CorporateContact) : Html.Raw("Not recorded"))</p>
 
 @if (Model.EditMode)
 {

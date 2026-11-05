@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.Models;
-using Edubase.Web.UIUnitTests.Areas.Governors.TestBase.Edubase.Web.UIUnitTests.Areas.Governors.TestBase;
+using Edubase.Web.UIUnitTests.Areas.Governors.TestBase;
 using Moq;
 using Xunit;
 
