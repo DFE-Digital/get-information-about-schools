@@ -4,15 +4,27 @@ using Edubase.AcceptanceTests.Users;
 
 namespace Edubase.AcceptanceTests.UserPreferences
 {
-    internal class UserPreferencesInAzureTableStorage : IUserPreferencesInPersistentStorage
+    internal class UserPreferencesInAzureTableStorage : IUserPreferencesInMigrationSource
     {
         private readonly TableClient tableClient;
 
-        public UserPreferencesInAzureTableStorage(Settings settings)
+        public UserPreferencesInAzureTableStorage(string connectionString)
         {
-            ArgumentNullException.ThrowIfNull(settings);
+            tableClient = new TableClient(connectionString, "UserPreferences");
+        }
 
-            tableClient = new TableClient(settings.DataConnectionString, "UserPreferences");
+        public async Task<IEnumerable<UserPreference>> GetAllUserPreferences()
+        {
+            var pages = tableClient.QueryAsync<TableEntity>().AsPages();
+
+            var userPreferences = pages.SelectMany(page => page.Values)
+                .Select(entity => new UserPreference
+                {
+                    RowKey = entity.RowKey,
+                    SavedSearchToken = entity.GetString("SavedSearchToken")
+                });
+
+            return await userPreferences.ToListAsync();
         }
 
         public async Task<string> GetSavedSearchTokenForUser(User user)

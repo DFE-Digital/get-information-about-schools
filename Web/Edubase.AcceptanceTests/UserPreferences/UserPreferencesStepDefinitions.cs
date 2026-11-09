@@ -12,6 +12,8 @@ namespace Edubase.AcceptanceTests.UserPreferences
         private readonly IGiasFrontEnd giasFrontEnd;
         private readonly IEstablishmentSearchResultsScreen establishmentSearchResultsScreen;
         private readonly IUserPreferencesInPersistentStorage userPreferencesInPersistentStorage;
+        private readonly IUserPreferencesInMigrationSource userPreferencesInMigrationSource;
+        private readonly IUserPreferencesInMigrationTarget userPreferencesInMigrationTarget;
         private EstablishmentSearchFilter establishmentSearchFilter;
         private User user;
         private string savedSearchToken;
@@ -22,30 +24,37 @@ namespace Edubase.AcceptanceTests.UserPreferences
             IUsers users,
             IGiasFrontEnd giasFrontEnd,
             IEstablishmentSearchResultsScreen establishmentSearchResultsScreen,
-            IUserPreferencesInPersistentStorage userPreferencesInPersistentStorage)
+            IUserPreferencesInPersistentStorage userPreferencesInPersistentStorage,
+            IUserPreferencesInMigrationSource userPreferencesInMigrationSource,
+            IUserPreferencesInMigrationTarget userPreferencesInMigrationTarget)
         {
             this.users = users;
             this.giasFrontEnd = giasFrontEnd;
             this.establishmentSearchResultsScreen = establishmentSearchResultsScreen;
             this.userPreferencesInPersistentStorage = userPreferencesInPersistentStorage;
+            this.userPreferencesInMigrationSource = userPreferencesInMigrationSource;
+            this.userPreferencesInMigrationTarget = userPreferencesInMigrationTarget;
         }
 
         [Given("the required data extracted from table storage")]
         public void GivenTheRequiredDataExtractedFromTableStorage()
         {
-            throw new PendingStepException();
+            // assume the data was extracted by the DBA
         }
 
         [When("the migration runs")]
         public void WhenTheMigrationRuns()
         {
-            throw new PendingStepException();
+            // assume the migration was run by the DBA
         }
 
         [Then("all the existing UserPreferencesRepository data extracted from the table storage should be migrated to the SQL table.")]
-        public void ThenAllTheExistingUserPreferencesRepositoryDataExtractedFromTheTableStorageShouldBeMigratedToTheSQLTable_()
+        public async Task ThenAllTheExistingUserPreferencesRepositoryDataExtractedFromTheTableStorageShouldBeMigratedToTheSQLTable_()
         {
-            throw new PendingStepException();
+            var expectedUserPreferences = await userPreferencesInMigrationSource.GetAllUserPreferences();
+            var acutalUserPreferences = await userPreferencesInMigrationTarget.GetAllUserPreferences();
+
+            Assert.Equal(expectedUserPreferences.Count(), acutalUserPreferences.Count());
         }
 
 

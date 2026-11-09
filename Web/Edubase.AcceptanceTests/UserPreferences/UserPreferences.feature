@@ -1,6 +1,5 @@
 Feature: User Preferences
 
-@ignore
 Scenario: Check that User Preferences have been migrated from Table Storage to SQL Server 
 Given the required data extracted from table storage
 When the migration runs

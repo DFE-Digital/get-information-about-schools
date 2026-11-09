@@ -44,17 +44,16 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
         private static void AddUserPreferencesInPersistentStorage(this ServiceCollection services, Settings settings)
         {
+            services.AddScoped<IUserPreferencesInMigrationSource>(sp => new UserPreferencesInAzureTableStorage(settings.DataConnectionString));
+            services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(settings.FrontEndDatabase));
+            services.AddScoped<IUserPreferencesInMigrationTarget, UserPreferencesInSQLServer>();
+
             if (settings.Feature_UserPreferencesMigration == false)
             {
                 services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInAzureTableStorage>();
             }
             else
             {
-                services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInAzureTableStorage>();
-
-                var connectionString = settings.FrontEndDatabase;
-
-                services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(connectionString));
                 services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInSQLServer>();
             }
         }
