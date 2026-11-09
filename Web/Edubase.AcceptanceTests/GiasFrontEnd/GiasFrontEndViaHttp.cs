@@ -77,5 +77,19 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
 
             return new EstablishmentSearchResults { Establishments = establishments };
         }
+
+        public async Task DeleteEstablishmentSearchFilter(string token)
+        {
+            var json = "{ \"token\" : null }";
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, "/api/save-search-token")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            using var response = await httpClient.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

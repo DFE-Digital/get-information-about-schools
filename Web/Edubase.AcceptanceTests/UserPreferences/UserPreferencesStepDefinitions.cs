@@ -2,6 +2,7 @@ using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.Users;
 using Xunit;
+using static System.Net.WebRequestMethods;
 
 namespace Edubase.AcceptanceTests.UserPreferences
 {
@@ -18,7 +19,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
         private User user;
         private string savedSearchToken;
         private EstablishmentSearchResults? searchResults;
-        private string selectedSaveFilter;
+        private string selectedSaveFilterSet;
 
         public UserPreferencesStepDefinitions(
             IUsers users,
@@ -95,13 +96,13 @@ namespace Edubase.AcceptanceTests.UserPreferences
         [When("I select My saved filter set on the establishment search results screen")]
         public async Task WhenISelectMySavedFilterSetOnTheEstablishmentSearchResultsScreen()
         {
-            selectedSaveFilter = savedSearchToken;
+            selectedSaveFilterSet = savedSearchToken;
         }
 
         [Then("the saved filters are applied to the list of establishments")]
         public async Task ThenTheSavedFiltersAreAppliedToTheListOfEstablishments()
         {
-            var actualSearchResults = await establishmentSearchResultsScreen.GetSearchResults(selectedSaveFilter);
+            var actualSearchResults = await establishmentSearchResultsScreen.GetSearchResults(selectedSaveFilterSet);
 
             var expectedUrns = searchResults!.Establishments
                 .Select(establishment => establishment.Urn)
@@ -117,13 +118,17 @@ namespace Edubase.AcceptanceTests.UserPreferences
         [When("I select the option My saved filter set")]
         public void WhenISelectTheOptionMySavedFilterSet()
         {
-            throw new PendingStepException();
+            selectedSaveFilterSet = savedSearchToken;
         }
 
         [Then("I can delete my saved filter")]
-        public void ThenICanDeleteMySavedFilter()
+        public async Task ThenICanDeleteMySavedFilter()
         {
-            throw new PendingStepException();
+            await establishmentSearchResultsScreen.DeleteSavedFilter(selectedSaveFilterSet);
+
+            var persistedSearchToken = await userPreferencesInPersistentStorage.GetSavedSearchTokenForUser(user);
+
+            Assert.Equal(null, persistedSearchToken);
         }
 
     }

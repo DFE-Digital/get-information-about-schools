@@ -30,5 +30,10 @@ namespace Edubase.AcceptanceTests.Establishments
 
             return token;
         }
+        public async Task DeleteSavedFilter(string token)
+        {
+            await giasFrontEnd.DeleteEstablishmentSearchFilter(token);
+        }
+
     }
 }

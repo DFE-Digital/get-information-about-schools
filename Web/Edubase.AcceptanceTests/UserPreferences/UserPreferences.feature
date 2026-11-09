@@ -15,7 +15,6 @@ Given I have a saved filter
 When I select My saved filter set on the establishment search results screen
 Then the saved filters are applied to the list of establishments
 
-@ignore
 Scenario: A GIAS user can delete a saved filter
 Given I have a saved filter
 When I select the option My saved filter set
