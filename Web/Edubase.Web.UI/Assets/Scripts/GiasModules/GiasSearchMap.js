@@ -251,19 +251,18 @@ class GiasSearchMap {
 
 
 
-    L.tileLayer('https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&zoom={z}&x={x}&y={y}&subscription-key='+azureMapsApiKey, {
+    L.tileLayer('https://atlas.microsoft.com/map/tile?api-version=2024-04-01&tilesetId=microsoft.base.road&zoom={z}&x={x}&y={y}&subscription-key=' + this.config.azureApiKey, {
       attribution: '© ' + new Date().getFullYear() + ' Microsoft, © 1992 - ' + new Date().getFullYear() + ' TomTom',
       maxZoom: 18,
       minZoom: 4,
       id: 'azuremaps.road',
       crossOrigin: true,
-      subscriptionKey: this.config.azureMapsApiKey
+      subscriptionKey: this.config.azureApiKey
     }).addTo(searchMap);
 
 
     this.mapObj = searchMap;
     this.getSearchData('init');
-    this.bindActions();
 
     searchMap.on('zoomend',
       function() {
