@@ -35,6 +35,7 @@
 - 2026-11-09: User prefers single-step deployment. Detailed cutover, downtime and rollback arrangements remain to be confirmed during planning.
 - 2026-11-09: User authorised the planning stage only. Retain Guided mode and obtain approval before implementation.
 - 2026-11-09: User confirmed the presented options with selective multi-targeting and selective temporary System.Web Adapters refinements. Confirmation authorises plan generation, not implementation.
+- 2026-11-10: User renamed the working branch to copilot/upgrade-dot-net-10 (superseding the initial working branch name above) and committed assessment/planning work as 0fdcd8cb0. Verified the working tree was clean before recording this update. Commits remain manual; implementation still requires explicit approval.
 
 ## Compatibility Review Gates
 - Static assessment does not prove runtime or visual parity; no application code changes or compatibility test execution during assessment.
