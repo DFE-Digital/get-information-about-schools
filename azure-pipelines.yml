@@ -261,6 +261,47 @@ stages:
   
   
   
+      - job: RunAcceptanceTests
+        displayName: 'Run acceptance tests against Dev'
+        dependsOn:
+          - DeployWebUiDevSlotMainJob
+          - smokeTestGiasWebUiDevSlotMainJobWebRoot
+          - smokeTestGiasWebUiDevSlotMainJobDownloadsPage
+        variables:
+          - group: 'GIAS.FrontEnd.AcceptanceTests.DEV'
+        pool:
+          vmImage: 'windows-2025-vs2026'
+        steps:
+          - checkout: self
+
+          - task: FileTransform@2
+            displayName: 'Populate acceptance test config'
+            inputs:
+              folderPath: '$(Build.SourcesDirectory)'
+              fileType: xml
+              targetFiles: 'acceptance.tests.config'
+
+          - task: PowerShell@2
+            displayName: 'Create acceptance test runtime config'
+            inputs:
+              targetType: 'inline'
+              script: |
+                Copy-Item -Path "$(Build.SourcesDirectory)\acceptance.tests.config" -Destination "$(Build.SourcesDirectory)\acceptance.tests.config.alwaysignore" -Force -ErrorAction Stop
+
+          - task: UseDotNet@2
+            displayName: 'Install .NET 10 SDK'
+            inputs:
+              packageType: 'sdk'
+              version: '10.0.x'
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Run acceptance tests against Dev'
+            inputs:
+              command: 'test'
+              projects: 'Web/Edubase.AcceptanceTests/Edubase.AcceptanceTests.csproj'
+              arguments: '--configuration $(buildConfiguration)'
+              publishTestResults: true
+
   ## Run this deploy stage only if conditions met to deploy to this environment
   - stage: 'DeployDevSandbox1'
     displayName: 'Deploy to Slot Sandbox1'
