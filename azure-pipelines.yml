@@ -267,6 +267,7 @@ stages:
           - DeployWebUiDevSlotMainJob
           - smokeTestGiasWebUiDevSlotMainJobWebRoot
           - smokeTestGiasWebUiDevSlotMainJobDownloadsPage
+        condition: and(not(canceled()), eq(dependencies.DeployWebUiDevSlotMainJob.result, 'Succeeded'))
         variables:
           - group: 'GIAS.FrontEnd.AcceptanceTests.DEV'
         pool:
