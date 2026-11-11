@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Edubase.Services.TexunaUnitTests\Edubase.Services.TexunaUnitTests.csproj" />
     <ProjectReference Include="..\Edubase.Web.Resources\Edubase.Web.Resources.csproj" />
   </ItemGroup>
 

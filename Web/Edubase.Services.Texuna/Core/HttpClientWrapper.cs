@@ -6,7 +6,6 @@ namespace Edubase.Services
     using Data.Repositories;
     using Domain;
     using Exceptions;
-    using Microsoft.AspNet.Identity;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -18,9 +17,9 @@ namespace Edubase.Services
     using System.Net.Http;
     using System.Net.Http.Formatting;
     using System.Net.Http.Headers;
+    using System.Security.Claims;
     using System.Security.Principal;
     using System.Threading.Tasks;
-    using System.Web;
     using Texuna;
     using Texuna.Core;
     using Texuna.Glimpse;
@@ -33,6 +32,7 @@ namespace Edubase.Services
         private readonly bool _enableApiLogging;
         private const string HEADER_SA_USER_ID = "sa_user_id";
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
+        private static readonly HttpRequestOptionsKey<string> RequestBodyJsonPayloadKey = new(REQ_BODY_JSON_PAYLOAD);
         private readonly IClientStorage _clientStorage;
 
         public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository)
@@ -334,7 +334,7 @@ namespace Edubase.Services
                         }
                     case HttpStatusCode.Forbidden:
                         // Java API returns:
-                        // - HTTP 403 Forbidden (optionally with JSON body): SA User ID found, but not permitted to access specific resource (e.g., specific establishment due to its status)
+                        // - HTTP 403 Forbidden (optionally with JSON body: SA User ID found, but not permitted to access specific resource (e.g., specific establishment due to its status)
                         throw new EduSecurityException($"The current principal does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                     case (HttpStatusCode) 429:
                         throw new UsageQuotaExceededException();
@@ -412,76 +412,76 @@ namespace Edubase.Services
             catch { return null; }
         }
 
-public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
-{
-    var startTime = DateTime.UtcNow;
-    HttpResponseMessage response = null;
-    var stopwatch = Stopwatch.StartNew();
-
-    try
-    {
-        response = await _httpClient.SendAsync(
-            requestMessage,
-            HttpCompletionOption.ResponseHeadersRead
-        );
-        return response;
-    }
-    catch (HttpRequestException)
-    {
-        throw;
-    }
-    catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
-    {
-        throw new TexunaApiSystemException(
-            $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})",
-            GetRequestJsonBody(requestMessage));
-    }
-    catch (TaskCanceledException ex)
-    {
-        // Following changes to the timeout, we notice that not all timeouts are caught by the above catch block
-        // and the development/"full error detail" error page does not have the exception details.
-        // For this reason we introduce this new catch block to catch all TaskCanceledExceptions that
-        // aren't caught by the above (pre-existing) catch block.
-        var aborted = new HttpResponseMessage((HttpStatusCode)499)
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
         {
-            ReasonPhrase = "ClientClosedRequest",
-            RequestMessage = requestMessage
-        };
-        response = aborted;
-        return aborted;
-    }
-    finally
-    {
-        stopwatch.Stop();
-        string responseMessage = null;
+            HttpResponseMessage response = null;
+            var startTime = DateTime.UtcNow;
+            var stopwatch = Stopwatch.StartNew();
 
-        var context = HttpContext.Current;
+            try
+            {
+                response = await _httpClient.SendAsync(requestMessage);
+                return response;
+            }
+            catch (HttpRequestException)
+            {
+                throw;
+            }
+            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
+            {
+                throw new TexunaApiSystemException(
+                    $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})",
+                    GetRequestJsonBody(requestMessage));
+            }
+            catch (TaskCanceledException)
+            {
+                // Following changes to the timeout, we notice that not all timeouts are caught by the above catch block
+                // and the development/"full error detail" error page does not have the exception details.
+                // For this reason we introduce this new catch block to catch all TaskCanceledExceptions that
+                // aren't caught by the above (pre-existing) catch block.
+                var aborted = new HttpResponseMessage((HttpStatusCode)499)
+                {
+                    ReasonPhrase = "ClientClosedRequest",
+                    RequestMessage = requestMessage
+                };
+                response = aborted;
+                return aborted;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                string responseMessage = null;
 
-        if (response?.Content != null)
-        {
-            responseMessage = await response.Content.ReadAsStringAsync();
-        }
+                if (response?.Content != null)
+                {
+                    responseMessage = await response.Content.ReadAsStringAsync();
+                }
+
+                var requestUserId = requestMessage.Headers.TryGetValues(HEADER_SA_USER_ID, out var userIds)
+                    ? userIds.FirstOrDefault()
+                    : null;
+
 #if DEBUG
-        var data = new ApiTraceData
-        {
-            StartTime = startTime,
-            DurationMillis = (int)Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
-            Method = requestMessage.Method.Method,
-            Url = requestMessage.RequestUri.ToString(),
-            Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
-            Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
-            ResponseCode = response != null ? (int)response.StatusCode : 0,
-            ClientIpAddress = context?.Request.UserHostAddress,
-            UserId = context?.User?.Identity?.GetUserId(),
-            UserName = context?.User?.Identity?.GetUserName()
-        };
+                var data = new ApiTraceData
+                {
+                    StartTime = startTime,
+                    DurationMillis = (int)Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
+                    Method = requestMessage.Method.Method,
+                    Url = requestMessage.RequestUri.ToString(),
+                    Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
+                    Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
+                    ResponseCode = response != null ? (int)response.StatusCode : 0,
+                    ClientIpAddress = null,
+                    UserId = requestUserId,
+                    UserName = null
+                };
 
-        ApiTrace.Data.Add(data);
+                ApiTrace.Data.Add(data);
 #endif
 
-        await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, context?.User?.Identity?.GetUserId());
-    }
-}
+                await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, requestUserId);
+            }
+        }
 
         private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed, string userId)
         {
@@ -521,7 +521,7 @@ public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessa
             if (uri.StartsWith("/")) throw new Exception($"{nameof(uri)} parameter value starts with a forward-slash.  You didn't want to do that.");
 
             var requestMessage = new HttpRequestMessage(method, uri);
-            requestMessage.Headers.Add(HEADER_SA_USER_ID, principal.GetUserId() ?? string.Empty);
+            requestMessage.Headers.Add(HEADER_SA_USER_ID, GetUserId(principal) ?? string.Empty);
 
             //
             // Proxies (e.g., WAF) are recognised as their infrastructure's IP address (rather than the end-user's / client's IP address).
@@ -545,14 +545,27 @@ public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessa
             if (requestBodyData != null)
             {
                 requestMessage.Content = new ObjectContent<object>(requestBodyData, _formatter);
-                requestMessage.Properties[REQ_BODY_JSON_PAYLOAD] = await requestMessage.Content.ReadAsStringAsync();
+                requestMessage.Options.Set(RequestBodyJsonPayloadKey, await requestMessage.Content.ReadAsStringAsync());
             }
-            else requestMessage.Properties[REQ_BODY_JSON_PAYLOAD] = string.Empty;
+            else
+            {
+                requestMessage.Options.Set(RequestBodyJsonPayloadKey, string.Empty);
+            }
 
             return requestMessage;
         }
 
-        private string GetRequestJsonBody(HttpRequestMessage msg) => msg != null && msg.Properties.ContainsKey(REQ_BODY_JSON_PAYLOAD) ? msg.Properties[REQ_BODY_JSON_PAYLOAD]?.ToString() ?? string.Empty : string.Empty;
+        private string GetRequestJsonBody(HttpRequestMessage msg)
+        {
+            if (msg == null)
+            {
+                return string.Empty;
+            }
+
+            return msg.Options.TryGetValue(RequestBodyJsonPayloadKey, out var payload)
+                ? payload ?? string.Empty
+                : string.Empty;
+        }
 
         public string ToJsonIndented(HttpHeaders headers)
         {
@@ -573,6 +586,24 @@ public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessa
                 }
             }
             return dict;
+        }
+
+        private static string GetUserId(IPrincipal principal)
+        {
+            var identity = principal?.Identity;
+            if (identity == null)
+            {
+                return null;
+            }
+
+            if (identity is ClaimsIdentity claimsIdentity)
+            {
+                return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                       ?? claimsIdentity.FindFirst("sub")?.Value
+                       ?? identity.Name;
+            }
+
+            return identity.Name;
         }
 
         #endregion

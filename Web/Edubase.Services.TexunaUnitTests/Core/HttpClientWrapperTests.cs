@@ -1,12 +1,12 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Edubase.Services.Core;
 using Edubase.Services.Exceptions;
-using Edubase.Web.UI;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -122,7 +122,9 @@ namespace Edubase.Services.TexunaUnitTests.Core
 
         private static HttpClientWrapper CreateWrapper(HttpMessageHandler mockHandler)
         {
-            return new HttpClientWrapper(new HttpClient(mockHandler), IocConfig.CreateJsonMediaTypeFormatter(),
+            return new HttpClientWrapper(
+                new HttpClient(mockHandler),
+                new JsonMediaTypeFormatter(),
                 new Mock<IClientStorage>(MockBehavior.Loose).Object);
         }
 

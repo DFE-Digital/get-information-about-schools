@@ -29,6 +29,7 @@
 - 2026-11-11: User accepted replacing System.Device.Location usage as long as new functionality remains equivalent.
 - 2026-11-11: User chose to expand Task 04.02 scope to resolve remaining Services-closure net10 warnings immediately (including package/security warning remediation).
 - 2026-11-11: User evaluated non-licensed AutoMapper path and chose to keep AutoMapper at 10.1.1 for now (instead of moving to 14.x), given current net48 compatibility constraints.
+- 2026-11-11: User requested adherence to the existing application's coding standards and style conventions, and asked for this preference to be explicitly captured in scenario instructions.
 
 ## User Preferences
 ### Technical Preferences
@@ -48,3 +49,4 @@
 - Use System.Web Adapters selectively, not automatically: prefer native ASP.NET Core APIs for straightforward changes; consider temporary shims only for supported, tightly coupled legacy request-context usages where they materially reduce migration risk. Verify actual usage and behaviour with explicit tests and remove temporary shims before completion. Adapters do not make MVC5 run on ASP.NET Core or require side-by-side deployment.
 - Enforce SQL-only repository wiring now for the migrated data areas and remove associated migration feature flags; handle logging/API-recording storage path separately.
 - Keep AutoMapper at 10.1.1 for now (non-licensed path), acknowledging current advisory exposure until a later migration/licensing decision.
+- Follow existing application coding standards, conventions, naming, structure, and style patterns unless an explicit task requires a deliberate deviation.
