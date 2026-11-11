@@ -1,28 +1,48 @@
-﻿using Edubase.Common;
-using Edubase.Data.Repositories;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Web;
-using System.Web.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
+using Edubase.Common;
+using Edubase.Data.Repositories;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Edubase.Web.UI.Helpers.ValueProviders
 {
-    public class TokenValueProviderFactory : ValueProviderFactory
+    public class TokenValueProviderFactory : IValueProviderFactory
     {
-        public override IValueProvider GetValueProvider(ControllerContext controllerContext)
+        public Task CreateValueProviderAsync(ValueProviderFactoryContext context)
         {
-            var tokenId = controllerContext.RequestContext.HttpContext.Request.QueryString["tok"];
-            if (tokenId.Clean() != null)
+            var tokenId = context.ActionContext.HttpContext.Request.Query["tok"].ToString();
+            if (tokenId.Clean() == null)
             {
-                var repo = DependencyResolver.Current.GetService<ITokenRepository>();
-                var token = repo.Get(tokenId);
-                if (token != null)
-                {
-                    var nvp = HttpUtility.ParseQueryString(token.Data);
-                    return new NameValueCollectionValueProvider(nvp, CultureInfo.CurrentCulture);
-                }
+                return Task.CompletedTask;
             }
 
-            return null;
+            var repo = context.ActionContext.HttpContext.RequestServices.GetService<ITokenRepository>();
+            if (repo == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            var token = repo.Get(tokenId);
+            if (token == null || token.Data.Clean() == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            var rawTokenData = token.Data.StartsWith("?") ? token.Data : "?" + token.Data;
+            var parsedQuery = QueryHelpers.ParseQuery(rawTokenData)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            var tokenQueryCollection = new QueryCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(parsedQuery));
+            var tokenValueProvider = new QueryStringValueProvider(BindingSource.Query, tokenQueryCollection, CultureInfo.CurrentCulture);
+
+            context.ValueProviders.Add(tokenValueProvider);
+            return Task.CompletedTask;
         }
     }
 }

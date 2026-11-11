@@ -5,20 +5,19 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web.Http;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
     using M = EstablishmentSearchResultModel;
 
     [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecureAcademy16To19Openings)]
-    public class AcademyOpeningsApiController : ApiController
+    public class AcademyOpeningsApiController : ControllerBase
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IEstablishmentWriteService _establishmentWriteService;
@@ -33,20 +32,11 @@ namespace Edubase.Web.UI.Controllers.Api
             _establishmentWriteService = establishmentWriteService;
         }
 
-        /// <summary>
-        /// Returns a paginated list of academy openings filtered by date range and establishment type.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="skip"></param>
-        /// <param name="take"></param>
-        /// <param name="establishmentTypeId"></param>
-        /// <returns></returns>
         [Route(
-             "api/academy-openings/list/{from:datetime}/{to:datetime}" +
-             "/{skip:int}/{take:int}/{establishmentTypeId?}"),
+             "api/academy-openings/list/{from:datetime}" +
+             "/{to:datetime}/{skip:int}/{take:int}/{establishmentTypeId?}"),
          HttpGet]
-        public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take,
+        public async Task<object> GetListAsync(DateTime from, DateTime to, int skip, int take,
             string establishmentTypeId = null)
         {
             if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
@@ -91,20 +81,23 @@ namespace Edubase.Web.UI.Controllers.Api
             };
         }
 
-        /// <summary>
-        /// POST api/academy/{urn}
-        /// Takes a payload with openDate and Name properties.
-        /// </summary>
-        /// <param name="urn"></param>
-        /// <param name="payload"></param>
-        /// <returns></returns>
         [Route("api/academy/{urn:int}"), HttpPost]
-        public async Task<HttpResponseMessage> SaveAsync(int urn, [FromBody] dynamic payload)
+        public async Task<IActionResult> SaveAsync(int urn, [FromBody] JsonElement payload)
         {
-            DateTime openingDate = payload.openDate;
+            if (!payload.TryGetProperty("openDate", out var openDateProperty) || !openDateProperty.TryGetDateTime(out var openingDate))
+            {
+                return BadRequest("openDate is required and must be a valid date.");
+            }
+
+            if (!payload.TryGetProperty("name", out var nameProperty))
+            {
+                return BadRequest("name is required.");
+            }
+
+            var name = nameProperty.GetString();
             var links = await _establishmentReadService.GetLinkedEstablishmentsAsync(urn, User);
             var link = links.FirstOrDefault(e =>
-                e.LinkTypeId == (int) eLookupEstablishmentLinkType.ParentOrPredecessor);
+                e.LinkTypeId == (int)eLookupEstablishmentLinkType.ParentOrPredecessor);
 
             ApiResponse response;
             if (link != null)
@@ -113,16 +106,22 @@ namespace Edubase.Web.UI.Controllers.Api
                     new EstablishmentModel { CloseDate = openingDate.AddDays(-1), Urn = link.Urn },
                     new EstablishmentFieldList { CloseDate = true }, User);
 
-                if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
+                if (response.HasErrors)
+                {
+                    return BadRequest(response);
+                }
             }
 
             response = await _establishmentWriteService.PartialUpdateAsync(
-                new EstablishmentModel { OpenDate = openingDate, Name = payload.name, Urn = urn },
+                new EstablishmentModel { OpenDate = openingDate, Name = name, Urn = urn },
                 new EstablishmentFieldList { OpenDate = true, Name = true }, User);
 
-            if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
+            if (response.HasErrors)
+            {
+                return BadRequest(response);
+            }
 
-            else return Request.CreateResponse(HttpStatusCode.OK, response);
+            return Ok(response);
         }
     }
 }

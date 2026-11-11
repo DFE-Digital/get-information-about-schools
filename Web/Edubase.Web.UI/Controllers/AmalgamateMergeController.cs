@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using Edubase.Common;
+using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Tools;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -279,11 +280,11 @@ namespace Edubase.Web.UI.Controllers
             var viewModel = new AmalgamateEstablishmentsModel();
 
             var submittedUrns = new List<int>();
-            
+
             var estab0HasErrors = DoesModelStateHaveErrorsForKey("Establishment0Urn");
             var estab1HasErrors = DoesModelStateHaveErrorsForKey("Establishment1Urn");
 
-            if (!model.Establishment0Urn.HasValue &&!estab0HasErrors)
+            if (!model.Establishment0Urn.HasValue && !estab0HasErrors)
             {
                 ModelState.AddModelError(nameof(model.Establishment0Urn), "Enter the establishment 1 URN");
             }
@@ -400,11 +401,9 @@ namespace Edubase.Web.UI.Controllers
                 return View("~/Views/Tools/Mergers/AmalgamateEstablishments.cshtml", model);
             }
 
-            viewModel.EstablishmentPhases = (await _lookupService.EducationPhasesGetAllAsync()).ToSelectList();
-
-            viewModel.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).ToSelectList();
-
-            viewModel.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).ToSelectList();
+            viewModel.EstablishmentPhases = ToSelectList(await _lookupService.EducationPhasesGetAllAsync());
+            viewModel.EstablishmentTypes = ToSelectList(await _lookupService.EstablishmentTypesGetAllAsync());
+            viewModel.LocalAuthorities = ToSelectList(await _lookupService.LocalAuthorityGetAllAsync());
 
             return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", viewModel);
         }
@@ -471,17 +470,15 @@ namespace Edubase.Web.UI.Controllers
                 return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
             }
 
-            model.EstablishmentPhases = (await _lookupService.EducationPhasesGetAllAsync()).ToSelectList();
-
-            model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).ToSelectList();
-
-            model.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).ToSelectList();
+            model.EstablishmentPhases = ToSelectList(await _lookupService.EducationPhasesGetAllAsync());
+            model.EstablishmentTypes = ToSelectList(await _lookupService.EstablishmentTypesGetAllAsync());
+            model.LocalAuthorities = ToSelectList(await _lookupService.LocalAuthorityGetAllAsync());
 
             var mergeDate = new DateTime(model.MergeDate.Year.GetValueOrDefault(),
                 model.MergeDate.Month.GetValueOrDefault(), model.MergeDate.Day.GetValueOrDefault());
 
-            var establishmentTypeId = int.TryParse(model.EstablishmentType, out var i) ? i : (int?) null;
-            var localAuthorityId = int.TryParse(model.LocalAuthorityId, out var j) ? j : (int?) null;
+            var establishmentTypeId = int.TryParse(model.EstablishmentType, out var i) ? i : (int?)null;
+            var localAuthorityId = int.TryParse(model.LocalAuthorityId, out var j) ? j : (int?)null;
 
             var result = await _establishmentWriteService.AmalgamateOrMergeAsync(
                 new AmalgamateMergeRequest()
@@ -508,16 +505,12 @@ namespace Edubase.Web.UI.Controllers
                 return View("~/Views/Tools/Mergers/AmalgamationComplete.cshtml", model);
             }
 
-
-
-
             foreach (var err in result.Errors)
             {
                 if (err.Fields != null)
                 {
                     ViewData.ModelState.AddModelError(err.Fields, err.Message);
                 }
-
             }
 
             return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
@@ -530,7 +523,17 @@ namespace Edubase.Web.UI.Controllers
             {
                 hasErrors = modelState.Errors.Count > 0;
             }
+
             return hasErrors;
+        }
+
+        private static IEnumerable<SelectListItem> ToSelectList(IEnumerable<LookupDto> items)
+        {
+            return items.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            });
         }
     }
 }

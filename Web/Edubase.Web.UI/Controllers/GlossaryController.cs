@@ -1,19 +1,13 @@
+using System.Threading.Tasks;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
-using Edubase.Services.Security;
-using Edubase.Web.UI.Filters;
-using Edubase.Web.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("glossary"), Route("{action=index}")]
+    [Route("glossary")]
     public class GlossaryController : Controller
     {
         private readonly IGlossaryRepository _glossaryRepository;
@@ -23,22 +17,24 @@ namespace Edubase.Web.UI.Controllers
             _glossaryRepository = glossaryRepository;
         }
 
-        [Route(Name = "Glossary")]
+        [HttpGet("", Name = "Glossary")]
+        [HttpGet("Index")]
         public async Task<ActionResult> Index()
         {
             var result = await _glossaryRepository.GetAllAsync(1000);
             return View(new GlossaryViewModel(result.Items) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
         }
 
-        [Route("Create", Name = "CreateGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Create", Name = "CreateGlossaryItem"), MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public ActionResult Create() => View("CreateEdit", new GlossaryItemViewModel());
 
-        [Route("Edit/{id}", Name = "EditGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Edit/{id}", Name = "EditGlossaryItem"), MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditAsync(string id)
         {
             var item = await _glossaryRepository.GetAsync(id);
-            if (item == null) return HttpNotFound();
-            else return View("CreateEdit", new GlossaryItemViewModel
+            if (item == null) return NotFound();
+
+            return View("CreateEdit", new GlossaryItemViewModel
             {
                 Id = id,
                 Content = item.Content,
@@ -46,11 +42,11 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Edit/{id}", Name = "PostEditGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [HttpPost("Edit/{id}", Name = "PostEditGlossaryItem"), MvcAuthorizeRoles(AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(GlossaryItemViewModel viewModel)
         {
             var item = await _glossaryRepository.GetAsync(viewModel.Id);
-            if (item == null) return HttpNotFound();
+            if (item == null) return NotFound();
 
             if (viewModel.IsDeleting)
             {
@@ -65,10 +61,11 @@ namespace Edubase.Web.UI.Controllers
                 await _glossaryRepository.UpdateAsync(item);
                 return RedirectToAction(nameof(Index));
             }
-            else return View("CreateEdit", viewModel);
+
+            return View("CreateEdit", viewModel);
         }
 
-        [Route("Create", Name = "PostCreateGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [HttpPost("Create", Name = "PostCreateGlossaryItem"), MvcAuthorizeRoles(AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync(GlossaryItemViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -78,11 +75,12 @@ namespace Edubase.Web.UI.Controllers
                     Title = viewModel.Title,
                     Content = viewModel.Content
                 };
+
                 await _glossaryRepository.CreateAsync(item);
                 return RedirectToAction(nameof(Index));
             }
-            else return View("CreateEdit", viewModel);
-        }
 
+            return View("CreateEdit", viewModel);
+        }
     }
 }

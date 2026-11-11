@@ -1,18 +1,18 @@
-﻿using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Unauthorized"), Route("{action=index}")]
+    [Route("Unauthorized")]
     public class UnauthorizedController : Controller
     {
-        [HttpGet, Route("Index")]
-        // GET: Unauthorized
+        [HttpGet("")]
+        [HttpGet("Index")]
         public ActionResult Index()
         {
             return View();
         }
 
-        [HttpGet, Route("LoginFailed")]
+        [HttpGet("LoginFailed")]
         public ActionResult LoginFailed()
         {
             return View();

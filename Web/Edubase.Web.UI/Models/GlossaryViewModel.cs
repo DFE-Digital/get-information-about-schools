@@ -1,14 +1,13 @@
-﻿using Edubase.Data.Entity;
+using Edubase.Data.Entity;
 using Edubase.Data.Repositories.TableStorage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Models
 {
     public class GlossaryViewModel
-    {   
+    {
         public bool UserCanEdit { get; set; }
         public IEnumerable<IGrouping<char, GlossaryItem>> Items { get; }
 

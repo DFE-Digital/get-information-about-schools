@@ -1,11 +1,12 @@
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("TermsofUse"), Route("{action=index}")]
+    [Route("TermsofUse")]
     public class TermsofUseController : EduBaseController
     {
-        [Route(Name = "TermsofUse")]
+        [HttpGet("", Name = "TermsofUse")]
+        [HttpGet("Index")]
         public ActionResult Index() => View();
     }
 }

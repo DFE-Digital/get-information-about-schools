@@ -1,11 +1,19 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Text;
-using System.Web.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Edubase.Web.UI.Helpers
 {
+    public enum JsonRequestBehavior
+    {
+        AllowGet,
+        DenyGet
+    }
+
     public class JsonCamelCaseResult : ActionResult
     {
         public JsonCamelCaseResult(object data, JsonRequestBehavior jsonRequestBehavior)
@@ -22,24 +30,28 @@ namespace Edubase.Web.UI.Helpers
 
         public JsonRequestBehavior JsonRequestBehavior { get; set; }
 
-        public override void ExecuteResult(ControllerContext context)
+        public override async Task ExecuteResultAsync(ActionContext context)
         {
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
-            if (JsonRequestBehavior == JsonRequestBehavior.DenyGet && String.Equals(context.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
+
+            var method = context.HttpContext.Request.Method;
+            if (JsonRequestBehavior == JsonRequestBehavior.DenyGet &&
+                string.Equals(method, "GET", StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException("This request has been blocked because sensitive information could be disclosed to third party web sites when this is used in a GET request. To allow GET requests, set JsonRequestBehavior to AllowGet.");
             }
 
             var response = context.HttpContext.Response;
+            response.ContentType = !string.IsNullOrEmpty(ContentType) ? ContentType : "application/json";
 
-            response.ContentType = !String.IsNullOrEmpty(ContentType) ? ContentType : "application/json";
             if (ContentEncoding != null)
             {
-                response.ContentEncoding = ContentEncoding;
+                response.Headers.ContentEncoding = ContentEncoding.WebName;
             }
+
             if (Data == null)
             {
                 return;
@@ -49,7 +61,8 @@ namespace Edubase.Web.UI.Helpers
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-            response.Write(JsonConvert.SerializeObject(Data, jsonSerializerSettings));
+
+            await response.WriteAsync(JsonConvert.SerializeObject(Data, jsonSerializerSettings), ContentEncoding ?? Encoding.UTF8);
         }
     }
 }

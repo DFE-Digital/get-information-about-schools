@@ -1,10 +1,9 @@
-using Autofac;
+using System;
+using Edubase.Common;
 using Edubase.Services.Domain;
+using Edubase.Web.Resources;
 using Edubase.Web.UI.Helpers;
-using FluentValidation.Mvc;
-using MoreLinq;
-using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -12,6 +11,17 @@ namespace Edubase.Web.UI.Controllers
     {
         protected new JsonCamelCaseResult Json(object data) => new JsonCamelCaseResult(data, JsonRequestBehavior.AllowGet);
 
-        protected void AddApiErrorsToModelState(ApiError[] errors, string keyName = "") => (errors ?? Enumerable.Empty<ApiError>()).ForEach(x => ModelState.AddModelError(keyName, x.GetMessage()));
+        protected JsonCamelCaseResult Json(object data, JsonRequestBehavior jsonRequestBehavior) => new JsonCamelCaseResult(data, jsonRequestBehavior);
+
+        protected void AddApiErrorsToModelState(ApiError[] errors, string keyName = "")
+        {
+            foreach (var error in errors ?? Array.Empty<ApiError>())
+            {
+                var message = ApiMessagesHelper.Get(error.Code).Clean() ??
+                    ApiMessagesHelper.Get(string.Concat(error.Code, "_", error.Fields), error.Message);
+
+                ModelState.AddModelError(keyName, message);
+            }
+        }
     }
 }

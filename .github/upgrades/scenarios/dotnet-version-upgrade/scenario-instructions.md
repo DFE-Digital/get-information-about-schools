@@ -31,6 +31,8 @@
 - 2026-11-11: User evaluated non-licensed AutoMapper path and chose to keep AutoMapper at 10.1.1 for now (instead of moving to 14.x), given current net48 compatibility constraints.
 - 2026-11-11: User requested adherence to the existing application's coding standards and style conventions, and asked for this preference to be explicitly captured in scenario instructions.
 - 2026-11-11: User approved a host-foundation cut for 04.04: produce a runnable ASP.NET Core shell on net10 and temporarily exclude legacy MVC5/System.Web feature code from compile, then restore full feature parity in 04.05.
+- 2026-11-11: User requested consistent line endings in edited/generated files to avoid Visual Studio normalization prompts; enforce repository-consistent endings for all future edits.
+- 2026-11-11: User requested a pause; stop implementation activity until the user asks to continue.
 
 ## User Preferences
 ### Technical Preferences
@@ -51,3 +53,49 @@
 - Enforce SQL-only repository wiring now for the migrated data areas and remove associated migration feature flags; handle logging/API-recording storage path separately.
 - Keep AutoMapper at 10.1.1 for now (non-licensed path), acknowledging current advisory exposure until a later migration/licensing decision.
 - Follow existing application coding standards, conventions, naming, structure, and style patterns unless an explicit task requires a deliberate deviation.
+- Keep line endings consistent with repository/editor conventions for every modified or newly generated file; avoid introducing mixed line endings that trigger normalization prompts.
+
+## Task 04 migration handover notes (for next chat / model switch)
+### Architectural decisions already in force
+- `04.04` intentionally established a runnable ASP.NET Core host shell first, then deferred full MVC5 surface migration to `04.05`.
+- Web.UI migration is being executed using **compile-slice gating** in `Web/Edubase.Web.UI/Edubase.Web.UI.csproj` (small, explicitly included file sets) to keep each slice buildable and debuggable.
+- Existing behavior parity is prioritized over syntactic modernization. Route names, redirect targets, JSON casing, and UI output contracts must remain equivalent unless explicitly approved otherwise.
+
+### Controller migration patterns to keep using
+- Replace MVC5 controller contracts/usings (`System.Web.Mvc`) with ASP.NET Core (`Microsoft.AspNetCore.Mvc`) and keep existing controller/action names.
+- Convert `RoutePrefix` + action routes to class-level `[Route("...")]` plus action-level `[HttpGet]/[HttpPost]` templates while preserving route names (`Name = ...`) used by redirects and links.
+- Replace `HttpNotFound()` with `NotFound()`.
+- Preserve legacy JSON allow-get semantics through the existing compatibility path (`EduBaseController` + `JsonCamelCaseResult` + compatibility `JsonRequestBehavior` enum), not ad-hoc serializer changes per controller.
+- For multi-step admin forms, preserve back/forward workflow semantics (`GoBack`, `Action` stepping, `TempData["ShowSaved"]`, model-state clearing/removal).
+- Where model-state value rehydration is required, use ASP.NET Core `ValueProviderResult` with `StringValues` and current culture.
+- Remove MVC5 `[AllowHtml]` attributes from migrated view models and preserve equivalent behavior through existing sanitization/rendering logic.
+
+### Task 04.05 controller work completed so far
+- Completed subtasks:
+  - `04.05.02.01` Web API controller surface
+  - `04.05.02.02` filter pipeline migration
+  - `04.05.02.03` model-binding/value-provider migration
+  - `04.05.02.04.01` shared MVC controller base/helpers
+- Root MVC controllers migrated and compile-validated in current slice:
+  - `UnauthorizedController`
+  - `TermsofUseController`
+  - `GuidanceController`
+  - `AmalgamateMergeController`
+  - `GlossaryController`
+  - `FaqController`
+  - `NewsController`
+  - `NotificationsController`
+
+### Outstanding issues / next execution targets
+- `04.05.02.04.02` is partially implemented but still marked stale/in-progress in workflow state; finalize status explicitly when resuming.
+- Remaining higher-complexity root controllers are still pending migration in this track (notably `DownloadsController`, `ChangeHistoryController`, `HomeController`, `ToolsController`, `SearchController`, `DataQualityController`, `ApprovalsController`, `AccountController`, `SitemapController`, plus `AdminController`).
+- `AdminController` compile activation remains blocked by unresolved legacy logging dependency path (`AzureTableLogger` / `ILoggingService`) and should be coordinated with logging migration decisions already captured in scenario preferences.
+- After finishing root controllers, continue planned order: `04.05.02.04.03` (Establishments), `04.05.02.04.04` (Groups/Governors), `04.05.02.04.05` (route contract check), `04.05.02.05` (endpoint contract validation).
+
+### Validation approach to replicate
+- After each controller slice, run targeted build:
+  - `dotnet build C:\copilot\get-information-about-schools\Web\Edubase.Web.UI\Edubase.Web.UI.csproj -v minimal`
+- Keep known warning context explicit in notes:
+  - User-approved AutoMapper advisory exposure while pinned at `AutoMapper 10.1.1`.
+  - Existing `RequiredDateTimeViewModel` CS0108 warnings currently pre-existing in migrated slice builds.
+- No production deployment during migration tasks.

@@ -1,16 +1,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
-    [RoutePrefix("Groups/Group")]
-    public class GroupApiController : ApiController
+    [Route("Groups/Group")]
+    public class GroupApiController : ControllerBase
     {
         private readonly IGroupsWriteService groupsWriteService;
 
@@ -19,31 +19,33 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             this.groupsWriteService = groupsWriteService;
         }
 
-        [HttpPost, Route("CreateChildrensCentre/Validate")]
-        public IHttpActionResult ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
+        [HttpPost("CreateChildrensCentre/Validate")]
+        public IActionResult ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
         {
-            return
-                !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { });
+            return !ModelState.IsValid
+                ? new JsonResult(ModelState.Where(m => m.Value?.Errors.Any() == true))
+                : new JsonResult(Array.Empty<string>());
         }
 
-        [HttpPost, Route("CreateChildrensCentre/Validate/OpenDate")]
-        public IHttpActionResult ValidateGroupOpenDate(DateTimeViewModel openDate)
+        [HttpPost("CreateChildrensCentre/Validate/OpenDate")]
+        public IActionResult ValidateGroupOpenDate(DateTimeViewModel openDate)
         {
             if (openDate == null || openDate.IsEmpty())
             {
                 ModelState.AddModelError("openDate", "Date cannot be empty");
-            } else if (openDate.IsValid() == false)
+            }
+            else if (openDate.IsValid() == false)
             {
                 ModelState.AddModelError("openDate", "The date specified is not valid");
             }
-            return
-                !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { });
+
+            return !ModelState.IsValid
+                ? new JsonResult(ModelState.Where(m => m.Value?.Errors.Any() == true))
+                : new JsonResult(Array.Empty<string>());
         }
 
-        [HttpPost, Route("CreateChildrensCentre/Validate/JoinedDate")]
-        public IHttpActionResult ValidateEstablishmentJoinedDate(ValidateEstablishmentJoinedDateModel model)
+        [HttpPost("CreateChildrensCentre/Validate/JoinedDate")]
+        public IActionResult ValidateEstablishmentJoinedDate(ValidateEstablishmentJoinedDateModel model)
         {
             if (model.JoinDate == null || model.JoinDate.IsEmpty())
             {
@@ -73,13 +75,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ModelState.AddModelError("joinDate", message);
             }
 
-            return
-                !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { });
+            return !ModelState.IsValid
+                ? new JsonResult(ModelState.Where(m => m.Value?.Errors.Any() == true))
+                : new JsonResult(Array.Empty<string>());
         }
 
-        [HttpPost, Route("CreateChildrensCentre/Validate/All")]
-        public async Task<IHttpActionResult> ValidateGroupWithEstablishments(ValidateCCGroupWithEstablishments model)
+        [HttpPost("CreateChildrensCentre/Validate/All")]
+        public async Task<IActionResult> ValidateGroupWithEstablishments(ValidateCCGroupWithEstablishments model)
         {
             var dto = new SaveGroupDto
             {
@@ -101,7 +103,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             var validation = await groupsWriteService.ValidateAsync(dto, User);
             validation.Errors.ForEach(x => x.Message = x.GetMessage());
-            return Json(validation);
+            return new JsonResult(validation);
         }
     }
 }

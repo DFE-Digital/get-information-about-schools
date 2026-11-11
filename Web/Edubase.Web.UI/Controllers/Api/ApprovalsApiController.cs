@@ -1,15 +1,13 @@
 using Edubase.Services.Approvals;
 using Edubase.Services.Approvals.Models;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Mvc;
 using Edubase.Services.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
-    public class ApprovalsApiController : ApiController
+    public class ApprovalsApiController : ControllerBase
     {
         private readonly IApprovalService _approvalService;
 
@@ -18,8 +16,8 @@ namespace Edubase.Web.UI.Controllers.Api
             _approvalService = approvalService;
         }
 
-        [System.Web.Http.Route("api/approvals/change-requests"), System.Web.Http.HttpGet]
-        public async Task<IHttpActionResult> GetAsync(int skip, int take, string sortBy)
+        [Route("api/approvals/change-requests"), HttpGet]
+        public async Task<IActionResult> GetAsync(int skip, int take, string sortBy)
         {
             try
             {
@@ -28,18 +26,18 @@ namespace Edubase.Web.UI.Controllers.Api
             }
             catch (PermissionDeniedException)
             {
-                return StatusCode(HttpStatusCode.Forbidden);
+                return StatusCode((int)HttpStatusCode.Forbidden);
             }
         }
 
-        [System.Web.Http.Route("api/approvals/change-request"), System.Web.Http.HttpPost]
+        [Route("api/approvals/change-request"), HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IHttpActionResult> ActionAsync(PendingChangeRequestAction model)
+        public async Task<IActionResult> ActionAsync(PendingChangeRequestAction model)
         {
             var result = await _approvalService.ActionAsync(model, User);
             return result.Success
-                ? ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent))
-                : (IHttpActionResult) Content(HttpStatusCode.BadRequest, result.Errors);
+                ? NoContent()
+                : StatusCode((int)HttpStatusCode.BadRequest, result.Errors);
         }
     }
 }

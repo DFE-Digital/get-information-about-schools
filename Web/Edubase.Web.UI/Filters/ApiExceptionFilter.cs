@@ -1,21 +1,26 @@
-﻿using Edubase.Data.Entity;
 using Edubase.Services.Exceptions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http.Filters;
-using Autofac;
-using AzureTableLogger.LogMessages;
 
 namespace Edubase.Web.UI.Filters
 {
-    public class ApiExceptionFilter: ExceptionFilterAttribute
+    public class ApiExceptionFilter : IExceptionFilter
     {
+        private readonly ILogger<ApiExceptionFilter> _logger;
+        private readonly bool _enableFriendlyErrorPage;
+
+        public ApiExceptionFilter(ILogger<ApiExceptionFilter> logger, IConfiguration configuration)
+        {
+            _logger = logger;
+            _enableFriendlyErrorPage = bool.TryParse(configuration["EnableFriendlyErrorPage"], out var enabled)
+                ? enabled
+                : true;
+        }
+
         public class SystemErrorMessage
         {
             public string Message { get; set; } = "Sorry, there is a problem with the service.";
@@ -23,39 +28,32 @@ namespace Edubase.Web.UI.Filters
             public string TechnicalDetails { get; set; }
         }
 
-        public override Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        public void OnException(ExceptionContext context)
         {
-            OnException(actionExecutedContext);
-            return Task.CompletedTask;
-        }
-
-        public override void OnException(HttpActionExecutedContext actionExecutedContext)
-        {
-            if (actionExecutedContext.Exception is TexunaApiNotFoundException) actionExecutedContext.Response = CreateNotFoundMessage();
-            else actionExecutedContext.Response = GetResponseMessage(actionExecutedContext);
-        }
-
-        private static HttpResponseMessage CreateNotFoundMessage()
-        {
-            return new HttpResponseMessage(HttpStatusCode.NotFound)
+            if (context == null)
             {
-                Content = new StringContent("Entity was not found"),
-                ReasonPhrase = "Not Found"
-            };
-        }
+                throw new ArgumentNullException(nameof(context));
+            }
 
-        private HttpResponseMessage GetResponseMessage(HttpActionExecutedContext actionExecutedContext)
-        {
-            if (actionExecutedContext == null) throw new ArgumentNullException(nameof(actionExecutedContext));
-            WebLogMessage msg = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>().Log(actionExecutedContext.Request.Properties["MS_HttpContext"] as HttpContextWrapper, actionExecutedContext.Exception);
+            if (context.Exception is TexunaApiNotFoundException)
+            {
+                context.Result = new NotFoundObjectResult("Entity was not found");
+                context.ExceptionHandled = true;
+                return;
+            }
+
+            _logger.LogError(context.Exception, "Unhandled API exception in {Path}", context.HttpContext.Request.Path);
             var error = new SystemErrorMessage
             {
-                ErrorCode = msg.Id,
-                TechnicalDetails = ExceptionHandler.EnableFriendlyErrorPage ? null : actionExecutedContext.Exception.ToString()
+                ErrorCode = context.HttpContext.TraceIdentifier,
+                TechnicalDetails = _enableFriendlyErrorPage ? null : context.Exception.ToString()
             };
-            return actionExecutedContext.Request.CreateResponse(HttpStatusCode.InternalServerError, error);
-        } 
 
-        
+            context.Result = new ObjectResult(error)
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            context.ExceptionHandled = true;
+        }
     }
 }

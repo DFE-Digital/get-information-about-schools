@@ -2,14 +2,13 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
-    public class AmalgamateMergeApiController : ApiController
+    public class AmalgamateMergeApiController : ControllerBase
     {
         private readonly IEstablishmentWriteService _establishmentWriteService;
 
@@ -18,12 +17,12 @@ namespace Edubase.Web.UI.Controllers.Api
             _establishmentWriteService = establishmentWriteService;
         }
 
-        [System.Web.Http.Route("api/amalgamate-merge"), System.Web.Http.HttpPost, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)]
+        [Route("api/amalgamate-merge"), HttpPost, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)]
         [ValidateAntiForgeryToken]
-        public async Task<IHttpActionResult> ProcessRequestAsync(AmalgamateMergeRequest payload)
+        public async Task<IActionResult> ProcessRequestAsync(AmalgamateMergeRequest payload)
         {
             var result = await _establishmentWriteService.AmalgamateOrMergeAsync(payload, User);
-            return !result.HasErrors ? Ok(result) : (IHttpActionResult) Content(HttpStatusCode.BadRequest, result);
+            return !result.HasErrors ? Ok(result) : StatusCode((int)HttpStatusCode.BadRequest, result);
         }
     }
 }

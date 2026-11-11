@@ -1,24 +1,24 @@
 using System;
 using System.Configuration;
 using Microsoft.Data.SqlClient;
-using System.Net;
 using System.Threading.Tasks;
-using System.Web.Http;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
 using Edubase.Data.Repositories.EF;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
     [Authorize]
-    public class SqlDataController : ApiController
+    public class SqlDataController : ControllerBase
     {
         private readonly IAzLogger _logger;
         private readonly FrontEndDbContext _frontEndDbContext;
 
         public SqlDataController(
             IAzLogger logger,
-            FrontEndDbContext frontEndDbContext)           
+            FrontEndDbContext frontEndDbContext)
         {
             _logger = logger;
             _frontEndDbContext = frontEndDbContext;
@@ -26,7 +26,7 @@ namespace Edubase.Web.UI.Controllers.Api
 
 
         [Route("api/sql"), HttpGet]
-        public async Task<IHttpActionResult> Sql()
+        public async Task<IActionResult> Sql()
         {
             try
             {
@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     Exception = ex.ToString()
                 });
 
-                return StatusCode(HttpStatusCode.ServiceUnavailable);
+                return StatusCode(503);
             }
         }
     }

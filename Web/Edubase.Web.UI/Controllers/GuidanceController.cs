@@ -1,20 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using CsvHelper;
-using CsvHelper.Configuration;
 using Edubase.Services;
 using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Guidance;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Guidance"), Route("{action=index}")]
+    [Route("Guidance")]
     public class GuidanceController : EduBaseController
     {
         private readonly IBlobService _blobService;
@@ -35,14 +32,26 @@ namespace Edubase.Web.UI.Controllers
             _fileGenerator = fileGenerator;
         }
 
-        [Route(Name = "Guidance")]
+        [HttpGet("", Name = "Guidance")]
+        [HttpGet("Index")]
         public ActionResult Index() => View();
+
+        [HttpGet("General")]
         public ActionResult General() => View();
+
+        [HttpGet("EstablishmentBulkUpdate")]
         public ActionResult EstablishmentBulkUpdate() => View();
+
+        [HttpGet("ChildrensCentre")]
         public ActionResult ChildrensCentre() => View();
+
+        [HttpGet("Federation")]
         public ActionResult Federation() => View();
+
+        [HttpGet("Governance")]
         public ActionResult Governance() => View();
 
+        [HttpGet("LaNameCodes")]
         public async Task<ActionResult> LaNameCodes()
         {
             var all = await _laNameCodeRepository.GetAllAsync();
@@ -55,19 +64,19 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("LaNameCodes/DataTables", Name = "LaNameCodesSelectData")]
+        [HttpGet("LaNameCodes/DataTables", Name = "LaNameCodesSelectData")]
         public ActionResult LaNameCodesSelectData(GuidanceLaNameCodeViewModel viewModel)
         {
             return View("SelectData", viewModel);
         }
 
-        [Route("LaNameCodes/DataTables/SelectFormat", Name = "LaNameCodesSelectFormat")]
+        [HttpGet("LaNameCodes/DataTables/SelectFormat", Name = "LaNameCodesSelectFormat")]
         public ActionResult LaNameCodesSelectFormat(GuidanceLaNameCodeViewModel viewModel)
         {
             return View("SelectFormat", viewModel);
         }
 
-        [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload", Name = "LaNameCodesGenerateDownload"), ValidateAntiForgeryToken]
+        [HttpPost("LaNameCodes/DataTables/SelectFormat/GenerateDownload", Name = "LaNameCodesGenerateDownload"), ValidateAntiForgeryToken]
         public async Task<ActionResult> LaNameCodesGenerateDownload(GuidanceLaNameCodeViewModel viewModel)
         {
             if (viewModel.DownloadName == null ||
@@ -97,7 +106,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload/Download", Name = "LaNameCodesDownload")]
+        [HttpGet("LaNameCodes/DataTables/SelectFormat/GenerateDownload/Download", Name = "LaNameCodesDownload")]
         public ActionResult LaNameCodesDownload()
         {
             return new FileStreamResult((MemoryStream) TempData["ArchivedBlob"], "application/octet-stream")

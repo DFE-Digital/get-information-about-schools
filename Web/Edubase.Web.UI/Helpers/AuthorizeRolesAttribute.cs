@@ -1,31 +1,29 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Edubase.Web.UI.Helpers
 {
-    public class MvcAuthorizeRolesAttribute : System.Web.Mvc.AuthorizeAttribute
+    public class MvcAuthorizeRolesAttribute : AuthorizeAttribute
     {
-        public MvcAuthorizeRolesAttribute(params string[] roles) : base()
+        public MvcAuthorizeRolesAttribute(params string[] roles)
         {
             Roles = string.Join(",", roles);
         }
 
-        public MvcAuthorizeRolesAttribute(string roles) : base()
+        public MvcAuthorizeRolesAttribute(string roles)
         {
             Roles = roles;
         }
     }
 
-    public class HttpAuthorizeRolesAttribute : System.Web.Http.AuthorizeAttribute
+    public class HttpAuthorizeRolesAttribute : AuthorizeAttribute
     {
-        public HttpAuthorizeRolesAttribute(params string[] roles) : base()
+        public HttpAuthorizeRolesAttribute(params string[] roles)
         {
             Roles = string.Join(",", roles);
         }
 
-        public HttpAuthorizeRolesAttribute(string roles) : base()
+        public HttpAuthorizeRolesAttribute(string roles)
         {
             Roles = roles;
         }

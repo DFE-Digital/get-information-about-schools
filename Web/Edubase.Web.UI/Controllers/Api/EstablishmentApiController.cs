@@ -1,29 +1,28 @@
-using System.Dynamic;
 using System.Linq;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Edubase.Services.Lookup;
-using Edubase.Web.UI.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
     [Authorize]
-    public class EstablishmentApiController : ApiController
+    public class EstablishmentApiController : ControllerBase
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly ICachedLookupService _lookupService;
-        
+
         public EstablishmentApiController(IEstablishmentReadService establishmentReadService, ICachedLookupService lookupService)
         {
             _establishmentReadService = establishmentReadService;
             _lookupService = lookupService;
         }
 
-        [Route("api/establishment/{urn:int}"), HttpGet, EdubaseAuthorize]
-        public async Task<IHttpActionResult> Get(int urn)
+        [Route("api/establishment/{urn:int}"), HttpGet]
+        public async Task<IActionResult> Get(int urn)
         {
             var retVal = await _establishmentReadService.GetAsync(urn, User);
             if (retVal.ReturnValue == null) return NotFound();

@@ -2,21 +2,20 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
-using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
-using Edubase.Web.UI.Helpers.ValueProviders;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Notifications;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Primitives;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Notifications")]
-    [Route("{action=index}")]
+    [Route("Notifications")]
     public class NotificationsController : EduBaseController
     {
         private readonly INotificationBannerRepository _BannerRepository;
@@ -30,15 +29,15 @@ namespace Edubase.Web.UI.Controllers
             _BannerRepository = BannerRepository;
         }
 
-        [Route(Name = "Notifications")]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("", Name = "Notifications")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public ActionResult Index()
         {
             return View();
         }
 
-        [Route("Banners")]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Banners")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> Banners()
         {
             var result = await _BannerRepository.GetAllAsync(2, null, true);
@@ -53,8 +52,8 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        [Route("Banners/Audit")]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Banners/Audit")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> AuditBanners(string sortBy)
         {
             var result = await _BannerRepository.GetAllAsync(1000);
@@ -70,8 +69,8 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        [Route("Banners/Audit/{id}")]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Banners/Audit/{id}")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> AuditBanner(string id, string sortBy)
         {
             var result = await _BannerRepository.GetAllAsync(1000);
@@ -85,9 +84,8 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        [Route("Banner/New", Name = "CreateBanner")]
-        [HttpGet]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Banner/New", Name = "CreateBanner")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> CreateBanner()
         {
             var banners = await _BannerRepository.GetAllAsync(1000, null, true);
@@ -102,21 +100,22 @@ namespace Edubase.Web.UI.Controllers
 
 
 
-        [Route("Banner/New", Name = "PostCreateBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [HttpPost("Banner/New", Name = "PostCreateBanner")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateBannerAsync(NotificationsBannerViewModel viewModel)
         {
             return await ProcessEditBanner(viewModel);
         }
 
-        [Route("Banner/{counter}/{id}", Name = "EditBanner")]
-        [HttpGet]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Banner/{counter}/{id}", Name = "EditBanner")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditBannerAsync(string id, int counter)
         {
             var item = await _BannerRepository.GetAsync(id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var banners = await _BannerRepository.GetAllAsync(1000, null, true);
@@ -144,20 +143,21 @@ namespace Edubase.Web.UI.Controllers
             return View("EditBanner", model);
         }
 
-        [Route("Banner/{counter}/{id}", Name = "PostEditBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [HttpPost("Banner/{counter}/{id}", Name = "PostEditBanner")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditBannerAsync(NotificationsBannerViewModel viewModel)
         {
             var item = await _BannerRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return await ProcessEditBanner(viewModel, item);
         }
 
-        private async Task<ActionResult> ProcessEditBanner(NotificationsBannerViewModel viewModel,
-            NotificationBanner originalBanner = null)
+        private async Task<ActionResult> ProcessEditBanner(NotificationsBannerViewModel viewModel, NotificationBanner originalBanner = null)
         {
             if (viewModel.GoBack)
             {
@@ -226,39 +226,36 @@ namespace Edubase.Web.UI.Controllers
 
             if (!ModelState.IsValid)
             {
-                ModelState.SetModelValue(nameof(viewModel.LinkUrl1), new ValueProviderResult(viewModel.LinkUrl1, viewModel.LinkUrl1, CultureInfo.CurrentCulture));
-                ModelState.SetModelValue(nameof(viewModel.LinkText1), new ValueProviderResult(viewModel.LinkText1, viewModel.LinkText1, CultureInfo.CurrentCulture));
-                ModelState.SetModelValue(nameof(viewModel.LinkUrl2), new ValueProviderResult(viewModel.LinkUrl2, viewModel.LinkUrl2, CultureInfo.CurrentCulture));
-                ModelState.SetModelValue(nameof(viewModel.LinkText2), new ValueProviderResult(viewModel.LinkText2, viewModel.LinkText2, CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkUrl1), new ValueProviderResult(new StringValues(viewModel.LinkUrl1 ?? string.Empty), CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkText1), new ValueProviderResult(new StringValues(viewModel.LinkText1 ?? string.Empty), CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkUrl2), new ValueProviderResult(new StringValues(viewModel.LinkUrl2 ?? string.Empty), CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkText2), new ValueProviderResult(new StringValues(viewModel.LinkText2 ?? string.Empty), CultureInfo.CurrentCulture));
             }
 
             return View("EditBanner", viewModel);
         }
 
-
-        [Route("Banner/{counter}/{id}/Delete", Name = "DeleteBanner")]
-        [HttpGet]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Banner/{counter}/{id}/Delete", Name = "DeleteBanner")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> DeleteBannerAsync(NotificationsBannerViewModel viewModel)
         {
             var item = await _BannerRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View("ConfirmDeleteBanner", viewModel.Set(item));
         }
 
-        [Route("Banner/{counter}/{id}/Delete/Confirm", Name = "DeleteBannerConfirmed")]
-        [HttpGet]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Banner/{counter}/{id}/Delete/Confirm", Name = "DeleteBannerConfirmed")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> DeleteBannerConfirmedAsync(NotificationsBannerViewModel viewModel)
         {
             var item = await _BannerRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             await _BannerRepository.DeleteAsync(viewModel.Id, User.GetUserId());
@@ -267,8 +264,8 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [Route("Templates")]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Templates")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> Templates()
         {
             var result = await _TemplateRepository.GetAllAsync(1000);
@@ -284,51 +281,51 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        [Route("Template/New", Name = "CreateTemplate")]
-        [HttpGet]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Template/New", Name = "CreateTemplate")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public ActionResult CreateTemplate()
         {
             return View("EditTemplate", new NotificationsTemplateViewModel());
         }
 
 
-        [Route("Template/New", Name = "PostCreateTemplate"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [HttpPost("Template/New", Name = "PostCreateTemplate")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateTemplateAsync(NotificationsTemplateViewModel viewModel)
         {
             return await ProcessEditTemplate(viewModel);
         }
 
 
-        [Route("Template/{id}", Name = "EditTemplate")]
-        [HttpGet]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Template/{id}", Name = "EditTemplate")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditTemplateAsync(string id)
         {
             var item = await _TemplateRepository.GetAsync(id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
-            return View("EditTemplate",
-                new NotificationsTemplateViewModel { Id = id, Content = item.Content, OriginalContent = item.Content });
+            return View("EditTemplate", new NotificationsTemplateViewModel { Id = id, Content = item.Content, OriginalContent = item.Content });
         }
 
-        [Route("Template/{id}", Name = "PostEditTemplate"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [HttpPost("Template/{id}", Name = "PostEditTemplate")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditTemplateAsync(NotificationsTemplateViewModel viewModel)
         {
             var item = await _TemplateRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return await ProcessEditTemplate(viewModel, item);
         }
 
-        private async Task<ActionResult> ProcessEditTemplate(NotificationsTemplateViewModel viewModel,
-            NotificationTemplate oldModel = null)
+        private async Task<ActionResult> ProcessEditTemplate(NotificationsTemplateViewModel viewModel, NotificationTemplate oldModel = null)
         {
             if (viewModel.GoBack)
             {
@@ -372,30 +369,27 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [Route("Template/{id}/Delete", Name = "DeleteTemplate")]
-        [HttpGet]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Template/{id}/Delete", Name = "DeleteTemplate")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> DeleteTemplateAsync(NotificationsTemplateViewModel viewModel)
         {
             var item = await _TemplateRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
-            return View("ConfirmDeleteTemplate",
-                new NotificationsTemplateViewModel { Id = item.RowKey, Content = item.Content });
+            return View("ConfirmDeleteTemplate", new NotificationsTemplateViewModel { Id = item.RowKey, Content = item.Content });
         }
 
-        [Route("Template/{id}/Delete/Confirm", Name = "DeleteTemplateConfirmed")]
-        [HttpGet]
-        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [HttpGet("Template/{id}/Delete/Confirm", Name = "DeleteTemplateConfirmed")]
+        [MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> DeleteTemplateConfirmedAsync(NotificationsTemplateViewModel viewModel)
         {
             var item = await _TemplateRepository.GetAsync(viewModel.Id);
             if (item == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             await _TemplateRepository.DeleteAsync(viewModel.Id);
@@ -403,11 +397,10 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToAction(nameof(Templates));
         }
 
-        [Route("BannersPartial")]
+        [HttpGet("BannersPartial")]
         public ActionResult BannersPartial()
         {
-            var notificationBanners =
-                _BannerRepository.GetNotificationBanners(2);
+            var notificationBanners = _BannerRepository.GetNotificationBanners(2);
             var model = new NotificationsBannersViewModel(notificationBanners);
             return PartialView("_NotificationsBannersPartial", model);
         }

@@ -1,12 +1,11 @@
 using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
-    public class UtilApiController : ApiController
+    public class UtilApiController : ControllerBase
     {
         private readonly IUserPreferenceRepository _userPreferenceRepository;
 
@@ -15,16 +14,17 @@ namespace Edubase.Web.UI.Controllers.Api
             _userPreferenceRepository = userPreferenceRepository;
         }
 
-        [System.Web.Http.Route("api/save-search-token"), System.Web.Http.HttpPost]
+        [Route("api/save-search-token"), HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IHttpActionResult> SaveSearchTokenAsync(dynamic payload)
+        public async Task<IActionResult> SaveSearchTokenAsync(dynamic payload)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                var prefs = await _userPreferenceRepository.GetAsync(User.GetUserId()) ?? new Data.Entity.UserPreference(User.GetUserId());
-                prefs.SavedSearchToken = (string) payload.token;
+                var userId = User.GetUserId();
+                var prefs = await _userPreferenceRepository.GetAsync(userId) ?? new Data.Entity.UserPreference(userId);
+                prefs.SavedSearchToken = (string)payload.token;
                 await _userPreferenceRepository.UpsertAsync(prefs);
-                return StatusCode(System.Net.HttpStatusCode.NoContent);
+                return NoContent();
             }
             else
             {

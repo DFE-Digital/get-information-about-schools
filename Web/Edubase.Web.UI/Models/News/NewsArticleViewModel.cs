@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Models.News
@@ -23,7 +22,7 @@ namespace Edubase.Web.UI.Models.News
         public RequiredDateTimeViewModel ArticleDate { get; set; } = new RequiredDateTimeViewModel();
         public bool ShowDate { get; set; } = true;
 
-        [Required, AllowHtml]
+        [Required]
         public string Content { get; set; }
 
         public bool GoBack { get; set; }
