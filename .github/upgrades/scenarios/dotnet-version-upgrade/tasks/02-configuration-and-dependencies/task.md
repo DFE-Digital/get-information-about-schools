@@ -1,0 +1,7 @@
+# 02-configuration-and-dependencies: Map configuration and review assembly/dependency conflicts
+
+Inventory configuration names and purposes across Common, Data, Services, Services.Texuna, Web.Resources, Web.UI and their tests. Map settings, custom sections, transforms, connection strings, secret sources, feature flags, defaults and precedence to their intended .NET 10 equivalents. Include IIS handlers/modules, the service.wsdl mapping, authentication, logging, caching and EF6 setup; moving a section to JSON alone does not recreate behaviour. Prepare the mapping without secret values and ask the user to resolve unclear business/environment semantics. Automate straightforward conversion later rather than hand-copying every key.
+
+Review binding redirects and package-version divergence to distinguish obsolete Framework assembly resolution from genuine conflicts that must be resolved. Verify existing package usage before applying suggested alternatives, particularly OData, authentication and storage. Define selective multi-targeting and adapter candidates from actual dependency/API evidence, including tests and removal criteria. Do not select a new identity provider, protocol version, logging destination or ORM implicitly.
+
+**Done when**: A portable configuration mapping and dependency-conflict review exist; environment/secret precedence and custom-component replacements are accounted for; ambiguities that affect implementation have user decisions or explicit blockers. No secrets are written to documentation.

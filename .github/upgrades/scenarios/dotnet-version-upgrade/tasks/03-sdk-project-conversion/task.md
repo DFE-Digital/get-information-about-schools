@@ -1,0 +1,7 @@
+# 03-sdk-project-conversion: Convert legacy project structure without changing target frameworks
+
+Convert the assessment's nine non-SDK projects to SDK style: Common, Data, Services, Services.Texuna, Web.Resources, Web.UI, CommonUnitTests, DataUnitTests and ServicesUnitTests. Convert packages.config to PackageReference as part of this structural work, retaining current TFMs and avoiding unrelated package/API changes. Keep the four existing SDK-style projects intact except where directly necessary for references. Reconcile this inventory against the current branch before execution.
+
+Preserve explicit content/resource inclusions, generated resources, assembly metadata, build/publish assets, test discovery and existing Razor/static-asset tooling. The in-place Framework web project needs project-type-specific conversion research; do not assume a generic class-library conversion preserves its build and publish semantics. If the conversion tool cannot preserve the web project's current-TFM behaviour, stop for a decision rather than silently combining conversion and ASP.NET Core migration. Convert projects sequentially and validate structural changes against the recorded baseline.
+
+**Done when**: Applicable projects are SDK-style with PackageReference, their original TFMs remain unchanged, resources/content and test discovery are preserved, and builds/tests show no unexplained regression from the baseline. Any conversion limitation is resolved explicitly before completion.
