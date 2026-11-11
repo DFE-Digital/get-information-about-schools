@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Edubase.Common;
 using Newtonsoft.Json;
-using Microsoft.AspNet.Identity;
 
 namespace Edubase.Services.Security.ClaimsIdentityConverters
 {
@@ -16,6 +15,7 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
     public class StubClaimsIdConverter
     {
         const string SA_USER_ID_SAML_ATTR = EduClaimTypes.SAUserId;
+        const string APPLICATION_COOKIE_AUTH_TYPE = "ApplicationCookie";
         
         public ClaimsIdentity Convert(ClaimsIdentity id)
         {
@@ -26,7 +26,7 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
 
             var claims = new List<Claim>() { new Claim(EduClaimTypes.UserId, userIdClaim.Value) };
             
-            return new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+            return new ClaimsIdentity(claims, APPLICATION_COOKIE_AUTH_TYPE);
         }
 
     }

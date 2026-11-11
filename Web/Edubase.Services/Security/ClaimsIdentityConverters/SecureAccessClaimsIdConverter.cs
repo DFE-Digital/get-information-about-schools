@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,7 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
         const string USERNAME_SAML_ATTR = "urn:oid:0.9.2342.19200300.100.1.1";
         const string FIRSTNAME_SAML_ATTR = "urn:oid:2.5.4.42";
         const string LASTNAME_SAML_ATTR = "urn:oid:2.5.4.4";
+        const string APPLICATION_COOKIE_AUTH_TYPE = "ApplicationCookie";
 
         public ClaimsIdentity Convert(ClaimsIdentity id)
         {
@@ -30,7 +31,7 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
             if (firstNameClaim?.Value != null) claims.Add(new Claim(EduClaimTypes.FirstName, firstNameClaim.Value));
             if (lastNameClaim?.Value != null) claims.Add(new Claim(EduClaimTypes.LastName, lastNameClaim.Value));
 
-            return new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
+            return new ClaimsIdentity(claims, APPLICATION_COOKIE_AUTH_TYPE);
         }
     }
 }

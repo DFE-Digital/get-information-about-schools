@@ -71,6 +71,11 @@ namespace Edubase.Services.IntegrationEndPoints
         /// <returns>An array of TimeSpans converted from the provided string.</returns>
         public static TimeSpan[] CsvSecondsToTimeSpans(string csvSeconds)
         {
+            if (string.IsNullOrWhiteSpace(csvSeconds))
+            {
+                return Array.Empty<TimeSpan>();
+            }
+
             return csvSeconds.Split(',')
                 .Select(x => x.Trim())
                 .Where(x => int.TryParse(x, out var s) && s >= 0)

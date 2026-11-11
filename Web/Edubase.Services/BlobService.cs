@@ -7,6 +7,7 @@ namespace Edubase.Services
     using System;
     using System.IO;
     using System.IO.Compression;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class BlobService : IBlobService
@@ -53,19 +54,29 @@ namespace Edubase.Services
         public BlobService Initialise(string containerName, bool fullPublicReadAccess = false, bool ensurePermissions = false)
         {
             var result = _client.GetContainerReference(containerName);
-            if (!result.CreateIfNotExists(fullPublicReadAccess
-                ? BlobContainerPublicAccessType.Blob : BlobContainerPublicAccessType.Off)
+            if (!result.CreateIfNotExistsAsync(
+                    fullPublicReadAccess ? BlobContainerPublicAccessType.Blob : BlobContainerPublicAccessType.Off,
+                    null,
+                    null)
+                .GetAwaiter()
+                .GetResult()
                 && ensurePermissions)
             {
                 // The container exists and we need to check the permissions
-                var perm = result.GetPermissions();
+                var perm = result.GetPermissionsAsync()
+                    .GetAwaiter()
+                    .GetResult();
                 if (perm.PublicAccess != BlobContainerPublicAccessType.Blob && fullPublicReadAccess) // the permission isn't 'public blob read', but we want it
                 {
-                    result.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob }); // open up public access
+                    result.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob })
+                        .GetAwaiter()
+                        .GetResult(); // open up public access
                 }
                 else if (perm.PublicAccess == BlobContainerPublicAccessType.Blob && !fullPublicReadAccess) // the permission is currently allowing anon read, but we don't want it.
                 {
-                    result.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off }); // close public access
+                    result.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off })
+                        .GetAwaiter()
+                        .GetResult(); // close public access
                 }
             }
             return this;
@@ -265,7 +276,9 @@ namespace Edubase.Services
         private void SetContentMimeType(string mimeType, CloudBlockBlob blob)
         {
             blob.Properties.ContentType = mimeType;
-            blob.SetProperties();
+            blob.SetPropertiesAsync(null, null, null, CancellationToken.None)
+                .GetAwaiter()
+                .GetResult();
         }
 
         public CloudBlockBlob GetBlobReference(string destinationContainerName, string destinationBlobName)

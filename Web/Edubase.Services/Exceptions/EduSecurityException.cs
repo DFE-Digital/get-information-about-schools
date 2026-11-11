@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 
 namespace Edubase.Services.Exceptions
 {
@@ -14,10 +13,6 @@ namespace Edubase.Services.Exceptions
         }
 
         public EduSecurityException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        protected EduSecurityException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

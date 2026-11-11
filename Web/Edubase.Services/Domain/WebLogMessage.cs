@@ -1,0 +1,19 @@
+namespace Edubase.Services.Domain
+{
+    public class WebLogMessage
+    {
+        public string Id { get; set; }
+        public string Message { get; set; }
+        public string Exception { get; set; }
+        public string Environment { get; set; }
+        public string HttpMethod { get; set; }
+        public string Url { get; set; }
+        public string ReferrerUrl { get; set; }
+        public string UserAgent { get; set; }
+        public string RequestJsonBody { get; set; }
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string ClientIpAddress { get; set; }
+        public string Timestamp { get; set; }
+    }
+}

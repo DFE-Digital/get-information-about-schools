@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,8 +39,7 @@ namespace Edubase.Services.TexunaUnitTests
     {
         private AzureMapsService CreateService(HttpMessageHandler handler)
         {
-            // Bypass constructor entirely
-            var service = (AzureMapsService) FormatterServices.GetUninitializedObject(typeof(AzureMapsService));
+            var service = (AzureMapsService)RuntimeHelpers.GetUninitializedObject(typeof(AzureMapsService));
 
             // Manually inject HttpClient
             var clientField = typeof(AzureMapsService)

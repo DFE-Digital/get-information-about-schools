@@ -9,7 +9,6 @@ namespace Edubase.Services.Exceptions
     /// <summary>
     /// Represents an exception from Texuna where the API raised some service error that is ___unhandle-able___ on our side.
     /// </summary>
-    [Serializable]
     public class TexunaApiSystemException : Exception
     {
         public string ApiRequestJsonPayload { get; set; }
@@ -22,9 +21,5 @@ namespace Edubase.Services.Exceptions
         {
             ApiRequestJsonPayload = apiRequestJsonPayload;
         }
-
-        protected TexunaApiSystemException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

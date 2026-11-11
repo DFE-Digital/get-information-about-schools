@@ -8,7 +8,6 @@ namespace Edubase.Services.Exceptions
     /// should be shown to the user.
     /// </summary>
 
-    [Serializable]
     public class EdubaseException : Exception
     {
         public EdubaseException()
@@ -22,9 +21,5 @@ namespace Edubase.Services.Exceptions
         public EdubaseException(string message, Exception inner) : base(message, inner)
         {
         }
-
-        protected EdubaseException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }
