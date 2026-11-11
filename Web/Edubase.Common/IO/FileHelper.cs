@@ -1,4 +1,5 @@
-﻿using System;
+using Microsoft.AspNetCore.StaticFiles;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -211,6 +212,8 @@ namespace Edubase.Common.IO
             {"csv", "text/csv"}
           };
 
+        private static readonly FileExtensionContentTypeProvider _contentTypeProvider = new FileExtensionContentTypeProvider();
+
 
         /// <summary>
         /// Gets the (dotless, lower-cased) file extension either from the filename or the mime type, depending on the said priority.
@@ -312,7 +315,7 @@ namespace Edubase.Common.IO
         }
 
         /// <summary>
-        /// Returns the MIME type of a file based on its filename.  It'll look at its own internal mapping before using System.Web.MimeMapping
+        /// Returns the MIME type of a file based on its filename. It'll look at its own internal mapping before using the framework content type provider.
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
@@ -320,7 +323,8 @@ namespace Edubase.Common.IO
         {
             var extension = GetExtension(fileName);
             if (_mimeTypesDictionary.ContainsKey(extension)) return _mimeTypesDictionary[extension];
-            else return System.Web.MimeMapping.GetMimeMapping(fileName);
+            if (_contentTypeProvider.TryGetContentType(fileName, out var contentType)) return contentType;
+            return "application/octet-stream";
         }
     }
 }

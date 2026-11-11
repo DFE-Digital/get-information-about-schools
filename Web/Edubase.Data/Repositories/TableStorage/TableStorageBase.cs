@@ -1,13 +1,11 @@
 namespace Edubase.Data.Repositories.TableStorage
 {
-    using System.Globalization;
     using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Microsoft.WindowsAzure.Storage.Table;
-    using System.Data.Entity.Design.PluralizationServices;
+    using System;
     using System.Configuration;
     using Common;
-    using System;
-    using Microsoft.WindowsAzure.Storage.RetryPolicies;
 
     public class TableStorageBase<T> where T : class
     {
@@ -29,15 +27,24 @@ namespace Edubase.Data.Repositories.TableStorage
                 RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(2), 10)
             };
 
-            var pluralizationService = PluralizationService.CreateService(new CultureInfo("en-GB"));
             var tsTableName = string.IsNullOrEmpty(tableName)
-                ? pluralizationService.Pluralize(typeof(T).Name)
+                ? GetDefaultTableName(typeof(T).Name)
                 : tableName;
 
             Table = tableClient.GetTableReference(tsTableName);
-            Table.CreateIfNotExists();
+            Table.CreateIfNotExistsAsync().GetAwaiter().GetResult();
         }
 
         public CloudTable Table { get; }
+
+        private static string GetDefaultTableName(string typeName)
+        {
+            if (typeName.EndsWith("s", StringComparison.OrdinalIgnoreCase))
+            {
+                return typeName;
+            }
+
+            return string.Concat(typeName, "s");
+        }
     }
 }

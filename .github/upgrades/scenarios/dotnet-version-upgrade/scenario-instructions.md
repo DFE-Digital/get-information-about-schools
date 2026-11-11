@@ -29,6 +29,7 @@
 - Deployment preference: migrate in one step, not incrementally; prefer a single production cutover rather than a staged feature-by-feature migration.
 - Use temporary library multi-targeting only where keeping existing consumers buildable provides enough value to justify the extra work, not automatically for every library. Evaluate each library and its dependency chain; do not assume successful builds establish runtime compatibility.
 - Use System.Web Adapters selectively, not automatically: prefer native ASP.NET Core APIs for straightforward changes; consider temporary shims only for supported, tightly coupled legacy request-context usages where they materially reduce migration risk. Verify actual usage and behaviour with explicit tests and remove temporary shims before completion. Adapters do not make MVC5 run on ASP.NET Core or require side-by-side deployment.
+- Enforce SQL-only repository wiring now for the migrated data areas and remove associated migration feature flags; handle logging/API-recording storage path separately.
 
 ## Key Decisions Log
 - 2026-11-06: User confirmed .NET 10 solution-wide assessment, Guided mode, new upgrade-dotnet-10 branch from clean main, manual commits and disabled automatic branch sync.
@@ -42,53 +43,5 @@
 - 2026-11-10: User deferred the OData removal/preservation decision until deeper runtime verification is completed.
 - 2026-11-10: User directed acceptance-test environment prerequisites to remain an explicit external blocker until valid secrets and environment access are provided.
 - 2026-11-11: User agreed Task 03 should not perform FluentValidation 11.x behavioral MVC5 migration work; keep Task 03 structural and defer FluentValidation behavior migration to Task 04.
-
-## Compatibility Review Gates
-- Static assessment does not prove runtime or visual parity; no application code changes or compatibility test execution during assessment.
-- documentation\service\container.md identifies Java SOAP hosting outside this .NET solution. Do not implicitly migrate or replace it.
-- Preserve HomeController's /service-wsdl and /service.wsdl redirect paths and behavior.
-- Preserve DownloadsController and DownloadsApiService generation, polling, redirects, streamed files and MAT closure CSV reports. Validate URLs, methods, authorization, errors, filenames, content types, content-disposition, schemas, encoding and ordering against baseline fixtures.
-- Preserve Newtonsoft.Json wire behavior, including both ApiResultDto and ProgressDto generation responses and current AJAX response shapes.
-- The report's suggested OData v4 replacement is not approved; confirm consumer/protocol compatibility before changing contracts.
-- Require visual and functional regression coverage of Razor views, CSS, JavaScript/Vue assets, forms, validation, navigation and accessibility.
-- AutoMapper 10.1.1 is flagged as vulnerable in Common, Web.UI and Web.UIUnitTests; include remediation in planning and verify advisory details and replacement-version compatibility.
-- Use the confirmed Bottom-Up development order and in-place web migration with one production cutover; resolve outstanding implementation and operational details before affected work.
-
-## Upgrade Options
-
-### Strategy
-- Upgrade Strategy: Bottom-Up
-
-### Project Structure
-- Project Approach: Web Projects - In-place rewrite; Class Libraries - selective Multi-targeting only where justified, otherwise In-place; System.Web Libraries - In-place
-- Package Management: Per-Project (defer CPM to post-migration)
-
-### Compatibility
-- Unsupported Packages: Resolve Inline
-- Unsupported API Handling: Fix Inline
-- System.Web Adapters: Use System.Web Adapters (selective temporary use only; native APIs preferred for straightforward changes)
-  Skill: migrating-mvc-system-web-adapters
-
-### Modernization
-- Configuration Migration: Manual Migration with Mapping Document
-- Logging Framework: Migrate to Microsoft.Extensions.Logging (user requirement; destination undecided)
-- Dependency Injection: Migrate to Built-in DI Container
-- Assembly Binding Redirects: Document and Review Before Removing
-- Entity Framework: Keep EF6
-
-## Strategy
-**Selected**: Bottom-Up (Dependency-First), in-place web migration, single production cutover.
-**Rationale**: Framework-to-modern migration across dependent libraries and a large System.Web application; dependency ordering isolates failures without requiring incremental deployment.
-
-### Execution Constraints
-- Separate SDK-style conversion on existing TFMs from TFM/API migration; perform project conversions sequentially.
-- Break the TFM migration task into dependency-ordered subtasks. Validate each migrated dependency closure and its tests before consumers; update test TFMs and references with the work that requires them.
-- Preserve and validate old consumers where selective multi-targeting justifies it. Where in-place changes intentionally make unmigrated consumers unbuildable, record the affected closure and validate it when migrated; do not claim every intermediate state builds or runs. Ask if this creates an unagreed significant trade-off.
-- Resolve packages and APIs inline without success-shaped placeholders or warning suppression; test contracts and runtime behaviour, not just compilation.
-- Use adapters only where supported usages reduce risk; test them and remove temporary shims and Framework targets before release. Do not introduce side-by-side production routing or cross-app infrastructure implicitly.
-- Keep manual commits as explicitly agreed. Require full build, tests, client/file/UI parity checks and release rehearsal before proposing the single production cutover; no deployment is authorised by this plan.
-
-## Build Tool Decisions
-- **Web\EdubaseWeb.sln**: Prefer IDE `run_build`/Visual Studio build for baseline and full-solution validation.
-- **Legacy non-SDK projects (including `Edubase.Web.UI.csproj`)**: Prefer Visual Studio/MSBuild tooling for command-line validation; `dotnet` CLI project evaluation can fail on missing `Microsoft.WebApplication.targets`.
-- **SDK-style projects (including `Edubase.AcceptanceTests`)**: `dotnet` CLI build/test is acceptable for targeted validation.
+- 2026-11-11: User confirmed SQL replacement is expected to be complete in this branch and instructed enforcement of SQL-only wiring now, including removal of associated migration feature flags, while handling logging/API-recording path separately.
+- 2026-11-11: User accepted replacing System.Device.Location usage as long as new functionality remains equivalent.

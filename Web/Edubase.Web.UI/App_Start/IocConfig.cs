@@ -461,105 +461,20 @@ namespace Edubase.Web.UI
             var connectionString = ConfigurationManager.ConnectionStrings["FrontEndDatabase"].ConnectionString;
             builder.Register(c => new FrontEndDbContext(new SqlConnection(connectionString))).InstancePerRequest();
 
-            if (Feature.IsEnabled("Feature_UserPreferencesMigration"))
-            {
-                builder.RegisterType<SqlUserPreferenceRepository>().As<IUserPreferenceRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
-            }
+            builder.RegisterType<SqlUserPreferenceRepository>().As<IUserPreferenceRepository>().InstancePerRequest();
+            builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().InstancePerRequest();
+            builder.RegisterType<SqlLocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().InstancePerRequest();
+            builder.RegisterType<SqlGlossaryItemRepository>().As<IGlossaryRepository>().InstancePerRequest();
+            builder.RegisterType<SqlFaqGroupRepository>().As<IFaqGroupRepository>().InstancePerRequest();
+            builder.RegisterType<SqlNotificationTemplateRepository>().As<INotificationTemplateRepository>().InstancePerRequest();
+            builder.RegisterType<SqlFaqItemRepository>().As<IFaqItemRepository>().InstancePerRequest();
+            builder.RegisterType<SqlDataQualityStatusRepository>().As<IDataQualityStatusRepository>().InstancePerRequest();
+            builder.RegisterType<SqlNewsArticleRepository>().As<INewsArticleRepository>().InstancePerRequest();
+            builder.RegisterType<SqlNotificationBannerRepository>().As<INotificationBannerRepository>().InstancePerRequest();
 
-            if (Feature.IsEnabled("Feature_TokensMigration"))
-            {
-                builder.RegisterType<SqlTokenRepository>().As<ITokenRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
-            }
-
-            if (Feature.IsEnabled("Feature_LocalAuthoritySetsMigration"))
-            {
-                builder.RegisterType<SqlLocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>().SingleInstance();
-            }
-          
-            if (Feature.IsEnabled("Feature_GlossaryItemsMigration"))
-            {
-                builder.RegisterType<SqlGlossaryItemRepository>().As<IGlossaryRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<GlossaryRepository>().As<IGlossaryRepository>().SingleInstance();
-            }
-          
-            if (Feature.IsEnabled("Feature_FaqGroupsMigration"))
-            {
-                builder.RegisterType<SqlFaqGroupRepository>().As<IFaqGroupRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<FaqGroupRepository>().As<IFaqGroupRepository>().SingleInstance();
-            }
-          
-
-            if (Feature.IsEnabled("Feature_NotificationTemplatesMigration"))
-            {
-                builder.RegisterType<SqlNotificationTemplateRepository>().As<INotificationTemplateRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<NotificationTemplateRepository>().As<INotificationTemplateRepository>().SingleInstance();
-            }
-
-            if (Feature.IsEnabled("Feature_FaqItemsMigration"))
-            {
-                builder.RegisterType<SqlFaqItemRepository>().As<IFaqItemRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<FaqItemRepository>().As<IFaqItemRepository>().SingleInstance();
-            }
-
-            if (Feature.IsEnabled("Feature_DataQualityStatusMigration"))
-            {
-                builder.RegisterType<SqlDataQualityStatusRepository>().As<IDataQualityStatusRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
-            }
-
-            if (Feature.IsEnabled("Feature_NewsArticlesMigration"))
-            {
-                builder.RegisterType<SqlNewsArticleRepository>().As<INewsArticleRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<NewsArticleRepository>().As<INewsArticleRepository>().SingleInstance();
-            }
-
-            if (Feature.IsEnabled("Feature_NotificationBannersMigration"))
-            {
-                builder.RegisterType<SqlNotificationBannerRepository>().As<INotificationBannerRepository>().InstancePerRequest();
-            }
-            else
-            {
-                builder.RegisterType<NotificationBannerRepository>().As<INotificationBannerRepository>().SingleInstance();
-            }
-
-            builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
+            // Logging/API-recording path remains separate from SQL migration scope.
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
 
             builder.RegisterType<SqlLaNameCodeRepository>().As<ISqlLaNameCodeRepository>().SingleInstance();
         }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <Configurations>Debug (QA);Debug;Debug-TexunaAPI;Release;ReleaseTexunaAPI</Configurations>
@@ -29,20 +29,19 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Device" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Web" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -55,6 +54,7 @@
     <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="11.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
