@@ -11,17 +11,21 @@ namespace Edubase.AcceptanceTests.Establishments
         private readonly IUsers users;
         private readonly IGiasFrontEnd giasFrontEnd;
         private readonly IEstablishments establishments;
+        private readonly IAcceptanceTestLogger logger;
+        private readonly List<string> errorMessages = new();
         private Establishment establishment = new();
         private string errorMessage = string.Empty;
 
         public EstablishmentsStepDefinitions(
             IUsers users,
             IGiasFrontEnd giasFrontEnd,
-            IEstablishments establishments)
+            IEstablishments establishments,
+            IAcceptanceTestLogger logger)
         {
             this.users = users;
             this.giasFrontEnd = giasFrontEnd;
             this.establishments = establishments;
+            this.logger = logger;
         }
 
         [Given("a user is not signed in")]
@@ -57,6 +61,9 @@ namespace Edubase.AcceptanceTests.Establishments
             catch (Exception e)
             {
                 errorMessage = $"An error occurred. Failed to retrieve establishment with URN {p0}. {e.Message}";
+
+                errorMessages.Add(errorMessage);
+                errorMessages.Add(e.ToString());
             }
         }
 
@@ -88,6 +95,15 @@ namespace Edubase.AcceptanceTests.Establishments
         public void ThenTheEstablishmentIsNotFound()
         {
             Assert.Contains("Not Found", errorMessage);
+        }
+
+        [AfterScenario]
+        public void AfterScenario()
+        {
+            foreach (var errorMessage in errorMessages)
+            {
+                logger.LogError(errorMessage);
+            }
         }
     }
 }

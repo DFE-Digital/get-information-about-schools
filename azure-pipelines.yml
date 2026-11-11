@@ -283,11 +283,89 @@ stages:
               targetFiles: 'acceptance.tests.config'
 
           - task: PowerShell@2
+            displayName: 'Report transform inputs and transformed config'
+            env:
+              ACCEPTANCE_DATA_CONNECTION_STRING: $(DataConnectionString)
+              ACCEPTANCE_FRONT_END_DATABASE: $(FrontEndDatabase)
+              ACCEPTANCE_ENVIRONMENT: $(Environment)
+              ACCEPTANCE_GIAS_FRONT_END_BASE_ADDRESS: $(GiasFrontEndBaseAddress)
+              ACCEPTANCE_HTTP_AUTH_MODULE_CREDENTIALS: $(HttpAuthModule.Credentials)
+              ACCEPTANCE_FEATURE_USER_PREFERENCES_MIGRATION: $(Feature_UserPreferencesMigration)
+            inputs:
+              targetType: 'inline'
+              script: |
+                $ErrorActionPreference = 'Stop'
+                function Test-ValuePresent([string] $value) {
+                  if ([string]::IsNullOrWhiteSpace($value)) { return $false }
+                  $unexpandedMacroPrefix = [string][char]36 + '('
+                  return -not $value.StartsWith($unexpandedMacroPrefix, [System.StringComparison]::Ordinal)
+                }
+
+                Write-Host 'FileTransform variable inputs (sensitive values are redacted):'
+                $variables = @(
+                  @{ Name = 'DataConnectionString'; Value = $env:ACCEPTANCE_DATA_CONNECTION_STRING; Sensitive = $true },
+                  @{ Name = 'FrontEndDatabase'; Value = $env:ACCEPTANCE_FRONT_END_DATABASE; Sensitive = $true },
+                  @{ Name = 'Environment'; Value = $env:ACCEPTANCE_ENVIRONMENT; Sensitive = $false },
+                  @{ Name = 'GiasFrontEndBaseAddress'; Value = $env:ACCEPTANCE_GIAS_FRONT_END_BASE_ADDRESS; Sensitive = $true },
+                  @{ Name = 'HttpAuthModule.Credentials'; Value = $env:ACCEPTANCE_HTTP_AUTH_MODULE_CREDENTIALS; Sensitive = $true },
+                  @{ Name = 'Feature_UserPreferencesMigration'; Value = $env:ACCEPTANCE_FEATURE_USER_PREFERENCES_MIGRATION; Sensitive = $false }
+                )
+                foreach ($variable in $variables) {
+                  $isSet = Test-ValuePresent $variable.Value
+                  if ($variable.Sensitive) {
+                    $displayValue = if ($isSet) { '<set; redacted>' } else { '<empty or undefined>' }
+                  } else {
+                    $displayValue = if ($isSet) { $variable.Value } else { '<empty or undefined>' }
+                  }
+                  Write-Host ('  {0}={1}' -f $variable.Name, $displayValue)
+                }
+
+                $configPath = Join-Path $env:BUILD_SOURCESDIRECTORY 'acceptance.tests.config'
+                [xml]$config = Get-Content -LiteralPath $configPath -Raw
+                foreach ($entry in $config.configuration.connectionStrings.add) {
+                  if (Test-ValuePresent ([string]$entry.connectionString)) {
+                    $entry.connectionString = '[REDACTED]'
+                  } else {
+                    $entry.connectionString = '[EMPTY]'
+                  }
+                }
+                foreach ($entry in $config.configuration.appSettings.add) {
+                  if (@('Environment', 'Feature_UserPreferencesMigration') -notcontains [string]$entry.key) {
+                    if (Test-ValuePresent ([string]$entry.value)) {
+                      $entry.value = '[REDACTED]'
+                    } else {
+                      $entry.value = '[EMPTY]'
+                    }
+                  }
+                }
+                Write-Host 'Sanitized transformed acceptance.tests.config:'
+                Write-Host $config.OuterXml
+
+          - task: PowerShell@2
             displayName: 'Create acceptance test runtime config'
             inputs:
               targetType: 'inline'
               script: |
-                Copy-Item -Path "$(Build.SourcesDirectory)\acceptance.tests.config" -Destination "$(Build.SourcesDirectory)\acceptance.tests.config.alwaysignore" -Force -ErrorAction Stop
+                $ErrorActionPreference = 'Stop'
+                $sourcePath = Join-Path $env:BUILD_SOURCESDIRECTORY 'acceptance.tests.config'
+                $copiedPath = Join-Path $env:BUILD_SOURCESDIRECTORY 'acceptance.tests.config.alwaysignore'
+                Copy-Item -LiteralPath $sourcePath -Destination $copiedPath -Force
+
+                [xml]$config = Get-Content -LiteralPath $copiedPath -Raw
+                foreach ($entry in $config.SelectNodes('/configuration/connectionStrings/add')) {
+                  $value = $entry.GetAttribute('connectionString')
+                  $entry.SetAttribute('connectionString', $(if ([string]::IsNullOrWhiteSpace($value)) { '[EMPTY]' } else { '[REDACTED]' }))
+                }
+                foreach ($entry in $config.SelectNodes('/configuration/appSettings/add')) {
+                  $key = $entry.GetAttribute('key')
+                  if (@('Environment', 'Feature_UserPreferencesMigration') -notcontains $key) {
+                    $value = $entry.GetAttribute('value')
+                    $entry.SetAttribute('value', $(if ([string]::IsNullOrWhiteSpace($value)) { '[EMPTY]' } else { '[REDACTED]' }))
+                  }
+                }
+                Write-Host ('Copied runtime config exists: {0}' -f (Test-Path -LiteralPath $copiedPath))
+                Write-Host 'Sanitized copied acceptance.tests.config.alwaysignore:'
+                Write-Host $config.OuterXml
 
           - task: UseDotNet@2
             displayName: 'Install .NET 10 SDK'

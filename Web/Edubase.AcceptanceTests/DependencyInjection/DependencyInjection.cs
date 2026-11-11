@@ -19,7 +19,8 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             var settings = Settings.Load();
 
             var services = new ServiceCollection();
-
+            
+            services.AddAcceptanceTestLogging();
             services.AddSingleton(settings);
 
             services.AddHardCodedUsers();
@@ -31,9 +32,14 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             return services;
         }
 
+        private static void AddAcceptanceTestLogging(this ServiceCollection services)
+        {
+            services.AddScoped<IAcceptanceTestLogger, ReqnrollLogger>();
+        }
+
         private static void AddHardCodedUsers(this ServiceCollection services)
         {
-            services.AddScoped<IUsers, UsersFromHardCodedValues>();
+            services.AddScoped<IUsers>(sp => new UsersFromHardCodedValues(sp.GetRequiredService<Settings>().Environment));
         }
 
         private static void AddEstablishmentsFromGiasFrontEnd(this ServiceCollection services)
@@ -50,11 +56,15 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
             if (settings.Feature_UserPreferencesMigration == false)
             {
-                services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInAzureTableStorage>();
+                var x = services.BuildServiceProvider().GetRequiredService<IUserPreferencesInMigrationSource>();
+
+                services.AddScoped<IUserPreferencesInPersistentStorage>(sp => x);
             }
             else
             {
-                services.AddScoped<IUserPreferencesInPersistentStorage, UserPreferencesInSQLServer>();
+                var x = services.BuildServiceProvider().GetRequiredService<IUserPreferencesInMigrationTarget>();
+
+                services.AddScoped<IUserPreferencesInPersistentStorage>(sp => x);
             }
         }
 
