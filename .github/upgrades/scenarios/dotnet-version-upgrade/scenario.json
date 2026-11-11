@@ -3,7 +3,7 @@
   "operationId": "a601a444-3f7e-4771-8772-2ea7dff5f701",
   "description": "Upgrade .NET projects to newer .NET versions, including guidance on current release status, support lifecycle (LTS/STS), and recommended upgrade targets.",
   "startTime": "2026-11-06T16:16:40.202892Z",
-  "lastUpdateTime": "2026-11-11T16:40:49.8612595Z",
+  "lastUpdateTime": "2026-11-11T17:16:32.5858164Z",
   "properties": {
     "taskStates": {
       "01-readiness-and-compatibility": "Completed",
@@ -15,7 +15,8 @@
       "04-net10-application-migration": "InProgress",
       "04.01-common-data-net10": "Completed",
       "04.02-services-net10": "Completed",
-      "04.03-texuna-resources-net10": "Completed"
+      "04.03-texuna-resources-net10": "Completed",
+      "04.04-webui-host-foundation-net10": "Completed"
     }
   },
   "folderPath": ""

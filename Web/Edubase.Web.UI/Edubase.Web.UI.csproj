@@ -1,12 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <WebProject_DirectoryAccessLevelKey>1</WebProject_DirectoryAccessLevelKey>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <UseRazorSourceGenerator>false</UseRazorSourceGenerator>
+    <AddRazorSupportForMvc>false</AddRazorSupportForMvc>
     <Configurations>Debug (QA);Debug;Debug-TexunaAPI;Release;ReleaseTexunaAPI</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -17,7 +20,7 @@
     <OutputPath>bin\</OutputPath>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.OracleClient" />
@@ -39,9 +42,7 @@
     <Reference Include="System.Net.Http"></Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".well-known\security.txt" />
@@ -223,6 +224,12 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -394,7 +401,7 @@
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj" />
     <ProjectReference Include="..\Edubase.Web.Resources\Edubase.Web.Resources.csproj" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <PackageReference Include="Antlr" Version="3.5.0.2" />
     <PackageReference Include="Autofac" Version="8.0.0" />
     <PackageReference Include="Autofac.Mvc5" Version="6.1.0" />
@@ -550,7 +557,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild">
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="'$(TargetFramework)' == 'net48'">
     <ItemGroup>
       <RoslynFiles Include="$(SolutionDir)packages\Microsoft.Net.Compilers.3.5.0\tools\*" />
     </ItemGroup>
@@ -558,3 +565,4 @@
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
   </Target>
 </Project>
+

@@ -30,6 +30,7 @@
 - 2026-11-11: User chose to expand Task 04.02 scope to resolve remaining Services-closure net10 warnings immediately (including package/security warning remediation).
 - 2026-11-11: User evaluated non-licensed AutoMapper path and chose to keep AutoMapper at 10.1.1 for now (instead of moving to 14.x), given current net48 compatibility constraints.
 - 2026-11-11: User requested adherence to the existing application's coding standards and style conventions, and asked for this preference to be explicitly captured in scenario instructions.
+- 2026-11-11: User approved a host-foundation cut for 04.04: produce a runnable ASP.NET Core shell on net10 and temporarily exclude legacy MVC5/System.Web feature code from compile, then restore full feature parity in 04.05.
 
 ## User Preferences
 ### Technical Preferences
