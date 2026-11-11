@@ -41,6 +41,7 @@
 - 2026-11-10: User decided to use Application Insights for both application logging and API session recordings, and to retire the existing admin log viewer in the .NET 10 migration.
 - 2026-11-10: User deferred the OData removal/preservation decision until deeper runtime verification is completed.
 - 2026-11-10: User directed acceptance-test environment prerequisites to remain an explicit external blocker until valid secrets and environment access are provided.
+- 2026-11-11: User agreed Task 03 should not perform FluentValidation 11.x behavioral MVC5 migration work; keep Task 03 structural and defer FluentValidation behavior migration to Task 04.
 
 ## Compatibility Review Gates
 - Static assessment does not prove runtime or visual parity; no application code changes or compatibility test execution during assessment.
