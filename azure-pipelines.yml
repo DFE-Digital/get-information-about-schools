@@ -275,17 +275,8 @@ stages:
         steps:
           - checkout: self
 
-          - task: FileTransform@2
-            displayName: 'Populate acceptance test config'
-            inputs:
-              folderPath: '$(Build.SourcesDirectory)'
-              enableXmlTransform: false
-              enableXmlVariableSubstitution: true
-              fileType: xml
-              targetFiles: 'acceptance.tests.config'
-
           - task: PowerShell@2
-            displayName: 'Report transform inputs and transformed config'
+            displayName: 'Populate and report acceptance test config'
             env:
               ACCEPTANCE_DATA_CONNECTION_STRING: $(DataConnectionString)
               ACCEPTANCE_FRONT_END_DATABASE: $(FrontEndDatabase)
@@ -303,7 +294,7 @@ stages:
                   return -not $value.StartsWith($unexpandedMacroPrefix, [System.StringComparison]::Ordinal)
                 }
 
-                Write-Host 'FileTransform variable inputs (sensitive values are redacted):'
+                Write-Host 'Acceptance test configuration inputs (sensitive values are redacted):'
                 $variables = @(
                   @{ Name = 'DataConnectionString'; Value = $env:ACCEPTANCE_DATA_CONNECTION_STRING; Sensitive = $true },
                   @{ Name = 'FrontEndDatabase'; Value = $env:ACCEPTANCE_FRONT_END_DATABASE; Sensitive = $true },
@@ -320,27 +311,49 @@ stages:
                     $displayValue = if ($isSet) { $variable.Value } else { '<empty or undefined>' }
                   }
                   Write-Host ('  {0}={1}' -f $variable.Name, $displayValue)
+                  if (-not $isSet) {
+                    throw "Required acceptance test variable '$($variable.Name)' is empty or unresolved."
+                  }
                 }
 
                 $configPath = Join-Path $env:BUILD_SOURCESDIRECTORY 'acceptance.tests.config'
                 [xml]$config = Get-Content -LiteralPath $configPath -Raw
-                foreach ($entry in $config.configuration.connectionStrings.add) {
-                  if (Test-ValuePresent ([string]$entry.connectionString)) {
-                    $entry.connectionString = '[REDACTED]'
-                  } else {
-                    $entry.connectionString = '[EMPTY]'
+                $connectionStringValues = @{
+                  DataConnectionString = $env:ACCEPTANCE_DATA_CONNECTION_STRING
+                  FrontEndDatabase = $env:ACCEPTANCE_FRONT_END_DATABASE
+                }
+                foreach ($name in $connectionStringValues.Keys) {
+                  $entry = $config.SelectSingleNode("/configuration/connectionStrings/add[@name='$name']")
+                  if ($null -eq $entry) {
+                    throw "Required connection string '$name' was not found in acceptance.tests.config."
+                  }
+                  $entry.SetAttribute('connectionString', [string]$connectionStringValues[$name])
+                }
+                $appSettingValues = @{
+                  Environment = $env:ACCEPTANCE_ENVIRONMENT
+                  GiasFrontEndBaseAddress = $env:ACCEPTANCE_GIAS_FRONT_END_BASE_ADDRESS
+                  'HttpAuthModule.Credentials' = $env:ACCEPTANCE_HTTP_AUTH_MODULE_CREDENTIALS
+                  Feature_UserPreferencesMigration = $env:ACCEPTANCE_FEATURE_USER_PREFERENCES_MIGRATION
+                }
+                foreach ($key in $appSettingValues.Keys) {
+                  $entry = $config.SelectSingleNode("/configuration/appSettings/add[@key='$key']")
+                  if ($null -eq $entry) {
+                    throw "Required appSetting '$key' was not found in acceptance.tests.config."
+                  }
+                  $entry.SetAttribute('value', [string]$appSettingValues[$key])
+                }
+                $config.Save($configPath)
+
+                foreach ($entry in $config.SelectNodes('/configuration/connectionStrings/add')) {
+                  $entry.SetAttribute('connectionString', $(if ([string]::IsNullOrWhiteSpace($entry.GetAttribute('connectionString'))) { '[EMPTY]' } else { '[REDACTED]' }))
+                }
+                foreach ($entry in $config.SelectNodes('/configuration/appSettings/add')) {
+                  $key = $entry.GetAttribute('key')
+                  if (@('Environment', 'Feature_UserPreferencesMigration') -notcontains $key) {
+                    $entry.SetAttribute('value', $(if ([string]::IsNullOrWhiteSpace($entry.GetAttribute('value'))) { '[EMPTY]' } else { '[REDACTED]' }))
                   }
                 }
-                foreach ($entry in $config.configuration.appSettings.add) {
-                  if (@('Environment', 'Feature_UserPreferencesMigration') -notcontains [string]$entry.key) {
-                    if (Test-ValuePresent ([string]$entry.value)) {
-                      $entry.value = '[REDACTED]'
-                    } else {
-                      $entry.value = '[EMPTY]'
-                    }
-                  }
-                }
-                Write-Host 'Sanitized transformed acceptance.tests.config:'
+                Write-Host 'Sanitized populated acceptance.tests.config:'
                 Write-Host $config.OuterXml
 
           - task: PowerShell@2
