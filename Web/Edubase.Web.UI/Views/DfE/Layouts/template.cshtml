@@ -1,4 +1,7 @@
+@using System.Linq
 @using Edubase.Web.UI.Controllers
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @{
     Layout = "../../govuk/layouts/template.cshtml";
     var version = typeof(HomeController).Assembly.GetName().Version;
@@ -23,10 +26,10 @@
 
 @section BodyEnd {
 
-    @if (!Request.Browser.Browser.Contains("MSIE 8"))
+    @if (!Context.Request.Headers.UserAgent.Any(x => x.Contains("MSIE 8", StringComparison.OrdinalIgnoreCase)))
     {
         <script nonce="@Html.ScriptNonce()">
-            var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
+            var azureMapsApiKey = "@(Configuration["AzureMapsApiKey"])";
         </script>
 
         <script src="@Html.Raw(Html.GetWebpackScriptUrl("bundle.*.js"))"></script>

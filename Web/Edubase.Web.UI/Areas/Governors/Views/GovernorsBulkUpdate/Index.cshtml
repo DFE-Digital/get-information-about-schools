@@ -65,7 +65,8 @@
         {
             var uri = new Uri(Model.ErrorLogDownload.Url);
             var path = uri.GetLeftPart(UriPartial.Path);
-            var id = HttpUtility.ParseQueryString(uri.Query)["id"];
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query.TrimStart('?'));
+            var id = query.TryGetValue("id", out var idValue) ? idValue.ToString() : null;
 
             using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
             {

@@ -59,7 +59,7 @@
                         <li>
                             <h3 class="govuk-heading-s">
                                 <span id="tool-link-@label.ToLower()-@itemCounter">
-                                    @Html.Raw(HttpUtility.HtmlDecode(list[itemCounter].Link.ToHtmlString()))
+                                    @Html.Raw(System.Net.WebUtility.HtmlDecode(list[itemCounter].Link.ToHtmlString()))
                                 </span>
                             </h3>
                             <p class="@Html.Conditional(list.Count == 1, "govuk-!-padding-right-6")">

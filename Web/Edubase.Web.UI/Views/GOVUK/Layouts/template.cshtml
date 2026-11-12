@@ -1,17 +1,20 @@
+@using System.Linq
 @using Edubase.Web.UI.Controllers
-@using Microsoft.AspNet.Identity
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @{
     ViewBag.assetsPath = "/public/govuk-frontend";
 
     var title = !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Get Information about Schools";
-    var documentTitle = string.Format("{0} - {1}", title, "GOV.UK");
-    var gtmKey = System.Configuration.ConfigurationManager.AppSettings["GoogleTagManagerKey"];
-
-    var envHeader = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
+    var documentTitle = $"{title} - GOV.UK";
+    var gtmKey = Configuration["GoogleTagManagerKey"];
+    var envHeader = Configuration["Environment"] ?? string.Empty;
     var version = typeof(HomeController).Assembly.GetName().Version;
-    var acceptsAnalytics = HttpContext.Current.Request.Cookies["analytics_preferences"]?.Value.ToString();
-
-    var clarityKey = System.Configuration.ConfigurationManager.AppSettings["ClarityKey"];
+    var acceptsAnalytics = Context.Request.Cookies["analytics_preferences"];
+    var clarityKey = Configuration["ClarityKey"];
+    var antiforgery = Context.RequestServices.GetService<IAntiforgery>();
+    var csrfToken = antiforgery?.GetAndStoreTokens(Context).RequestToken ?? string.Empty;
 }
 <!doctype html>
 <html lang="en" class="govuk-template govuk-template--rebranded">
@@ -80,15 +83,8 @@
 
     @RenderSection("Head", required: false)
 
-    @functions {
-        public static IHtmlString GetCsrfTokenMeta()
-        {
-            string cookieToken, formToken;
-            System.Web.Helpers.AntiForgery.GetTokens(null, out cookieToken, out formToken);
-            return new HtmlString($"<meta name=\"csrf-token\" content=\"{formToken}\" />");
-        }}
     @Html.AntiForgeryToken()
-    @GetCsrfTokenMeta()
+    <meta name="csrf-token" content="@csrfToken" />
 
 </head>
 <body class="govuk-template__body @(ViewBag.bodyClasses) no-js govuk-frontend-supported" data-module="app-navigation" id="top">
@@ -101,7 +97,7 @@
     }
     <!-- End Google Tag Manager (noscript) -->
 
-    @if (!Request.Browser.Browser.Contains("MSIE 8"))
+    @if (!Context.Request.Headers.UserAgent.Any(x => x.Contains("MSIE 8", StringComparison.OrdinalIgnoreCase)))
     {
         <script type="text/javascript" nonce="@Html.ScriptNonce()">
             document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
@@ -132,10 +128,8 @@
     }
 
     @{
-        // Not all uses of the URL on this page strictly require being forwarded header aware,
-        // but it's easier and safer to be consistent and just do it everywhere.
-        var urlHelper = new UrlHelper(Request.RequestContext);
-        var currentUrl = urlHelper.GetForwardedHeaderAwareUrl();
+        // Preserve page-origin semantics without relying on legacy MVC request-context helpers.
+        var currentUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}{Context.Request.Path}{Context.Request.QueryString}";
     }
 
     <div id="app">
@@ -261,7 +255,7 @@
                         @Html.NavigationItem((string)ViewBag.siteSection, "search", "Search", "Index", "Search", "search-link")
                         @Html.NavigationItem((string)ViewBag.siteSection, "downloads", "Downloads", "Index", "Downloads", "downloads-link")
 
-                        @if (Request.IsAuthenticated)
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
                             @Html.NavigationItem((string)ViewBag.siteSection, "tools", "Tools", "Index", "Tools", "tools-link")
                         }
@@ -270,7 +264,7 @@
                         @Html.NavigationItem((string)ViewBag.siteSection, "help", "Help", "Help", "Home", "help-link")
                         @Html.NavigationItem((string)ViewBag.siteSection, "news", "News", "Index", "News", "news-link")
 
-                        @if (Request.IsAuthenticated)
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="govuk-service-navigation__item" style="margin-left: auto;">
                                 @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { id = "logout-link", Class = "govuk-service-navigation__link", rel = "nofollow" })
@@ -372,7 +366,7 @@
             top.location.href = document.location.href;
         }
     </script>
-    @if (Request.IsAuthenticated)
+    @if (User.Identity?.IsAuthenticated == true)
     {
         <script nonce="@Html.ScriptNonce()">
             new checkGiasDataStatus();

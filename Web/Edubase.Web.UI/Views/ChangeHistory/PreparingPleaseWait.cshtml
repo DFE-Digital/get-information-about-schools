@@ -48,7 +48,8 @@
         </div>
     </div>
     <div class="govuk-grid-column-full govuk-!-padding-top-8">
-        <a href=@($"{Url.RouteUrl("ChangeHistorySearch")}?{Request.QueryString.RemoveKey("DownloadFormat")}") class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+        @{ var cancelQuery = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(Context.Request.QueryString.Value ?? string.Empty); cancelQuery.Remove("DownloadFormat"); var cancelQueryValue = Microsoft.AspNetCore.Http.Extensions.QueryString.Create(cancelQuery).Value; }
+        <a href=@(string.IsNullOrEmpty(cancelQueryValue) ? Url.RouteUrl("ChangeHistorySearch") : $"{Url.RouteUrl("ChangeHistorySearch")}?{cancelQueryValue.TrimStart('?')}") class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
     </div>
 </div>
 

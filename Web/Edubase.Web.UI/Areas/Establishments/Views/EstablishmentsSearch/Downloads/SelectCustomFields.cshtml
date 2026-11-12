@@ -97,10 +97,12 @@
     {
         <input type="hidden" name="SelectedLocalAuthorityIds" value="@laId" />
     }
-    var statusId = Request.QueryString.GetValues("SelectedEstablishmentStatusIds") ?? new string[0];
+    var statusId = Context.Request.Query.TryGetValue("SelectedEstablishmentStatusIds", out var statusIdValues)
+        ? statusIdValues.ToArray()
+        : Array.Empty<string>();
     foreach (var status in statusId)
     {
-        @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{HttpUtility.HtmlEncode(status)}\" />")
+        @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{System.Net.WebUtility.HtmlEncode(status)}\" />")
     }
     <!-- Top error summary (already works) -->
     <div id="search-error-summary" class="govuk-error-summary" role="alert" style="display: none;">

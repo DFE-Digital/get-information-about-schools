@@ -46,13 +46,17 @@
 @helper LocationLink(PlaceDto place)
 {
     const string key = "LocationSearchModel.AutoSuggestValue";
-    var queryString = Request.QueryString.RemoveKeys("placeId", key).AddIfNonExistent(key, $"{place.Coords.Latitude},{place.Coords.Longitude}");
-    if (queryString["OpenOnly"] == "true")
+    var queryValues = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(Context.Request.QueryString.Value ?? string.Empty);
+    queryValues.Remove("placeId");
+    queryValues.Remove(key);
+    queryValues[key] = $"{place.Coords.Latitude},{place.Coords.Longitude}";
+    if (queryValues.TryGetValue("OpenOnly", out var openOnlyValue) && openOnlyValue.ToString() == "true")
     {
-        queryString = queryString.RemoveKey("OpenOnly").AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eLookupEstablishmentStatus.Open, (int)eLookupEstablishmentStatus.OpenButProposedToClose);
+        queryValues.Remove("OpenOnly");
+        queryValues[SearchViewModel.BIND_ALIAS_STATUSIDS] = $"{(int)eLookupEstablishmentStatus.Open},{(int)eLookupEstablishmentStatus.OpenButProposedToClose}";
     }
 
-    <a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@queryString">@place.Name</a>
+    <a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@Microsoft.AspNetCore.Http.Extensions.QueryString.Create(queryValues).Value.TrimStart('?')">@place.Name</a>
 
 }
 

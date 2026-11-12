@@ -1,5 +1,4 @@
 @using System.Globalization
-@using System.Web.Mvc.Html
 @using Edubase.Data.Entity
 @using Edubase.Web.UI.Controllers
 @model Edubase.Web.UI.Models.News.NewsArticlesAuditViewModel
@@ -30,16 +29,17 @@
 </div>
 
 @{
-    var request = HttpContext.Current.Request;
+    var request = Context.Request;
+    var sortByQuery = request.Query["sortby"].ToString();
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = nameof(NewsArticle.ArticleDate);
 
-    if (request.QueryString["sortby"] != null)
+    if (!string.IsNullOrEmpty(sortByQuery))
     {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+        sortField = sortByQuery.Substring(0, sortByQuery.IndexOf('-'));
+        sortDir = sortByQuery.Contains("asc") ? "asc" : "desc";
+        sortDirText = sortByQuery.Contains("asc") ? "an ascending order" : "a descending order";
     }
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";

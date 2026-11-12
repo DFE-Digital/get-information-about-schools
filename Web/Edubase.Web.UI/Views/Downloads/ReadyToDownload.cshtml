@@ -47,8 +47,8 @@
 
             if (isExtract)
             {
-                var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-                id = query["id"];
+                var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query.TrimStart('?'));
+                id = query.TryGetValue("id", out var idValue) ? idValue.ToString() : null;
             }
 
             using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))

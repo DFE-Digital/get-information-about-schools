@@ -6,7 +6,9 @@
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 
-    var gSearch = Request.QueryString["gsearch"];
+    var gSearch = Context.Request.Query.TryGetValue("gsearch", out var gSearchValues)
+        ? gSearchValues.ToString()
+        : null;
 }
 
 @section Head

@@ -6,8 +6,12 @@
     ViewBag.SiteSection = "tools";
 
     var establishmentTypeId = Model.EstablishmentTypeId;
-    var sortBy = Request.QueryString["sortBy"] ?? "OpenDate-asc";
-    var month = Request.QueryString["month"] ?? Model.SelectedMonth;
+    var sortBy = Context.Request.Query.TryGetValue("sortBy", out var sortByValues)
+        ? sortByValues.ToString()
+        : "OpenDate-asc";
+    var month = Context.Request.Query.TryGetValue("month", out var monthValues)
+        ? monthValues.ToString()
+        : Model.SelectedMonth;
     var sortParts = (sortBy ?? "OpenDate-asc").Split('-');
     var sortField = sortParts.Length > 0 && !string.IsNullOrWhiteSpace(sortParts[0]) ? sortParts[0] : "OpenDate";
     var sortDir = sortParts.Length > 1 ? sortParts[1].ToLowerInvariant() : "desc";

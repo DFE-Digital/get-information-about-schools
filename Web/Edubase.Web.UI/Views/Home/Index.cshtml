@@ -7,10 +7,8 @@
 }
 
 @{
-    // Not all uses of the URL on this page strictly require being forwarded header aware,
-    // but it's easier and safer to be consistent and just do it everywhere.
-    var urlHelper = new UrlHelper(Request.RequestContext);
-    var currentUrl = urlHelper.GetForwardedHeaderAwareUrl();
+    // Preserve the existing return URL semantics without relying on MVC request-context helpers.
+    var currentUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}{Context.Request.Path}{Context.Request.QueryString}";
 }
 
 <div class="govuk-grid-row">
@@ -98,7 +96,7 @@
             </div>
         </div>
 
-        @if (!Request.IsAuthenticated)
+        @if (User.Identity?.IsAuthenticated != true)
         {
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full @groupSpacing">

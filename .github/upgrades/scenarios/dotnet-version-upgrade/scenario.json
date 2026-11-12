@@ -3,7 +3,7 @@
   "operationId": "a601a444-3f7e-4771-8772-2ea7dff5f701",
   "description": "Upgrade .NET projects to newer .NET versions, including guidance on current release status, support lifecycle (LTS/STS), and recommended upgrade targets.",
   "startTime": "2026-11-06T16:16:40.202892Z",
-  "lastUpdateTime": "2026-11-12T13:13:04.5353264Z",
+  "lastUpdateTime": "2026-11-12T14:16:29.0269738Z",
   "properties": {
     "orphanedTaskIds": [],
     "taskStates": {
@@ -18,7 +18,9 @@
       "06-solution-validation": "Failed",
       "02-configuration-and-dependencies": "Completed",
       "01-readiness-and-compatibility": "Completed",
-      "04.05.02.05-endpoint-contract-validation": "Completed"
+      "04.05.02.05-endpoint-contract-validation": "Completed",
+      "04.05.03-webui-views-assets-parity": "Completed",
+      "04.05.04-webui-parity-validation": "Completed"
     }
   },
   "folderPath": ""

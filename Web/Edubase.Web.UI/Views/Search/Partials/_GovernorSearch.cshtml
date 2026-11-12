@@ -6,11 +6,9 @@
 @model VM
 
 @{
-    var gSearch = "";
-    if (Request.QueryString["gsearch"] != null)
-    {
-        gSearch = Request.QueryString["gsearch"];
-    }
+    var gSearch = Context.Request.Query.TryGetValue("gsearch", out var gSearchValues)
+        ? gSearchValues.ToString()
+        : string.Empty;
 }
 <div>
 <h2 class="govuk-heading-s">Search by:</h2>

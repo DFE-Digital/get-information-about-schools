@@ -78,7 +78,7 @@
     </div>
     <div class="govuk-grid-column-full">
         <div class="button-row">
-            @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "MergeEstablishments", "AmalgamateMerge", new { area = ""}, new { @class = "govuk-button govuk-button--secondary"})
+            @Html.ActionLink(System.Net.WebUtility.HtmlDecode("&laquo; Go back"), "MergeEstablishments", "AmalgamateMerge", new { area = ""}, new { @class = "govuk-button govuk-button--secondary"})
             <button type="submit" class="govuk-button">Process</button>
             @Html.ActionLink("Cancel", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
         </div>

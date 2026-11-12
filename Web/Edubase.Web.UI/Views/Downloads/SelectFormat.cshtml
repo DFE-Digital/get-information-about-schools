@@ -48,7 +48,7 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <input type="hidden" name="state" value="@Request.QueryString["state"]"/>
+            <input type="hidden" name="state" value="@(Context.Request.Query.TryGetValue("state", out var stateValue) ? stateValue.ToString() : null)"/>
             <div class="download-step">
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">

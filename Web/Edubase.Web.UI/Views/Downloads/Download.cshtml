@@ -39,7 +39,7 @@
                     <a id="download-button" class="govuk-button" href="@Url.Current(new { start = true })" rel="nofollow">
                         Download
                     </a>
-                    <p id="download-file-format-body" class="govuk-body">The data is in @(Request.QueryString["downloadtype"]?.ToString().ToUpper()) format and will download as a ZIP file. Open the ZIP file to access its content.</p>
+                    <p id="download-file-format-body" class="govuk-body">The data is in @(Context.Request.Query.TryGetValue("downloadtype", out var downloadTypeValue) ? downloadTypeValue.ToString().ToUpperInvariant() : string.Empty) format and will download as a ZIP file. Open the ZIP file to access its content.</p>
                 </li>
             </ul>
         </div>

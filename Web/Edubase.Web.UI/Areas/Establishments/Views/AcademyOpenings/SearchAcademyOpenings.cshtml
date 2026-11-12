@@ -3,7 +3,11 @@
 @{
     ViewBag.bodyClasses = "manage-academy-openings";
     ViewBag.SiteSection = "tools";
-    var establishmentTypeId = (ViewBag.EstablishmentTypeId as string) ?? Request.QueryString["establishmentTypeId"] ?? string.Empty;
+    var establishmentTypeId = (ViewBag.EstablishmentTypeId as string)
+        ?? (Context.Request.Query.TryGetValue("establishmentTypeId", out var establishmentTypeIdValues)
+            ? establishmentTypeIdValues.ToString()
+            : string.Empty)
+        ?? string.Empty;
     var manageRouteName = (ViewBag.ManageRouteName as string) ??
                           (string.Equals(establishmentTypeId, "46", StringComparison.OrdinalIgnoreCase)
                               ? "ManageSecureAcademy16To19Openings"

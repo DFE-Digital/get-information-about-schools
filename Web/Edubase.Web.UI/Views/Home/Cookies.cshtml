@@ -1,7 +1,7 @@
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.SiteSection = "help";
-    var acceptsAnalytics = HttpContext.Current.Request.Cookies["analytics_preferences"]?.Value.ToString();
+    var acceptsAnalytics = Context.Request.Cookies["analytics_preferences"];
     var declinedAnalytics = acceptsAnalytics == "False";
 }
 @section BreadCrumbs
