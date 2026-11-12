@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
@@ -10,7 +10,7 @@ using Edubase.Web.UI.Validation;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
+    [Route("Governors/GroupCorporateContact")]
     public class GroupCorporateContactController : Controller
     {
         private const string GroupEditCorporateContactRoute = "~/Groups/Group/Edit/{groupUId:int}/CorporateContact";
@@ -30,7 +30,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
         [HttpGet, EdubaseAuthorize]
-        [Route(GroupEditCorporateContactRoute, Name = "GroupEditCorporateContact")]
+        [Route("", Name = "GroupEditCorporateContact")]
         public async Task<ActionResult> GroupEditCorporateContact(int groupUId)
         {
             var group = await _groupReadService.GetAsync(groupUId, User);
@@ -49,7 +49,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
         [HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
-        [Route(GroupEditCorporateContactRoute, Name = "GroupEditCorporateContactPost")]
+        [Route("Post", Name = "GroupEditCorporateContactPost")]
         public async Task<ActionResult> GroupEditCorporateContact(EditGroupCorporateContactViewModel model)
         {
             var result = await new EditGroupCorporateContactViewModelValidator().ValidateAsync(model);

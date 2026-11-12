@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Edubase.Web.UI.Filters;
-using System.Web.Mvc;
 using Edubase.Services.Approvals;
 using Edubase.Services.Approvals.Models;
 using Edubase.Services.Core;
+using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Tools;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Approvals"), Route("{action=index}"), MvcAuthorizeRoles(AuthorizedRoles.CanApprove)]
+    [Route("Approvals"), MvcAuthorizeRoles(AuthorizedRoles.CanApprove)]
     public class ApprovalsController : Controller
     {
         private readonly IApprovalService _approvalService;
@@ -22,7 +22,8 @@ namespace Edubase.Web.UI.Controllers
             _approvalService = approvalService;
         }
 
-        [HttpGet, EdubaseAuthorize, Route(Name = "PendingApprovals")]
+        [HttpGet("", Name = "PendingApprovals"), EdubaseAuthorize]
+        [HttpGet("Index")]
         public async Task<ActionResult> Index(string sortBy, int skip = 0)
         {
             var vm = await PopulateChangesModel(sortBy, skip);
@@ -30,7 +31,8 @@ namespace Edubase.Web.UI.Controllers
             return View("Index", vm);
         }
 
-        [HttpPost, EdubaseAuthorize, Route(Name = "PendingApprovalsPost"), ValidateAntiForgeryToken]
+        [HttpPost("", Name = "PendingApprovalsPost"), EdubaseAuthorize, ValidateAntiForgeryToken]
+        [HttpPost("Index")]
         public async Task<ActionResult> Index(PendingChangeRequestAction viewModel)
         {
             if (viewModel.Ids == null)
@@ -42,13 +44,13 @@ namespace Edubase.Web.UI.Controllers
 
             if (viewModel.Action == ePendingChangeRequestAction.Reject)
             {
-
                 if (string.IsNullOrEmpty(viewModel.RejectionReason))
                 {
                     if (viewModel.ActionSpecifier == "setRejection")
                     {
                         ModelState.AddModelError("RejectionReason", "Enter a reason for the rejection");
                     }
+
                     return View("ExplainRejections", viewModel);
                 }
 
@@ -69,26 +71,24 @@ namespace Edubase.Web.UI.Controllers
                 TempData["ShowSuccess"] = "Items rejected. The editor has been notified by email";
                 return RedirectToAction("Index");
             }
+
+            viewModel.ActionSpecifier = "approve";
+            var approveResult = await _approvalService.ActionAsync(viewModel, User);
+            if (approveResult.HasErrors)
+            {
+                foreach (var error in approveResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Message);
+                }
+            }
             else
             {
-                viewModel.ActionSpecifier = "approve";
-                var result = await _approvalService.ActionAsync(viewModel, User);
-                if (result.HasErrors)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Message);
-                    }
-                }
-                else
-                {
-                    TempData["ShowSuccess"] = "Items approved. The editor has been notified by email";
-                }
-                var vm = await PopulateChangesModel(DefaultSort);
-                return View("Index", vm);
+                TempData["ShowSuccess"] = "Items approved. The editor has been notified by email";
             }
-        }
 
+            var updatedVm = await PopulateChangesModel(DefaultSort);
+            return View("Index", updatedVm);
+        }
 
         private async Task<ApprovalsViewModel> PopulateChangesModel(string sortBy, int skip = 0)
         {
@@ -96,11 +96,17 @@ namespace Edubase.Web.UI.Controllers
             {
                 sortBy = DefaultSort;
             }
-            var res =  await _approvalService.GetAsync(skip, 100, sortBy, User);
-            var viewModel = new ApprovalsViewModel()
+
+            var res = await _approvalService.GetAsync(skip, 100, sortBy, User);
+            var viewModel = new ApprovalsViewModel
             {
-                Skip = skip, SortBy = sortBy, Items = res.Items, Count = res.Count, SortedAscending = sortBy.Contains("-asc")
+                Skip = skip,
+                SortBy = sortBy,
+                Items = res.Items,
+                Count = res.Count,
+                SortedAscending = sortBy.Contains("-asc")
             };
+
             viewModel.ApprovalItems = new PaginatedResult<PendingApprovalItem>(viewModel.Skip, viewModel.Take, res.Count, res.Items);
             return viewModel;
         }

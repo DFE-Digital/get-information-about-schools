@@ -10,7 +10,6 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
-using Edubase.Web.UI.Exceptions;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Controllers;
 
@@ -39,12 +38,12 @@ namespace Edubase.Web.UI.Helpers
         {
             if (establishmentUrn.HasValue && groupUId.HasValue)
             {
-                throw new InvalidParameterException("Both urn and uid cannot be populated");
+                throw new ArgumentException("Both urn and uid cannot be populated");
             }
 
             if (!establishmentUrn.HasValue && !groupUId.HasValue)
             {
-                throw new InvalidParameterException($"Both {nameof(establishmentUrn)} and {nameof(groupUId)} parameters are null");
+                throw new ArgumentException($"Both {nameof(establishmentUrn)} and {nameof(groupUId)} parameters are null");
             }
 
             if (establishmentUrn.HasValue)

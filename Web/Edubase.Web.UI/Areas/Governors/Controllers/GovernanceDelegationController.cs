@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
@@ -9,8 +9,7 @@ using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
-    [RoutePrefix("GovernanceDelegation")]
+    [Route("Governors/GovernanceDelegation")]
     public class GovernanceDelegationController : Controller
     {
         private const string GROUP_EDIT_DELEGATION = "~/Groups/Group/Edit/{groupUId:int}/Governance/Delegation";

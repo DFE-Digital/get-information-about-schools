@@ -1,21 +1,20 @@
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Common;
 using Edubase.Services;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Groups;
+using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors")]
-    [RoutePrefix("Governance")]
+    [Route("Governors/Governance")]
     public class GovernanceController : Controller
     {
         private const string EstabEditGovernanceMode = "~/Establishment/Edit/{establishmentUrn:int}/GovernanceMode";
@@ -41,7 +40,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return Redirect(url);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Governance/ConfirmGroup/{uid:int}", Name = "GroupGovernanceConfirmUpToDate"), ValidateAntiForgeryToken]
+        [HttpPost, EdubaseAuthorize, Route("ConfirmGroup/{uid:int}", Name = "GroupGovernanceConfirmUpToDate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> GroupGovernanceConfirmUpToDateAsync(int uid)
         {
             await _groupWriteService.ConfirmGovernanceAsync(uid, User);

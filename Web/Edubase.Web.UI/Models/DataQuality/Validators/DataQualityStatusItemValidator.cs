@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentValidation;
 
 namespace Edubase.Web.UI.Models.DataQuality.Validators
@@ -7,7 +7,9 @@ namespace Edubase.Web.UI.Models.DataQuality.Validators
     {
         public DataQualityStatusItemValidator()
         {
-            this.CascadeMode = CascadeMode.StopOnFirstFailure;
+            ClassLevelCascadeMode = CascadeMode.Stop;
+            RuleLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.LastUpdated)
                 .NotEmpty().WithMessage("Please correct the date")
                 .Must(x => x.IsValid()).WithMessage("Please correct the date")

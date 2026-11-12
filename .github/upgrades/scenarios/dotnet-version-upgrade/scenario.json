@@ -3,29 +3,25 @@
   "operationId": "a601a444-3f7e-4771-8772-2ea7dff5f701",
   "description": "Upgrade .NET projects to newer .NET versions, including guidance on current release status, support lifecycle (LTS/STS), and recommended upgrade targets.",
   "startTime": "2026-11-06T16:16:40.202892Z",
-  "lastUpdateTime": "2026-11-11T19:09:04.01149Z",
+  "lastUpdateTime": "2026-11-12T12:56:26.4086589Z",
   "properties": {
+    "orphanedTaskIds": [
+      "04.01-common-data-net10",
+      "04.02-services-net10",
+      "04.03-texuna-resources-net10",
+      "04.04-webui-host-foundation-net10",
+      "04.06-cross-closure-validation-and-gates"
+    ],
     "taskStates": {
-      "01-readiness-and-compatibility": "Completed",
-      "02-configuration-and-dependencies": "Completed",
-      "02.01-config-surface-mapping": "Completed",
-      "02.02-binding-and-package-conflicts": "Completed",
-      "03-sdk-project-conversion": "Failed",
-      "02.03-contract-and-decision-gates": "Completed",
+      "04.05.02.04.02-root-mvc-controller-contracts": "Completed",
+      "04.06-cross-closure-validation-and-gates": "InProgress",
+      "04.05.02.04.03-establishments-area-controller-contracts": "Completed",
+      "04.05.02.04-mvc-area-controller-contract-parity": "Completed",
       "04-net10-application-migration": "InProgress",
-      "04.01-common-data-net10": "Completed",
-      "04.02-services-net10": "Completed",
-      "04.03-texuna-resources-net10": "Completed",
-      "04.04-webui-host-foundation-net10": "Completed",
-      "04.05-webui-feature-parity-net10": "InProgress",
-      "04.05.01-webui-bootstrap-di-routing": "Completed",
-      "04.05.02-webui-controllers-api-contracts": "InProgress",
-      "04.05.02.01-webapi-controller-surface": "Completed",
-      "04.05.02.02-filter-pipeline-migration": "Completed",
-      "04.05.02.03-model-binding-value-provider-migration": "Completed",
-      "04.05.02.04-mvc-area-controller-contract-parity": "InProgress",
-      "04.05.02.04.01-shared-controller-base-and-helpers": "Completed",
-      "04.05.02.04.02-root-mvc-controller-contracts": "InProgress"
+      "04.05.02.04.04-groups-governors-area-controller-contracts": "Completed",
+      "04.05.02.04.05-controller-route-contract-check": "Completed",
+      "03-sdk-project-conversion": "Completed",
+      "06-solution-validation": "Failed"
     }
   },
   "folderPath": ""

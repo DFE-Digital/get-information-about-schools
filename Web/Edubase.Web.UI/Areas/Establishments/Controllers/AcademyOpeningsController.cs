@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -13,13 +13,13 @@ using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Filters;
-using Microsoft.Ajax.Utilities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using M = EstablishmentSearchResultModel;
 
-    [RouteArea("Establishments"), RoutePrefix("manage"), Route("{action=index}"),
+    [Route("Establishments/manage"),
      MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecureAcademy16To19Openings)]
     public class AcademyOpeningsController : Controller
     {
@@ -218,7 +218,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             if (!urn.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var result = await _establishmentReadService.GetAsync((int) urn, User);
@@ -253,7 +253,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
          Route("edit-academy-opening/{urn}", Name = "SaveAcademyOpening")]
         public async Task<ActionResult> SaveAcademyOpening(EditAcademyOpeningViewModel viewModel)
         {
-            if (viewModel.EstablishmentName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(viewModel.EstablishmentName))
             {
                 ModelState.AddModelError("EstablishmentName", "Please enter the establishment name");
             }
@@ -279,7 +279,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     foreach (var e in response.Errors)
                     {
-                        ModelState.AddModelError(e.Fields ?? string.Empty, e.GetMessage());
+                        ModelState.AddModelError(e.Fields ?? string.Empty, e.Message ?? string.Empty);
                     }
                     return View("EditAcademyOpening", viewModel);
                 }
@@ -295,7 +295,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 foreach (var e in response.Errors)
                 {
-                    ModelState.AddModelError(e.Fields ?? string.Empty, e.GetMessage());
+                    ModelState.AddModelError(e.Fields ?? string.Empty, e.Message ?? string.Empty);
                 }
                 return View("EditAcademyOpening", viewModel);
             }

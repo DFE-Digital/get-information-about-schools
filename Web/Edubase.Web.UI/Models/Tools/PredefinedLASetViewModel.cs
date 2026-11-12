@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using System.Collections.Generic;
@@ -8,10 +8,12 @@ namespace Edubase.Web.UI.Models.Tools
 {
     public class PredefinedLASetViewModel
     {
+        private const string BindAliasForSelectedLocalAuthorityIds = "d";
+
         public string Id { get; set; }
         public string PageTitle => (Id == null ? "Create" : "Edit") + " local authority set";
 
-        [BindAlias(Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_LAIDS), CannotBeEmpty(ErrorMessage = "Please enter local authorities")]
+        [BindAlias(BindAliasForSelectedLocalAuthorityIds), CannotBeEmpty(ErrorMessage = "Please enter local authorities")]
         public List<int> SelectedLocalAuthorityIds { get; set; } = new List<int>();
 
         public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }

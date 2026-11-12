@@ -3,7 +3,7 @@ using Edubase.Services.Establishments.DisplayPolicies;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models.Search;

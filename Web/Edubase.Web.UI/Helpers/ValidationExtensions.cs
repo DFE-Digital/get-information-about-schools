@@ -1,8 +1,8 @@
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -24,9 +24,15 @@ namespace Edubase.Web.UI.Helpers
                     !modelState[key].Errors.Any())
                 {
                     modelState.AddModelError(key, error.CustomState?.ToString() ?? error.ErrorMessage);
-                    modelState.SetModelValue(key, new ValueProviderResult(error.AttemptedValue ?? "", (error.AttemptedValue ?? "").ToString(), CultureInfo.CurrentCulture));
+                    modelState.SetModelValue(key, new ValueProviderResult(error.AttemptedValue?.ToString() ?? string.Empty));
                 }
             }
         }
+
+        public static void AddToModelState(this ValidationResult result, ModelStateDictionary modelState, string prefix)
+            => result.EduBaseAddToModelState(modelState, prefix);
+
+        public static bool IsValidField(this ModelStateDictionary modelState, string key)
+            => modelState.GetFieldValidationState(key) != ModelValidationState.Invalid;
     }
 }

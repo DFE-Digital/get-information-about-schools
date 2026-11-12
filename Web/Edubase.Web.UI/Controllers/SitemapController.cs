@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.Xml.Linq;
 using Edubase.Common;
 using Edubase.Common.Cache;
@@ -20,31 +18,45 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models;
-using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
-using Edubase.Web.UI.Models.Search;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Web.UI.Controllers
 {
     public class SitemapController : EduBaseController
     {
+        private static readonly string[] SearchTabs =
+        {
+            "Establishments",
+            "Groups",
+            "Governors"
+        };
+
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
         private readonly ICacheAccessor _cacheAccessor;
         private readonly ICachedLookupService _lookupService;
+        private readonly IConfiguration _configuration;
+
         public const int Take = 5000;
         public const string CacheTag = "sitemap";
-        private readonly int _cacheDays = ConfigurationManager.AppSettings["SitemapCacheDays"].ToInteger() ?? 1;
 
-        public SitemapController(IEstablishmentReadService establishmentReadService,
-        IGroupReadService groupReadService,
-        ICacheAccessor cacheAccessor,
-        ICachedLookupService lookupService)
+        private readonly int _cacheDays;
+
+        public SitemapController(
+            IEstablishmentReadService establishmentReadService,
+            IGroupReadService groupReadService,
+            ICacheAccessor cacheAccessor,
+            ICachedLookupService lookupService,
+            IConfiguration configuration)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _cacheAccessor = cacheAccessor;
             _lookupService = lookupService;
+            _configuration = configuration;
+            _cacheDays = _configuration["SitemapCacheDays"].ToInteger() ?? 1;
         }
 
         [Route("~/sitemap.xml")]
@@ -64,7 +76,7 @@ namespace Edubase.Web.UI.Controllers
                 await _cacheAccessor.SetAsync(cacheName, responseCopy, TimeSpan.FromDays(_cacheDays));
             }
 
-            return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+            return Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
 
         [Route("~/sitemap_site.xml")]
@@ -79,13 +91,12 @@ namespace Edubase.Web.UI.Controllers
                 await _cacheAccessor.SetAsync(cacheName, responseCopy, TimeSpan.FromDays(_cacheDays));
             }
 
-            return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+            return Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
 
         [Route("~/sitemap_est{estType}.xml")]
         public async Task<ActionResult> SitemapEstablishmentByType(int estType)
         {
-            Server.ScriptTimeout = 300;
             var cacheName = $"{CacheTag}_est_{estType}";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
 
@@ -95,13 +106,12 @@ namespace Edubase.Web.UI.Controllers
                 await _cacheAccessor.SetAsync(cacheName, responseCopy, TimeSpan.FromDays(_cacheDays));
             }
 
-            return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+            return Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
 
         [Route("~/sitemap_group{groupType}.xml")]
         public async Task<ActionResult> SitemapGroupByType(int groupType)
         {
-            Server.ScriptTimeout = 300;
             var cacheName = $"{CacheTag}_group_{groupType}";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
 
@@ -111,22 +121,21 @@ namespace Edubase.Web.UI.Controllers
                 await _cacheAccessor.SetAsync(cacheName, responseCopy, TimeSpan.FromDays(_cacheDays));
             }
 
-            return this.Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
+            return Content(responseCopy, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
 
         private async Task<string> GetSitemapIndex()
         {
-            var urlHelper = this.Url;
-            var urls = new List<string> { AbsoluteActionUrl(urlHelper, "SitemapSite", "Sitemap") };
+            var urls = new List<string> { AbsoluteActionUrl("SitemapSite", "Sitemap") };
 
             foreach (var est in await GetEstablishmentTypes())
             {
-                urls.Add(AbsoluteActionUrl(urlHelper, "SitemapEstablishmentByType", "Sitemap", new { estType = est }));
+                urls.Add(AbsoluteActionUrl("SitemapEstablishmentByType", "Sitemap", new { estType = est }));
             }
 
             foreach (var grp in await GetGroupTypes())
             {
-                urls.Add(AbsoluteActionUrl(urlHelper, "SitemapGroupByType", "Sitemap", new { groupType = grp}));
+                urls.Add(AbsoluteActionUrl("SitemapGroupByType", "Sitemap", new { groupType = grp }));
             }
 
             return BuildSitemapIndexXml(urls);
@@ -164,12 +173,11 @@ namespace Edubase.Web.UI.Controllers
 
         private IReadOnlyCollection<SitemapNode> GetSitemapNodes()
         {
-            List<SitemapNode> nodes = new List<SitemapNode>();
+            var nodes = new List<SitemapNode>();
 
             nodes.Add(BuildNode("Index", "Home", null, null, 1, SitemapFrequency.Yearly));
-
             nodes.Add(BuildNode("Index", "Search", null, null, 1, SitemapFrequency.Yearly));
-            foreach (var tab in (SearchViewModel.Tab[]) Enum.GetValues(typeof(SearchViewModel.Tab)))
+            foreach (var tab in SearchTabs)
             {
                 nodes.Add(BuildNode("Index", "Search", new { SelectedTab = tab }, null, 1, SitemapFrequency.Yearly));
             }
@@ -197,23 +205,21 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<IReadOnlyCollection<SitemapNode>> GetEstablishmentNodes(int estType, double? priority)
         {
-            var urlHelper = this.Url;
             var nodes = new List<SitemapNode>();
             if (ExcludeApiLookup())
             {
                 return nodes;
             }
 
-            var resultCount = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { TypeIds = new []{estType}, StatusIds = new[] { 1, 4 } }, Take = 1 }, User);
+            var resultCount = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { TypeIds = new[] { estType }, StatusIds = new[] { 1, 4 } }, Take = 1 }, User);
             var resultItems = new List<EstablishmentSearchResultModel>();
 
             if (resultCount.Count > 0)
             {
-                // the backend will timeout if we query too large a dataset, so we loop it.
                 var skip = 0;
                 do
                 {
-                    var lookup = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { TypeIds = new [] {estType}, StatusIds = new[] { 1, 4 } }, Skip = skip, Take = Take }, User);
+                    var lookup = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { TypeIds = new[] { estType }, StatusIds = new[] { 1, 4 } }, Skip = skip, Take = Take }, User);
                     resultItems.AddRange(lookup.Items);
                     if (skip + Take >= resultCount.Count)
                     {
@@ -226,7 +232,7 @@ namespace Edubase.Web.UI.Controllers
             foreach (var item in resultItems)
             {
                 nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, null, priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
-                nodes.AddRange(GetEstablishmentTabs(item,priority-0.1));
+                nodes.AddRange(GetEstablishmentTabs(item, priority - 0.1));
             }
 
             return nodes;
@@ -234,14 +240,12 @@ namespace Edubase.Web.UI.Controllers
 
         private IReadOnlyCollection<SitemapNode> GetEstablishmentTabs(EstablishmentModel item, double? priority)
         {
-            var urlHelper = this.Url;
             var nodes = new List<SitemapNode>();
 
             nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, "school-dashboard", priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
             nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, "school-links", priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
             nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, "school-location", priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
 
-            // not all establishments have the governance page displayed for the general public
             var displayPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() };
             var tabPolicy = new TabDisplayPolicy(item, displayPolicy, User);
             if (tabPolicy.Governance)
@@ -254,18 +258,16 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<IReadOnlyCollection<SitemapNode>> GetGroupNodes(int groupType, double? priority)
         {
-            var urlHelper = this.Url;
             var nodes = new List<SitemapNode>();
             if (ExcludeApiLookup())
             {
                 return nodes;
             }
 
-            var resultCount = await _groupReadService.SearchAsync(new GroupSearchPayload {GroupTypeIds = new []{ groupType }, GroupStatusIds = new[] { 1, 4 }, Take = 1 }, User);
+            var resultCount = await _groupReadService.SearchAsync(new GroupSearchPayload { GroupTypeIds = new[] { groupType }, GroupStatusIds = new[] { 1, 4 }, Take = 1 }, User);
             var resultItems = new List<SearchGroupDocument>();
             if (resultCount.Count > 0)
             {
-                // the backend will timeout if we query too large a dataset, so we loop it.
                 var skip = 0;
                 do
                 {
@@ -290,27 +292,24 @@ namespace Edubase.Web.UI.Controllers
 
         private IReadOnlyCollection<SitemapNode> GetGroupTabs(SearchGroupDocument item, double? priority)
         {
-            var urlHelper = this.Url;
             var nodes = new List<SitemapNode>();
 
             nodes.Add(BuildNode("Details", "Group", new { area = "Groups", id = item.GroupUId }, "details", priority, SitemapFrequency.Weekly));
             nodes.Add(BuildNode("Details", "Group", new { area = "Groups", id = item.GroupUId }, "list", priority, SitemapFrequency.Weekly));
 
-            // not all groups have access to governance tab
-            if  (item.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust)
+            if (item.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
             {
-                nodes.Add(BuildNode("Details","Group", new { area = "Groups", id = item.GroupUId }, "governance", priority, SitemapFrequency.Weekly));
+                nodes.Add(BuildNode("Details", "Group", new { area = "Groups", id = item.GroupUId }, "governance", priority, SitemapFrequency.Weekly));
             }
 
             return nodes;
         }
 
-        private SitemapNode BuildNode(string action, string controllerName, object routeValues = null, string tag = null, double ? priority = 0.5, SitemapFrequency frequency = SitemapFrequency.Monthly, DateTime? lastUpdated = null)
+        private SitemapNode BuildNode(string action, string controllerName, object routeValues = null, string tag = null, double? priority = 0.5, SitemapFrequency frequency = SitemapFrequency.Monthly, DateTime? lastUpdated = null)
         {
-            var urlHelper = this.Url;
-            var node = new SitemapNode()
+            var node = new SitemapNode
             {
-                Url = AbsoluteActionUrl(urlHelper, action, controllerName, routeValues),
+                Url = AbsoluteActionUrl(action, controllerName, routeValues),
                 Priority = priority,
                 Frequency = frequency
             };
@@ -333,15 +332,15 @@ namespace Edubase.Web.UI.Controllers
             XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
             XElement root = new XElement(xmlns + "sitemapindex");
 
-            foreach (string url in siteIndex)
+            foreach (var url in siteIndex)
             {
-                XElement urlElement = new XElement(
+                var urlElement = new XElement(
                     xmlns + "sitemap",
-                    new XElement(xmlns + "loc", Uri.EscapeUriString(url)));
+                    new XElement(xmlns + "loc", NormalizeSitemapUrl(url)));
                 root.Add(urlElement);
             }
 
-            XDocument document = new XDocument(root);
+            var document = new XDocument(root);
             return document.ToString();
         }
 
@@ -350,11 +349,11 @@ namespace Edubase.Web.UI.Controllers
             XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
             XElement root = new XElement(xmlns + "urlset");
 
-            foreach (SitemapNode sitemapNode in siteNodes)
+            foreach (var sitemapNode in siteNodes)
             {
-                XElement urlElement = new XElement(
+                var urlElement = new XElement(
                     xmlns + "url",
-                    new XElement(xmlns + "loc", Uri.EscapeUriString(sitemapNode.Url)),
+                    new XElement(xmlns + "loc", NormalizeSitemapUrl(sitemapNode.Url)),
                     sitemapNode.LastModified == null ? null : new XElement(
                         xmlns + "lastmod",
                         sitemapNode.LastModified.Value.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:sszzz")),
@@ -367,7 +366,7 @@ namespace Edubase.Web.UI.Controllers
                 root.Add(urlElement);
             }
 
-            XDocument document = new XDocument(root);
+            var document = new XDocument(root);
             return document.ToString();
         }
 
@@ -385,34 +384,58 @@ namespace Edubase.Web.UI.Controllers
 
         private bool ExcludeApiLookup()
         {
-            return (ConfigurationManager.AppSettings["SitemapExcludeApi"].ToInteger() ?? 0) != 0;
+            return (_configuration["SitemapExcludeApi"].ToInteger() ?? 0) != 0;
         }
 
-        private static string AbsoluteActionUrl(
-            UrlHelper urlHelper,
-            string actionName,
-            string controllerName,
-            object routeValues = null)
+        private string AbsoluteActionUrl(string actionName, string controllerName, object routeValues = null)
         {
-            var forwardedHeaderAwareUrl = urlHelper.GetForwardedHeaderAwareUrl();
+            var request = HttpContext.Request;
+            var requestHeaderHost = request.Headers["X-Forwarded-Host"].ToString();
+            var host = request.Host.HasValue ? request.Host.Host : string.Empty;
+            var scheme = request.Scheme;
 
-            // Note: Providing the scheme pushes `.Action` to return an absolute URL. Omitting this appears to return a relative URL.
-            var scheme = forwardedHeaderAwareUrl.Scheme;
-            var absoluteActionUrl = urlHelper.Action(actionName, controllerName, routeValues, scheme);
+            if (!string.IsNullOrWhiteSpace(requestHeaderHost))
+            {
+                var allowedForwardedHostNames = (_configuration["AllowedForwardedHostNames"] ?? string.Empty)
+                    .Split(',')
+                    .Select(x => x.Trim())
+                    .Where(x => !string.IsNullOrWhiteSpace(x));
+
+                if (allowedForwardedHostNames.Contains(requestHeaderHost, StringComparer.OrdinalIgnoreCase))
+                {
+                    host = requestHeaderHost;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The `X-Forwarded-Host` header contains an invalid value: {requestHeaderHost}");
+                }
+            }
+
+            var absoluteActionUrl = Url.Action(actionName, controllerName, routeValues, scheme, host);
             if (absoluteActionUrl is null)
             {
                 return null;
             }
 
-            // Where the site is accessed via a reverse proxy, the `Host` property of the `UriBuilder` will be incorrect.
-            // For this reason, we replace the `Host` property with the value of the `X-Forwarded-Host` header where present.
             var uriBuilder = new UriBuilder(absoluteActionUrl)
             {
-                Host = forwardedHeaderAwareUrl.Host,
+                Scheme = scheme,
+                Host = host
             };
 
-            var newUri = uriBuilder.Uri;
-            return newUri.ToString();
+            return uriBuilder.Uri.ToString();
+        }
+
+        private static string NormalizeSitemapUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return url;
+            }
+
+            return Uri.TryCreate(url, UriKind.Absolute, out var normalized)
+                ? normalized.AbsoluteUri
+                : url;
         }
     }
 }

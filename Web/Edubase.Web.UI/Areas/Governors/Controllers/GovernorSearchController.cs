@@ -13,15 +13,15 @@ using Edubase.Web.UI.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
 using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("Search"), Route("{action=index}")]
+    [Route("Governors/Search/{action=index}")]
     public class GovernorSearchController : EduBaseController
     {
         private IGovernorDownloadService _governorDownloadService;
@@ -51,7 +51,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> ResultsPartial(GovernorSearchViewModel model)
         {
             var result = await SearchGovernors(model);
-            HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
+            HttpContext.Response.Headers["x-count"] = model.Count.ToString();
             return PartialView("Partials/_GovernorSearchResults", model);
         }
 
@@ -59,7 +59,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> PrepareDownload(GovernorSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Governors;
-            if(viewModel.SearchQueryString == null) viewModel.SearchQueryString = Request.QueryString.ToString();
+            if(viewModel.SearchQueryString == null) viewModel.SearchQueryString = Request.QueryString.Value;
 
             var allowNonPublicDataDownload = User.InRole(EdubaseRoles.EDUBASE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.EFADO, EdubaseRoles.edubase_ddce, EdubaseRoles.SFC);
             viewModel.TotalSteps = allowNonPublicDataDownload ? 4 : 3;
@@ -183,7 +183,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .Cast<int>());
             }
 
-            model.SearchQueryString = Request.QueryString.ToString();
+            model.SearchQueryString = Request.QueryString.Value;
             model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();

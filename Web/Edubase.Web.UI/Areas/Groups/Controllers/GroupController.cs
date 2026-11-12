@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.UI;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Edubase.Services.Establishments;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors;
@@ -12,15 +12,12 @@ using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Helpers;
-using FluentValidation.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
     using Common;
     using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
-    using Exceptions;
     using Filters;
-    using Microsoft.IdentityModel.Tokens;
     using Models.CreateEdit;
     using Models.Validators;
     using MoreLinq;
@@ -36,7 +33,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using GS = Services.Enums.eLookupGroupStatus;
     using GT = Services.Enums.eLookupGroupType;
 
-    [RouteArea("Groups"), RoutePrefix(Group)]
+    [Route("Groups/Group/{action=index}")]
     public class GroupController : Controller
     {
         private readonly ICompaniesHouseService _companiesHouseService;
@@ -208,7 +205,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (string.IsNullOrWhiteSpace(companiesHouseNumber))
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             ViewData["academyTrustRoute"] = academyTrustRoute;
@@ -246,7 +243,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> CreateNewGroup(string type)
         {
             var groupTypeMode = StringUtil.ToEnum<eGroupTypeMode>(type);
-            Guard.IsTrue(groupTypeMode.HasValue, () => new InvalidParameterException($"Invalid type parameter supplied"));
+            Guard.IsTrue(groupTypeMode.HasValue, () => new ArgumentException($"Invalid type parameter supplied"));
 
             var viewModel = await PopulateSelectLists(new GroupEditorViewModel(eSaveMode.Details));
 
@@ -310,7 +307,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var result = await _groupReadService.GetAsync(id, User);
             if (result.ReturnValue == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var model = result.ReturnValue;
@@ -360,7 +357,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var result = await _groupReadService.GetAsync(id, User);
             if (result.ReturnValue == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             var model = result.ReturnValue;
 
@@ -609,7 +606,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             ViewData["academyTrustRoute"] = academyTrustRoute;
 
-            if (!viewModel.SearchText.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(viewModel.SearchText))
             {
                 if (viewModel.SearchText.IsInteger())
                 {
@@ -630,7 +627,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
             }
 
-            if (viewModel.Search && viewModel.SearchText.IsNullOrEmpty())
+            if (viewModel.Search && string.IsNullOrEmpty(viewModel.SearchText))
             {
                 ModelState.AddModelError(nameof(viewModel.SearchText), "The SearchText field is required.");
             }
@@ -821,7 +818,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var query = from groupType in GroupTypesFromRouteName(academyTrustRoute)
                         join permissionType in userPermissions.GroupTypes on groupType equals permissionType
                         select new { groupType };
-            return query.ToList().IsNullOrEmpty();
+            return !query.Any();
         }
 
         private async Task<IEnumerable<LookupDto>> GetAcademyTrustGroupTypes(string academyTrustRoute)
@@ -985,7 +982,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else
             {
-                throw new InvalidParameterException("The action parameter is invalid");
+                throw new ArgumentException("The action parameter is invalid");
             }
 
             if (!suppressClearModelState)

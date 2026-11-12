@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Security.Principal;
 using Edubase.Common;
 using Edubase.Services.Establishments;
@@ -12,7 +12,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
         public SearchForEstablishmentViewModelValidator(IEstablishmentReadService establishmentReadService, IPrincipal principal)
         {
             RuleFor(x => x.SearchUrn)
-                .Cascade(CascadeMode.StopOnFirstFailure)
+                .Cascade(CascadeMode.Stop)
                 .Must(x => x.ToInteger().HasValue)
                 .WithMessage("Please enter a valid URN")
                 

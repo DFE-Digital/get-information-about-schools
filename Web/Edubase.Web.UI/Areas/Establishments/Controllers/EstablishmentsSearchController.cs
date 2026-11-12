@@ -2,14 +2,13 @@ using System.Collections.Generic;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Edubase.Data.Repositories;
 using Edubase.Services.Establishments.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -25,14 +24,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using Services.Establishments.Search;
     using Services.Lookup;
     using System;
-    using System.Collections.Specialized;
     using System.Threading.Tasks;
     using UI.Controllers;
     using UI.Models.Search;
     using EM = Services.Establishments.Models.EstablishmentModel;
     using R = Services.Security.EdubaseRoles;
 
-    [RouteArea("Establishments"), RoutePrefix("Search"), Route("{action=index}")]
+    [Route("Establishments/Search")]
     public class EstablishmentsSearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -51,12 +49,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _userPreferenceRepository = userPreferenceRepository;
         }
 
-        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
-
-        [HttpGet, Route(Name = "EstabSearch")]
+        [HttpGet("", Name = "EstabSearch")]
         public async Task<ActionResult> Index(EstablishmentSearchViewModel model)
         {
-            model.SearchQueryString = Request.QueryString.ToString();
+            model.SearchQueryString = Request.QueryString.ToString().TrimStart('?');
 
             var retVal = await SearchByUrnAsync(model);
             if (retVal != null)
@@ -67,10 +63,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             model.SavedFilterToken = TempData["SavedToken"]?.ToString();
 
             // if the user navigates back to or reloads the search results => look up saved results token
-            if (Request.IsAuthenticated && string.IsNullOrEmpty(model.SavedFilterToken))
+            if (User?.Identity?.IsAuthenticated == true && string.IsNullOrEmpty(model.SavedFilterToken))
             {
-                var userId = User.Identity.GetUserId();
-                model.SavedFilterToken = (await _userPreferenceRepository.GetAsync(userId))?.SavedSearchToken;
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity?.Name;
+                model.SavedFilterToken = userId == null ? null : (await _userPreferenceRepository.GetAsync(userId))?.SavedSearchToken;
             }
 
             var payload = await GetEstablishmentSearchPayload(model);
@@ -82,10 +78,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return await ProcessEstablishmentsSearch(model, payload.Object);
         }
 
-        [HttpGet, Route("results-js")]
+        [HttpGet("results-js")]
         public async Task<PartialViewResult> ResultsPartial(EstablishmentSearchViewModel model)
         {
-            model.SearchQueryString = Request.QueryString.ToString();
+            model.SearchQueryString = Request.QueryString.ToString().TrimStart('?');
             var payload = await GetEstablishmentSearchPayload(model);
             if (!payload.Success)
             {
@@ -93,13 +89,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             await ProcessEstablishmentsSearch(model, payload.Object);
-            HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
-            HttpContext.Response.Headers.Add("x-show-date-filter-warning",
-                model.ShowDateFilterWarning.ToString().ToLower());
+            HttpContext.Response.Headers["x-count"] = model.Count.ToString();
+            HttpContext.Response.Headers["x-show-date-filter-warning"] = model.ShowDateFilterWarning.ToString().ToLower();
             return PartialView("Partials/_EstablishmentSearchResults", model);
         }
 
-        [HttpGet, Route("results-json")]
+        [HttpGet("results-json")]
         public async Task<ActionResult> JsonResults(EstablishmentSearchViewModel model)
         {
             var payload = await GetEstablishmentSearchPayload(model);
@@ -111,7 +106,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
             var educationPhases = await _lookupService.EducationPhasesGetAllAsync();
             var counties = (await _lookupService.CountiesGetAllAsync()).Where(c => c.Id != 63); //remove "not recorded"
-            HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
+            HttpContext.Response.Headers["x-count"] = model.Count.ToString();
 
             if (model.Results == null)
             {
@@ -150,7 +145,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return Json(filtered);
         }
 
-        [HttpGet, Route("PrepareDownload")]
+        [HttpGet("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Establishments;
@@ -165,7 +160,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (!viewModel.Dataset.HasValue)
             {
                 viewModel.Dataset = eDataSet.Custom;
-                viewModel.SearchQueryString = Request.QueryString.ToString();
+                viewModel.SearchQueryString = Request.QueryString.ToString().TrimStart('?');
                 return View("Downloads/SelectDataset", viewModel);
             }
 
@@ -190,9 +185,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
 
                 // the SearchQueryString is used for the breadcrumb response. We dont want to retain the Dataset selection as part of that
-                var queryString = new NameValueCollection(Request.QueryString);
-                queryString.Remove("Dataset");
-                viewModel.SearchQueryString = queryString.ToQueryString();
+                var queryBuilder = new QueryBuilder();
+                foreach (var pair in Request.Query)
+                {
+                    if (string.Equals(pair.Key, "Dataset", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    foreach (var value in pair.Value)
+                    {
+                        queryBuilder.Add(pair.Key, value);
+                    }
+                }
+
+                viewModel.SearchQueryString = queryBuilder.ToQueryString().Value.TrimStart('?');
                 var customFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User))
                     .OrderBy(x => x.Name).ToList();
 
@@ -227,7 +234,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
         }
 
-        [HttpGet, Route("Download")]
+        [HttpGet("Download")]
         public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null,
             eLookupSearchSource? searchSource = null)
         {
@@ -265,7 +272,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("Downloads/ReadyToDownload", viewModel);
         }
 
-        [HttpGet, Route("EstablishmentDownloadAjax")]
+        [HttpGet("EstablishmentDownloadAjax")]
         public async Task<ActionResult> DownloadAjax(Guid id, eFileFormat fileFormat, string searchQueryString = null,
             eLookupSearchSource? searchSource = null)
         {
@@ -302,6 +309,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }));
 
         }
+
+        private ActionResult RedirectToEstabDetail(int urn)
+            => RedirectToRoute(new RouteValueDictionary
+                {
+                    {"action", "Details"}, {"controller", "Establishment"}, {"id", urn}, {"area", "Establishments"}
+                });
 
         private async Task<EstablishmentSearchViewModel> PopulateLookups(EstablishmentSearchViewModel vm)
         {
@@ -354,13 +367,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             return vm;
         }
-
-        private ActionResult RedirectToEstabDetail(int urn)
-            => new RedirectToRouteResult(null,
-                new RouteValueDictionary
-                {
-                    {"action", "Details"}, {"controller", "Establishment"}, {"id", urn}, {"area", "Establishments"}
-                });
 
         private async Task<Returns<EstablishmentSearchPayload>> GetEstablishmentSearchPayload(
             EstablishmentSearchViewModel model)

@@ -12,14 +12,14 @@ using Edubase.Web.UI.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Edubase.Web.UI.Models.Search;
 using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
-    [RouteArea("Groups"), RoutePrefix("Search"), Route("{action=index}")]
+    [Route("Groups/Search/{action=index}")]
     public class GroupSearchController : EduBaseController
     {
         IGroupReadService _groupReadService;
@@ -43,7 +43,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> ResultsPartial(GroupSearchViewModel model)
         {
             var result = await SearchGroups(model);
-            HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
+            HttpContext.Response.Headers["x-count"] = model.Count.ToString();
             return PartialView("Partials/_GroupSearchResults", model);
         }
 
@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (!viewModel.FileFormat.HasValue)
             {
-                viewModel.SearchQueryString = Request.QueryString.ToString();
+                viewModel.SearchQueryString = Request.QueryString.Value;
                 viewModel.Step = 1;
                 return View("Downloads/SelectFormat", viewModel);
             }
@@ -151,7 +151,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (model.GroupSearchModel.AutoSuggestValueAsInt.HasValue) return RedirectToDetailPage(model.GroupSearchModel.AutoSuggestValueAsInt.Value);
             else
             {
-                model.SearchQueryString = Request.QueryString.ToString();
+                model.SearchQueryString = Request.QueryString.Value;
                 var text = model.GroupSearchModel.Text.Clean();
                 model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
                 model.GroupStatuses = (await _lookupService.GroupStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();

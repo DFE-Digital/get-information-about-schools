@@ -7,7 +7,8 @@ using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Config;
@@ -27,15 +28,15 @@ using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Web.Resources;
+using Edubase.Web.UI;
+using Edubase.Web.UI.Areas;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models.Validators;
-using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
-using FluentValidation.Mvc;
 using MoreLinq;
 using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
 using EnumExtensions = Edubase.Services.Establishments.EnumExtensions;
@@ -44,7 +45,7 @@ using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [RouteArea("Establishments"), RoutePrefix("Establishment")]
+    [Route("Establishments/Establishment")]
     public class EstablishmentController : EduBaseController
     {
         private readonly ICachedLookupService _cachedLookupService;
@@ -101,7 +102,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _governorsGridViewModelFactory = governorsGridViewModelFactory;
 
             _formKeys = new Lazy<string[]>(
-                () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
+                () => Request?.Form?.Keys.Select(x => x.GetPart(".")).Distinct().ToArray(),
                 LazyThreadSafetyMode.PublicationOnly);
         }
 
@@ -353,7 +354,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var result = await _establishmentReadService.GetAsync(id, User);
             if (result.ReturnValue == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             viewModel.Establishment = result.ReturnValue;
@@ -395,7 +396,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (result.ReturnValue == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var changes = await _establishmentReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User);
@@ -420,9 +421,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpHead, Route("Details/{urn:int}", Name = "EstabDetailsHead")]
         public async Task<ActionResult> DetailsHead(int urn)
         {
-            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            Response.Headers["Access-Control-Allow-Origin"] = "*";
             var result = await _establishmentReadService.GetAsync(urn, User);
-            return result.ReturnValue == null ? HttpNotFound() : new HttpStatusCodeResult(200);
+            return result.ReturnValue == null ? NotFound() : StatusCode(200);
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}", Name = "EditEstablishmentDetail")]
@@ -430,7 +431,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = await CreateEditViewModel(id, vm =>
@@ -452,7 +453,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = await CreateEditViewModel(id);
@@ -483,7 +484,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View("EditIEBT", viewModel);
             }
 
-            return HttpNotFound();
+            return NotFound();
         }
 
         [HttpGet, EdubaseAuthorize, Route("Proprietor/Add/{urn:int}/{counter:int}")]
@@ -511,7 +512,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new EditEstablishmentLinksViewModel();
@@ -523,11 +524,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Location/{locationField?}")]
-        public async Task<ActionResult> EditLocation(int? id, string locationField = null)
+        public async Task<ActionResult> EditLocation(int? id, string locationField)
         {
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = await CreateEditViewModel(id);
@@ -637,12 +638,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links/Search", Name = "EditEstabLinks_SearchForEstablishment")]
-        public async Task<ActionResult> SearchForEstablishment(int? id, SearchForEstablishmentViewModel viewModel)
+        public async Task<ActionResult> SearchEstablishmentForLink(int? id, SearchForEstablishmentViewModel viewModel)
         {
-            viewModel = viewModel ?? new SearchForEstablishmentViewModel();
             if (!id.HasValue)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             await PopulateEstablishmentPageViewModel(viewModel, id.Value, "links");
@@ -1408,7 +1408,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASRemoveAddress)
             {
-                RemoveAdditionalAddress(viewModel);
+                viewModel.AdditionalAddresses.RemoveAt(int.Parse(viewModel.ActionSpecifierParam) - 1);
+                viewModel.IsDirty = true;
             }
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASCancel)
             {

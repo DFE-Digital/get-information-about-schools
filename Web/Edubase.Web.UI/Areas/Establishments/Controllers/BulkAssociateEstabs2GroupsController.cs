@@ -9,14 +9,15 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using R = Services.Security.EdubaseRoles;
 
-    [RouteArea("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkAssociateEstabs2Groups)]
+    [Route("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkAssociateEstabs2Groups)]
     public class BulkAssociateEstabs2GroupsController : EduBaseController
     {
         private const string ViewName = "BulkAssociateEstabs2Groups";
@@ -36,7 +37,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (ModelState.IsValid)
             {
                 var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
-                viewModel.BulkFile.SaveAs(fileName);
+                await SaveUploadedFileAsync(viewModel.BulkFile, fileName);
                 var result = await _establishmentWriteService.BulkAssociateEstabs2GroupsAsync(fileName, User);
                 return result.HasErrors
                     ? await ResultInternalAsync(Guid.Empty, viewModel, result)
@@ -148,6 +149,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 throw new Exception("ApiResponse indicated failure, but no errors were supplied");
             }
+        }
+
+        private static async Task SaveUploadedFileAsync(IFormFile file, string fileName)
+        {
+            await using var stream = new FileStream(fileName, FileMode.Create);
+            await file.CopyToAsync(stream);
         }
     }
 }

@@ -9,14 +9,15 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using R = Services.Security.EdubaseRoles;
 
-    [RouteArea("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateFreeSchools)]
+    [Route("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateFreeSchools)]
     public class BulkCreateFreeSchoolsController : EduBaseController
     {
         const string ViewName = "BulkCreateFreeSchools";
@@ -39,7 +40,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (ModelState.IsValid)
             {
                 var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
-                viewModel.BulkFile.SaveAs(fileName);
+                await SaveUploadedFileAsync(viewModel.BulkFile, fileName);
                 var result = await _establishmentWriteService.BulkCreateFreeSchoolsAsync(fileName, User);
                 return result.HasErrors
                     ? await ResultInternalAsync(Guid.Empty, viewModel, result)
@@ -157,6 +158,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     }))
                     : throw new Exception("ApiResponse indicated failure, but no errors were supplied");
             }
+        }
+
+        private static async Task SaveUploadedFileAsync(IFormFile file, string fileName)
+        {
+            await using var stream = new FileStream(fileName, FileMode.Create);
+            await file.CopyToAsync(stream);
         }
     }
 }

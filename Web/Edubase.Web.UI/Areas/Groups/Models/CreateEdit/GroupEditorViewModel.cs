@@ -1,12 +1,10 @@
 using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Http.Controllers;
-using System.Web.Mvc;
-using Castle.Components.DictionaryAdapter;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
@@ -171,7 +169,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public void ClearWarnings()
         {
-            WarningsToProcess = new EditableList<ApiWarning>();
+            WarningsToProcess = new List<ApiWarning>();
         }
 
         public GroupEditorViewModel()

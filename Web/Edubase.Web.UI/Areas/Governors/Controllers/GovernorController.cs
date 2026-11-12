@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Castle.Core.Internal;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Edubase.Common;
+using Edubase.Common.Reflection;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
@@ -18,7 +19,6 @@ using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
@@ -28,13 +28,13 @@ using GR = Edubase.Services.Enums.eLookupGovernorRole;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("Governor")]
+    [Route("Governors/Governor/{action=index}")]
     public class GovernorController : Controller
     {
         private const string GROUP_EDIT_GOVERNANCE = "~/Groups/Group/Edit/{groupUId:int}/Governance";
         private const string ESTAB_EDIT_GOVERNANCE = "~/Establishment/Edit/{establishmentUrn:int}/Governance";
         private const string GROUP_ADD_GOVERNOR = "~/Groups/Group/Edit/{groupUId:int}/Governance/Add";
-        private const string ESTAB_ADD_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/Add";
+        private const string ESTAB_ADD_GOVERNOR = "~/Establishment/Edit/{establishmentUrn,int}/Governance/Add";
         private const string GROUP_EDIT_GOVERNOR = "~/Groups/Group/Edit/{groupUId:int}/Governance/Edit/{gid:int}";
         private const string ESTAB_EDIT_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/Edit/{gid:int}";
         private const string GROUP_REPLACE_GOVERNOR = "~/Groups/Group/Edit/{groupUId:int}/Governance/Replace/{gid:int}";
@@ -80,7 +80,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             int? duplicateGovernorId, bool roleAlreadyExists = false, eLookupGovernorRole? selectedRole = null)
         {
             Guard.IsTrue(groupUId.HasValue || establishmentUrn.HasValue,
-                () => new InvalidParameterException(
+                () => new ArgumentException(
                     $"Both parameters '{nameof(groupUId)}' and '{nameof(establishmentUrn)}' are null."));
 
             var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
@@ -197,7 +197,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         await _governorsWriteService.DeleteAsync(viewModel.RemovalGid.Value, User);
                     }
                 }
-                else throw new InvalidParameterException($"The parameter for action is invalid: '{viewModel.Action}'");
+                else throw new ArgumentException($"The parameter for action is invalid: '{viewModel.Action}'");
 
                 if (ModelState.IsValid)
                 {
@@ -226,24 +226,21 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <returns></returns>
         [Route(GROUP_ADD_GOVERNOR, Name = "GroupAddGovernor"), Route(ESTAB_ADD_GOVERNOR, Name = "EstabAddGovernor"),
          Route(GROUP_EDIT_GOVERNOR, Name = "GroupEditGovernor"), Route(ESTAB_EDIT_GOVERNOR, Name = "EstabEditGovernor"),
-         Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"),
-         Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
+         Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"), Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
          HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn,
             eLookupGovernorRole? role, int? gid)
         {
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.QueryString["gid2"].ToInteger(),
-                AppointmentEndDateDay = Request.QueryString["d"].ToInteger(),
-                AppointmentEndDateMonth = Request.QueryString["m"].ToInteger(),
-                AppointmentEndDateYear = Request.QueryString["y"].ToInteger(),
-                Reinstate = Request.QueryString["rag"] == "true"
+                ReplacementGovernorId = Request.Query.ContainsKey("gid2") ? (int?)Convert.ToInt32(Request.Query["gid2"].ToString()) : null,
+                AppointmentEndDateDay = Request.Query.ContainsKey("d") ? (int?)Convert.ToInt32(Request.Query["d"].ToString()) : null,
+                AppointmentEndDateMonth = Request.Query.ContainsKey("m") ? (int?)Convert.ToInt32(Request.Query["m"].ToString()) : null,
+                AppointmentEndDateYear = Request.Query.ContainsKey("y") ? (int?)Convert.ToInt32(Request.Query["y"].ToString()) : null,
+                Reinstate = Request.Query.ContainsKey("rag") && Request.Query["rag"] == "true"
             };
 
-            var replaceMode =
-                ((Route) ControllerContext.RouteData.Route).Url.IndexOf("/Replace/",
-                    StringComparison.OrdinalIgnoreCase) > -1;
+            var replaceMode = (Request.Path.Value ?? string.Empty).IndexOf("/Replace/", StringComparison.OrdinalIgnoreCase) > -1;
 
             if (replaceMode && !role.HasValue && gid.HasValue)
             {
@@ -259,9 +256,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     {
                         establishmentUrn = establishmentUrn.Value,
                         gid = gid.Value,
-                        d = Request.QueryString["d"],
-                        m = Request.QueryString["m"],
-                        y = Request.QueryString["y"],
+                        d = Request.Query["d"],
+                        m = Request.Query["m"],
+                        y = Request.Query["y"],
                         ri = "true"
                     });
             }
@@ -696,11 +693,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var replaceGovernorState = new
             {
-                ReplacementGovernorId = Request.QueryString["rgid"].ToInteger(),
-                DateTermEndsDay = Request.QueryString["d"].ToInteger(),
-                DateTermEndsMonth = Request.QueryString["m"].ToInteger(),
-                DateTermEndsYear = Request.QueryString["y"].ToInteger(),
-                Reinstate = Request.QueryString["ri"] == "true"
+                ReplacementGovernorId = Request.Query.ContainsKey("rgid") ? (int?)Convert.ToInt32(Request.Query["rgid"].ToString()) : null,
+                DateTermEndsDay = Request.Query.ContainsKey("d") ? (int?)Convert.ToInt32(Request.Query["d"].ToString()) : null,
+                DateTermEndsMonth = Request.Query.ContainsKey("m") ? (int?)Convert.ToInt32(Request.Query["m"].ToString()) : null,
+                DateTermEndsYear = Request.Query.ContainsKey("y") ? (int?)Convert.ToInt32(Request.Query["y"].ToString()) : null,
+                Reinstate = Request.Query.ContainsKey("ri") && Request.Query["ri"] == "true"
             };
 
             var governor = await _governorsReadService.GetGovernorAsync(gid, User);
@@ -1112,7 +1109,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 foreach (var property in properties)
                 {
                     JsonPropertyAttribute attribute = null;
-                    attribute = property.GetAttribute<JsonPropertyAttribute>();
+                    attribute = property.GetCustomAttribute<JsonPropertyAttribute>();
 
                     if (string.Equals(error.Fields, property.Name, StringComparison.OrdinalIgnoreCase) ||
                         (attribute != null && string.Equals(error.Fields, attribute.PropertyName,

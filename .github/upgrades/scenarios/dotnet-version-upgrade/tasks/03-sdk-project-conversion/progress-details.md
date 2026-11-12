@@ -35,6 +35,11 @@
 - `Web/Edubase.Web.UI/Edubase.Web.UI.csproj` cannot currently build after conversion because MVC5 validation code uses legacy FluentValidation MVC/attribute APIs that are incompatible with the transitive FluentValidation 11.x dependency chain.
 - User-directed resolution path: defer FluentValidation 11.x migration behavior changes to Task 04.
 
+## Blocker resolution update (2026-11-12)
+- The previously noted `Web/Edubase.Web.UI` FluentValidation-related build blocker was addressed during downstream Task 04 controller/validation migration work.
+- Current validation (`dotnet build Web/Edubase.Web.UI/Edubase.Web.UI.csproj -c Release`) now succeeds.
+- Task 03 structural conversion outcomes are therefore fully validated in current branch state.
+
 ## Notes
 - `packages.config` files were removed from converted target projects.
 - Remaining `packages.config` in repository (`Web/Edubase.Services.TexunaUnitTests/packages.config`) belongs to a project not in Task 03 conversion scope.

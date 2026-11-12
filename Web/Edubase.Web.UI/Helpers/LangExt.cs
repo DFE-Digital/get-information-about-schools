@@ -1,13 +1,15 @@
 using Edubase.Common;
 using Edubase.Services.Domain;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
-using System.Web.Mvc;
 
 namespace Edubase.Web.UI
 {
@@ -38,7 +40,7 @@ namespace Edubase.Web.UI
                                                     string message,
                                                     ModelStateDictionary modelState)
         {
-            var key = ExpressionHelper.GetExpressionText(ex);
+            var key = (ex.Body as MemberExpression)?.Member?.Name ?? ex.Body.ToString();
             modelState.AddModelError(key, message);
         }
 

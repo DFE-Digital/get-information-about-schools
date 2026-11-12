@@ -15,14 +15,10 @@ namespace Edubase.Web.UI.Models.Search
 
         private List<int> selectedLocalAuthorityIds = new List<int>();
 
-        public const string BIND_ALIAS_GOONERES = Areas.Establishments.Models.Search.EstablishmentSearchViewModel
-            .BIND_ALIAS_GOONERES;
-
-        public const string BIND_ALIAS_STATUSIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel
-            .BIND_ALIAS_STATUSIDS;
-
-        public const string BIND_ALIAS_LAIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel
-            .BIND_ALIAS_LAIDS;
+        // Keep these alias values aligned with Establishments search model aliases.
+        public const string BIND_ALIAS_GOONERES = "f";
+        public const string BIND_ALIAS_STATUSIDS = "b";
+        public const string BIND_ALIAS_LAIDS = "d";
 
         public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
 

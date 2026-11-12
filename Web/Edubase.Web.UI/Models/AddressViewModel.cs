@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+using Edubase.Services.Domain;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Models
 {

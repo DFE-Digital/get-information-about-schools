@@ -1,6 +1,7 @@
 using Edubase.Services.Domain;
-using Microsoft.Ajax.Utilities;
 using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -26,13 +27,12 @@ namespace Edubase.Web.UI.Controllers
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web.Mvc;
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
     using ES = Edubase.Services.Enums.EnumSets;
     using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 
-    [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
+    [Route("Tools"), EdubaseAuthorize]
     public class ToolsController : Controller
     {
         private readonly ISecurityService _securityService;
@@ -69,7 +69,8 @@ namespace Edubase.Web.UI.Controllers
             _establishmentDownloadService = establishmentDownloadService;
         }
 
-        [Route(Name = "Tools")]
+        [HttpGet("" , Name = "Tools")]
+        [HttpGet("Index")]
         public async Task<ActionResult> Index()
         {
             var createGroupPermission = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -116,15 +117,15 @@ namespace Edubase.Web.UI.Controllers
         [Route("DownloadClosedTrustsInformation", Name = "DownloadClosedTrustsInformation")]
         public ActionResult DownloadClosedTrustsInformation() => View();
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
+        [HttpGet("BulkAcademies"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
         public ActionResult BulkAcademies() => View();
 
-        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies), ValidateAntiForgeryToken]
+        [HttpPost("BulkAcademies"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies), ValidateAntiForgeryToken]
         public async Task<ActionResult> BulkAcademies(BulkAcademiesViewModel model, int? removeUrn, int? editUrn,
             string action)
         {
             var establishmentTypeFullList = (await _lookup.EstablishmentTypesGetAllAsync()).ToList();
-            model.ItemTypes = establishmentTypeFullList.ToSelectList();
+            model.ItemTypes = ToSelectListItems(establishmentTypeFullList);
             EstablishmentModel est = null;
 
             SelectListItem[] validateAllowedAcademyTypes = null;
@@ -168,8 +169,9 @@ namespace Edubase.Web.UI.Controllers
                                 .ToList()
                             : establishmentTypeFullList;
 
-                        validateAllowedAcademyTypes = (await GetFilteredBulkAcademyTypes((int) est.Urn, allowedTypes))
-                           .ToSelectList(est?.TypeId)
+                        validateAllowedAcademyTypes = ToSelectListItems(
+                                await GetFilteredBulkAcademyTypes((int) est.Urn, allowedTypes),
+                                est?.TypeId)
                            ?.ToArray();
 
                         if (validateAllowedAcademyTypes?.Length == 0)
@@ -182,9 +184,9 @@ namespace Edubase.Web.UI.Controllers
 
             if (action == "add")
             {
-                model.FilteredItemTypes =
-                    (await GetFilteredBulkAcademyTypes(model.FoundItem.Urn ?? 0, establishmentTypeFullList))
-                    .ToSelectList(model.FoundItem.EstablishmentTypeId);
+                model.FilteredItemTypes = ToSelectListItems(
+                    await GetFilteredBulkAcademyTypes(model.FoundItem.Urn ?? 0, establishmentTypeFullList),
+                    model.FoundItem.EstablishmentTypeId);
 
                 if (model.FoundItem.EstablishmentTypeId == null)
                 {
@@ -221,9 +223,9 @@ namespace Edubase.Web.UI.Controllers
                 if (editUrn != null)
                 {
                     var itm = model.ItemsToAdd?.First(x => x.Urn == editUrn);
-                    model.FilteredItemTypes =
-                        (await GetFilteredBulkAcademyTypes((int) editUrn, establishmentTypeFullList)).ToSelectList(
-                            itm?.EstablishmentTypeId);
+                    model.FilteredItemTypes = ToSelectListItems(
+                        await GetFilteredBulkAcademyTypes((int) editUrn, establishmentTypeFullList),
+                        itm?.EstablishmentTypeId);
                     model.FoundItem = itm;
                     ViewBag.ButtonText = "Update establishment";
                 }
@@ -367,7 +369,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments)]
+        [HttpGet("MergersTool"), MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments)]
         public async Task<ActionResult> MergersTool()
         {
             var settings =
@@ -460,7 +462,7 @@ namespace Edubase.Web.UI.Controllers
             await PopulateLookupData(viewModel);
             viewModel.Results = new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take,
                 await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel), User));
-            HttpContext.Response.Headers.Add("x-count", viewModel.Results.Count.ToString());
+            HttpContext.Response.Headers["x-count"] = viewModel.Results.Count.ToString();
             return PartialView("_IndSchSearchResults", viewModel);
         }
 
@@ -512,13 +514,12 @@ namespace Edubase.Web.UI.Controllers
                 }));
             }
 
-
             return Json(
                 JsonConvert.SerializeObject(new
                 {
                     status = model.IsComplete,
                     redirect = string.Concat("/independent-schools/download/", id)
-                }), JsonRequestBehavior.AllowGet);
+                }));
         }
 
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
@@ -668,5 +669,13 @@ namespace Edubase.Web.UI.Controllers
                 }
             };
         }
+
+        private static IEnumerable<SelectListItem> ToSelectListItems(IEnumerable<EstablishmentLookupDto> items, int? currentId = null)
+            => items.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+                Selected = currentId.HasValue && currentId.Value == x.Id
+            });
     }
 }

@@ -5,12 +5,12 @@ using Edubase.Web.UI.Helpers;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateGovernors)]
+    [Route("Governors/BulkUpdate/{action=index}"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateGovernors)]
     public class GovernorsBulkUpdateController : Controller
     {
         readonly IGovernorsWriteService _governorsWriteService;
@@ -22,35 +22,38 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _governorsReadService = governorsReadService;
         }
 
-        [HttpGet, Route(Name = "GovernorsBulkUpdate"), ImportModelState]
-        public ActionResult Index()
+        [HttpGet]
+        public IActionResult Index()
         {
             var vm = TempData["ProcessBulkUpdate"] as GovernorsBulkUpdateViewModel ?? new GovernorsBulkUpdateViewModel();
 
             return View("Index", vm);
         }
 
-        [HttpGet, Route("DownloadTemplate")]
+        [HttpGet("DownloadTemplate")]
         public async Task<ActionResult> DownloadTemplate()
         {
             return Redirect(await _governorsReadService.GetGovernorBulkUpdateTemplateUri(User));
         }
 
-        [HttpPost, Route(Name = "GovernorsProcessBulkUpdate"), ExportModelState, ValidateAntiForgeryToken]
+        [HttpPost, Route("ProcessBulkUpdate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkUpdate(GovernorsBulkUpdateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
-                viewModel.BulkFile.SaveAs(fileName);
+                var tempFilename = Path.GetTempFileName();
+                await using (var targetStream = System.IO.File.Create(tempFilename))
+                {
+                    await viewModel.BulkFile.CopyToAsync(targetStream);
+                }
 
-                if (new FileInfo(fileName).Length > 1000000)
+                if (new FileInfo(tempFilename).Length > 1000000)
                 {
                     ModelState.AddModelError("BulkFile", "The file size is too large. Please use a file size smaller than 1MB");
                 }
                 else
                 {
-                    var result = await _governorsWriteService.BulkUpdateValidateAsync(fileName, User);
+                    var result = await _governorsWriteService.BulkUpdateValidateAsync(tempFilename, User);
                     if (result.Success.GetValueOrDefault())
                     {
                         var apiResponse = await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id, User);
@@ -69,7 +72,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                             viewModel.ErrorLogDownload = result.ErrorLogFile;
                         }
                     }
-                    System.IO.File.Delete(fileName);
+                    System.IO.File.Delete(tempFilename);
                 }
             }
             else

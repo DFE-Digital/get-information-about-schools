@@ -2,10 +2,7 @@ using Edubase.Common;
 using Edubase.Common.Spatial;
 using Edubase.Web.UI.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
 {

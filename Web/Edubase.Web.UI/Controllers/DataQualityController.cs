@@ -1,21 +1,23 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Data.Entity;
 using Edubase.Services.DataQuality;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.DataQuality;
-using Edubase.Web.UI.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Edubase.Web.UI.Controllers
 {
     // Nuance here -- logged in users may view, but not modify, data quality status or data owner details.
     [EdubaseAuthorize]
+    [Route("DataQuality")]
     public class DataQualityController : Controller
     {
         private readonly IDataQualityWriteService _dataQualityWriteService;
@@ -34,16 +36,16 @@ namespace Edubase.Web.UI.Controllers
 
         private const string AuthorisationRoles = AuthorizedRoles.IsAdmin + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.APT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.FST + "," + EdubaseRoles.YCS;
 
-        public DataQualityController(IDataQualityWriteService dataQualityWriteService)
+        public DataQualityController(IDataQualityWriteService dataQualityWriteService, IConfiguration configuration)
         {
-            this._dataQualityWriteService = dataQualityWriteService;
-            if (!int.TryParse(ConfigurationManager.AppSettings["DataQualityUpdatePeriod"], out _dataQualityUpdatePeriod))
+            _dataQualityWriteService = dataQualityWriteService;
+            if (!int.TryParse(configuration["DataQualityUpdatePeriod"], out _dataQualityUpdatePeriod))
             {
-                this._dataQualityUpdatePeriod = 7;
+                _dataQualityUpdatePeriod = 7;
             }
         }
 
-        [HttpGet, Route("DataQuality/Status")]
+        [HttpGet("Status")]
         [EdubaseAuthorize]
         public async Task<ActionResult> Status()
         {
@@ -79,16 +81,15 @@ namespace Edubase.Web.UI.Controllers
             return View(data);
         }
 
-        [HttpGet, Route("DataQuality/Edit")]
+        [HttpGet("Edit")]
         [EdubaseAuthorize(Roles = AuthorisationRoles)]
         public async Task<ActionResult> EditStatus()
         {
             var datasets = (await _dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityStatusItem
-                {
-                    EstablishmentType = d.EstablishmentType,
-                    LastUpdated = new DateTimeViewModel(d.LastUpdated)
-                })
-                .ToList();
+            {
+                EstablishmentType = d.EstablishmentType,
+                LastUpdated = new DateTimeViewModel(d.LastUpdated)
+            }).ToList();
 
             var data = new EditDataQualityStatusViewModel
             {
@@ -99,7 +100,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (User.InRole(kvp.Key, AuthorizedRoles.IsAdmin))
                 {
-                    var item = new DataQualityStatusItem {EstablishmentType = kvp.Value};
+                    var item = new DataQualityStatusItem { EstablishmentType = kvp.Value };
 
                     if (User.IsInRole(AuthorizedRoles.IsAdmin))
                     {
@@ -109,11 +110,13 @@ namespace Edubase.Web.UI.Controllers
                     data.Items.Add(item);
                 }
             }
-            data.Items.Sort((x,y) => x.EstablishmentType.GetEnumMember().CompareTo(y.EstablishmentType.GetEnumMember()));
+
+            data.Items.Sort((x, y) => x.EstablishmentType.GetEnumMember().CompareTo(y.EstablishmentType.GetEnumMember()));
             return View(data);
         }
 
-        [HttpPost, Route("DataQuality/Edit"), ValidateAntiForgeryToken]
+        [HttpPost("Edit")]
+        [ValidateAntiForgeryToken]
         [EdubaseAuthorize(Roles = AuthorisationRoles)]
         public async Task<ActionResult> EditStatus(EditDataQualityStatusViewModel model)
         {
@@ -132,38 +135,37 @@ namespace Edubase.Web.UI.Controllers
                     }
                 }
 
-                return RedirectToAction("ViewStatus", new {dataUpdated = true});
+                return RedirectToAction("ViewStatus", new { dataUpdated = true });
             }
 
             return View(model);
         }
 
-
-        [HttpGet, Route("DataQuality/EditDataOwnerDetails")]
+        [HttpGet("EditDataOwnerDetails")]
         [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditDataOwnerDetails()
         {
             var data = new EditDataQualityDataOwnerViewModel
             {
                 Items = (await _dataQualityWriteService.GetDataQualityStatus())
-                    .Select(d =>
-                        new DataQualityDataOwnerItem()
-                        {
-                            EstablishmentType = d.EstablishmentType,
-                            Name = d.DataOwner,
-                            Email = d.Email,
-                        })
+                    .Select(d => new DataQualityDataOwnerItem
+                    {
+                        EstablishmentType = d.EstablishmentType,
+                        Name = d.DataOwner,
+                        Email = d.Email
+                    })
                     // Only show items that the user has permission to edit
                     .Where(item => UserMayEditDataQualityOwnerDetails(item.EstablishmentType))
                     .ToList()
             };
 
-            data.Items.Sort((x,y) => x.EstablishmentType.GetEnumMember().CompareTo(y.EstablishmentType.GetEnumMember()));
+            data.Items.Sort((x, y) => x.EstablishmentType.GetEnumMember().CompareTo(y.EstablishmentType.GetEnumMember()));
 
             return View(data);
         }
 
-        [HttpPost, Route("DataQuality/EditDataOwnerDetails"), ValidateAntiForgeryToken]
+        [HttpPost("EditDataOwnerDetails")]
+        [ValidateAntiForgeryToken]
         [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditDataOwnerDetails(EditDataQualityDataOwnerViewModel model)
         {
@@ -197,11 +199,11 @@ namespace Edubase.Web.UI.Controllers
                 );
             }
 
-            return RedirectToAction("ViewStatus", new {dataUpdated = true});
-
+            return RedirectToAction("ViewStatus", new { dataUpdated = true });
         }
 
-        [HttpGet, Route("DataQuality")]
+        [HttpGet("")]
+        [HttpGet("ViewStatus")]
         public async Task<ActionResult> ViewStatus(bool dataUpdated = false)
         {
             var dataQualityStatusList = await _dataQualityWriteService.GetDataQualityStatus();
@@ -220,7 +222,7 @@ namespace Edubase.Web.UI.Controllers
                 DataUpdated = dataUpdated,
 
                 // Backoffice role users do not need to be prompted (appears on logon and a separate config entry), but should be able to update the date
-                UserCanUpdateLastUpdated = Api.UserRolesController.UserRequiresDataQualityPrompt(User) || User.InRole(AuthorizedRoles.IsAdmin),
+                UserCanUpdateLastUpdated = UserRequiresDataQualityPrompt(User) || User.InRole(AuthorizedRoles.IsAdmin),
 
                 // Allow only admins (backoffice users) to update data owner details - data owners may not edit their own details
                 UserCanUpdateDataOwnerDetails = User.InRole(AuthorizedRoles.IsAdmin) // || User.InRole(_roleToDataSetMappings.Keys.ToArray())
@@ -229,10 +231,19 @@ namespace Edubase.Web.UI.Controllers
             return View(data);
         }
 
+        private static bool UserRequiresDataQualityPrompt(IPrincipal principal) => principal.InRole(
+            EdubaseRoles.EFADO,
+            EdubaseRoles.AP_AOS,
+            EdubaseRoles.IEBT,
+            EdubaseRoles.APT,
+            EdubaseRoles.SOU,
+            EdubaseRoles.FST,
+            EdubaseRoles.YCS
+        );
 
         private bool UserMayEditDataQualityOwnerDetails(DataQualityStatus.DataQualityEstablishmentType establishmentType)
         {
-            if(User.InRole(AuthorizedRoles.IsAdmin))
+            if (User.InRole(AuthorizedRoles.IsAdmin))
             {
                 // Administrators (e.g., backoffice users) may edit all data owner details
                 return true;

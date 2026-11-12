@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Services.Enums;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
@@ -12,7 +12,7 @@ using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("SharedGovernor")]
+    [Route("Governors/SharedGovernor")]
     public class SharedGovernorController : Controller
     {
         private const string EstabSelectSharedGovernor = "~/Establishment/Edit/{establishmentUrn:int}/Governance/SelectSharedGovernor";
@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _layoutHelper = layoutHelper;
         }
 
-        [HttpGet, Route(EstabSelectSharedGovernor, Name = "SelectSharedGovernor"), EdubaseAuthorize]
+        [HttpGet, Route("SelectSharedGovernor", Name = "SelectSharedGovernor"), EdubaseAuthorize]
         public async Task<ActionResult> SelectSharedGovernor(int establishmentUrn, eLookupGovernorRole role)
         {
             var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == (int)role).Name;
@@ -55,7 +55,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route(EstabSelectSharedGovernor), EdubaseAuthorize, ValidateAntiForgeryToken]
+        [HttpPost, Route("SelectSharedGovernor"), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> SelectSharedGovernor(SelectSharedGovernorViewModel model)
         {
             if (ModelState.IsValid)
@@ -103,7 +103,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpGet, Route(EstabEditSharedGovernor, Name = "EditSharedGovernor"), EdubaseAuthorize]
+        [HttpGet, Route("EditSharedGovernor", Name = "EditSharedGovernor"), EdubaseAuthorize]
         public async Task<ActionResult> EditSharedGovernor(int establishmentUrn, int governorId)
         {
             var governor = await _governorsReadService.GetGovernorAsync(governorId, User);
@@ -119,7 +119,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpPost, Route(EstabEditSharedGovernor), EdubaseAuthorize, ValidateAntiForgeryToken]
+        [HttpPost, Route("EditSharedGovernor"), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> EditSharedGovernor(EditSharedGovernorViewModel model)
         {
             if (ModelState.IsValid)

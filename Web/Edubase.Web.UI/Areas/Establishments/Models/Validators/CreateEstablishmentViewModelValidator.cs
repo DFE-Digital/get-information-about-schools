@@ -50,7 +50,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
             When(x => x.ActionStep == CreateSteps.EstabNumber, () =>      //Had some aggro with combining tests, may not work
             {
                 RuleFor(x => x.EducationPhaseId)
-                .Cascade(CascadeMode.StopOnFirstFailure)
+                .Cascade(CascadeMode.Stop)
                     .NotNull().WithMessage("Please select a phase of education")
                     .NotEmpty().WithMessage("Please select a phase of education")
                     .Must((m, x) => establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId.Value].Contains(x.Value))    //Fails here

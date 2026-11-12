@@ -6,13 +6,14 @@ using Edubase.Web.UI.Helpers;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Edubase.Web.UI.Mappers;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [RouteArea("Establishments"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateEstablishments)]
+    [Route("Establishments/BulkUpdate"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateEstablishments)]
     public class BulkUpdateController : Controller
     {
         readonly IEstablishmentWriteService _establishmentWriteService;
@@ -22,11 +23,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _establishmentWriteService = establishmentWriteService;
         }
 
-        [HttpGet, Route(Name = "EstabBulkUpdate")]
+        [HttpGet("", Name = "EstabBulkUpdate")]
         public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(AuthorizedRoles.IsAdmin)));
 
 
-        [HttpPost, Route(Name = "ProcessBulkUpdate"), ValidateAntiForgeryToken]
+        [HttpPost("", Name = "ProcessBulkUpdate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkUpdate(BulkUpdateViewModel viewModel)
         {
             viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
@@ -35,7 +36,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 var payload = viewModel.MapToDto();
                 var fileName = payload.FileName;
-                viewModel.BulkFile.SaveAs(fileName);
+                await SaveUploadedFileAsync(viewModel.BulkFile, fileName);
 
                 if (new FileInfo(fileName).Length > 1000000)
                 {
@@ -65,7 +66,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
 
-        [HttpGet, Route("result/{id}/{state}")]
+        [HttpGet("result/{id}/{state}")]
         public async Task<ActionResult> Result(Guid id, string state)
         {
             var model = await _establishmentWriteService.BulkUpdateAsync_GetProgressAsync(id, User);
@@ -88,7 +89,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        [HttpGet, Route("resultAjax/{id}/{state}")]
+        [HttpGet("resultAjax/{id}/{state}")]
         public async Task<ActionResult> ResultAjax(Guid id, string state)
         {
             var model = await _establishmentWriteService.BulkUpdateAsync_GetProgressAsync(id, User);
@@ -96,8 +97,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 status = model.IsCompleted(),
                 redirect = string.Concat("/Establishments/BulkUpdate/result/", id,"/", state)
-            }), JsonRequestBehavior.AllowGet);
+            }));
 
+        }
+
+        private static async Task SaveUploadedFileAsync(IFormFile file, string fileName)
+        {
+            await using var stream = new FileStream(fileName, FileMode.Create);
+            await file.CopyToAsync(stream);
         }
     }
 }

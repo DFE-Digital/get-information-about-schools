@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using Edubase.Data.Entity;
+using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Helpers.ModelBinding;
-using Edubase.Data.Entity;
-using System.Web.Mvc;
-using Edubase.Services.Core;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Edubase.Web.UI.Models.Tools
 {

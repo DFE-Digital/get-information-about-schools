@@ -1,26 +1,28 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Common;
+using Edubase.Common.Spatial;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Geo;
 using Edubase.Services.Governors.Factories;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Edubase.Web.UI.Controllers
 {
-    using System.Web;
-    using Common.Spatial;
-    using Edubase.Services.Geo;
     using eStatus = Services.Enums.eLookupEstablishmentStatus;
 
-    [RoutePrefix("Search"), Route("{action=index}")]
+    [Route("Search")]
     public class SearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -30,7 +32,8 @@ namespace Edubase.Web.UI.Controllers
 
         private const string ConstIndex = "Index";
 
-        public SearchController(IEstablishmentReadService establishmentReadService,
+        public SearchController(
+            IEstablishmentReadService establishmentReadService,
             ICachedLookupService cachedLookupService,
             IGroupReadService groupReadService,
             IPlacesLookupService placesService)
@@ -41,18 +44,18 @@ namespace Edubase.Web.UI.Controllers
             _groupReadService = groupReadService;
         }
 
-        [HttpGet, Route(Name = "Search")]
+        [HttpGet("", Name = "Search")]
+        [HttpGet("Index")]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
             if (!viewModel.NoResults)
             {
-
                 if (viewModel.LocalAuthorityToRemove.HasValue)
                 {
-                    return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+                    return Redirect("/?" + QueryStringHelper.ToQueryString(
+                        SearchViewModel.BIND_ALIAS_LAIDS,
                         viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
                 }
-
 
                 if (viewModel.SearchType.HasValue)
                 {
@@ -90,7 +93,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 var fieldId = "TextSearchModel.Text";
                 var fieldError = "We could not find any establishments matching your search criteria";
-                var la = Request.QueryString["LocalAuthorityToAdd"];
+
                 switch (viewModel.SearchType)
                 {
                     case eSearchType.Text:
@@ -108,7 +111,6 @@ namespace Edubase.Web.UI.Controllers
                             fieldId = "LocationSearchModel.Text";
                             fieldError = "Please enter a postcode, town or city to start a search";
                             viewModel.ErrorPanel = "Location";
-
                         }
                         else
                         {
@@ -124,11 +126,11 @@ namespace Edubase.Web.UI.Controllers
                         {
                             return await ProcessLocalAuthorityDisambiguation(viewModel);
                         }
-                        fieldId = "LocalAuthorityToAdd";
 
-                        fieldError = viewModel.SelectedLocalAuthorityIds.Any() ?
-                            "This local authority has no open schools" :
-                            "Please enter a local authority to start a search";
+                        fieldId = "LocalAuthorityToAdd";
+                        fieldError = viewModel.SelectedLocalAuthorityIds.Any()
+                            ? "This local authority has no open schools"
+                            : "Please enter a local authority to start a search";
                         viewModel.ErrorPanel = "LocalAuthority";
 
                         break;
@@ -136,9 +138,9 @@ namespace Edubase.Web.UI.Controllers
                     case eSearchType.Group:
                         fieldId = "GroupSearchModel.Text";
 
-                        fieldError = viewModel.GroupSearchModel.Text.IsNullOrEmpty() ?
-                            "Please enter an establishment group to start a search" :
-                            "We could not find any establishment groups matching your search criteria";
+                        fieldError = viewModel.GroupSearchModel.Text.IsNullOrEmpty()
+                            ? "Please enter an establishment group to start a search"
+                            : "We could not find any establishment groups matching your search criteria";
 
                         viewModel.ErrorPanel = "Group";
                         break;
@@ -146,11 +148,11 @@ namespace Edubase.Web.UI.Controllers
                     case eSearchType.Governor:
                         fieldId = "GovernorSearchModel.Forename";
 
-                        fieldError = viewModel.GovernorSearchModel.Forename.IsNullOrEmpty() &&
-                                     viewModel.GovernorSearchModel.Surname.IsNullOrEmpty() &&
-                                     viewModel.GovernorSearchModel.RoleId.Length == 0 ?
-                            "Please enter a governor to start a search" :
-                            "We could not find any governors matching your search criteria";
+                        fieldError = viewModel.GovernorSearchModel.Forename.IsNullOrEmpty()
+                                     && viewModel.GovernorSearchModel.Surname.IsNullOrEmpty()
+                                     && viewModel.GovernorSearchModel.RoleId.Length == 0
+                            ? "Please enter a governor to start a search"
+                            : "We could not find any governors matching your search criteria";
 
                         viewModel.ErrorPanel = "Governor";
 
@@ -181,34 +183,34 @@ namespace Edubase.Web.UI.Controllers
                     var staffRole = new LookupItemViewModel(x);
 
                     // If recognised as an enum and we have a C#-overridden name for it, use that instead
-                    if(Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole) x.Id))
+                    if (Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole)x.Id))
                     {
-                        var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole) x.Id);
-                        if(!factoryName.ToLowerInvariant().Equals(staffRole.Name.ToLowerInvariant()))
+                        var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole)x.Id);
+                        if (!factoryName.ToLowerInvariant().Equals(staffRole.Name.ToLowerInvariant()))
                         {
                             Console.Error.WriteLine($"Governor role name mismatch - not just a case difference: {staffRole.Name} -> {factoryName}");
                         }
 
                         staffRole.Name = factoryName;
                     }
+
                     return staffRole;
                 });
 
             return View(ConstIndex, viewModel);
         }
 
-        [HttpGet, Route("Results", Name = "SearchResults")]
+        [HttpGet("Results", Name = "SearchResults")]
         public async Task<ActionResult> IndexResults(SearchViewModel viewModel)
         {
             if (!viewModel.NoResults)
             {
-
                 if (viewModel.LocalAuthorityToRemove.HasValue)
                 {
-                    return Redirect("?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
-                                        viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
+                    return Redirect("?" + QueryStringHelper.ToQueryString(
+                        SearchViewModel.BIND_ALIAS_LAIDS,
+                        viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
                 }
-
 
                 if (viewModel.SearchType.HasValue)
                 {
@@ -220,7 +222,7 @@ namespace Edubase.Web.UI.Controllers
                     if (viewModel.SearchType == eSearchType.ByLocalAuthority &&
                         !string.IsNullOrEmpty(viewModel.LocalAuthorityToAdd))
                     {
-                       return await ProcessLocalAuthorityDisambiguation(viewModel);
+                        return await ProcessLocalAuthorityDisambiguation(viewModel);
                     }
 
                     if (ModelState.IsValid)
@@ -239,27 +241,32 @@ namespace Edubase.Web.UI.Controllers
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
                         {
                             var url = Url.Action(ConstIndex, "EstablishmentsSearch", new { area = "Establishments" });
-                            url = viewModel.OpenOnly
-                                ? $"{url}?{Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eStatus.Open, (int)eStatus.OpenButProposedToClose)}"
-                                : $"{url}?{Request.QueryString.AddIfNonExistent("OpenOnly", "false")}";
+                            var queryString = viewModel.OpenOnly
+                                ? AddIfNonExistentToCurrentQuery(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eStatus.Open, (int)eStatus.OpenButProposedToClose)
+                                : AddIfNonExistentToCurrentQuery("OpenOnly", "false");
 
-                            return Redirect(url);
+                            return Redirect(AppendQueryString(url, queryString));
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
-                            return Redirect(Url.Action(ConstIndex, "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
+                            var groupUrl = Url.Action(ConstIndex, "GroupSearch", new { area = "Groups" });
+                            return Redirect(AppendQueryString(groupUrl, CurrentQueryStringWithoutQuestionMark()));
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
                         {
-                            string[] allowedKeys = { "SelectedTab", "SearchType", "searchtype", "gsearch", "GovernorSearchModel.Forename", "GovernorSearchModel.Surname", "GovernorSearchModel.RoleId", "GovernorSearchModel.IncludeHistoric", "GovernorSearchModel.Gid" };
+                            string[] allowedKeys =
+                            {
+                                "SelectedTab", "SearchType", "searchtype", "gsearch", "GovernorSearchModel.Forename", "GovernorSearchModel.Surname", "GovernorSearchModel.RoleId", "GovernorSearchModel.IncludeHistoric", "GovernorSearchModel.Gid"
+                            };
 
                             var qs = CleanQueryString(allowedKeys);
+                            var roleQuery = string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"t={r}"));
+                            var redirectQuery = string.IsNullOrWhiteSpace(roleQuery) ? qs : string.Join("&", new[] { qs, roleQuery }.Where(x => !string.IsNullOrWhiteSpace(x)));
+                            var redirectUrl = Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" });
 
-                            var redirectUrl = $"{Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" })}?{qs}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}";
-
-                            return Redirect(redirectUrl);
+                            return Redirect(AppendQueryString(redirectUrl, redirectQuery));
                         }
 
                         throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
@@ -277,23 +284,25 @@ namespace Edubase.Web.UI.Controllers
         /// <returns></returns>
         public string CleanQueryString(string[] allowedKeys)
         {
-            var cleanQuery = HttpUtility.ParseQueryString(string.Empty);
+            var queryBuilder = new QueryBuilder();
 
             foreach (var key in allowedKeys)
             {
-                var value = Request.QueryString[key];
-                if (value != null)
+                if (!Request.Query.TryGetValue(key, out var values))
                 {
-                    cleanQuery[key] = value;
+                    continue;
+                }
+
+                foreach (var value in values)
+                {
+                    queryBuilder.Add(key, value);
                 }
             }
 
-            var nqs = cleanQuery.ToString();
-
-            return nqs;
+            return queryBuilder.ToQueryString().Value?.TrimStart('?') ?? string.Empty;
         }
 
-        [Route("Suggest"), HttpGet]
+        [HttpGet("Suggest")]
         public async Task<ActionResult> Suggest(string text)
         {
             var suggestions = (await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User)).ToArray();
@@ -306,6 +315,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     continue;
                 }
+
                 establishmentSuggestionItem.Address_CityOrTown = string.Empty;
                 establishmentSuggestionItem.Address_PostCode = string.Empty;
             }
@@ -313,43 +323,94 @@ namespace Edubase.Web.UI.Controllers
             return Json(suggestions);
         }
 
-        [Route("SuggestGroup"), HttpGet]
+        [HttpGet("SuggestGroup")]
         public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
 
-        [Route("SuggestPlace"), HttpGet]
+        [HttpGet("SuggestPlace")]
         public async Task<ActionResult> SuggestPlace(string text)
         {
             return QueryValidator.ValidatePlaceSuggestionQuery(text)
-                ? (ActionResult) Json(await _placesService.SearchAsync(text, true))
-                : new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ? Json(await _placesService.SearchAsync(text, true))
+                : BadRequest();
         }
 
         private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(SearchViewModel model)
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
             var localAuthority = localAuthorities.FirstOrDefault(x => x.Name.Equals(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase));
-            if (localAuthority != null) return Redirect("?SearchType=ByLocalAuthority&" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
-                model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
-            else
+            if (localAuthority != null)
             {
-                var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd ?? "",
-                    localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd ?? "", StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList(), model.OpenOnly);
-                return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
+                return Redirect("?SearchType=ByLocalAuthority&" + QueryStringHelper.ToQueryString(
+                    SearchViewModel.BIND_ALIAS_LAIDS,
+                    model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
             }
+
+            var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(
+                model.SelectedLocalAuthorityIds,
+                model.LocalAuthorityToAdd ?? string.Empty,
+                localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd ?? string.Empty, StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList(),
+                model.OpenOnly);
+            return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
         }
 
         private async Task<ActionResult> ProcessLocationDisambiguation(string query)
         {
             var items = await _placesService.SearchAsync(query, false);
             return items.Any()
-                ? View(
-                    "LocationDisambiguation",
-                    new LocationDisambiguationViewModel
-                    {
-                        SearchText = query,
-                        MatchingLocations = items.ToList()
-                    })
+                ? View("LocationDisambiguation", new LocationDisambiguationViewModel
+                {
+                    SearchText = query,
+                    MatchingLocations = items.ToList()
+                })
                 : null;
+        }
+
+        private string AddIfNonExistentToCurrentQuery(string key, params object[] values)
+        {
+            var queryValues = QueryHelpers.ParseQuery(Request.QueryString.Value ?? string.Empty)
+                .ToDictionary(k => k.Key, v => v.Value.ToList(), StringComparer.OrdinalIgnoreCase);
+
+            if (!queryValues.TryGetValue(key, out var existingValues))
+            {
+                existingValues = new List<string>();
+                queryValues[key] = existingValues;
+            }
+
+            foreach (var value in values.Select(x => x?.ToString()).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct())
+            {
+                if (!existingValues.Contains(value, StringComparer.Ordinal))
+                {
+                    existingValues.Add(value);
+                }
+            }
+
+            var queryBuilder = new QueryBuilder();
+            foreach (var entry in queryValues)
+            {
+                foreach (var value in entry.Value)
+                {
+                    queryBuilder.Add(entry.Key, value);
+                }
+            }
+
+            return queryBuilder.ToQueryString().Value?.TrimStart('?') ?? string.Empty;
+        }
+
+        private string CurrentQueryStringWithoutQuestionMark() =>
+            Request.QueryString.HasValue
+                ? Request.QueryString.Value.TrimStart('?')
+                : string.Empty;
+
+        private static string AppendQueryString(string url, string queryString)
+        {
+            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(queryString))
+            {
+                return url;
+            }
+
+            return url.Contains("?", StringComparison.Ordinal)
+                ? string.Concat(url, "&", queryString)
+                : string.Concat(url, "?", queryString);
         }
     }
 }

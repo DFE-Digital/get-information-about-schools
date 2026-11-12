@@ -5,7 +5,6 @@ using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
-using Edubase.Web.UI.Areas.Governors.Models;
 using System.Collections.Generic;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Services.Core;
@@ -14,6 +13,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Services.ExternalLookup;
+using Microsoft.AspNetCore.Routing;
 
 namespace Edubase.Web.UI.Models
 {
@@ -97,9 +97,9 @@ namespace Edubase.Web.UI.Models
 
         public GroupModel LegalParentGroup { get; set; }
 
-        public RouteDto LegalParentGroupRouteDto => LegalParentGroup == null ? null : new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name);
+        public RouteDto LegalParentGroupRouteDto => LegalParentGroup == null ? null : new RouteDto("GroupDetails", new RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name);
 
-        public RouteDto EstabDetailRouteDto => new RouteDto("EstabDetails", new System.Web.Routing.RouteValueDictionary(new { id = Establishment.Urn }), Establishment.Name);
+        public RouteDto EstabDetailRouteDto => new RouteDto("EstabDetails", new RouteValueDictionary(new { id = Establishment.Urn }), Establishment.Name);
 
         public bool IsUserLoggedOn { get; set; }
 
@@ -216,7 +216,7 @@ namespace Edubase.Web.UI.Models
 
         public IEnumerable<AdditionalAddressViewModel> AdditionalAddressList { get; set; } = Enumerable.Empty<AdditionalAddressViewModel>();
 
-        public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
+        public object GovernorsGridViewModel { get; set; }
 
         /// <summary>
         /// Whether the current user needs to confirm either the establishment or governance records are up-to-date; at _MEDIUM_ priority.
@@ -294,7 +294,7 @@ namespace Edubase.Web.UI.Models
             && Uri.TryCreate(OfstedReportUrl, UriKind.Absolute, out var uri)
             && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
-        public TabWarningsModel TabWarnings { get; set; }
+        public object TabWarnings { get; set; }
         public string ClosedStatusMessage
         {
             get

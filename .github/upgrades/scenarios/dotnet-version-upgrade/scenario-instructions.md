@@ -33,6 +33,9 @@
 - 2026-11-11: User approved a host-foundation cut for 04.04: produce a runnable ASP.NET Core shell on net10 and temporarily exclude legacy MVC5/System.Web feature code from compile, then restore full feature parity in 04.05.
 - 2026-11-11: User requested consistent line endings in edited/generated files to avoid Visual Studio normalization prompts; enforce repository-consistent endings for all future edits.
 - 2026-11-11: User requested a pause; stop implementation activity until the user asks to continue.
+- 2026-11-12: User asked the agent to take over implementation directly (instead of MAI-Code handoff/review loops) and to use medium-size migration slices for better efficiency.
+- 2026-11-12: User chose to defer `AccountController` migration until explicit ASP.NET Core auth-scheme wiring is confirmed.
+- 2026-11-12: User chose to close root-controller subtask with `AccountController` deferred and `AdminController` blocked, then proceed to Establishments area controllers.
 
 ## User Preferences
 ### Technical Preferences
