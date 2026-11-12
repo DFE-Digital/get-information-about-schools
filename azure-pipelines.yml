@@ -280,9 +280,7 @@ stages:
             inputs:
               folderPath: '$(Build.SourcesDirectory)'
               enableXmlTransform: false
-              enableXmlVariableSubstitution: true
-              fileType: xml
-              targetFiles: 'acceptance.tests.config'
+              xmlTargetFiles: 'acceptance.tests.config'
 
           - task: PowerShell@2
             displayName: 'Create acceptance test runtime config'
