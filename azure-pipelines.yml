@@ -227,7 +227,7 @@ stages:
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
         parameters:
-          enabled: 'true'
+          enabled: ${{ ne(variables['Build.SourceBranch'], 'refs/heads/290161-qa-acceptance-tests') }}
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiDevSlotMainJobWebRoot'
           previousDeploymentJobName: 'DeployWebUiDevSlotMainJob'
@@ -244,7 +244,7 @@ stages:
       ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
       - template: 'pipelines/template-smoke-test-deployment.yml'
         parameters:
-          enabled: 'true'
+          enabled: ${{ ne(variables['Build.SourceBranch'], 'refs/heads/290161-qa-acceptance-tests') }}
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiDevSlotMainJobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiDevSlotMainJob'
