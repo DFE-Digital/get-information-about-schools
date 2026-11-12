@@ -279,6 +279,8 @@ stages:
             displayName: 'Populate acceptance test config'
             inputs:
               folderPath: '$(Build.SourcesDirectory)'
+              enableXmlTransform: false
+              enableXmlVariableSubstitution: true
               fileType: xml
               targetFiles: 'acceptance.tests.config'
 
