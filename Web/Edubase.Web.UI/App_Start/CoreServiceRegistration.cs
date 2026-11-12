@@ -19,6 +19,7 @@ public static class CoreServiceRegistration
         }
 
         services.AddRouting();
+        services.AddHttpContextAccessor();
         services.AddControllersWithViews(options =>
         {
             CoreFilterConfig.RegisterGlobalFilters(options);

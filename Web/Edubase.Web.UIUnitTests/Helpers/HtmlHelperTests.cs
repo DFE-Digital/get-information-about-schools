@@ -1,21 +1,21 @@
 using System;
-using System.IO;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Moq;
 using Xunit;
 
 namespace Edubase.Web.UI.Helpers.Tests
 {
     public class HtmlHelperTests
     {
-
         [Fact]
         public void SplitNameAndCapitaliseFirstLetter_CamelCase_Timeout()
         {
             var longInput = new string('a', 10000) + "B" + new string('c', 10000);
-            var exception = new Exception(longInput);
-            var error = new ModelError(exception);
+            var error = new ModelError(longInput);
 
-            Action act = () => HtmlHelperExtensions.SplitNameAndCapitaliseFirstLetter((ModelError) error);
+            Action act = () => HtmlHelperExtensions.SplitNameAndCapitaliseFirstLetter(error);
 
             var ex = Record.Exception(act);
             Assert.Null(ex);
@@ -24,33 +24,17 @@ namespace Edubase.Web.UI.Helpers.Tests
         [Fact]
         public void SplitNameAndCapitaliseFirstLetter_CamelCase()
         {
-            var exception = new Exception("camelCaseString");
-            var error = new ModelError(exception);
-            var fieldInfo = typeof(ModelError).GetProperty("ErrorMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-            if (fieldInfo != null)
-            {
-                fieldInfo.SetValue(error, "camelCaseString");
-            }
-
+            var error = new ModelError("camelCaseString");
             var result = HtmlHelperExtensions.SplitNameAndCapitaliseFirstLetter(error);
-
             Assert.Equal("Camel case string", result);
         }
 
         [Fact]
         public void SplitNameAndCapitaliseFirstLetter_EmptyString()
         {
-            var exception = new Exception("");
-            var error = new ModelError(exception);
-            var fieldInfo = typeof(ModelError).GetProperty("ErrorMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-            if (fieldInfo != null)
-            {
-                fieldInfo.SetValue(error, "");
-            }
-
+            var error = new ModelError(string.Empty);
             var result = HtmlHelperExtensions.SplitNameAndCapitaliseFirstLetter(error);
-
-            Assert.Equal("", result);
+            Assert.Equal(string.Empty, result);
         }
 
         [Theory]
@@ -61,36 +45,26 @@ namespace Edubase.Web.UI.Helpers.Tests
         [InlineData("Line1", "Line1")]
         public void HtmlNewLines_CorrectFormatting(string input, string expected)
         {
-            // Arrange
-            var htmlHelper = CreateHtmlHelper();
-           
-            // Act
-            var result = htmlHelper.HtmlNewlines(input);
+            var htmlHelper = new Mock<IHtmlHelper>();
+            htmlHelper.Setup(x => x.Encode(It.IsAny<string>())).Returns<string>(s => s);
 
-            // Assert
-            Assert.Equal(expected, result.ToHtmlString());
+            var result = htmlHelper.Object.HtmlNewlines(input);
+
+            Assert.Equal(expected, result.Value);
         }
 
-        private static HtmlHelper CreateHtmlHelper()
+        [Theory]
+        [InlineData("Line1\nLine2", "Line1<br/>Line2")]
+        [InlineData("Line1\rLine2", "Line1<br/>Line2")]
+        [InlineData("Line1\r\nLine2", "Line1<br/>Line2")]
+        public void HtmlNewLines_HtmlString_CorrectFormatting(string input, string expected)
         {
-            var viewData = new ViewDataDictionary();
-            return new HtmlHelper(new ViewContext
-                {
-                    Writer = new StringWriter(),
-                    ViewData = viewData
-                },
-                new TestViewDataContainer(viewData)
-            );
-        }
+            var htmlHelper = new Mock<IHtmlHelper>();
+            htmlHelper.Setup(x => x.Encode(It.IsAny<object>())).Returns<object>(o => o?.ToString() ?? string.Empty);
 
-        private sealed class TestViewDataContainer : IViewDataContainer
-        {
-            public TestViewDataContainer(ViewDataDictionary viewData)
-            {
-                ViewData = viewData;
-            }
+            var result = htmlHelper.Object.HtmlNewlines(new HtmlString(input));
 
-            public ViewDataDictionary ViewData { get; set; }
+            Assert.Equal(expected, result.Value);
         }
     }
 }

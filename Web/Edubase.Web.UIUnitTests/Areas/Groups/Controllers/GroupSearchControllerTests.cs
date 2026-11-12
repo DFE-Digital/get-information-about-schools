@@ -1,9 +1,7 @@
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
@@ -11,6 +9,9 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Groups.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using Xunit;
 
@@ -24,12 +25,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             var grs = new Mock<IGroupReadService>();
             var gds = new Mock<IGroupDownloadService>();
             var cls = new Mock<ICachedLookupService>();
-            var request = new Mock<HttpRequestBase>();
-            var context = new Mock<HttpContextBase>();
-
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            context.SetupGet(x => x.User).Returns(new GenericPrincipal(new GenericIdentity("bob"), new[] { "superhuman" }));
 
             grs.Setup(x => x.SearchAsync(It.IsAny<GroupSearchPayload>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(2, new List<SearchGroupDocument>()
@@ -39,7 +34,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 }));
 
             var subject = new GroupSearchController(grs.Object, gds.Object, cls.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString(string.Empty);
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, "bob") }, "Test"));
+            subject.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
 
             var vm = new GroupSearchViewModel();
             var result = await subject.Index(vm) as ViewResult;
@@ -54,21 +52,18 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             var grs = new Mock<IGroupReadService>();
             var gds = new Mock<IGroupDownloadService>();
             var cls = new Mock<ICachedLookupService>();
-            var request = new Mock<HttpRequestBase>();
-            var context = new Mock<HttpContextBase>();
 
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            context.SetupGet(x => x.User).Returns(new GenericPrincipal(new GenericIdentity("bob"), new[] { "superhuman" }));
-
-            grs.Setup(x => x.SearchAsync(It.IsAny<GroupSearchPayload>(),  It.IsAny<IPrincipal>()))
+            grs.Setup(x => x.SearchAsync(It.IsAny<GroupSearchPayload>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>()
                 {
                     new SearchGroupDocument{ Name="Group 1", GroupUId = 123 }
                 }));
 
             var subject = new GroupSearchController(grs.Object, gds.Object, cls.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString(string.Empty);
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, "bob") }, "Test"));
+            subject.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
 
             var vm = new GroupSearchViewModel();
             var result = await subject.Index(vm) as RedirectToRouteResult;
@@ -86,26 +81,23 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             var grs = new Mock<IGroupReadService>(MockBehavior.Strict);
             var gds = new Mock<IGroupDownloadService>();
             var cls = new Mock<ICachedLookupService>();
-            var request = new Mock<HttpRequestBase>();
-            var context = new Mock<HttpContextBase>();
 
             var principal = new GenericPrincipal(new GenericIdentity("bob"), new[] { "superhuman" });
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            context.SetupGet(x => x.User).Returns(principal);
-
             grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(),
                 It.Is<int?>(i => i == 1000),
                 It.IsAny<string>(),
                 It.IsAny<int?>(),
-                It.Is<IPrincipal>(p => p == principal)))
+                It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>()
                 {
                     new SearchGroupDocument{ Name="Group 1000", GroupUId = 1000 }
                 }));
 
             var subject = new GroupSearchController(grs.Object, gds.Object, cls.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString(string.Empty);
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, "bob") }, "Test"));
+            subject.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
 
             var vm = new GroupSearchViewModel();
             vm.GroupSearchModel.Text = "1000";

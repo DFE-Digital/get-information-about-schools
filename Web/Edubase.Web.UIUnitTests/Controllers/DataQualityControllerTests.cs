@@ -4,8 +4,9 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Edubase.Data.Entity;
 using Edubase.Services.DataQuality;
 using Edubase.Web.UI.Controllers;
@@ -20,23 +21,23 @@ namespace Edubase.Web.UIUnitTests.Controllers
     public class DataQualityControllerTests
     {
         private readonly Mock<IDataQualityWriteService> _writeServiceMock = new Mock<IDataQualityWriteService>();
-        private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>();
-        private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>();
-        private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>();
-        private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>();
         private readonly DataQualityController _controllerUnderTest;
 
         public DataQualityControllerTests()
         {
-            mockHttpContextBase.SetupGet(x => x.User)
-                .Returns(mockPrincipal.Object);
-            mockControllerContext.SetupGet(x => x.HttpContext)
-                .Returns(mockHttpContextBase.Object);
-            mockPrincipal.SetupGet(x => x.Identity)
-                .Returns(mockIdentity.Object);
-            _controllerUnderTest = new DataQualityController(_writeServiceMock.Object)
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    ["DataQualityUpdatePeriod"] = "7"
+                })
+                .Build();
+
+            _controllerUnderTest = new DataQualityController(_writeServiceMock.Object, configuration)
             {
-                ControllerContext = mockControllerContext.Object
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
             };
         }
 

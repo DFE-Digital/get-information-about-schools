@@ -36,69 +36,19 @@
 - 2026-11-12: User asked the agent to take over implementation directly (instead of MAI-Code handoff/review loops) and to use medium-size migration slices for better efficiency.
 - 2026-11-12: User chose to defer `AccountController` migration until explicit ASP.NET Core auth-scheme wiring is confirmed.
 - 2026-11-12: User chose to close root-controller subtask with `AccountController` deferred and `AdminController` blocked, then proceed to Establishments area controllers.
+- 2026-11-12: User requested a documentation-first handoff so another developer/Copilot session can resume with accurate state and tasks artifacts.
 
-## User Preferences
-### Technical Preferences
-- Upgrade this solution and projects to .NET 10.
-- Need to keep backward compatibility with existing clients, eg SOAP endpoints, contracts, exports, downloads, reports.
-- UI style, layout, features should all be preserved.
-- Do not substitute .NET 11 preview for the requested .NET 10 target.
-- Use standard Microsoft.Extensions.Logging ILogger for logging.
-- ApiRecorderSessionItemRepository and WebLogItemRepository currently write to Azure Table Storage and will not migrate to SQL.
-- The existing application's feature-flagged Table Storage to SQL migration is expected to complete before .NET 10 implementation. If timings overlap, assess temporary Table Storage support complexity and ask the user before choosing. Confirm migration completion and fallback requirements before omitting Table Storage; the two logging repositories require separate treatment.
-- SQL migration scope is the ten data areas already represented by SQL repositories and migration flags; assume this SQL migration completes before .NET 10 implementation and these areas should no longer use Azure Table Storage.
-- Logging and API recording remain outside SQL migration scope; use Application Insights for both application logging and API session recordings, and retire the current admin log viewer.
-- OData disposition is deferred until deeper runtime verification confirms whether active contracts exist.
-- Acceptance-test environment access (`devsecrets.gias.config.alwaysignore` + reachable target environment) is an explicit external blocker until provided.
-- Deployment preference: migrate in one step, not incrementally; prefer a single production cutover rather than a staged feature-by-feature migration.
-- Use temporary library multi-targeting only where keeping existing consumers buildable provides enough value to justify the extra work, not automatically for every library. Evaluate each library and its dependency chain; do not assume successful builds establish runtime compatibility.
-- Use System.Web Adapters selectively, not automatically: prefer native ASP.NET Core APIs for straightforward changes; consider temporary shims only for supported, tightly coupled legacy request-context usages where they materially reduce migration risk. Verify actual usage and behaviour with explicit tests and remove temporary shims before completion. Adapters do not make MVC5 run on ASP.NET Core or require side-by-side deployment.
-- Enforce SQL-only repository wiring now for the migrated data areas and remove associated migration feature flags; handle logging/API-recording storage path separately.
-- Keep AutoMapper at 10.1.1 for now (non-licensed path), acknowledging current advisory exposure until a later migration/licensing decision.
-- Follow existing application coding standards, conventions, naming, structure, and style patterns unless an explicit task requires a deliberate deviation.
-- Keep line endings consistent with repository/editor conventions for every modified or newly generated file; avoid introducing mixed line endings that trigger normalization prompts.
-
-## Task 04 migration handover notes (for next chat / model switch)
-### Architectural decisions already in force
-- `04.04` intentionally established a runnable ASP.NET Core host shell first, then deferred full MVC5 surface migration to `04.05`.
-- Web.UI migration is being executed using **compile-slice gating** in `Web/Edubase.Web.UI/Edubase.Web.UI.csproj` (small, explicitly included file sets) to keep each slice buildable and debuggable.
-- Existing behavior parity is prioritized over syntactic modernization. Route names, redirect targets, JSON casing, and UI output contracts must remain equivalent unless explicitly approved otherwise.
-
-### Controller migration patterns to keep using
-- Replace MVC5 controller contracts/usings (`System.Web.Mvc`) with ASP.NET Core (`Microsoft.AspNetCore.Mvc`) and keep existing controller/action names.
-- Convert `RoutePrefix` + action routes to class-level `[Route("...")]` plus action-level `[HttpGet]/[HttpPost]` templates while preserving route names (`Name = ...`) used by redirects and links.
-- Replace `HttpNotFound()` with `NotFound()`.
-- Preserve legacy JSON allow-get semantics through the existing compatibility path (`EduBaseController` + `JsonCamelCaseResult` + compatibility `JsonRequestBehavior` enum), not ad-hoc serializer changes per controller.
-- For multi-step admin forms, preserve back/forward workflow semantics (`GoBack`, `Action` stepping, `TempData["ShowSaved"]`, model-state clearing/removal).
-- Where model-state value rehydration is required, use ASP.NET Core `ValueProviderResult` with `StringValues` and current culture.
-- Remove MVC5 `[AllowHtml]` attributes from migrated view models and preserve equivalent behavior through existing sanitization/rendering logic.
-
-### Task 04.05 controller work completed so far
-- Completed subtasks:
-  - `04.05.02.01` Web API controller surface
-  - `04.05.02.02` filter pipeline migration
-  - `04.05.02.03` model-binding/value-provider migration
-  - `04.05.02.04.01` shared MVC controller base/helpers
-- Root MVC controllers migrated and compile-validated in current slice:
-  - `UnauthorizedController`
-  - `TermsofUseController`
-  - `GuidanceController`
-  - `AmalgamateMergeController`
-  - `GlossaryController`
-  - `FaqController`
-  - `NewsController`
-  - `NotificationsController`
-
-### Outstanding issues / next execution targets
-- `04.05.02.04.02` is partially implemented but still marked stale/in-progress in workflow state; finalize status explicitly when resuming.
-- Remaining higher-complexity root controllers are still pending migration in this track (notably `DownloadsController`, `ChangeHistoryController`, `HomeController`, `ToolsController`, `SearchController`, `DataQualityController`, `ApprovalsController`, `AccountController`, `SitemapController`, plus `AdminController`).
-- `AdminController` compile activation remains blocked by unresolved legacy logging dependency path (`AzureTableLogger` / `ILoggingService`) and should be coordinated with logging migration decisions already captured in scenario preferences.
-- After finishing root controllers, continue planned order: `04.05.02.04.03` (Establishments), `04.05.02.04.04` (Groups/Governors), `04.05.02.04.05` (route contract check), `04.05.02.05` (endpoint contract validation).
-
-### Validation approach to replicate
-- After each controller slice, run targeted build:
-  - `dotnet build C:\copilot\get-information-about-schools\Web\Edubase.Web.UI\Edubase.Web.UI.csproj -v minimal`
-- Keep known warning context explicit in notes:
-  - User-approved AutoMapper advisory exposure while pinned at `AutoMapper 10.1.1`.
-  - Existing `RequiredDateTimeViewModel` CS0108 warnings currently pre-existing in migrated slice builds.
-- No production deployment during migration tasks.
+## Task 04/05 handover snapshot (2026-11-12)
+- Migration status: application code migration is effectively complete for the current compile surface.
+- Validation status:
+  - `run_build` reports successful workspace build.
+  - `Web/Edubase.Web.UIUnitTests` full suite passes (`887/887`) after compatibility/runtime fixes.
+- Workflow status:
+  - `04.06-cross-closure-validation-and-gates` has completion evidence in `tasks/04.06-cross-closure-validation-and-gates/progress-details.md`.
+  - Next execution target is `05-release-readiness`.
+  - `06-solution-validation` remains historically failed in tracker and should be re-opened/re-run after task 05 finalization.
+- Remaining migration hygiene to track in release/readiness:
+  - Non-test csproj compile excludes still present and should be reviewed before final closure:
+    - `Web/Edubase.Web.UI/Edubase.Web.UI.csproj`: `Models\\BaseViewModel.cs`
+    - `Web/Edubase.Services/Edubase.Services.csproj`: `Security\\Permissions\\Permission.cs`
+- Operational constraint remains unchanged: no production deployment from this workflow without explicit user approval.

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Xunit;

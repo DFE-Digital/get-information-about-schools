@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Castle.Core.Logging;
 using Edubase.Services;
 using Edubase.Services.Enums;
@@ -26,10 +28,18 @@ namespace Edubase.Web.UIUnitTests.Controllers
             blobMock.Setup(x => x.ArchiveBlobAsync(It.IsAny<MemoryStream>(), It.IsAny<string>()))
                 .ReturnsAsync((MemoryStream ms, string name) => ms);
 
+            var generatorMock = new Mock<ILaNameCodeFileGenerator>();
+            generatorMock.Setup(x => x.Generate(It.IsAny<IEnumerable<LaNameCodes>>(), It.IsAny<eFileFormat>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns((IEnumerable<LaNameCodes> rows, eFileFormat format, string header, string sheet) =>
+                {
+                    var bytes = Encoding.UTF8.GetBytes("dummy");
+                    return new MemoryStream(bytes);
+                });
+
             return new GuidanceController(
                 blobService ?? blobMock.Object,
                 repository ?? Mock.Of<ISqlLaNameCodeRepository>(),
-                fileGenerator ?? new LaNameCodeFileGenerator());
+                fileGenerator ?? generatorMock.Object);
         }
 
         private static ISqlLaNameCodeRepository RepositoryReturning(
@@ -144,7 +154,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
                     });
 
             var controller = CreateController(repository: repoMock.Object);
-            controller.TempData = new TempDataDictionary();
+            controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
 
             var result = await controller.LaNameCodesGenerateDownload(
                 new GuidanceLaNameCodeViewModel { DownloadName = downloadName, FileFormat = eFileFormat.CSV });
@@ -161,7 +171,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
             var repoMock = new Mock<ISqlLaNameCodeRepository>();
             var generatorMock = new Mock<ILaNameCodeFileGenerator>();
             var controller = CreateController(repository: repoMock.Object, fileGenerator: generatorMock.Object);
-            controller.TempData = new TempDataDictionary();
+            controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
 
             var result = await controller.LaNameCodesGenerateDownload(
                 new GuidanceLaNameCodeViewModel { DownloadName = "MartianLaNameCodes", FileFormat = eFileFormat.CSV });
@@ -176,7 +186,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
         {
             var repoMock = new Mock<ISqlLaNameCodeRepository>();
             var controller = CreateController(repository: repoMock.Object);
-            controller.TempData = new TempDataDictionary();
+            controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
 
             var result = await controller.LaNameCodesGenerateDownload(
                 new GuidanceLaNameCodeViewModel { DownloadName = "EnglishLaNameCodes", FileFormat = null });
@@ -202,7 +212,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
                     .ReturnsAsync((MemoryStream ms, string name) => ms);
 
             var controller = CreateController(repository: repoMock.Object, blobService: blobMock.Object);
-            controller.TempData = new TempDataDictionary();
+            controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
 
             var result = await controller.LaNameCodesGenerateDownload(
                 new GuidanceLaNameCodeViewModel { DownloadName = "EnglishLaNameCodes", FileFormat = eFileFormat.CSV });

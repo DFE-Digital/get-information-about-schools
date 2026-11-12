@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
@@ -158,7 +158,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
                 Person_FirstName = "Alex",
                 Person_LastName = "Chair",
                 Person_TitleId = 1,
-                AppointmentEndDate = new DateTime(2025, 4, 10)
+                AppointmentEndDate = new DateTime(2025, 4, 10),
+                AppointingBodyId = 2
             };
 
             var dto = new GovernorsDetailsDto
@@ -243,6 +244,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
 
             SetupCommonLookupMocks();
 
+            var controller = BuildController();
+
             // Overrides
             mockCachedLookupService
                 .Setup(s => s.TitlesGetAllAsync())
@@ -261,8 +264,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
                     It.IsAny<Action<EstablishmentModel>>(),
                     It.IsAny<Action<GroupModel>>()))
                 .Returns(Task.CompletedTask);
-
-            var controller = BuildController();
 
             // Act
             var result = await controller.ReplaceChair(estabUrn, existingChairId);
@@ -382,7 +383,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
                 Person_TitleId = 1
             };
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["rgid"] = "202";
             controller = BuildController(qs);
 
@@ -452,7 +453,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
             var estabUrn = 7777;
             var existingChairId = 123;
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["d"] = "10";
             qs["m"] = "11";
             qs["y"] = "2030";
@@ -598,7 +599,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
                     It.IsAny<Action<GroupModel>>()))
                 .Returns(Task.CompletedTask);
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["rgid"] = replacementId.ToString();
 
             // Act
@@ -633,7 +634,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.ReplaceChair
             Assert.Equal(replacement.PostCode, newGov.PostCode);
 
             Assert.Equal(estabUrn, vm.Urn);
-            Assert.Equal(replacement.Id, vm.SelectedPreviousExistingNonChairId);
+            Assert.NotNull(vm.SelectedNonChair);
+            Assert.Equal(replacement.Id, vm.SelectedNonChair.Id);
         }
     }
 }

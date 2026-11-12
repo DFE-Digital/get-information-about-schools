@@ -10,7 +10,6 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Web.UI.Areas.Governors.Models;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using Edubase.Services.Lookup;
 
 namespace Edubase.Web.UI.Areas

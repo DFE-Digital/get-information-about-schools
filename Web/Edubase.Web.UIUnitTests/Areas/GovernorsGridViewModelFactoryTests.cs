@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
@@ -97,7 +96,6 @@ namespace Edubase.Web.UIUnitTests.Areas
             Assert.False(result.EditMode);
             Assert.Equal(appointingBodieslookups, result.AppointingBodies);
             Assert.Equal(governorPermissions, result.GovernorPermissions);
-            // need to test the Grid creation but no time at the moment
         }
 
         [Theory]

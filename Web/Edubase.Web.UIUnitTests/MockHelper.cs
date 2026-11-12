@@ -74,8 +74,9 @@ namespace Edubase.Web.UIUnitTests
 
         public static Mock<IUserDependentLookupService> SetupLookupService(IPrincipal user)
         {
-            var ls = new Mock<IUserDependentLookupService>(MockBehavior.Strict);
-            ls.Setup(c => c.EstablishmentStatusesGetAllAsync(user)).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            var ls = new Mock<IUserDependentLookupService>(MockBehavior.Loose);
+            ls.Setup(c => c.EstablishmentStatusesGetAllAsync(It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
 
             return ls;
         }

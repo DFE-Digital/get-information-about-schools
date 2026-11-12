@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -21,7 +21,7 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="controller">mvc controller</param>
         /// <param name="id">id attribute of the a tag</param>
         /// <returns></returns>
-        public static IHtmlString NavigationItem(this HtmlHelper helper, string currentSiteSection, string siteSection, string linkText,
+        public static IHtmlContent NavigationItem(this IHtmlHelper helper, string currentSiteSection, string siteSection, string linkText,
             string action, string controller, string id)
         {
             var active = siteSection == currentSiteSection;
@@ -35,8 +35,9 @@ namespace Edubase.Web.UI.Helpers
 
             s.Append("\">");
 
-            var uh = new UrlHelper(helper.ViewContext.RequestContext, helper.RouteCollection);
-            var url = uh.Action(action, controller, new { area = "" });
+            var urlFactory = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<IUrlHelperFactory>();
+            var urlHelper = urlFactory.GetUrlHelper(helper.ViewContext);
+            var url = urlHelper.Action(action, controller, new { area = "" });
 
             s.Append($"<a class=\"govuk-service-navigation__link\" href=\"{url}\" id=\"{id}\">");
 
@@ -51,7 +52,7 @@ namespace Edubase.Web.UI.Helpers
 
             s.Append("</li>");
 
-            return new MvcHtmlString(s.ToString());
+            return new HtmlString(s.ToString());
         }
     }
 }

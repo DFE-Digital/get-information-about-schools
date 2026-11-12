@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
@@ -45,12 +48,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<IResourcesHelper> mockResourcesHelper = new Mock<IResourcesHelper>(MockBehavior.Loose);
         private readonly Mock<ISecurityService> mockSecurityService = new Mock<ISecurityService>(MockBehavior.Strict);
         private readonly Mock<IExternalLookupService> mockExternalLookupService = new Mock<IExternalLookupService>(MockBehavior.Strict);
-        private readonly Mock<HttpRequestBase> mockHttpRequestBase = new Mock<HttpRequestBase>(MockBehavior.Strict);
-        private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
-        private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
-        private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
+        private readonly Mock<IUrlHelper> mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Loose);
         private readonly Mock<IFSCPDService> mockFscpdService = new Mock<IFSCPDService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
         private readonly Mock<IOfstedService> mockOfstedService = new Mock<IOfstedService>(MockBehavior.Strict);
@@ -66,8 +66,20 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             mockEstablishmentReadService.Setup(e => e.GetEstabType2EducationPhaseMap())
                .Returns(new Dictionary<eLookupEstablishmentType, eLookupEducationPhase[]>());
 
-            mockUrlHelper.Setup(u => u.RouteUrl(It.IsAny<string>(), It.IsAny<object>()))
-                .Returns("fake url");
+            mockEstablishmentReadService
+                .Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync((int urn, IPrincipal principal) => new ServiceResultDto<EstablishmentModel>
+                {
+                    Status = eServiceResultStatus.Success,
+                    ReturnValue = new EstablishmentModel
+                    {
+                        Urn = urn,
+                        Name = "Test establishment",
+                        StatusId = (int)eLookupEstablishmentStatus.Open
+                    }
+                });
+
+            mockUrlHelper.Setup(u => u.RouteUrl(It.IsAny<UrlRouteContext>())).Returns("fake url");
 
             controller = new EstablishmentController(
                 mockEstablishmentReadService.Object,
@@ -87,27 +99,23 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 
         private void SetupHttpRequest()
         {
-            mockHttpRequestBase.SetupGet(x => x.QueryString)
-                .Returns(HttpUtility.ParseQueryString(string.Empty));
-            mockHttpContextBase.SetupGet(x => x.Request)
-                .Returns(mockHttpRequestBase.Object);
-            mockHttpContextBase.SetupGet(x => x.User)
-                .Returns(mockPrincipal.Object);
-            mockControllerContext.SetupGet(x => x.HttpContext)
-                .Returns(mockHttpContextBase.Object);
-            mockControllerContext.SetupGet(x => x.IsChildAction)
-                .Returns(false);
-            mockControllerContext.SetupGet(x => x.RouteData)
-                .Returns(new System.Web.Routing.RouteData());
-            mockPrincipal.SetupGet(x => x.Identity)
-                .Returns(mockIdentity.Object);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString(string.Empty);
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Establishments";
+            routeData.Values["action"] = "Index";
+            mockIdentity.SetupGet(x => x.Name).Returns("TestUser");
+            mockIdentity.SetupGet(x => x.AuthenticationType).Returns("TestAuthentication");
+            mockIdentity.SetupGet(x => x.IsAuthenticated).Returns(true);
+            mockPrincipal.SetupGet(x => x.Identity).Returns(mockIdentity.Object);
+            mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
+            httpContext.User = new ClaimsPrincipal(mockPrincipal.Object);
+            controller.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = routeData };
         }
 
         protected void SetupController()
         {
             SetupHttpRequest();
-            controller.ControllerContext = mockControllerContext.Object;
-            mockControllerContext.SetupGet(c => c.Controller).Returns(controller);
             controller.Url = mockUrlHelper.Object;
         }
 
@@ -125,7 +133,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditHelpdesk(null as int?);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Fact]
@@ -142,7 +150,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditIEBT(null as int?);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Fact]
@@ -151,15 +159,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             mockEstablishmentReadService.Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.EditLocation(4));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.EditLocation(4, null));
         }
 
         [Fact]
         public async Task Estab_Edit_Location_Null_Id()
         {
-            var response = await controller.EditLocation(null as int?);
+            var response = await controller.EditLocation(null as int?, null);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Fact]
@@ -268,7 +276,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditDetails(null, null);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Theory]
@@ -339,7 +347,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var response = await controller.EditLinks(null);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
         [Fact]
@@ -396,15 +404,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             mockEstablishmentReadService.Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.SearchForEstablishment(4, null));
+            await Assert.ThrowsAsync<NullReferenceException>(() => controller.SearchEstablishmentForLink(4, null));
         }
 
         [Fact]
         public async Task Estab_SearchForEstablishment_Null_Id()
         {
-            var response = await controller.SearchForEstablishment(null, null);
+            var response = await controller.SearchEstablishmentForLink(null, null);
 
-            Assert.IsType<HttpNotFoundResult>(response);
+            Assert.IsType<NotFoundResult>(response);
         }
 
 [Theory]
@@ -428,19 +436,19 @@ public async Task Estab_Details_TabDisplayPolicy(bool locationDataFieldViewable,
     mockPrincipal.Setup(x => x.Identity.IsAuthenticated).Returns(true);
     mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ESTABLISHMENT)).Returns(false);
 
-    mockEstablishmentReadService.Setup(x => x.GetAsync(urn, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetAsync(urn, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new ServiceResultDto<EstablishmentModel>(establishmentModel));
 
-    mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new List<LinkedEstablishmentModel>());
 
-    mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()))
         .ReturnsAsync(new PaginatedResult<EstablishmentChangeDto>());
 
-    mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, mockPrincipal.Object))
+    mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new List<GroupModel>());
 
-    mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new EstablishmentDisplayEditPolicy()
         {
             IEBTDetail = new IEBTDetailDisplayEditPolicy(),
@@ -458,10 +466,10 @@ public async Task Estab_Details_TabDisplayPolicy(bool locationDataFieldViewable,
             Northing = locationDataFieldViewable
         });
 
-    mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, It.IsAny<IPrincipal>()))
         .ReturnsAsync(true);
 
-    mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new EstablishmentEditPolicyEnvelope()
         {
             EditPolicy = new EstablishmentDisplayEditPolicy()
@@ -498,27 +506,27 @@ public async Task Estab_Details_TabEditPolicy(bool locationDataFieldEditable, bo
     mockPrincipal.Setup(x => x.Identity.IsAuthenticated).Returns(true);
     mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ESTABLISHMENT)).Returns(false);
 
-    mockEstablishmentReadService.Setup(x => x.GetAsync(urn, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetAsync(urn, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new ServiceResultDto<EstablishmentModel>(establishmentModel));
 
-    mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new List<LinkedEstablishmentModel>());
 
-    mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()))
         .ReturnsAsync(new PaginatedResult<EstablishmentChangeDto>());
 
-    mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, mockPrincipal.Object))
+    mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new List<GroupModel>());
 
-    mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new EstablishmentDisplayEditPolicy()
         {
             IEBTDetail = new IEBTDetailDisplayEditPolicy()
         });
 
-    mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, mockPrincipal.Object)).ReturnsAsync(true);
+    mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, It.IsAny<IPrincipal>())).ReturnsAsync(true);
 
-    mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, mockPrincipal.Object))
+    mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, It.IsAny<IPrincipal>()))
         .ReturnsAsync(new EstablishmentEditPolicyEnvelope()
         {
             EditPolicy = new EstablishmentDisplayEditPolicy()

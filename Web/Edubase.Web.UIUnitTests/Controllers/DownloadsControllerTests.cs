@@ -1,8 +1,8 @@
 using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Services.Domain;
 using Edubase.Services.Downloads;
 using Edubase.Services.Establishments;
@@ -45,13 +45,11 @@ namespace Edubase.Web.UIUnitTests.Controllers
                 .Setup(x => x.GenerateScheduledExtractAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(apiResultDtoJson);
 
-            var httpContextMock = new Mock<HttpContextBase>();
-            _controller.ControllerContext = new ControllerContext { HttpContext = httpContextMock.Object };
+            _controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
 
             var result = await _controller.RequestScheduledExtract(testEid);
 
-            var redirectResult = Assert.IsType<RedirectToRouteResult>(result);
-            Assert.NotNull(redirectResult.RouteValues);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.NotNull(redirectResult);
         }
 
@@ -68,14 +66,13 @@ namespace Edubase.Web.UIUnitTests.Controllers
                 .Setup(x => x.GenerateScheduledExtractAsync(testEid, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(progressDtoJson);
 
-            var httpContextMock = new Mock<HttpContextBase>();
-            _controller.ControllerContext = new ControllerContext { HttpContext = httpContextMock.Object };
+            _controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
 
             var result = await _controller.RequestScheduledExtract(testEid);
 
-            var redirectResult = Assert.IsType<RedirectToRouteResult>(result);
-            Assert.NotNull(redirectResult.RouteValues);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.NotNull(redirectResult);
+            Assert.NotNull(redirectResult.RouteValues);
             Assert.True(redirectResult.RouteValues.ContainsKey("id"));
 
             var extractedId = ExtractIdFromFileLocationUri(progressDto.FileLocationUri);

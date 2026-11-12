@@ -1,15 +1,13 @@
-using System.Web.Mvc;
-using System.Web.Routing;
+using Edubase.Web.UI.App_Start;
+using Microsoft.AspNetCore.Routing;
 
 namespace Edubase.Web.UI
 {
-    public class RouteConfig
+    public static class RouteConfig
     {
-        public static void RegisterRoutes(RouteCollection routes)
+        public static void RegisterRoutes(IEndpointRouteBuilder endpoints)
         {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.MapMvcAttributeRoutes();
+            CoreRouteConfig.MapRoutes(endpoints);
         }
     }
-
 }

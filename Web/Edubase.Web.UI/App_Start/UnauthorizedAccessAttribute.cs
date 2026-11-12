@@ -1,16 +1,17 @@
-﻿using System;
-using System.Web.Mvc;
+using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Edubase.Web.UI
 {
-    public class UnauthorizedAccessAttribute : FilterAttribute, IExceptionFilter
+    public class UnauthorizedAccessAttribute : ExceptionFilterAttribute
     {
-        public void OnException(ExceptionContext filterContext)
+        public override void OnException(ExceptionContext context)
         {
-            if (filterContext.Exception is UnauthorizedAccessException)
+            if (context.Exception is UnauthorizedAccessException)
             {
-                filterContext.Result = new RedirectResult("/Unauthorized");
-                filterContext.ExceptionHandled = true;
+                context.Result = new RedirectResult("/Unauthorized");
+                context.ExceptionHandled = true;
             }
         }
     }

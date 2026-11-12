@@ -1,7 +1,5 @@
 using System.Data.Common;
 using System.Data.Entity;
-using Edubase.Web.UI.Models;
-using Microsoft.Identity.Client;
 
 namespace Edubase.Web.UI.Models
 {

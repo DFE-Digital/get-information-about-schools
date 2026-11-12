@@ -1,6 +1,7 @@
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
@@ -17,12 +18,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers
         private readonly GroupCorporateContactController controller;
         private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>();
         private readonly Mock<IGroupsWriteService> mockGroupsWriteService = new Mock<IGroupsWriteService>();
-        private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
+        private readonly Mock<IUrlHelper> mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Loose);
         private readonly Mock<ILayoutHelper> mockLayoutHelper = new Mock<ILayoutHelper>(MockBehavior.Loose);
 
         public GroupCorporateContactControllerTests()
         {
-            mockUrlHelper.Setup(u => u.RouteUrl(It.IsAny<string>(), It.IsAny<object>())).Returns("test-url");
+            mockUrlHelper.Setup(u => u.RouteUrl(It.IsAny<UrlRouteContext>())).Returns("test-url");
             controller = new GroupCorporateContactController(mockGroupReadService.Object, mockGroupsWriteService.Object, mockLayoutHelper.Object)
             {
                 Url = mockUrlHelper.Object

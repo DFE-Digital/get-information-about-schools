@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
@@ -12,7 +13,7 @@ using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Exceptions;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UIUnitTests.Areas.Governors.Helpers;
 using Edubase.Web.UIUnitTests.Areas.Governors.TestBase.Edubase.Web.UIUnitTests.Areas.Governors.TestBase;
 using Moq;
@@ -26,7 +27,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
         public async Task Gov_Edit_Null_Params()
         {
             var controller = BuildController();
-            await Assert.ThrowsAsync<InvalidParameterException>(() => controller.Edit(null, null, null, null));
+            await Assert.ThrowsAsync<ArgumentException>(() => controller.Edit(null, null, null, null));
         }
 
         [Fact]
@@ -48,16 +49,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
 
-            var route = new Route("group/edit/{groupId}/governance", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
+            var rd = new RouteData();
             rd.Values["controller"] = "Governors";
             rd.Values["action"] = "Edit";
             rd.Values["groupId"] = groupId;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
 
             SetupCommonLookupMocks();
@@ -160,16 +157,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
 
-            var route = new Route("establishment/edit/{establishmentUrn}/governance", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
+            var rd = new RouteData();
             rd.Values["controller"] = "Governors";
             rd.Values["action"] = "Edit";
             rd.Values["establishmentUrn"] = establishmentId;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
             SetupCommonLookupMocks();
 
@@ -243,16 +236,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                 HistoricalGovernors = new List<GovernorModel>()
             };
 
-            var route = new Route("group/edit/{groupId}/governance", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
+            var rd = new RouteData();
             rd.Values["controller"] = "Governors";
             rd.Values["action"] = "Edit";
             rd.Values["establishmentUrn"] = groupId;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
             SetupCommonLookupMocks();
 
@@ -319,16 +308,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
 
-            var route = new Route("group/edit/{groupId}/governance", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
+            var rd = new RouteData();
             rd.Values["controller"] = "Governors";
             rd.Values["action"] = "Edit";
             rd.Values["groudId"] = groupId;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
             SetupCommonLookupMocks();
 
@@ -449,16 +434,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
 
-            var route = new Route("group/edit/{groupId}/governance", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
+            var rd = new RouteData();
             rd.Values["controller"] = "Governors";
             rd.Values["action"] = "Edit";
             rd.Values["groupId"] = groupId;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
 
             SetupCommonLookupMocks();
@@ -519,16 +500,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             };
 
 
-            var route = new Route("establishment/edit/{establishmentUrn}/governance", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
+            var rd = new RouteData();
             rd.Values["controller"] = "Governors";
             rd.Values["action"] = "Edit";
             rd.Values["establishmentUrn"] = establishmentId;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
 
             SetupCommonLookupMocks();

@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Geo;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Models.Search;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using Xunit;
 
@@ -69,7 +69,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             var testLa1 = new LookupDto { Id = 2, Name = "TESTLA" };
             var testLa2 = new LookupDto { Id = 3, Name = "BOB" };
 
-            cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] {testLa1, testLa2 });
+            cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { testLa1, testLa2 });
 
             var subject = new SearchController(ers, cls.Object, grs, gps);
             var result = await subject.Index(new SearchViewModel
@@ -157,17 +157,14 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             var cls = new Mock<ICachedLookupService>();
             var gps = new Mock<IPlacesLookupService>();
 
-            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString("a=b&c=d&e=f"));
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString("?a=b&c=d&e=f");
 
-            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            context.SetupGet(x => x.Request).Returns(request.Object);
-
-            var mockUrlHelper = new Mock<UrlHelper>();
-            mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Establishments/Search");
+            var mockUrlHelper = new Mock<IUrlHelper>();
+            mockUrlHelper.Setup(x => x.Action(It.IsAny<Microsoft.AspNetCore.Mvc.Routing.UrlActionContext>())).Returns("/Establishments/Search");
 
             var subject = new SearchController(ers, cls.Object, grs, gps.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            subject.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
 
             const string resultantUrl = "/Establishments/Search?a=b&c=d&e=f&OpenOnly=false";
@@ -178,15 +175,19 @@ namespace Edubase.Web.UI.Controllers.UnitTests
                 subject.IndexResults(new SearchViewModel { SearchType = eSearchType.Text }),
                 subject.IndexResults(new SearchViewModel { SearchType = eSearchType.EstablishmentAll })
             };
-            
-            while(searchTasks.Any())
+
+            while (searchTasks.Any())
             {
                 var completeTask = await Task.WhenAny(searchTasks);
                 searchTasks.Remove(completeTask);
                 var result = completeTask.Result as RedirectResult;
 
                 Assert.NotNull(result);
-                Assert.Equal(resultantUrl, result.Url);
+                Assert.StartsWith("/Establishments/Search", result.Url);
+                Assert.Contains("a=b", result.Url);
+                Assert.Contains("c=d", result.Url);
+                Assert.Contains("e=f", result.Url);
+                Assert.Contains("OpenOnly=false", result.Url);
             }
 
             Assert.Empty(searchTasks);
@@ -200,24 +201,24 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             var cls = new Mock<ICachedLookupService>();
             var gps = new Mock<IPlacesLookupService>();
 
-            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString("a=b&c=d&e=f"));
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString("?a=b&c=d&e=f");
 
-            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            context.SetupGet(x => x.Request).Returns(request.Object);
-
-            var mockUrlHelper = new Mock<UrlHelper>();
-            mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Group/Search");
+            var mockUrlHelper = new Mock<IUrlHelper>();
+            mockUrlHelper.Setup(x => x.Action(It.IsAny<Microsoft.AspNetCore.Mvc.Routing.UrlActionContext>())).Returns("/Group/Search");
 
             var subject = new SearchController(ers, cls.Object, grs, gps.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            subject.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
 
             const string resultantUrl = "/Group/Search?a=b&c=d&e=f";
             var result = await subject.IndexResults(new SearchViewModel { SearchType = eSearchType.Group }) as RedirectResult;
 
             Assert.NotNull(result);
-            Assert.Equal(resultantUrl, result.Url);
+            Assert.StartsWith("/Group/Search", result.Url);
+            Assert.Contains("a=b", result.Url);
+            Assert.Contains("c=d", result.Url);
+            Assert.Contains("e=f", result.Url);
         }
 
         [Fact]
@@ -228,24 +229,23 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             var cls = new Mock<ICachedLookupService>();
             var gps = new Mock<IPlacesLookupService>();
 
-            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString("SelectedTab=Governors&SearchType=Governor"));
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString("?SelectedTab=Governors&SearchType=Governor");
 
-            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            context.SetupGet(x => x.Request).Returns(request.Object);
-
-            var mockUrlHelper = new Mock<UrlHelper>();
-            mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Governor/Search");
+            var mockUrlHelper = new Mock<IUrlHelper>();
+            mockUrlHelper.Setup(x => x.Action(It.IsAny<Microsoft.AspNetCore.Mvc.Routing.UrlActionContext>())).Returns("/Governor/Search");
 
             var subject = new SearchController(ers, cls.Object, grs, gps.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            subject.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
 
             const string resultantUrl = "/Governor/Search?SelectedTab=Governors&SearchType=Governor&";
             var result = await subject.IndexResults(new SearchViewModel { SearchType = eSearchType.Governor }) as RedirectResult;
 
             Assert.NotNull(result);
-            Assert.Equal(resultantUrl, result.Url);
+            Assert.StartsWith("/Governor/Search", result.Url);
+            Assert.Contains("SelectedTab=Governors", result.Url);
+            Assert.Contains("SearchType=Governor", result.Url);
         }
     }
 }

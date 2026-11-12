@@ -7,7 +7,6 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Common.Config;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
@@ -25,7 +24,13 @@ using Edubase.Web.UI.Models.Grid;
 using Moq;
 using Xunit;
 using static Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
+using ControllerContext = System.Web.Mvc.ControllerContext;
 using GR = Edubase.Services.Enums.eLookupGovernorRole;
+using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
+using RedirectToRouteResult = Microsoft.AspNetCore.Mvc.RedirectToRouteResult;
+using RouteData = System.Web.Routing.RouteData;
+using RouteValueDictionary = System.Web.Routing.RouteValueDictionary;
+using ViewResult = Microsoft.AspNetCore.Mvc.ViewResult;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 {
@@ -293,7 +298,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
-            var cls = new Mock<ICachedLookupService>(MockBehavior.Strict);
+            var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
             var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
@@ -547,7 +552,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                     Id = "Religious characteristics"
                 },
             };
-            eds.Setup(x => x.GetSearchDownloadCustomFields(principal.Object)).Returns(Task.FromResult(expectedFields));
+            eds.Setup(x => x.GetSearchDownloadCustomFields(It.IsAny<IPrincipal>())).Returns(Task.FromResult(expectedFields));
 
             var fp = new Mock<IFeatureFlagProvider>();
             Feature.Provider = fp.Object;
@@ -622,7 +627,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                     Id = "Religious characteristics"
                 },
             };
-            eds.Setup(x => x.GetSearchDownloadCustomFields(principal.Object)).Returns(Task.FromResult(expectedFields));
+            eds.Setup(x => x.GetSearchDownloadCustomFields(It.IsAny<IPrincipal>())).Returns(Task.FromResult(expectedFields));
 
             var fp = new Mock<IFeatureFlagProvider>();
             Feature.Provider = fp.Object;

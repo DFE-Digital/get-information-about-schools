@@ -1,15 +1,13 @@
-﻿using Edubase.Web.UI.Filters;
-using System.Configuration;
-using System.Web.Mvc;
+using Edubase.Web.UI.App_Start;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI
 {
-    public class FilterConfig
+    public static class FilterConfig
     {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters, ExceptionHandler exceptionHandler)
+        public static void RegisterGlobalFilters(MvcOptions options)
         {
-            filters.Add(new UnauthorizedAccessAttribute());
-            filters.Add(exceptionHandler);
+            CoreFilterConfig.RegisterGlobalFilters(options);
         }
     }
 }

@@ -1,23 +1,22 @@
 using System;
 using System.Configuration;
-using Microsoft.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
-using AzureTableLogger;
-using AzureTableLogger.LogMessages;
 using Edubase.Data.Repositories.EF;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
     [Authorize]
     public class SqlDataController : ControllerBase
     {
-        private readonly IAzLogger _logger;
+        private readonly ILogger<SqlDataController> _logger;
         private readonly FrontEndDbContext _frontEndDbContext;
 
         public SqlDataController(
-            IAzLogger logger,
+            ILogger<SqlDataController> logger,
             FrontEndDbContext frontEndDbContext)
         {
             _logger = logger;
@@ -38,14 +37,7 @@ namespace Edubase.Web.UI.Controllers.Api
             }
             catch (Exception ex)
             {
-                _logger.Log(new WebLogMessage
-                {
-                    Level = LogMessage.LogLevel.ERROR,
-                    Environment = ConfigurationManager.AppSettings["Environment"],
-                    Message = $"[api/sql] connection failed. {ex.GetType().Name}: {ex.Message}",
-                    Exception = ex.ToString()
-                });
-
+                _logger.LogError(ex, "[api/sql] connection failed in environment {Environment}", ConfigurationManager.AppSettings["Environment"]);
                 return StatusCode(503);
             }
         }

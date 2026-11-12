@@ -1,13 +1,11 @@
-﻿using Microsoft.Owin.Security;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.MvcResult
 {
-    internal class ChallengeResult : HttpUnauthorizedResult
+    internal class ChallengeResult : IActionResult
     {
         private const string XsrfKey = "XsrfId";
 
@@ -27,14 +25,21 @@ namespace Edubase.Web.UI.MvcResult
         public string RedirectUri { get; set; }
         public string UserId { get; set; }
 
-        public override void ExecuteResult(ControllerContext context)
+        public async Task ExecuteResultAsync(ActionContext context)
         {
             var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
             if (UserId != null)
             {
-                properties.Dictionary[XsrfKey] = UserId;
+                properties.Items[XsrfKey] = UserId;
             }
-            context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+
+            if (string.IsNullOrWhiteSpace(LoginProvider))
+            {
+                await context.HttpContext.ChallengeAsync(properties);
+                return;
+            }
+
+            await context.HttpContext.ChallengeAsync(LoginProvider, properties);
         }
     }
 }

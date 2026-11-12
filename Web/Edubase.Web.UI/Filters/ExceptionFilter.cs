@@ -1,15 +1,14 @@
 using System;
 using System.Configuration;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Edubase.Common;
-using Edubase.Services.Exceptions;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
-using Edubase.Web.UI.Helpers;
-using Sustainsys.Saml2.Exceptions;
+using Edubase.Common;
+using Edubase.Services.Exceptions;
+using Edubase.Services.Texuna;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -28,42 +27,47 @@ namespace Edubase.Web.UI.Filters
                 throw new ArgumentNullException(nameof(filterContext));
             }
 
-            if (filterContext.Exception is EdubaseException) // domain / purposeful exception - not logged
+            if (filterContext.Exception is EdubaseException domainException)
             {
-                var domainException = filterContext.Exception as EdubaseException;
                 filterContext.Result = new ViewResult
                 {
                     ViewName = "~/Views/Shared/DomainError.cshtml",
-                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", domainException.Message }, { "ExTypeName", domainException.GetType().Name } }
+                    ViewData = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(
+                        metadataProvider: new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(),
+                        modelState: filterContext.ModelState)
+                    {
+                        ["PublicErrorMessage"] = domainException.Message,
+                        ["ExTypeName"] = domainException.GetType().Name
+                    }
                 };
 
                 filterContext.ExceptionHandled = true;
             }
-            else if (filterContext.Exception is UnsuccessfulSamlOperationException)
+            else if (string.Equals(filterContext.Exception.GetType().Name, "UnsuccessfulSamlOperationException", StringComparison.Ordinal))
             {
                 filterContext.Result = new RedirectResult("/Unauthorized/LoginFailed");
                 filterContext.ExceptionHandled = true;
             }
-            else // unhandled/unexpected exception; log it and tell the user.
+            else
             {
                 var ctx = filterContext.HttpContext;
                 var msg = Log(ctx, filterContext.Exception);
 
-                // Making this "forwarded-header-aware" is not strictly required,
-                // but it's easier and safer to be consistent and just do it everywhere.
-                var urlHelper = new UrlHelper(filterContext.RequestContext);
-                var url = urlHelper.GetForwardedHeaderAwareUrl();
+                var request = ctx.Request;
+                var isPartialView = request.Path.Value != null &&
+                                    request.Path.Value.EndsWith("results-js", StringComparison.InvariantCultureIgnoreCase);
 
                 filterContext.Result = new ViewResult
                 {
-                    // Show either the "simple" user-facing error page, or the full error page with technical detail.
                     ViewName = EnableFriendlyErrorPage ? "~/Views/Shared/Error.cshtml" : "~/Views/Shared/FullErrorDetail.cshtml",
-                    ViewData = new ViewDataDictionary
+                    ViewData = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(
+                        metadataProvider: new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(),
+                        modelState: filterContext.ModelState)
                     {
                         ["ErrorCode"] = msg.Id,
-                        ["IsPartialView"] = url.AbsolutePath.EndsWith("results-js", StringComparison.InvariantCultureIgnoreCase),
+                        ["IsPartialView"] = isPartialView,
                         ["Message"] = msg.Message,
-                        ["Url"] = url,
+                        ["Url"] = request.Path + request.QueryString,
                         ["Environment"] = ConfigurationManager.AppSettings["Environment"],
                         ["ShowTechnicalDetail"] = !EnableFriendlyErrorPage,
                         ["Exception"] = msg.Exception,
@@ -78,43 +82,36 @@ namespace Edubase.Web.UI.Filters
                 };
 
                 ctx.Response.Clear();
-                ctx.Response.TrySkipIisCustomErrors = true;
-                ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
+                ctx.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 filterContext.ExceptionHandled = true;
             }
         }
 
-        public WebLogMessage Log(HttpContextBase ctx, Exception exception)
+        public WebLogMessage Log(HttpContext ctx, Exception exception)
         {
-            string userId = null, userName = null;
-            string httpMethod = ctx?.Request?.HttpMethod ?? string.Empty;
+            var httpMethod = ctx?.Request?.Method ?? string.Empty;
 
-            try
+            var msg = new WebLogMessage
             {
-                userId = ctx?.User?.Identity?.GetUserId();
-                userName = ctx?.User?.Identity?.GetUserName();
-            }
-            catch
-            {
-                // ignored
-            }
-
-            WebLogMessage msg = new WebLogMessage {
-                ClientIpAddress = ctx?.Request?.UserHostAddress,
+                ClientIpAddress = ctx?.Connection?.RemoteIpAddress?.ToString(),
                 Environment = ConfigurationManager.AppSettings["Environment"],
                 Exception = exception?.ToString(),
                 HttpMethod = httpMethod,
                 Level = LogMessage.LogLevel.ERROR,
-                ReferrerUrl = ctx?.Request.UrlReferrer?.ToString(),
+                ReferrerUrl = ctx?.Request?.Headers["Referer"].ToString(),
                 Message = exception?.GetBaseException().Message,
-                Url = ctx?.Request.Url?.ToString(),
-                UserAgent = ctx?.Request.UserAgent,
-                UserId = userId,
-                UserName = userName,
+                Url = (ctx?.Request?.Path.ToString() ?? string.Empty) + (ctx?.Request?.QueryString.Value ?? string.Empty),
+                UserAgent = ctx?.Request?.Headers["User-Agent"].ToString(),
+                UserId = ctx?.User?.GetUserId(),
+                UserName = ctx?.User?.Identity?.Name,
                 RequestJsonBody = (exception as TexunaApiSystemException)?.ApiRequestJsonPayload ?? string.Empty
             };
 
-            if (!new[] {string.Empty, "POST", "GET"}.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase))) return msg; // only log errors GET/POST or empty http method
+            if (!new[] { string.Empty, "POST", "GET" }.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase)))
+            {
+                return msg;
+            }
+
             if ((msg.UserAgent ?? string.Empty).IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
             {
                 _logger.Log(msg);

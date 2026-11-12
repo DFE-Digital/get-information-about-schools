@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <WebProject_DirectoryAccessLevelKey>1</WebProject_DirectoryAccessLevelKey>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
     <RazorCompileOnPublish>false</RazorCompileOnPublish>
@@ -41,210 +41,217 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Net.Http"></Reference>
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="AzureTableLogger" Version="1.1.3" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
+    <PackageReference Include="DocumentFormat.OpenXml.Framework" Version="3.5.1" />
+    <PackageReference Include="EntityFramework" Version="6.5.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+  </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="App_Start\CoreFilterConfig.cs" />
-    <Compile Include="App_Start\CoreRouteConfig.cs" />
-    <Compile Include="App_Start\CoreServiceRegistration.cs" />
-    <Compile Include="App_Start\CoreUnauthorizedAccessExceptionFilter.cs" />
-    <Compile Include="Helpers\AuthorizeRolesAttribute.cs" />
-    <Compile Include="Helpers\AuthorizedRoles.cs" />
-    <Compile Include="Helpers\AcademyUtility.cs" />
-    <Compile Include="Helpers\CannotBeEmptyAttribute.cs" />
-    <Compile Include="Helpers\EnumExtensions.cs" />
-    <Compile Include="Helpers\LangExt.cs" />
-    <Compile Include="Helpers\JsonCamelCaseResult.cs" />
-    <Compile Include="Helpers\ValidationExtensions.cs" />
-    <Compile Include="Helpers\QueryStringHelper.cs" />
-    <Compile Include="Helpers\QueryValidator.cs" />
-    <Compile Include="Helpers\RequireUrlNotification.cs" />
-    <Compile Include="Helpers\RouteDto.cs" />
-    <Compile Include="Helpers\RoleEquivalence.cs" />
-    <Compile Include="Helpers\ILayoutHelper.cs" />
-    <Compile Include="Helpers\LayoutHelper.cs" />
-    <Compile Include="Helpers\ModelBinding\BindAliasAttribute.cs" />
-    <Compile Include="Filters\EdubaseAuthorizeAttribute.cs" />
-    <Compile Include="Helpers\ModelBinding\DefaultModelBinderEx.cs" />
-    <Compile Include="Helpers\ModelBinding\BindAliasValueProviderFactory.cs" />
-    <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
-    <Compile Include="Filters\ApiExceptionFilter.cs" />
-    <Compile Include="Controllers\AmalgamateMergeController.cs" />
-    <Compile Include="Controllers\ApprovalsController.cs" />
-    <Compile Include="Controllers\ChangeHistoryController.cs" />
-    <Compile Include="Controllers\DataQualityController.cs" />
-    <Compile Include="Controllers\DownloadsController.cs" />
-    <Compile Include="Controllers\EduBaseController.cs" />
-    <Compile Include="Controllers\FaqController.cs" />
-    <Compile Include="Controllers\GlossaryController.cs" />
-    <Compile Include="Controllers\GuidanceController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\NewsController.cs" />
-    <Compile Include="Controllers\NotificationsController.cs" />
-    <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\SitemapController.cs" />
-    <Compile Include="Controllers\TermsofUseController.cs" />
-    <Compile Include="Controllers\ToolsController.cs" />
-    <Compile Include="Controllers\UnauthorizedController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\BulkAssociateEstabs2GroupsController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\BulkCreateFreeSchoolsController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
-    <Compile Include="Areas\Establishments\Controllers\EstablishmentController.cs" />
-    <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
-    <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernorController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GovernorsBulkUpdateController.cs" />
-    <Compile Include="Areas\Governors\Controllers\GroupCorporateContactController.cs" />
-    <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
-    <Compile Include="Controllers\Api\ILaNameCodeFileGenerator.cs" />
-    <Compile Include="Controllers\Api\ISqlLaNameCodeRepository.cs" />
-    <Compile Include="Models\DateTimeViewModel.cs" />
-    <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
-    <Compile Include="Models\DataQuality\DataQualityStatusItem.cs" />
-    <Compile Include="Models\DataQuality\DataQualityStatusViewModel.cs" />
-    <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
-    <Compile Include="Models\DataQuality\EditDataQualityStatusViewModel.cs" />
-    <Compile Include="Models\DataQuality\FullDataQualityStatusItem.cs" />
-    <Compile Include="Models\DataQuality\FullDataQualityStatusViewModel.cs" />
-    <Compile Include="Models\DataQuality\Validators\DataQualityStatusItemValidator.cs" />
-    <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
-    <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
-    <Compile Include="Models\Faq\FaqItemViewModel.cs" />
-    <Compile Include="Models\Faq\FaqViewModel.cs" />
-    <Compile Include="Models\GlossaryItemViewModel.cs" />
-    <Compile Include="Models\GlossaryViewModel.cs" />
-    <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
-    <Compile Include="Models\Guidance\LaNameCodes.cs" />
-    <Compile Include="Models\HomepageViewModel.cs" />
-    <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
-    <Compile Include="Models\News\NewsArticleViewModel.cs" />
-    <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
-    <Compile Include="Models\News\NewsArticlesViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsBannerAuditViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsBannersAuditViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsBannersViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsTemplateViewModel.cs" />
-    <Compile Include="Models\Notifications\NotificationsTemplatesViewModel.cs" />
-    <Compile Include="Models\Notifications\Validators\ValidateUrl.cs" />
-    <Compile Include="Models\RequiredDateTimeViewModel.cs" />
-    <Compile Include="Models\AddressViewModel.cs" />
-    <Compile Include="Models\ContactDetailsViewModel.cs" />
-    <Compile Include="Models\EditEstablishmentModel.cs" />
-    <Compile Include="Models\EstablishmentDetailViewModel.cs" />
-    <Compile Include="Models\LinkedEstabViewModel.cs" />
-    <Compile Include="Models\ProprietorViewModel.cs" />
-    <Compile Include="Models\LookupItemViewModel.cs" />
-    <Compile Include="Models\HeirarchicalLookupItemViewModel.cs" />
-    <Compile Include="Models\AgeRangeFilterViewModel.cs" />
-    <Compile Include="Models\Search\eSearchType.cs" />
-    <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
-    <Compile Include="Models\Search\GovernorSearchPayloadViewModel.cs" />
-    <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
-    <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
-    <Compile Include="Models\Search\SearchViewModel.cs" />
-    <Compile Include="Models\SitemapNode.cs" />
-    <Compile Include="Models\SqlLaNameCode.cs" />
-    <Compile Include="Models\Tools\AmalgamateEstablishmentsModel.cs" />
-    <Compile Include="Models\Tools\ApprovalsViewModel.cs" />
-    <Compile Include="Models\Tools\BulkAcademiesCreateViewModel.cs" />
-    <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
-    <Compile Include="Models\Tools\MergeEstablishmentsModel.cs" />
-    <Compile Include="Models\Tools\PredefinedLASetViewModel.cs" />
-    <Compile Include="Models\Tools\PredefinedLASetsViewModel.cs" />
-    <Compile Include="Models\ToolsViewModel.cs" />
-    <Compile Include="Models\ChangeHistoryViewModel.cs" />
-    <Compile Include="Models\DownloadsViewModel.cs" />
-    <Compile Include="Models\Search\DownloadErrorViewModel.cs" />
-    <Compile Include="Models\Search\IDownloadGenerationProgressModel.cs" />
-    <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
-    <Compile Include="Models\Grid\GridCellViewModel.cs" />
-    <Compile Include="Models\Grid\GridRowViewModel.cs" />
-    <Compile Include="Models\Grid\GridViewModel.cs" />
-    <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
-    <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
-    <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
-    <Compile Include="Areas\Establishments\Models\BulkAssociateEstabs2GroupsViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\AddOrReplaceAddressViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\AdditionalAddressViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\CreateChildrensCentreViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\CreateEstablishmentViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EditAcademyOpeningViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EditEstablishmentLinksViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\ManageAcademyOpeningsViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\IEstablishmentPageViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\SearchForEstablishmentViewModel.cs" />
-    <Compile Include="Areas\Establishments\Models\TabDisplayPolicy.cs" />
-    <Compile Include="Areas\Establishments\Models\TabEditPolicy.cs" />
-    <Compile Include="Areas\Establishments\Models\TabWarningsModel.cs" />
-    <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\EstablishmentGroupViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupSearchDownloadGenerationProgressViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupDetailViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
-    <Compile Include="Areas\Groups\Models\Validators\ValidateChildrensCentreStep2Validator.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\CreateAcademyTrustViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditorViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditorViewModelBase.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditGovernanceViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\GroupLinkedEstablishmentsViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\IGroupPageViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\LinkedEstablishmentSearchViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\SearchCompaniesHouseModel.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateCCGroupWithEstablishments.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateChildrensCentreStep2.cs" />
-    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
-    <Compile Include="Areas\Groups\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
-    <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\EditGovernanceModeViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\EditGroupDelegationInformationViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\EditSharedGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorsBulkUpdateViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\GovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\ReplaceChairViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\ReplaceGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\SelectSharedGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\SharedGovernorViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\CreateEditGovernorViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\EditGroupDelegationInformationViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\GovernorViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\GovernorsBulkUpdateViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\GovernorsGridViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\ReplaceChairViewModelValidator.cs" />
-    <Compile Include="Areas\Governors\Models\Validators\SelectSharedGovernorViewModelValidator.cs" />
-    <Compile Include="Areas\IGovernorsGridViewModelFactory.cs" />
-    <Compile Include="Validation\EdubaseAbstractValidator.cs" />
-    <Compile Include="Validation\ValidationExtensions.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\BulkUpdateViewModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\CreateEstablishmentViewModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentLinksViewModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentModelValidator.cs" />
-    <Compile Include="Areas\Establishments\Models\Validators\SearchForEstablishmentViewModelValidator.cs" />
-    <Compile Include="Controllers\Api\AcademyOpeningsApiController.cs" />
-    <Compile Include="Controllers\Api\AmalgamateMergeApiController.cs" />
-    <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
-    <Compile Include="Controllers\Api\BulkCreateAcademiesApiController.cs" />
-    <Compile Include="Controllers\Api\EstablishmentApiController.cs" />
-    <Compile Include="Controllers\Api\SearchApiController.cs" />
-    <Compile Include="Controllers\Api\UtilApiController.cs" />
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   </ItemGroup>
   <ItemGroup>
     <Content Include=".well-known\security.txt" />

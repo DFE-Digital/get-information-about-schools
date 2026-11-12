@@ -1,9 +1,7 @@
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Governors;
@@ -13,6 +11,9 @@ using Edubase.Services.Governors.Search;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Governors.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using Xunit;
 
@@ -28,12 +29,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var cls = new Mock<ICachedLookupService>();
             var gprs = new Mock<IGroupReadService>();
             var ers = new Mock<IEstablishmentReadService>();
-            var context = new Mock<HttpContextBase>();
-            var request = new Mock<HttpRequestBase>();
-
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            context.SetupGet(x => x.User).Returns(new GenericPrincipal(new GenericIdentity("bob"), new[] { "superhuman" }));
 
             grs.Setup(x => x.SearchAsync(It.IsAny<GovernorSearchPayload>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new ApiPagedResult<SearchGovernorModel>(2, new List<SearchGovernorModel>
@@ -43,7 +38,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                     }));
 
             var subject = new GovernorSearchController(gds.Object, grs.Object, cls.Object, gprs.Object, ers.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString(string.Empty);
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, "bob") }, "Test"));
+            subject.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
 
             var vm = new GovernorSearchViewModel();
             var result = await subject.Index(vm) as ViewResult;
@@ -63,12 +61,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var cls = new Mock<ICachedLookupService>();
             var gprs = new Mock<IGroupReadService>();
             var ers = new Mock<IEstablishmentReadService>();
-            var context = new Mock<HttpContextBase>();
-            var request = new Mock<HttpRequestBase>();
-
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            context.SetupGet(x => x.User).Returns(new GenericPrincipal(new GenericIdentity("bob"), new[] { "superhuman" }));
 
             grs.Setup(x => x.SearchAsync(It.IsAny<GovernorSearchPayload>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new ApiPagedResult<SearchGovernorModel>(2, new List<SearchGovernorModel>
@@ -77,7 +69,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 }));
 
             var subject = new GovernorSearchController(gds.Object, grs.Object, cls.Object, gprs.Object, ers.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString(string.Empty);
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, "bob") }, "Test"));
+            subject.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
 
             var vm = new GovernorSearchViewModel();
             vm.GovernorSearchModel.Forename = "bob";

@@ -60,7 +60,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return retVal;
             }
 
-            model.SavedFilterToken = TempData["SavedToken"]?.ToString();
+            model.SavedFilterToken = TempData?["SavedToken"]?.ToString();
 
             // if the user navigates back to or reloads the search results => look up saved results token
             if (User?.Identity?.IsAuthenticated == true && string.IsNullOrEmpty(model.SavedFilterToken))
@@ -164,7 +164,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View("Downloads/SelectDataset", viewModel);
             }
 
-            if (viewModel.CustomFields == null)
+            if (viewModel.CustomFields == null || viewModel.CustomFields.Count == 0)
             {
                 var customFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
 
@@ -231,7 +231,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     SelectedFields = viewModel.SelectedCustomFields.ToArray()
                 }, User);
 
-            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
+            return RedirectToRoute(new RouteValueDictionary
+            {
+                { "action", nameof(Download) },
+                { "id", progressId },
+                { "fileFormat", viewModel.FileFormat.Value },
+                { "searchQueryString", viewModel.SearchQueryString },
+                { "searchSource", viewModel.SearchSource }
+            });
         }
 
         [HttpGet("Download")]

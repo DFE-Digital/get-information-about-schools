@@ -1,4 +1,5 @@
-﻿using System.Linq;
+#if NET48
+using System.Linq;
 using System.Web;
 using Edubase.Services.Texuna.Glimpse;
 using Glimpse.AspNet.Extensibility;
@@ -28,3 +29,11 @@ namespace Edubase.Web.UI.Glimpse
         public override string Name => "Current User Api Trace";
     }
 }
+#else
+namespace Edubase.Web.UI.Glimpse
+{
+    public class CurrentUserApiTraceTab
+    {
+    }
+}
+#endif

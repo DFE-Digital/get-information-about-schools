@@ -1,15 +1,26 @@
-using System.Web.Mvc;
-using System.Web.Routing;
+using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 
 namespace Edubase.Web.UIUnitTests.Areas.Governors.Helpers
 {
-    internal sealed class FakeUrlHelper : UrlHelper
+    internal sealed class FakeUrlHelper : IUrlHelper
     {
-        public FakeUrlHelper() : base(new RequestContext(new FakeHttpContext(null), new RouteData())) { }
+        public ActionContext ActionContext { get; set; } = new ActionContext(
+            new DefaultHttpContext(),
+            new RouteData(),
+            new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
 
-        public override string RouteUrl(string routeName, object routeValues)
-        {
-            return "/fake-url";
-        }
+        public string Action(UrlActionContext actionContext) => "/fake-url";
+
+        public string Content(string contentPath) => contentPath;
+
+        public bool IsLocalUrl(string url) => !string.IsNullOrEmpty(url) && url.StartsWith("/", StringComparison.Ordinal);
+
+        public string Link(string routeName, object values) => "/fake-url";
+
+        public string RouteUrl(UrlRouteContext routeContext) => "/fake-url";
     }
 }

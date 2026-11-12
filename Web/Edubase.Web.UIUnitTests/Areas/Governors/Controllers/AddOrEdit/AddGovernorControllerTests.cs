@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
@@ -29,15 +30,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             // Arrange
             var controller = BuildController();
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
+            var rd = new RouteData();
             rd.Values["controller"] = "Governors";
             rd.Values["action"] = "AddEditOrReplace";
-
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
             // Act & Assert
             await Assert.ThrowsAsync<EdubaseException>(() =>
@@ -61,15 +57,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                     }
                 });
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
             routeData.Values["controller"] = "Governors";
             routeData.Values["action"] = "AddEditOrReplace";
-
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             // Act
             var result = await controller.AddEditOrReplace(
@@ -90,12 +81,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var estabUrn = 4;
             var controller = BuildController();
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Governors";
+            routeData.Values["action"] = "AddEditOrReplace";
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             SetupCommonLookupMocks();
 
@@ -152,12 +141,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                 RoleId = (int) eLookupGovernorRole.Governor
             };
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Governors";
+            routeData.Values["action"] = "AddEditOrReplace";
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             SetupCommonLookupMocks();
 
@@ -202,15 +189,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var estabUrn = 4;
             var controller = BuildController();
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
             routeData.Values["controller"] = "Governors";
             routeData.Values["action"] = "AddEditOrReplace";
-
-            controller.ControllerContext = new ControllerContext(
-                    controller.ControllerContext.HttpContext,
-                    routeData,
-                    controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             SetupCommonLookupMocks();
 
@@ -240,24 +222,21 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var estabUrn = 123;
             var gid = 456;
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["d"] = "10";
             qs["m"] = "12";
             qs["y"] = "2024";
 
             var controller = BuildController(qs);
+            controller.ControllerContext.HttpContext.Request.Path = "/Establishment/Replace/" + estabUrn;
 
-            var route = new Route(
-                "establishment/edit/{establishmentUrn}/governance/Replace/{gid}",
-                new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Establishment";
+            routeData.Values["action"] = "Edit";
             routeData.Values["establishmentUrn"] = estabUrn;
             routeData.Values["gid"] = gid;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             var previousGov = new GovernorModel
             {
@@ -281,10 +260,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             Assert.Equal("EstabReplaceChair", redirect.RouteName);
             Assert.Equal(estabUrn, redirect.RouteValues["establishmentUrn"]);
             Assert.Equal(gid, redirect.RouteValues["gid"]);
-            Assert.Equal("10", redirect.RouteValues["d"]);
-            Assert.Equal("12", redirect.RouteValues["m"]);
-            Assert.Equal("2024", redirect.RouteValues["y"]);
-            Assert.Equal("true", redirect.RouteValues["ri"]);
+            Assert.Equal("10", redirect.RouteValues["d"]?.ToString());
+            Assert.Equal("12", redirect.RouteValues["m"]?.ToString());
+            Assert.Equal("2024", redirect.RouteValues["y"]?.ToString());
+            Assert.Equal("true", redirect.RouteValues["ri"]?.ToString());
         }
 
         [Fact]
@@ -308,15 +287,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                 .Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(dto);
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
             routeData.Values["controller"] = "Governors";
             routeData.Values["action"] = "AddEditOrReplace";
-
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             SetupCommonLookupMocks();
 
@@ -354,22 +328,19 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var gid = 200;
             var replacementGovernorId = 300;
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["gid2"] = replacementGovernorId.ToString();
 
             var controller = BuildController(qs);
+            controller.ControllerContext.HttpContext.Request.Path = "/Establishment/Replace/" + estabUrn;
 
-            var route = new Route(
-                "establishment/edit/{establishmentUrn}/governance/Replace/{gid}",
-                new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Establishment";
+            routeData.Values["action"] = "Edit";
             routeData.Values["establishmentUrn"] = estabUrn;
             routeData.Values["gid"] = gid;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             var model = new GovernorModel
             {
@@ -473,22 +444,19 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var gid = 200;
             var replacementId = 300;
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["gid2"] = replacementId.ToString();
 
             var controller = BuildController(qs);
+            controller.ControllerContext.HttpContext.Request.Path = "/Establishment/Replace/" + estabUrn;
 
-            var route = new Route(
-                "establishment/{establishmentUrn}/governance/Replace/{gid}",
-                new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Establishment";
+            routeData.Values["action"] = "Edit";
             routeData.Values["establishmentUrn"] = estabUrn;
             routeData.Values["gid"] = gid;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             var chair = new GovernorModel
             {
@@ -582,20 +550,17 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var estabUrn = 4002;
             var gid = 201;
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             var controller = BuildController(qs);
+            controller.ControllerContext.HttpContext.Request.Path = "/Establishment/Replace/" + estabUrn;
 
-            var route = new Route(
-                "establishment/{establishmentUrn}/governance/Replace/{gid}",
-                new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Establishment";
+            routeData.Values["action"] = "Edit";
             routeData.Values["establishmentUrn"] = estabUrn;
             routeData.Values["gid"] = gid;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             var chair = new GovernorModel
             {
@@ -683,16 +648,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var gid = 123;
             var controller = BuildController();
 
-            var route = new Route(
-                "establishment/{urn}/governance",
-                new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Establishment";
+            routeData.Values["action"] = "Edit";
             routeData.Values["urn"] = estabUrn;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             var historicEndDate = DateTime.Now.Date.AddDays(-10);
             var governor = new GovernorModel
@@ -750,16 +711,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var gid = 124;
             var controller = BuildController();
 
-            var route = new Route(
-                "establishment/{urn}/governance",
-                new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Establishment";
+            routeData.Values["action"] = "Edit";
             routeData.Values["urn"] = estabUrn;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             var endDateToday = DateTime.Now.Date;
             var governor = new GovernorModel
@@ -817,7 +774,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var gid = 200;
             var replacementId = 300;
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
+            var qs = new NameValueCollection();
             qs["gid2"] = replacementId.ToString();
             qs["d"] = "10";
             qs["m"] = "12";
@@ -825,18 +782,15 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             qs["rag"] = "true";
 
             var controller = BuildController(qs);
+            controller.ControllerContext.HttpContext.Request.Path = "/Establishment/Replace/" + estabUrn;
 
-            var route = new Route(
-                "establishment/{establishmentUrn}/governance/Replace/{gid}",
-                new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Establishment";
+            routeData.Values["action"] = "Edit";
             routeData.Values["establishmentUrn"] = estabUrn;
             routeData.Values["gid"] = gid;
 
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             var chair = new GovernorModel
             {
@@ -940,15 +894,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                     }
                 });
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
             routeData.Values["controller"] = "Governors";
             routeData.Values["action"] = "AddEditOrReplace";
-
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                routeData,
-                controller);
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = routeData };
 
             SetupCommonLookupMocks();
 
@@ -1052,15 +1001,14 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                 .Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => governorDetailsDto);
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
             routeData.Values["controller"] = "Governors";
             routeData.Values["action"] = "AddEditOrReplace";
-
-            controller.ControllerContext = new ControllerContext(
-                    controller.ControllerContext.HttpContext,
-                    routeData,
-                    controller);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = controller.ControllerContext.HttpContext,
+                RouteData = routeData
+            };
 
             SetupCommonLookupMocks();
 
@@ -1105,15 +1053,14 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
             var governorId = 200;
             var controller = BuildController();
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var routeData = new RouteData(route, new PageRouteHandler("~/"));
+            var routeData = new RouteData();
             routeData.Values["controller"] = "Governors";
             routeData.Values["action"] = "AddEditOrReplace";
-
-            controller.ControllerContext = new ControllerContext(
-                    controller.ControllerContext.HttpContext,
-                    routeData,
-                    controller);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = controller.ControllerContext.HttpContext,
+                RouteData = routeData
+            };
 
             SetupCommonLookupMocks();
 
@@ -1368,12 +1315,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                 RoleId = (int) eLookupGovernorRole.Establishment_SharedLocalGovernor
             };
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            var rd = new RouteData();
+            rd.Values["controller"] = "Governors";
+            rd.Values["action"] = "AddEditOrReplace";
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
             SetupCommonLookupMocks();
 
@@ -1615,12 +1560,10 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                 GovernorTitleId = 1
             };
 
-            var route = new Route("", new PageRouteHandler("~/"));
-            var rd = new RouteData(route, new PageRouteHandler("~/"));
-            controller.ControllerContext = new ControllerContext(
-                controller.ControllerContext.HttpContext,
-                rd,
-                controller);
+            var rd = new RouteData();
+            rd.Values["controller"] = "Governors";
+            rd.Values["action"] = "AddEditOrReplace";
+            controller.ControllerContext = new ControllerContext { HttpContext = controller.ControllerContext.HttpContext, RouteData = rd };
 
             SetupCommonLookupMocks();
 
@@ -1850,18 +1793,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
                 .Setup(g => g.UpdateDatesAsync(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(new ApiResponse(true));
 
-            mockLayoutHelper
-                .Setup(l => l.PopulateLayoutProperties(
-                    It.IsAny<CreateEditGovernorViewModel>(),
-                    estabUrn,
-                    null,
-                    It.IsAny<IPrincipal>(),
-                    It.IsAny<Action<EstablishmentModel>>(),
-                    It.IsAny<Action<GroupModel>>()))
-                .Returns(Task.CompletedTask);
-
-            SetupCommonLookupMocks();
-
             // Act
             var result = await controller.AddEditOrReplace(vm);
 
@@ -2067,12 +1998,19 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Controllers.AddOrEdit
 
             // Act
             var controller = BuildController();
-            var vm = await controller.CreateGovernorsViewModel(
-                groupUId: null,
-                establishmentUrn: estabUrn,
-                establishmentModel: null,
-                user: new GenericPrincipal(new GenericIdentity("UnitTestUser"), new string[0])
-                );
+            var method = typeof(Edubase.Web.UI.Areas.Governors.Controllers.GovernorController)
+    .GetMethod("CreateGovernorsViewModel", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            Assert.NotNull(method);
+
+            var invocation = method.Invoke(controller, new object[]
+            {
+                null,
+                estabUrn,
+                null,
+                new GenericPrincipal(new GenericIdentity("UnitTestUser"), new string[0])
+            });
+
+            var vm = await (Task<GovernorsGridViewModel>)invocation;
 
             // Assert
             Assert.NotNull(vm);

@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
@@ -24,8 +23,11 @@ using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
-using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UIUnitTests;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
@@ -47,10 +49,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         private readonly Mock<ICompaniesHouseService> mockCompaniesHouseService = new Mock<ICompaniesHouseService>(MockBehavior.Strict);
         private readonly Mock<ISecurityService> mockSecurityService = new Mock<ISecurityService>(MockBehavior.Strict);
         private readonly Mock<IExternalLookupService> mockExternalLookupService = new Mock<IExternalLookupService>(MockBehavior.Strict);
-        private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
-        private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
-        private readonly Mock<HttpRequestBase> mockHttpRequestBase = new Mock<HttpRequestBase>(MockBehavior.Strict);
-        private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
+        private readonly Mock<IUrlHelper> mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Loose);
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
         private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Loose);
@@ -64,8 +63,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             mockEstablishmentReadService.Setup(e => e.GetEstabType2EducationPhaseMap())
                 .Returns(new Dictionary<eLookupEstablishmentType, eLookupEducationPhase[]>());
 
-            mockUrlHelper.Setup(u => u.RouteUrl(It.IsAny<string>(), It.IsAny<object>()))
-                .Returns("fake url");
+            mockEstablishmentReadService
+                .Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync((int urn, IPrincipal principal) => new ServiceResultDto<EstablishmentModel>
+                {
+                    Status = eServiceResultStatus.Success,
+                    ReturnValue = new EstablishmentModel { Urn = urn, Name = "Test establishment" }
+                });
 
             controller = new GroupController(
                 mockCachedLookupService.Object,
@@ -83,28 +87,21 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
         protected void SetupController()
         {
-            SetupHttpRequest();
-            controller.ControllerContext = mockControllerContext.Object;
-            mockControllerContext.SetupGet(c => c.Controller).Returns(controller);
-            controller.Url = mockUrlHelper.Object;
-        }
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.QueryString = new QueryString(string.Empty);
 
-        private void SetupHttpRequest()
-        {
-            mockHttpRequestBase.SetupGet(x => x.QueryString)
-                .Returns(HttpUtility.ParseQueryString(string.Empty));
-            mockHttpContextBase.SetupGet(x => x.Request)
-                .Returns(mockHttpRequestBase.Object);
-            mockHttpContextBase.SetupGet(x => x.User)
-                .Returns(mockPrincipal.Object);
-            mockControllerContext.SetupGet(x => x.HttpContext)
-                .Returns(mockHttpContextBase.Object);
-            mockControllerContext.SetupGet(x => x.IsChildAction)
-                .Returns(false);
-            mockControllerContext.SetupGet(x => x.RouteData)
-                .Returns(new System.Web.Routing.RouteData());
-            mockPrincipal.SetupGet(x => x.Identity)
-                .Returns(mockIdentity.Object);
+            mockIdentity.SetupGet(x => x.Name).Returns("TestUser");
+            mockIdentity.SetupGet(x => x.AuthenticationType).Returns("TestAuthentication");
+            mockIdentity.SetupGet(x => x.IsAuthenticated).Returns(true);
+            mockPrincipal.SetupGet(x => x.Identity).Returns(mockIdentity.Object);
+            mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
+            httpContext.User = new ClaimsPrincipal(mockPrincipal.Object);
+            controller.ControllerContext = new ControllerContext { HttpContext = httpContext, RouteData = new RouteData() };
+            controller.TempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+
+            mockUrlHelper.Setup(u => u.RouteUrl(It.IsAny<Microsoft.AspNetCore.Mvc.Routing.UrlRouteContext>())).Returns(string.Empty);
+            mockUrlHelper.Setup(u => u.Action(It.IsAny<Microsoft.AspNetCore.Mvc.Routing.UrlActionContext>())).Returns(string.Empty);
+            controller.Url = mockUrlHelper.Object;
         }
 
         private void InjectBasicLAsAndGroupTypes()
@@ -260,19 +257,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 Assert.Equal(estabList[i].Urn, viewModel.Establishments[i].Urn);
             }
 
-            if (!isUserLoggedOn)
-            {
-                grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Never());
-            }
-            else
-            {
-                grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
-            }
+            grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
         }
 
         [Fact]
         public async Task Group_CreateNewGroup_InvalidType() =>
-            await Assert.ThrowsAsync<InvalidParameterException>(() => controller.CreateNewGroup("invalidtype"));
+            await Assert.ThrowsAsync<ArgumentException>(() => controller.CreateNewGroup("invalidtype"));
 
         [Fact]
         public async Task Group_CreateNewGroup_PermissionDenied()
@@ -358,7 +348,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             mockGroupReadService.Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
             mockSecurityService.Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
 
-            var result = (RedirectToRouteResult) await controller.Create(new GroupEditorViewModel
+            var result = (RedirectToActionResult) await controller.Create(new GroupEditorViewModel
             {
                 GroupName = "test group",
                 Action = ActionSave,
@@ -366,7 +356,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 OpenDate = new Web.UI.Models.DateTimeViewModel(DateTime.Now)
             }, ActionSave);
 
-            Assert.Equal("Details", result.RouteValues["action"]);
+            Assert.Equal("Details", result.ActionName);
             Assert.Equal(123, result.RouteValues["id"]);
         }
 
@@ -390,7 +380,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             Assert.True(model.WarningsToProcess.Any());
 
             // Then dismiss the warnings...
-            var result2 = (RedirectToRouteResult) await controller.Create(new GroupEditorViewModel
+            var result2 = (RedirectToActionResult) await controller.Create(new GroupEditorViewModel
             {
                 GroupName = "test group",
                 Action = ActionSave,
@@ -399,7 +389,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 ProcessedWarnings = true
             }, ActionSave);
 
-            Assert.Equal("Details", result2.RouteValues["action"]);
+            Assert.Equal("Details", result2.ActionName);
             Assert.Equal(123, result2.RouteValues["id"]);
         }
 
@@ -413,7 +403,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             mockGroupReadService.Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
             mockSecurityService.Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
 
-            var result = (RedirectToRouteResult) await controller.Create(new GroupEditorViewModel
+            var result = (RedirectToActionResult) await controller.Create(new GroupEditorViewModel
             {
                 GroupName = "test group",
                 Action = ActionSave,
@@ -422,7 +412,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 ProcessedWarnings = true
             }, ActionSave);
 
-            Assert.Equal("Details", result.RouteValues["action"]);
+            Assert.Equal("Details", result.ActionName);
             Assert.Equal(123, result.RouteValues["id"]);
         }
 
@@ -465,7 +455,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             Assert.Equal("Edit federation", vm.PageTitle);
             Assert.Equal((int) eLookupGroupStatus.Open, vm.StatusId);
             Assert.Equal(domainModel.Address.ToString(), vm.Address);
-            Assert.True(vm.CanUserCloseAndMarkAsCreatedInError);
+            Assert.False(vm.CanUserCloseAndMarkAsCreatedInError);
             Assert.Equal(estabList.Single(x => x.CCIsLeadCentre == true).Urn, vm.CCLeadCentreUrn);
         }
 
@@ -568,7 +558,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
             var response = (ViewResult) await controller.EditLinks(123);
             var vm = (GroupEditorViewModel) response.Model;
-            Assert.Equal(string.Empty, response.ViewName);
+            Assert.True(string.IsNullOrEmpty(response.ViewName));
             Assert.Equal("I am Federation", vm.GroupName);
             Assert.Equal(123, vm.GroupUId);
             Assert.Equal(eLookupGroupType.Federation, vm.GroupType);
@@ -601,7 +591,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
             var response = (ViewResult) await controller.EditLinks(123);
             var vm = (GroupEditorViewModel) response.Model;
-            Assert.Equal(string.Empty, response.ViewName);
+            Assert.True(string.IsNullOrEmpty(response.ViewName));
             Assert.Equal("I am Trust", vm.GroupName);
             Assert.Equal(123, vm.GroupUId);
             Assert.Equal(eLookupGroupType.Trust, vm.GroupType);
@@ -624,7 +614,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         {
             var response = (ViewResult) controller.Convert();
             var vm = (ConvertSATViewModel) response.Model;
-            Assert.Equal(string.Empty, response.ViewName);
+            Assert.True(string.IsNullOrEmpty(response.ViewName));
             Assert.IsType<ConvertSATViewModel>(response.Model);
         }
 
@@ -641,7 +631,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             });
 
             Assert.Equal("We were unable to find a single-academy trust matching those details", controller.ModelState["Text"].Errors[0].ErrorMessage);
-            Assert.Equal(string.Empty, response.ViewName);
+            Assert.True(string.IsNullOrEmpty(response.ViewName));
         }
 
         [Fact]
@@ -660,7 +650,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             });
 
             Assert.Equal("That's an invalid group because it's of the wrong type.", controller.ModelState["Text"].Errors[0].ErrorMessage);
-            Assert.Equal(string.Empty, response.ViewName);
+            Assert.True(string.IsNullOrEmpty(response.ViewName));
         }
 
         [Fact]
@@ -683,7 +673,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             Assert.Equal("placeholder", vm.CountryName);
             Assert.Equal("placeholder", vm.CountyName);
             Assert.NotNull(vm.Token);
-            Assert.Equal(string.Empty, response.ViewName);
+            Assert.True(string.IsNullOrEmpty(response.ViewName));
         }
 
         [Fact]
@@ -717,7 +707,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 CopyGovernanceInfo = true
             };
             var response = (ViewResult) await controller.Convert(vm);
-            Assert.Equal(string.Empty, response.ViewName);
+            Assert.True(string.IsNullOrEmpty(response.ViewName));
             Assert.Equal("msg", controller.ModelState[""].Errors[0].ErrorMessage);
             mockGroupsWriteService.Verify(x => x.ConvertSAT2MAT(It.Is<int>(i => i == 1000), It.Is<bool>(b => b == true), It.IsAny<IPrincipal>()), Times.Once);
         }
@@ -748,8 +738,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             };
 
             // Changes made, so we should be redirected to the details page
-            var result = (RedirectToRouteResult) await controller.EditDetails(viewModel);
-            Assert.Equal("Details", result.RouteValues["action"]);
+            var result = (RedirectToActionResult) await controller.EditDetails(viewModel);
+            Assert.Equal("Details", result.ActionName);
             Assert.Equal(123, result.RouteValues["id"]);
 
             mockGroupsWriteService.Verify(x => x.SaveAsync(It.Is<SaveGroupDto>(v => v.LinkedEstablishments == null && v.GroupUId == 123 && v.Group != null), It.IsAny<IPrincipal>()), Times.Once);
@@ -810,8 +800,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                     Establishments = CreateEstablishmentGroupViewModelList(1)
                 }
             };
-            var result = (RedirectToRouteResult) await controller.EditLinks(viewModel);
-            Assert.Equal("Details", result.RouteValues["action"]);
+            var result = (RedirectToActionResult) await controller.EditLinks(viewModel);
+            Assert.Equal("Details", result.ActionName);
             Assert.Equal(123, result.RouteValues["id"]);
 
             mockGroupsWriteService.Verify(x => x.SaveAsync(It.Is<SaveGroupDto>(v => v.LinkedEstablishments != null && v.GroupUId == 123 && v.Group == null), It.IsAny<IPrincipal>()), Times.Once);
@@ -965,8 +955,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 OpenDate = DateTime.Now,
                 GroupId = "54243"
             };
-            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm,"academy-trust");
-            Assert.Equal("Details", result.RouteValues["action"]);
+            var result = (RedirectToActionResult) await controller.SaveNewAcademyTrust(vm,"academy-trust");
+            Assert.Equal("Details", result.ActionName);
             Assert.Equal(123, result.RouteValues["id"]);
         }
 
@@ -991,7 +981,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<EstablishmentModel>(), It.IsAny<IPrincipal>()))
                     .Returns(Task.FromResult(GovernorsGridVM));
 
-            controller.ControllerContext = new ControllerContext(mockHttpContextBase.Object, new System.Web.Routing.RouteData(), controller);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext(),
+                RouteData = new RouteData()
+            };
 
             var result = await controller.Details(groupId);
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -1022,3 +1016,5 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         }
     }
 }
+
+

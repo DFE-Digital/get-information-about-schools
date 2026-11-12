@@ -2,13 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Principal;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Governors.Models;
+using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas;
+using Edubase.Web.UI.Areas.Governors.Models;
 using global::Edubase.Services.Establishments;
 using global::Edubase.Services.Governors;
 using global::Edubase.Services.Groups;
@@ -63,11 +67,35 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.TestBase
                     mockEstablishmentReadService.Object,
                     mockLayoutHelper.Object);
 
-                var requestContext = new RequestContext(
-                    new FakeHttpContext(testPrincipal, queryString),
-                    new RouteData());
+                var httpContext = FakeHttpContext.Create(testPrincipal, queryString);
+                controller.ControllerContext = new ControllerContext
+                {
+                    HttpContext = httpContext,
+                    RouteData = new RouteData()
+                };
+                controller.TempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
 
-                controller.ControllerContext = new ControllerContext(requestContext, controller);
+                mockCachedLookupService
+                    .Setup(s => s.NationalitiesGetAllAsync())
+                    .ReturnsAsync(new List<LookupDto>());
+                mockCachedLookupService
+                    .Setup(s => s.GovernorAppointingBodiesGetAllAsync())
+                    .ReturnsAsync(new List<LookupDto>());
+                mockCachedLookupService
+                    .Setup(s => s.TitlesGetAllAsync())
+                    .ReturnsAsync(new List<LookupDto>());
+                mockCachedLookupService
+                    .Setup(s => s.GovernorRolesGetAllAsync())
+                    .ReturnsAsync(new List<LookupDto>());
+                mockLayoutHelper
+                    .Setup(l => l.PopulateLayoutProperties(
+                        It.IsAny<CreateEditGovernorViewModel>(),
+                        It.IsAny<int?>(),
+                        It.IsAny<int?>(),
+                        It.IsAny<IPrincipal>(),
+                        It.IsAny<Action<EstablishmentModel>>(),
+                        It.IsAny<Action<GroupModel>>()))
+                    .Returns(Task.CompletedTask);
 
                 TestControllerBuilderHelper.RegisterRoutes();
 

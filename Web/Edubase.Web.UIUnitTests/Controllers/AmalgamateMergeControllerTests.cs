@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
@@ -48,7 +48,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(establishmentServiceResultNull);
 
-            mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsInRange<int>(100, 110, Range.Inclusive), It.IsAny<IPrincipal>()))
+            mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsInRange<int>(100, 110, Moq.Range.Inclusive), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(establishmentServiceResultTestEstablishement);
 
             mockEstablishmentWriteService.Setup(x => x.AmalgamateOrMergeAsync(It.IsAny<AmalgamateMergeRequest>(), It.IsAny<IPrincipal>()))
@@ -69,8 +69,8 @@ namespace Edubase.Web.UI.Controllers.UnitTests
         [InlineData("Amalgamation", "AmalgamateEstablishments")]
         public void SelectMergerTypeTest_Redirections(string mergerType, string expectedAction)
         {
-            var result = controller.SelectMergerType(mergerType) as RedirectToRouteResult;
-            var action = result.RouteValues["action"];
+            var result = controller.SelectMergerType(mergerType) as RedirectToActionResult;
+            var action = result?.ActionName;
 
             Assert.NotNull(result);
             Assert.Equal(expectedAction, action);
