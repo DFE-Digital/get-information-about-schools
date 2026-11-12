@@ -1,6 +1,5 @@
 # Migration Progress
-**Progress**: 10/25 tasks complete <progress value="40" max="100"></progress> 40%
-**Progress**: 9/23 tasks complete <progress value="39" max="100"></progress> 39%
+**Progress**: 10/24 tasks complete <progress value="42" max="100"></progress> 42%
 **Status**: In Progress - Task 04-net10-application-migration
 
 ## Tasks
@@ -12,15 +11,17 @@
 - 🔄 04-net10-application-migration: Migrate project TFMs, dependencies and application behaviour ([Content](tasks/04-net10-application-migration/task.md))
   - ✅ 04.01-common-data-net10: Migrate Common/Data closure to net10 with EF6 preserved ([Content](tasks/04.01-common-data-net10/task.md), [Progress](tasks/04.01-common-data-net10/progress-details.md))
   - ✅ 04.02-services-net10: Migrate Services closure to net10 preserving API contracts ([Content](tasks/04.02-services-net10/task.md), [Progress](tasks/04.02-services-net10/progress-details.md))
+  - ✅ 04.03-texuna-resources-net10: Migrate Texuna/Resources closure to net10 preserving contracts ([Content](tasks/04.03-texuna-resources-net10/task.md), [Progress](tasks/04.03-texuna-resources-net10/progress-details.md))
   - ✅ 04.04-webui-host-foundation-net10: Retarget Web.UI and migrate host/pipeline/config/DI foundation ([Content](tasks/04.04-webui-host-foundation-net10/task.md), [Progress](tasks/04.04-webui-host-foundation-net10/progress-details.md))
   - 🔄 04.05-webui-feature-parity-net10: Migrate Web.UI controllers/views/contracts to behavior parity ([Content](tasks/04.05-webui-feature-parity-net10/task.md))
-        - 🔄 04.05.02.04.02-root-mvc-controller-contracts: Migrate root (non-area) MVC controllers preserving route/action contracts ([Content](tasks/04.05.02.04.02-root-mvc-controller-contracts/task.md))
+    - ✅ 04.05.01-webui-bootstrap-di-routing: Migrate Program/App_Start bootstrap, DI and routing to ASP.NET Core startup flow ([Content](tasks/04.05.01-webui-bootstrap-di-routing/task.md), [Progress](tasks/04.05.01-webui-bootstrap-di-routing/progress-details.md))
+    - 🔄 04.05.02-webui-controllers-api-contracts: Migrate API + MVC/Area controller behavior and contract-sensitive surfaces ([Content](tasks/04.05.02-webui-controllers-api-contracts/task.md))
       - ✅ 04.05.02.01-webapi-controller-surface: Migrate Web API controller surface to ASP.NET Core action patterns ([Content](tasks/04.05.02.01-webapi-controller-surface/task.md), [Progress](tasks/04.05.02.01-webapi-controller-surface/progress-details.md))
       - ✅ 04.05.02.02-filter-pipeline-migration: Migrate API/MVC filter and exception handling pipeline components ([Content](tasks/04.05.02.02-filter-pipeline-migration/task.md), [Progress](tasks/04.05.02.02-filter-pipeline-migration/progress-details.md))
       - ✅ 04.05.02.03-model-binding-value-provider-migration: Migrate custom model binder and token value-provider infrastructure ([Content](tasks/04.05.02.03-model-binding-value-provider-migration/task.md), [Progress](tasks/04.05.02.03-model-binding-value-provider-migration/progress-details.md))
-      - 🔄 04.05.02.04-mvc-area-controller-contract-parity: Migrate MVC/Area controller contract surfaces and route parity dependencies ([Content](tasks/04.05.02.04-mvc-area-controller-contract-parity/task.md))
+      - 🔄 04.05.02.04-mvc-area-controller-contract-parity: Migrate MVC/Area controller contract surfaces and route parity dependencies ([Content](tasks/04.05.02.04-mvc-area-controller-contract-parity/task.md), [Progress](tasks/04.05.02.04-mvc-area-controller-contract-parity/progress-details.md))
         - ✅ 04.05.02.04.01-shared-controller-base-and-helpers: Migrate shared MVC base controller and helper dependencies used by non-API controllers ([Content](tasks/04.05.02.04.01-shared-controller-base-and-helpers/task.md), [Progress](tasks/04.05.02.04.01-shared-controller-base-and-helpers/progress-details.md))
-        - 🔲 04.05.02.04.02-root-mvc-controller-contracts: Migrate root (non-area) MVC controllers preserving route/action contracts ([Content](tasks/04.05.02.04.02-root-mvc-controller-contracts/task.md))
+        - 🔄 04.05.02.04.02-root-mvc-controller-contracts: Migrate root (non-area) MVC controllers preserving route/action contracts ([Content](tasks/04.05.02.04.02-root-mvc-controller-contracts/task.md), [Progress](tasks/04.05.02.04.02-root-mvc-controller-contracts/progress-details.md))
         - 🔲 04.05.02.04.03-establishments-area-controller-contracts: Migrate Establishments area controllers and their route/redirect contracts ([Content](tasks/04.05.02.04.03-establishments-area-controller-contracts/task.md))
         - 🔲 04.05.02.04.04-groups-governors-area-controller-contracts: Migrate Groups/Governors area controllers and contract-sensitive flows ([Content](tasks/04.05.02.04.04-groups-governors-area-controller-contracts/task.md))
         - 🔲 04.05.02.04.05-controller-route-contract-check: Validate route/action contract parity for migrated MVC/Area controller surfaces ([Content](tasks/04.05.02.04.05-controller-route-contract-check/task.md))

@@ -24,9 +24,12 @@ namespace Edubase.Web.UI.Controllers
     using Services.Texuna.ChangeHistory.Models;
     using System;
     using System.Threading.Tasks;
-    using System.Web.Mvc;
+    using Edubase.Web.UI.Helpers;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
-    [RoutePrefix("ChangeHistory"), Route("{action=index}"), EdubaseAuthorize]
+    [Route("ChangeHistory")]
+    [EdubaseAuthorize]
     public class ChangeHistoryController : Controller
     {
         private readonly IChangeHistoryService _svc;
@@ -44,7 +47,7 @@ namespace Edubase.Web.UI.Controllers
             _groupDownloadService = groupDownloadService;
         }
 
-        [HttpGet, Route(Name = "ChangeHistoryCriteria")]
+        [HttpGet("", Name = "ChangeHistoryCriteria")]
         public ActionResult Index(ChangeHistoryViewModel viewModel)
         {
             return View("Index", viewModel);    
@@ -72,12 +75,12 @@ namespace Edubase.Web.UI.Controllers
                     {
                         if (viewModel.SearchType.OneOfThese(eSearchType.Text, eSearchType.EstablishmentAll))
                         {
-                            return Redirect(Url.RouteUrl("ChangeHistoryEstablishments") + "?" + Request.QueryString);
+                            return Redirect(Url.RouteUrl("ChangeHistoryEstablishments") + Request.QueryString);
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
-                            return Redirect(Url.RouteUrl("ChangeHistoryGroups") + "?" + Request.QueryString);
+                            return Redirect(Url.RouteUrl("ChangeHistoryGroups") + Request.QueryString);
                         }
 
                         throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
@@ -120,7 +123,7 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.SearchType = eSearchType.EstablishmentAll;
             }
             viewModel = await ProcessEstablishmentSearch(viewModel);
-            HttpContext.Response.Headers.Add("x-count", viewModel.Count.ToString());
+            HttpContext.Response.Headers["x-count"] = viewModel.Count.ToString();
             return PartialView("Partials/_EstablishmentResults", viewModel);
         }
 
@@ -145,7 +148,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<PartialViewResult> GroupResultsPartial(ChangeHistoryViewModel viewModel)
         {
             viewModel = await ProcessGroupSearch(viewModel);
-            HttpContext.Response.Headers.Add("x-count", viewModel.Count.ToString());
+            HttpContext.Response.Headers["x-count"] = viewModel.Count.ToString();
             return PartialView("Partials/_GroupResults", viewModel);
         }
 
@@ -206,7 +209,7 @@ namespace Edubase.Web.UI.Controllers
                         new SearchChangeHistoryDownloadPayload(viewModel.DownloadFormat.Value));
                     var progress = await _svc.SearchWithDownloadGenerationAsync(payload, User);
                     return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new { id = progress.Id }),
-                        "?", Request.QueryString));
+                        Request.QueryString));
                 }
             }
 
@@ -230,8 +233,7 @@ namespace Edubase.Web.UI.Controllers
                 new SearchChangeHistoryDownloadPayload(viewModel.DownloadFormat.Value));
             var progressAll = await _svc.SearchWithDownloadGenerationAsync(payloadAll, User);
             return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new {id = progressAll.Id}),
-                "?", Request.QueryString));
-
+                Request.QueryString));
         }
 
         private async Task<ChangeHistoryViewModel> ProcessEstablishmentSearch(ChangeHistoryViewModel viewModel)
@@ -391,18 +393,18 @@ namespace Edubase.Web.UI.Controllers
             var progress = await _svc.GetDownloadGenerationProgressAsync(id, User);
             if (vm.SingleEstablishment || vm.SingleGroup)
             {
-                return Json(
-                    JsonConvert.SerializeObject(new
-                    {
-                        status = progress.IsComplete, redirect = "/ChangeHistory/Search/Download/"
-                    }), JsonRequestBehavior.AllowGet);
+                return new JsonCamelCaseResult(new
+                {
+                    status = progress.IsComplete,
+                    redirect = "/ChangeHistory/Search/Download/"
+                }, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(
-                JsonConvert.SerializeObject(new
-                {
-                    status = progress.IsComplete, redirect = string.Concat("/ChangeHistory/Download/", id)
-                }), JsonRequestBehavior.AllowGet);
+            return new JsonCamelCaseResult(new
+            {
+                status = progress.IsComplete,
+                redirect = string.Concat("/ChangeHistory/Download/", id)
+            }, JsonRequestBehavior.AllowGet);
 
         }
 

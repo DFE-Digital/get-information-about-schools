@@ -1,31 +1,31 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Objects;
-using System.Web.Mvc;
-using Edubase.Services.Downloads;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Edubase.Web.UI.Models;
-using Newtonsoft.Json;
+using Edubase.Common;
+using Edubase.Services;
 using Edubase.Services.Domain;
+using Edubase.Services.Downloads;
+using Edubase.Services.Downloads.Models;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Web.UI.Filters;
-using Edubase.Common;
 using Edubase.Web.UI.Helpers;
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http.Results;
-using System.Web.Routing;
-using Edubase.Services;
-using Edubase.Services.Downloads.Models;
-using Edubase.Web.UI.Models.Search;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Guidance;
-using Glimpse.Core.Configuration;
+using Edubase.Web.UI.Models.Search;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Downloads"), Route("{action=index}")]
+    [Route("Downloads")]
     public class DownloadsController : Controller
     {
         private readonly IDownloadsService _downloadsService;
@@ -76,8 +76,8 @@ namespace Edubase.Web.UI.Controllers
         private Guid getIdFromFileLocationUri(ProgressDto response)
         {
             var uri = new Uri(response.FileLocationUri);
-            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-            return Guid.Parse(query["id"]);
+            var query = QueryHelpers.ParseQuery(uri.Query);
+            return Guid.Parse(query["id"].FirstOrDefault());
         }
 
         [Route("Collate", Name = "CollateDownloads"), ValidateAntiForgeryToken]
@@ -147,11 +147,11 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> GenerateAjax(Guid id)
         {
             var model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
-            return Json(
-                JsonConvert.SerializeObject(new
-                {
-                    status = model.IsComplete, redirect = string.Concat("/Downloads/Generated/", id)
-                }), JsonRequestBehavior.AllowGet);
+            return new JsonCamelCaseResult(new
+            {
+                status = model.IsComplete,
+                redirect = string.Concat("/Downloads/Generated/", id)
+            }, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -280,7 +280,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (string.IsNullOrWhiteSpace(state))
                 {
-                    return new HttpStatusCodeResult(400, "State parameter cannot be empty");
+                    return StatusCode(StatusCodes.Status400BadRequest, "State parameter cannot be empty");
                 }
 
                 ViewBag.RouteName = "GroupDataDownload";
@@ -289,9 +289,9 @@ namespace Edubase.Web.UI.Controllers
                 {
                     ViewBag.BreadcrumbRoutes = UriHelper.DeserializeUrlToken<RouteDto[]>(state);
                 }
-                catch (FormatException ex)
+                catch (FormatException)
                 {
-                    return new HttpStatusCodeResult(400, "Invalid state parameter");
+                    return StatusCode(StatusCodes.Status400BadRequest, "Invalid state parameter");
                 }
 
                 if (downloadType.HasValue && !start) return View("Download");
@@ -299,9 +299,9 @@ namespace Edubase.Web.UI.Controllers
                     return Redirect((await _groupDownloadService.DownloadGroupData(uid, downloadType.Value, User)).Url);
                 else return View("SelectFormat");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new HttpStatusCodeResult(500, "An unexpected error occured");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured");
             }
         }
 
@@ -348,7 +348,7 @@ namespace Edubase.Web.UI.Controllers
             }
             else
             {
-                return HttpNotFound();
+                return NotFound();
             }
         }
 
@@ -383,7 +383,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             else
             {

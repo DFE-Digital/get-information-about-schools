@@ -1,34 +1,38 @@
-using Edubase.Web.UI.MvcResult;
 using System;
-using System.Net;
-using System.Web.Mvc;
-using Edubase.Web.UI.Helpers;
+using System.Linq;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Edubase.Web.UI.Filters
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public class EdubaseAuthorizeAttribute : AuthorizeAttribute
+    public class EdubaseAuthorizeAttribute : AuthorizeAttribute, IAuthorizationFilter
     {
-        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (filterContext.HttpContext.Request.IsAuthenticated)
+            if (context == null)
             {
-                filterContext.Result = new HttpStatusCodeResult((int)HttpStatusCode.Forbidden);
+                throw new ArgumentNullException(nameof(context));
             }
-            else
-            {
-                var urlHelper = new UrlHelper(filterContext.RequestContext);
-                var redirectUrl = urlHelper.Action("ExternalLoginCallback", "Account", new
-                {
-                    // Making this "forwarded-header-aware" is not strictly required,
-                    // but it's easier and safer to be consistent and just do it everywhere.
-                    // - The `returnUrl` is currently ignored by the `AccountController.ExternalLoginCallback` method.
-                    // - `PathAndQuery` is absolute, but relative to the host/domain part
-                    //   (e.g., `new Uri("http://example.com/./abc/123/../567").PathAndQuery` returns /abc/567).
-                    ReturnUrl = urlHelper.GetForwardedHeaderAwareUrl().PathAndQuery
-                });
 
-                filterContext.Result = new ChallengeResult("Saml2", redirectUrl);
+            var user = context.HttpContext.User;
+            if (!(user?.Identity?.IsAuthenticated ?? false))
+            {
+                var returnUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
+                var redirectUrl = $"/Account/ExternalLoginCallback?ReturnUrl={Uri.EscapeDataString(returnUrl.ToString())}";
+                context.Result = new ChallengeResult(new AuthenticationProperties { RedirectUri = redirectUrl });
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(Roles))
+            {
+                var allowedRoles = Roles.Split(',').Select(r => r.Trim()).Where(r => !string.IsNullOrWhiteSpace(r)).ToHashSet();
+                if (allowedRoles.Count > 0 && !allowedRoles.Any(user.IsInRole))
+                {
+                    context.Result = new ForbidResult();
+                }
             }
         }
     }
