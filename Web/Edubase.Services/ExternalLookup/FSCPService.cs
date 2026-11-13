@@ -1,9 +1,9 @@
 using System;
-using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Caching;
+using System.Threading;
 using System.Threading.Tasks;
 using Edubase.Common;
 using Edubase.Services.IntegrationEndPoints;
@@ -28,10 +28,9 @@ namespace Edubase.Services.ExternalLookup
             _configuration = configuration;
 
             var retryCsv = configuration["AppSettings:FscpdClient_RetryIntervals"] ?? "1,2,5";
-            var timeoutValue = configuration["AppSettings:FscpdClient_Timeout"] ?? "10";
 
             var retryIntervals = PollyUtil.CsvSecondsToTimeSpans(retryCsv);
-            _retryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, timeoutValue);
+            _retryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, "AppSettings:FscpdClient_Timeout");
         }
 
         private string GetCollection(bool mat)
@@ -82,8 +81,8 @@ namespace Edubase.Services.ExternalLookup
 
                 try
                 {
-                    using (var response = await _retryPolicy.ExecuteAsync(async () =>
-                        await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
+                    using (var response = await _retryPolicy.ExecuteAsync(async cancellationToken =>
+                        await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken), CancellationToken.None))
                     {
                         var isOk = response.StatusCode == HttpStatusCode.OK;
                         MemoryCache.Default.Set(new CacheItem(key, isOk),

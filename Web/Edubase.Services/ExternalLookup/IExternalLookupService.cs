@@ -8,7 +8,5 @@ namespace Edubase.Services.ExternalLookup
         string FscpdURL(int? urn, string name, bool mat = false);
         Task<bool> SfbCheckExists(int? lookupId, FbType lookupType);
         string SfbURL(int? lookupId, FbType lookupType);
-        Task<bool> OfstedReportPageCheckExists(int? urn);
-        string OfstedReportUrl(int? urn);
     }
 }

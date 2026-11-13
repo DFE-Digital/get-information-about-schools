@@ -40,10 +40,9 @@ namespace Edubase.Services.ExternalLookup
                 ?? throw new ArgumentNullException("FinancialBenchmarkingURL is missing");
 
             var retryCsv = configuration["AppSettings:FBService_RetryIntervals"] ?? "1,2,5";
-            var timeoutValue = configuration["FBService_Timeout"] ?? "10";
 
             var retryIntervals = PollyUtil.CsvSecondsToTimeSpans(retryCsv);
-            RetryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, timeoutValue);
+            RetryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, "AppSettings:FBService_Timeout");
         }
 
         public string PublicURL(int? lookupId, FbType lookupType)

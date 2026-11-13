@@ -20,7 +20,7 @@ public class AzureMapsService : IAzureMapsService
     private readonly HttpClient _azureMapsClient;
     private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy;
 
-    private const string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
+    private const string AzureMapServiceTimeoutKey = "AppSettings:AzureMapService_Timeout";
 
     public AzureMapsService(IConfiguration configuration, HttpClient httpClient)
     {
@@ -46,7 +46,7 @@ public class AzureMapsService : IAzureMapsService
             return Array.Empty<PlaceDto>();
         }
 
-        using (var response = await RetryPolicy.ExecuteAsync(async () =>
+        using (var response = await RetryPolicy.ExecuteAsync(async policyCancellationToken =>
                {
                    using (var request = new HttpRequestMessage(
                               HttpMethod.Get,
@@ -55,9 +55,9 @@ public class AzureMapsService : IAzureMapsService
                        return await _azureMapsClient.SendAsync(
                            request,
                            HttpCompletionOption.ResponseHeadersRead,
-                           cancellationToken);
+                           policyCancellationToken);
                    }
-               }))
+               }, cancellationToken))
         {
             if (!response.IsSuccessStatusCode)
             {

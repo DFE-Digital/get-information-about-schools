@@ -47,7 +47,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         [Fact]
         public async Task CreateTimeoutPolicy_ShouldTriggerTimeout()
         {
-            var validKey = "AzureMapService_Timeout";
+            var validKey = "AppSettings:AzureMapService_Timeout";
             _configuration[validKey] = "5";
 
             var policy = PollyUtil.CreateTimeoutPolicy(_configuration, validKey);
