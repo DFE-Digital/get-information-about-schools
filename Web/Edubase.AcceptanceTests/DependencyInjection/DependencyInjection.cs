@@ -17,7 +17,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         [ScenarioDependencies]
         public static IServiceCollection CreateServices()
         {
-            var settings = Settings.CreateFromXml("acceptance.tests.config.alwaysignore");
+            var settings = Settings.CreateFromXml("Configuration/acceptance.tests.config.alwaysignore");
 
             var services = new ServiceCollection();
             
