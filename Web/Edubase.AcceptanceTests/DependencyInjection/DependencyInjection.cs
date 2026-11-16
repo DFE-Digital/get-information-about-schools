@@ -55,7 +55,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(settings.ConnectionStrings.AzureSqlServer));
             services.AddScoped<IUserPreferencesInMigrationTarget, UserPreferencesInSQLServer>();
 
-            if (settings.FeatureFlags.UserPreferencesMigrated == false)
+            if (!settings.FeatureFlags.UserPreferencesMigrated)
             {
                 var x = services.BuildServiceProvider().GetRequiredService<IUserPreferencesInMigrationSource>();
 
