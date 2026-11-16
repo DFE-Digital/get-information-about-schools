@@ -1,5 +1,6 @@
 using System.Net;
 using Edubase.AcceptanceTests.Apis;
+using Edubase.AcceptanceTests.Configuration;
 using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.GiasFrontEnd;
 using Edubase.AcceptanceTests.SigninAuthorities;
@@ -16,7 +17,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         [ScenarioDependencies]
         public static IServiceCollection CreateServices()
         {
-            var settings = Settings.Load();
+            var settings = Settings.CreateFromXml("acceptance.tests.config.alwaysignore");
 
             var services = new ServiceCollection();
             
@@ -50,11 +51,11 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
         private static void AddUserPreferencesInPersistentStorage(this ServiceCollection services, Settings settings)
         {
-            services.AddScoped<IUserPreferencesInMigrationSource>(sp => new UserPreferencesInAzureTableStorage(settings.DataConnectionString));
-            services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(settings.FrontEndDatabase));
+            services.AddScoped<IUserPreferencesInMigrationSource>(sp => new UserPreferencesInAzureTableStorage(settings.ConnectionStrings.AzureTableStorage));
+            services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(settings.ConnectionStrings.AzureSqlServer));
             services.AddScoped<IUserPreferencesInMigrationTarget, UserPreferencesInSQLServer>();
 
-            if (settings.Feature_UserPreferencesMigration == false)
+            if (settings.FeatureFlags.UserPreferencesMigrated == false)
             {
                 var x = services.BuildServiceProvider().GetRequiredService<IUserPreferencesInMigrationSource>();
 
@@ -74,7 +75,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             // Give each scenario its own handler and authenticated session.
             services.AddScoped<HttpClientHandler>(_ =>
             {
-                var credentials = settings.HttpAuthModuleCredentials.Split(':');
+                var credentials = settings.GiasFrontEnd.HttpAuthModuleCredentials.Split(':');
 
                 var networkCredentials = new NetworkCredential(credentials[0], credentials[1]);
 
@@ -89,10 +90,12 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddScoped<HttpClient>(sp => new HttpClient(
                 sp.GetRequiredService<HttpClientHandler>(), disposeHandler: false)
             {
-                BaseAddress = new Uri(settings.GiasFrontEndBaseAddress)
+                BaseAddress = new Uri(settings.GiasFrontEnd.BaseAddress)
             });
 
-            services.AddHttpClient("AzureSignInSimulator")
+            var name = "HttpClientNameForAzureSignInSimulator";
+
+            services.AddHttpClient(name)
                 .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
                 {
                     AllowAutoRedirect = false
@@ -101,7 +104,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddScoped<IApi>(sp =>
             {
                 var factory = sp.GetRequiredService<IHttpClientFactory>();
-                var simulatorClient = factory.CreateClient("AzureSignInSimulator");
+                var simulatorClient = factory.CreateClient(name);
 
                 return new HttpApi(simulatorClient);
             });
