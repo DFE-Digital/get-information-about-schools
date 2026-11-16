@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Edubase.Web.UIUnitTests.Controllers
                 .Returns(mockHttpContextBase.Object);
             mockPrincipal.SetupGet(x => x.Identity)
                 .Returns(mockIdentity.Object);
-            _controllerUnderTest = new DataQualityController(_writeServiceMock.Object)
+            _controllerUnderTest = new DataQualityController(_writeServiceMock.Object, new ConfigurationBuilder().AddInMemoryCollection().Build())
             {
                 ControllerContext = mockControllerContext.Object
             };

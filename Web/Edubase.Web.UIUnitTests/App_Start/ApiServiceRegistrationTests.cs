@@ -25,7 +25,45 @@ namespace Edubase.Web.UIUnitTests.App_Start
     public class ApiServiceRegistrationTests
     {
         [Theory]
-        [InlineData("OSPlacesClient", "OSPlacesApiBaseUrl")]
+        [InlineData("LookupApiClient", "LookupApiBaseAddress", "LookupApiUsername", "LookupApiPassword")]
+        [InlineData("GovernorSearchApiClient", "GovernorSearchApiBaseAddress", "GovernorSearchApiUsername", "GovernorSearchApiPassword")]
+        public void AddApiServices_UsesMainApiWhenSeparateSettingsAreEmpty(string name, string addressKey,
+            string usernameKey, string passwordKey)
+        {
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            configuration["AppSettings:TexunaApiBaseAddress"] = "https://backend.example/";
+            configuration["AppSettings:TexunaApiUsername"] = "main-user";
+            configuration["AppSettings:TexunaApiPassword"] = "main-password";
+            configuration["AppSettings:" + addressKey] = "";
+            configuration["AppSettings:" + usernameKey] = "";
+            configuration["AppSettings:" + passwordKey] = "";
+            var services = new ServiceCollection();
+            services.AddApiServices(configuration);
+
+            using (var provider = services.BuildServiceProvider())
+            {
+                var factory = provider.GetRequiredService<IHttpClientFactory>();
+                using (var client = factory.CreateClient(name))
+                {
+                    Assert.Equal("https://backend.example/", client.BaseAddress.AbsoluteUri);
+                    Assert.Equal(TimeSpan.FromSeconds(30), client.Timeout);
+                    Assert.Equal(Convert.ToBase64String(Encoding.ASCII.GetBytes("main-user:main-password")),
+                        client.DefaultRequestHeaders.Authorization.Parameter);
+                }
+
+                configuration["AppSettings:" + usernameKey] = "separate-user";
+                configuration["AppSettings:HttpClient_Timeout"] = "17";
+                using (var client = factory.CreateClient(name))
+                {
+                    Assert.Equal(TimeSpan.FromSeconds(17), client.Timeout);
+                    Assert.Equal(Convert.ToBase64String(Encoding.ASCII.GetBytes("separate-user:main-password")),
+                        client.DefaultRequestHeaders.Authorization.Parameter);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("OSPlacesClient", "OSPlacesUrl")]
         [InlineData("AzureMapsClient", "AzureMapsUrl")]
         [InlineData("FscpdClient", "FscpdURL")]
         [InlineData("SfbClient", "FinancialBenchmarkingApiURL")]
@@ -47,7 +85,7 @@ namespace Edubase.Web.UIUnitTests.App_Start
         public async Task AddExternalApiServices_OSPlacesUsesConfiguredKeyAndTimeout()
         {
             var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
-            configuration["AppSettings:OSPlacesApiBaseUrl"] = "https://osplaces.example/";
+            configuration["AppSettings:OSPlacesUrl"] = "https://osplaces.example/";
             configuration["AppSettings:OSPlacesApiKey"] = "test-key";
             configuration["AppSettings:OSPlacesApiServices_Timeout"] = "1";
             configuration["AppSettings:OSPlacesApiServices_RetryIntervals"] = "";
@@ -79,7 +117,7 @@ namespace Edubase.Web.UIUnitTests.App_Start
         }
 
         [Theory]
-        [InlineData("TexunaApiClient", "TexunaApiBaseAddress", "HttpClient_Timeout", "api:Username", "api:Password", 11)]
+        [InlineData("TexunaApiClient", "TexunaApiBaseAddress", "HttpClient_Timeout", "TexunaApiUsername", "TexunaApiPassword", 11)]
         [InlineData("LookupApiClient", "LookupApiBaseAddress", "LookupClient_Timeout", "LookupApiUsername", "LookupApiPassword", 22)]
         [InlineData("GovernorSearchApiClient", "GovernorSearchApiBaseAddress", "GovernorSearchClient_Timeout", "GovernorSearchApiUsername", "GovernorSearchApiPassword", 33)]
         public void AddApiServices_ConfiguresNamedClient(string name, string addressKey, string timeoutKey,

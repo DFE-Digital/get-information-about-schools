@@ -1,9 +1,9 @@
+using Microsoft.Extensions.Configuration;
 using CompaniesHouse;
 using CompaniesHouse.Request;
 using Edubase.Services.Domain;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models;
 using System;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +11,13 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 
 public class CompaniesHouseService : ICompaniesHouseService
 {
+    private readonly IConfiguration _configuration;
+
+    public CompaniesHouseService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     private const int COMPANIES_HOUSE_SIZE_LIMIT = 400;
 
     public async Task<PagedDto<CompanyProfile>> SearchByCompaniesHouseNumber(string number)
@@ -56,7 +63,7 @@ public class CompaniesHouseService : ICompaniesHouseService
 
     private CompaniesHouseClient GetCompaniesHouseClient()
     {
-        var key = ConfigurationManager.AppSettings["CompaniesHouseApiKey"];
+        var key = _configuration["AppSettings:CompaniesHouseApiKey"];
         var settings = new CompaniesHouseSettings(key);
         var client = new CompaniesHouseClient(settings);
         return client;

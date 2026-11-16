@@ -15,7 +15,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <Reference Include="System.Configuration" />
+
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http.WebRequest" />

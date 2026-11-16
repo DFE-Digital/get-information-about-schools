@@ -1,6 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Runtime.Caching;
@@ -18,11 +18,11 @@ namespace Edubase.Data.Repositories.EF
         private readonly int _notificationBannerCacheExpirationInSeconds;
         private readonly FrontEndDbContext _context;
 
-        public SqlNotificationBannerRepository(FrontEndDbContext context)
+        public SqlNotificationBannerRepository(FrontEndDbContext context, IConfiguration configuration)
         {
             _context = context;
 
-            if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInSeconds"],
+            if (!int.TryParse(configuration["AppSettings:NotificationBannerCacheExpirationInSeconds"],
                     out _notificationBannerCacheExpirationInSeconds))
             {
                 _notificationBannerCacheExpirationInSeconds = 300;

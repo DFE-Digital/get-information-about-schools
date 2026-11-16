@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @using Edubase.Web.UI.Areas.Groups.Models
 @using Edubase.Common;
 @using Edubase.Services.Enums;
@@ -35,7 +36,7 @@ else if (Model.Results.Count > 0)
                     <dd>
                         @if (result.CompaniesHouseNumber != null)
                         {
-                            <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.CompaniesHouseNumber" target="_blank" rel="noopener noreferrer">
+                            <a href="@Configuration["AppSettings:CompaniesHouseBaseUrl"]@result.CompaniesHouseNumber" target="_blank" rel="noopener noreferrer">
                                 @result.CompaniesHouseNumber
                                 <text>(opens in new tab)</text>
                             </a>

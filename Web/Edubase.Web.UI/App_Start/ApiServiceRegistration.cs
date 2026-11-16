@@ -1,3 +1,4 @@
+using Edubase.Services.Texuna.Glimpse;
 using System;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -27,16 +28,18 @@ namespace Edubase.Web.UI.App_Start
 {
     public static class ApiServiceRegistration
     {
+        private const int DefaultTimeoutSeconds = 30;
         private const string TexunaApiClient = "TexunaApiClient";
         private const string LookupApiClient = "LookupApiClient";
         private const string GovernorSearchApiClient = "GovernorSearchApiClient";
 
         public static void AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
-            AddClient(services, configuration, TexunaApiClient, "TexunaApiBaseAddress", "HttpClient_Timeout", "api:Username", "api:Password");
+            AddClient(services, configuration, TexunaApiClient, "TexunaApiBaseAddress", "HttpClient_Timeout", "TexunaApiUsername", "TexunaApiPassword");
             AddClient(services, configuration, LookupApiClient, "LookupApiBaseAddress", "LookupClient_Timeout", "LookupApiUsername", "LookupApiPassword");
             AddClient(services, configuration, GovernorSearchApiClient, "GovernorSearchApiBaseAddress", "GovernorSearchClient_Timeout", "GovernorSearchApiUsername", "GovernorSearchApiPassword");
 
+            services.AddSingleton(new ApiTraceList(configuration));
             services.AddSingleton(new JsonMediaTypeFormatter
             {
                 SerializerSettings = new JsonSerializerSettings
@@ -47,17 +50,17 @@ namespace Edubase.Web.UI.App_Start
                 }
             });
 
-            services.AddScoped<HttpClientWrapper>(provider => CreateWrapper(provider, TexunaApiClient));
+            services.AddScoped<HttpClientWrapper>(provider => CreateWrapper(provider, TexunaApiClient, configuration));
             services.AddScoped<IHttpClientWrapper>(provider => provider.GetRequiredService<HttpClientWrapper>());
             services.AddScoped<ISecurityService, SecurityApiService>();
             services.AddScoped<LookupApiService>(provider => new LookupApiService(
-                CreateWrapper(provider, LookupApiClient),
+                CreateWrapper(provider, LookupApiClient, configuration),
                 provider.GetRequiredService<ISecurityService>()));
             services.AddScoped<ILookupService>(provider => provider.GetRequiredService<LookupApiService>());
             services.AddScoped<IUserDependentLookupService>(provider => provider.GetRequiredService<LookupApiService>());
             services.AddScoped<IGovernorsReadService>(provider => new GovernorsReadApiService(
                 provider.GetRequiredService<HttpClientWrapper>(),
-                CreateWrapper(provider, GovernorSearchApiClient),
+                CreateWrapper(provider, GovernorSearchApiClient, configuration),
                 provider.GetRequiredService<IEstablishmentReadService>()));
             services.AddScoped<IGovernorsWriteService, GovernorsWriteApiService>();
             services.AddScoped<IGovernorDownloadService, GovernorDownloadApiService>();
@@ -65,7 +68,7 @@ namespace Edubase.Web.UI.App_Start
 
         public static void AddExternalApiServices(this IServiceCollection services, IConfiguration configuration)
         {
-            AddExternalClient(services, configuration, "OSPlacesClient", "OSPlacesApiBaseUrl")
+            AddExternalClient(services, configuration, "OSPlacesClient", "OSPlacesUrl")
                 .ConfigureHttpClient(client =>
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
@@ -96,19 +99,25 @@ namespace Edubase.Web.UI.App_Start
         }
 
         private static void AddClient(IServiceCollection services, IConfiguration configuration, string name,
-            string baseAddressKey, string timeoutKey, string usernameKey, string passwordKey)
+            string addressKey, string timeoutKey, string usernameKey, string passwordKey)
         {
+            var settings = configuration.GetSection("AppSettings");
             services.AddHttpClient(name, client =>
             {
-                client.BaseAddress = new Uri(configuration["AppSettings:" + baseAddressKey]);
-                if (!int.TryParse(configuration["AppSettings:" + timeoutKey], out var timeoutSeconds))
+                var address = settings[addressKey];
+                client.BaseAddress = new Uri(string.IsNullOrWhiteSpace(address) ? settings["TexunaApiBaseAddress"] : address);
+
+                if (!int.TryParse(settings[timeoutKey], out var timeoutSeconds)
+                    && !int.TryParse(settings["HttpClient_Timeout"], out timeoutSeconds))
                 {
-                    timeoutSeconds = 30;
+                    timeoutSeconds = DefaultTimeoutSeconds;
                 }
                 client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
 
-                var username = configuration["AppSettings:" + usernameKey];
-                var password = configuration["AppSettings:" + passwordKey];
+                var username = settings[usernameKey];
+                var password = settings[passwordKey];
+                username = string.IsNullOrEmpty(username) ? settings["TexunaApiUsername"] : username;
+                password = string.IsNullOrEmpty(password) ? settings["TexunaApiPassword"] : password;
                 if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
                 {
                     var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
@@ -117,13 +126,14 @@ namespace Edubase.Web.UI.App_Start
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false });
         }
 
-        private static HttpClientWrapper CreateWrapper(IServiceProvider provider, string name)
+        private static HttpClientWrapper CreateWrapper(IServiceProvider provider, string name, IConfiguration configuration)
         {
             var client = provider.GetRequiredService<IHttpClientFactory>().CreateClient(name);
             return new HttpClientWrapper(client,
                 provider.GetRequiredService<JsonMediaTypeFormatter>(),
                 provider.GetRequiredService<IClientStorage>(),
-                provider.GetRequiredService<ApiRecorderSessionItemRepository>());
+                provider.GetRequiredService<ApiRecorderSessionItemRepository>(), configuration,
+                provider.GetRequiredService<ApiTraceList>());
         }
     }
 }

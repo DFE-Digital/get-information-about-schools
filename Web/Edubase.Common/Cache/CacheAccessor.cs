@@ -43,7 +43,12 @@ namespace Edubase.Common.Cache
         private ISubscriber _subscriber; // subscription to key-updates
 
         public CacheAccessor(JsonConverterCollection converters, IConnectionMultiplexer connection)
-            : this(converters)
+            : this(converters, connection, new CacheConfig())
+        {
+        }
+
+        public CacheAccessor(JsonConverterCollection converters, IConnectionMultiplexer connection, CacheConfig config)
+            : this(config, null)
         {
             _jsonConverterCollection = converters;
 

@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.App_Start
             {
                 var converters = provider.GetRequiredService<JsonConverterCollection>();
                 var redis = provider.GetRequiredService<IConnectionMultiplexer>();
-                return new CacheAccessor(converters, redis);
+                return new CacheAccessor(converters, redis, new CacheConfig(configuration));
             });
 
             DbGeographyConverter dbGeographyConverter = new();

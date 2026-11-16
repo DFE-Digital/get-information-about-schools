@@ -12,5 +12,5 @@ public class ConfigurationFeatureFlagProvider : IFeatureFlagProvider
         _configuration = configuration;
     }
 
-    public bool IsEnabled(string featureName) => bool.TryParse(_configuration[featureName], out var enabled) && enabled;
+    public bool IsEnabled(string featureName) => bool.TryParse(_configuration["AppSettings:" + featureName], out var enabled) && enabled;
 }

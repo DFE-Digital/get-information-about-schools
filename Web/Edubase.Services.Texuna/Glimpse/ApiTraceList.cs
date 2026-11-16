@@ -1,6 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace Edubase.Services.Texuna.Glimpse
@@ -12,11 +12,11 @@ namespace Edubase.Services.Texuna.Glimpse
 
         private readonly int _sessionRetentionCount;
 
-        public ApiTraceList()
+        public ApiTraceList(IConfiguration configuration = null)
         {
             _data = new List<ApiTraceData>();
 
-            var configValue = ConfigurationManager.AppSettings["ApiTraceSessionRetentionCount"];
+            var configValue = configuration?["AppSettings:ApiTraceSessionRetentionCount"];
             if (!int.TryParse(configValue, out _sessionRetentionCount))
             {
                 _sessionRetentionCount = 25;

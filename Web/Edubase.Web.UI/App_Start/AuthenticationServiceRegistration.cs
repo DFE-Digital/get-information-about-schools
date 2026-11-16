@@ -38,15 +38,15 @@ namespace Edubase.Web.UI.App_Start
             /// Sets up the default cookie schemes and toggles between real and simulator SAML2 flows.
             /// </summary>
             var authBuilder = services.AddAuthentication(options =>
-            {                
-                options.DefaultScheme = "ApplicationCookie";                
-                options.DefaultChallengeScheme = Saml2Defaults.Scheme;                
+            {
+                options.DefaultScheme = "ApplicationCookie";
+                options.DefaultChallengeScheme = Saml2Defaults.Scheme;
                 options.DefaultForbidScheme = "ApplicationCookie";
             })
             .AddCookie("ApplicationCookie", options =>
             {
                 options.LoginPath = "/Account/Login";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);                
+                options.ExpireTimeSpan = TimeSpan.Parse(configuration["AppSettings:SessionExpireTimeSpan"]);
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             })

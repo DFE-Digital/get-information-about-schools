@@ -1,6 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Data.Entity;
@@ -17,6 +17,8 @@ namespace Edubase.Web.UI.Controllers
     [EdubaseAuthorize]
     public class DataQualityController : Controller
     {
+        private readonly IConfiguration _configuration;
+
         private readonly IDataQualityWriteService _dataQualityWriteService;
         private readonly int _dataQualityUpdatePeriod;
 
@@ -33,10 +35,11 @@ namespace Edubase.Web.UI.Controllers
 
         private const string AuthorisationRoles = AuthorizedRoles.IsAdmin + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.APT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.FST + "," + EdubaseRoles.YCS;
 
-        public DataQualityController(IDataQualityWriteService dataQualityWriteService)
+        public DataQualityController(IDataQualityWriteService dataQualityWriteService, IConfiguration configuration)
         {
+            _configuration = configuration;
             this._dataQualityWriteService = dataQualityWriteService;
-            if (!int.TryParse(ConfigurationManager.AppSettings["DataQualityUpdatePeriod"], out _dataQualityUpdatePeriod))
+            if (!int.TryParse(_configuration["AppSettings:DataQualityUpdatePeriod"], out _dataQualityUpdatePeriod))
             {
                 this._dataQualityUpdatePeriod = 7;
             }

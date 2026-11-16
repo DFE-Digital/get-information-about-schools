@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 //using System;
 //using System.Collections.Generic;
 //using System.Linq;
@@ -76,7 +77,7 @@
 //                mockCompaniesHouseService.Object,
 //                mockGovernorsReadService.Object,
 //                mockExternalLookupService.Object,
-//                mockGovernorGridViewModelFactory.Object);
+//                mockGovernorGridViewModelFactory.Object, new ConfigurationBuilder().AddInMemoryCollection().Build());
 
 //            SetupController();
 //        }

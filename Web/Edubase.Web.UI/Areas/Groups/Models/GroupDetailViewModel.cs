@@ -13,7 +13,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models
     using Services.Groups.Models;
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using GT = Services.Enums.eLookupGroupType;
 
     public class GroupDetailViewModel
@@ -64,7 +63,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public List<EstablishmentGroupViewModel> Establishments { get; private set; } = new List<EstablishmentGroupViewModel>();
 
-        public string CompaniesHouseUrl => ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"].Append(Group.CompaniesHouseNumber);
+        public string CompaniesHouseBaseUrl { get; set; }
+
+        public string CompaniesHouseUrl => CompaniesHouseBaseUrl.Append(Group.CompaniesHouseNumber);
 
         public PaginatedResult<GroupChangeDto> ChangeHistory { get; set; }
 
@@ -73,7 +74,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public IEnumerable<LinkedGroupModel> Links { get; set; }
         public GovernorPermissions GovernorPermissions { get; set; }
 
-        public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
+        public string FscpdServiceName { get; set; }
 
         public string FscpdURL => extService.FscpdURL(
             Group.GroupUId,

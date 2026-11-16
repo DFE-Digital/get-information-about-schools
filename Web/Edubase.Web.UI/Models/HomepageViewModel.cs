@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Configuration;
 using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Models
@@ -11,8 +10,8 @@ namespace Edubase.Web.UI.Models
             NewsArticles = newsArticles;
         }
         public IEnumerable<NewsArticle> NewsArticles { get; set; }
-        public string FinancialBenchmarkingHomepage => ConfigurationManager.AppSettings["FinancialBenchmarkingURL"];
-        public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
-        public string FscpdHomepage => ConfigurationManager.AppSettings["FscpdHomeUrl"];
+        public string FinancialBenchmarkingHomepage { get; set; }
+        public string FscpdServiceName { get; set; }
+        public string FscpdHomepage { get; set; }
     }
 }

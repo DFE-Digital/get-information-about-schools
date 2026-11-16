@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Security.Principal;
@@ -78,7 +79,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 mockSecurityService.Object,
                 mockExternalLookupService.Object,
                 mockLookupService.Object,
-                mockGovernorsGridViewModelFactory.Object);
+                mockGovernorsGridViewModelFactory.Object, new ConfigurationBuilder().AddInMemoryCollection().Build());
 
             SetupController();
         }

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Web;
 using Azure.Core;
@@ -13,10 +14,13 @@ namespace Edubase.Web.UI.Controllers
 {
     public class ErrorController : Controller
     {
+        private readonly IConfiguration _configuration;
+
         private ILogger<ErrorController> logger;
 
-        public ErrorController(ILogger<ErrorController> logger)
+        public ErrorController(ILogger<ErrorController> logger, IConfiguration configuration)
         {
+            _configuration = configuration;
             this.logger = logger;
         }
 
@@ -40,7 +44,7 @@ namespace Edubase.Web.UI.Controllers
                 var ex = exceptionFeature.Error;
                 // var path = exceptionFeature.Path;
 
-                if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableErrorReporting"]))
+                if (_configuration.GetValue<bool>("AppSettings:EnableErrorReporting"))
                 {
                     var ctx = HttpContext;
 

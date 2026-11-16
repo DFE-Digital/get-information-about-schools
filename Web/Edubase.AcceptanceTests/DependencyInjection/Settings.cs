@@ -20,7 +20,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         public string? SASimulatorGuid { get; set; }
         public string? GetGroupByIdFAKey { get; set; }
         public string? TexunaApiBaseAddress { get; set; }
-        public string? ApiPassword { get; set; }
+        public string? TexunaApiPassword { get; set; }
         public string? LookupApiBaseAddress { get; set; }
         public string? LookupApiPassword { get; set; }
         public string? SASimulatorUri { get; set; }
@@ -83,7 +83,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
                     case "SASimulatorGuid": settings.SASimulatorGuid = value; break;
                     case "GetGroupByIdFAKey": settings.GetGroupByIdFAKey = value; break;
                     case "TexunaApiBaseAddress": settings.TexunaApiBaseAddress = value; break;
-                    case "api:Password": settings.ApiPassword = value; break;
+                    case "TexunaApiPassword": settings.TexunaApiPassword = value; break;
                     case "LookupApiBaseAddress": settings.LookupApiBaseAddress = value; break;
                     case "LookupApiPassword": settings.LookupApiPassword = value; break;
                     case "SASimulatorUri": settings.SASimulatorUri = value; break;

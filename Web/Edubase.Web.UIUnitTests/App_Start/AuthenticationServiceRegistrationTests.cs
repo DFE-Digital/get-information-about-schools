@@ -1,3 +1,6 @@
+using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Edubase.Services.Security;
@@ -12,6 +15,23 @@ namespace Edubase.Web.UIUnitTests.App_Start
 {
     public class AuthenticationServiceRegistrationTests
     {
+        [Fact]
+        public void AddApplicationAuthentication_UsesConfiguredCookieLifetime()
+        {
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            configuration["AppSettings:SessionExpireTimeSpan"] = "00:59:00";
+            var services = new ServiceCollection();
+            services.AddLogging();
+            services.AddApplicationAuthentication(configuration);
+
+            using (var provider = services.BuildServiceProvider())
+            {
+                var options = provider.GetRequiredService<IOptionsMonitor<CookieAuthenticationOptions>>();
+                Assert.Equal(TimeSpan.FromMinutes(59), options.Get("ApplicationCookie").ExpireTimeSpan);
+                Assert.Equal(TimeSpan.FromMinutes(5), options.Get("ExternalCookie").ExpireTimeSpan);
+            }
+        }
+
         [Theory]
         [InlineData("EdubasePolicy", "OrdinaryUser", true)]
         [InlineData("CanManageAcademyOpeningsOrSecureAcademy16To19", EdubaseRoles.EFADO, false)]
