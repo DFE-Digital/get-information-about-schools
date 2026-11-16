@@ -100,9 +100,9 @@ namespace Edubase.AcceptanceTests.Establishments
         [AfterScenario]
         public void AfterScenario()
         {
-            foreach (var errorMessage in errorMessages)
+            foreach (var loggedErrorMessage in errorMessages)
             {
-                logger.LogError(errorMessage);
+                logger.LogError(loggedErrorMessage);
             }
         }
     }
