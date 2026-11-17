@@ -68,12 +68,7 @@ namespace Edubase.Web.UI.App_Start
 
         public static void AddExternalApiServices(this IServiceCollection services, IConfiguration configuration)
         {
-            AddExternalClient(services, configuration, "OSPlacesClient", "OSPlacesUrl")
-                .ConfigureHttpClient(client =>
-                {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                        configuration["AppSettings:OSPlacesApiKey"]);
-                });
+            AddExternalClient(services, configuration, "OSPlacesClient", "OSPlacesUrl");                
             AddExternalClient(services, configuration, "AzureMapsClient", "AzureMapsUrl");
             AddExternalClient(services, configuration, "FscpdClient", "FscpdURL");
             AddExternalClient(services, configuration, "SfbClient", "FinancialBenchmarkingApiURL");
