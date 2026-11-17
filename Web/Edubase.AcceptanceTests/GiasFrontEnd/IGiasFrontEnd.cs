@@ -11,6 +11,7 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
         Task<EstablishmentSearchResults> GetEstablishmentSearchResults(EstablishmentSearchFilter filter);
         Task SaveEstablishmentSearchFilter(string token);
         Task SignIn(User user);
+        Task SignOut(User user);
         Task<string> TokenizeEstablishmentSearchFilter(EstablishmentSearchFilter establishmentSearchFilter);
     }
 }

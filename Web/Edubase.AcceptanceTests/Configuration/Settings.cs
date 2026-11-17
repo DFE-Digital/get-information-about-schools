@@ -65,6 +65,7 @@ namespace Edubase.AcceptanceTests.Configuration
                     case "GiasFrontEndBaseAddress": settings.GiasFrontEnd.BaseAddress = value; break;
                     case "Environment": settings.Environment = value; break;
                     case "HttpAuthModule.Credentials": settings.GiasFrontEnd.HttpAuthModuleCredentials = value; break;
+                    case "UseLocalSignIn": settings.UseLocalSignIn = bool.Parse(value); break;
                     case "Feature_UserPreferencesMigration": settings.FeatureFlags.UserPreferencesMigrated = bool.Parse(value); break;
                 }
             }

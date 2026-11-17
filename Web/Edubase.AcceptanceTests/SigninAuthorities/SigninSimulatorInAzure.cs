@@ -148,5 +148,14 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
                 "test" => "https://dfe-sign-in-simulator.azurewebsites.net/e00bdaf5-4cee-47c2-b76c-41b00bb59d02",
                 _ => throw new ArgumentException($"Unexpected environment: {environmentName}", nameof(environmentName))
             };
+
+        public async Task SignOut(User user)
+        {
+            httpClient.DefaultRequestHeaders.Remove("Cookie");
+
+            // Step 1: Initial GET to login page
+            using var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, WebRoutes.SignIn));
+            using var signInButtonResponse = await httpClient.SendAsync(signInButton);
+        }
     }
 }

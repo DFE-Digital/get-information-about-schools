@@ -128,7 +128,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
 
             var persistedSearchToken = await userPreferencesInPersistentStorage.GetSavedSearchTokenForUser(user);
 
-            Assert.Equal(null, persistedSearchToken);
+            Assert.Null(persistedSearchToken);
         }
 
     }
