@@ -57,15 +57,13 @@ namespace Edubase.AcceptanceTests.DependencyInjection
 
             if (!settings.FeatureFlags.UserPreferencesMigrated)
             {
-                var x = services.BuildServiceProvider().GetRequiredService<IUserPreferencesInMigrationSource>();
-
-                services.AddScoped<IUserPreferencesInPersistentStorage>(sp => x);
+                services.AddScoped<IUserPreferencesInPersistentStorage>(sp =>
+                    sp.GetRequiredService<IUserPreferencesInMigrationSource>());
             }
             else
             {
-                var x = services.BuildServiceProvider().GetRequiredService<IUserPreferencesInMigrationTarget>();
-
-                services.AddScoped<IUserPreferencesInPersistentStorage>(sp => x);
+                services.AddScoped<IUserPreferencesInPersistentStorage>(sp =>
+                    sp.GetRequiredService<IUserPreferencesInMigrationTarget>());
             }
         }
 
