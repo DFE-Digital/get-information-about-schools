@@ -280,15 +280,15 @@ stages:
             inputs:
               folderPath: '$(Build.SourcesDirectory)'
               enableXmlTransform: false
-              xmlTargetFiles: 'acceptance.tests.config'
+              xmlTargetFiles: 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config'
 
           - task: PowerShell@2
             displayName: 'Create acceptance test runtime config'
             inputs:
               targetType: 'inline'
               script: |
-                $source = Join-Path $env:BUILD_SOURCESDIRECTORY 'acceptance.tests.config'
-                $destination = Join-Path $env:BUILD_SOURCESDIRECTORY 'acceptance.tests.config.alwaysignore'
+                $source = Join-Path $env:BUILD_SOURCESDIRECTORY 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config'
+                $destination = Join-Path $env:BUILD_SOURCESDIRECTORY 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config.alwaysignore'
                 Copy-Item -LiteralPath $source -Destination $destination -Force
 
           - task: UseDotNet@2
