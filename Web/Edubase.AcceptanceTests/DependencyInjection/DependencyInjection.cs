@@ -25,9 +25,9 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddAcceptanceTestLogging();
             services.AddSingleton(settings);
 
-            services.AddHardCodedUsers();
+            //services.AddHardCodedUsers();
             services.AddSqlServer(settings);
-            //services.AddUsersInSqlServer(settings);
+            services.AddUsersInSqlServer(settings);
             services.AddEstablishmentsFromGiasFrontEnd();
             services.AddGiasFrontEnd(settings);
             services.AddUserPreferencesInPersistentStorage(settings);

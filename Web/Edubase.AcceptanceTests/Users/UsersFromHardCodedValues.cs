@@ -28,5 +28,10 @@ namespace Edubase.AcceptanceTests.Users
                 Comment = "GIAS Backoffice - TESTER ONLY"
             };
         }
+
+        public async Task DeleteUser(User user)
+        {
+            // do nothing, as this is a hard coded user
+        }
     }
 }

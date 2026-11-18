@@ -1,15 +1,14 @@
 using Edubase.AcceptanceTests.Repositories;
-using Edubase.AcceptanceTests.UserPreferences;
 using Microsoft.EntityFrameworkCore;
 
 namespace Edubase.AcceptanceTests.Users
 {
-    public sealed class UsersInSqlServer : IUsers
+    internal sealed class UsersInSqlServer : IUsers
     {
         private readonly string environment;
         private readonly AcceptanceTestsDbContext dbContext;
 
-        public UsersInSqlServer(string environment, AcceptanceTestsDbContext dbContext)
+        internal UsersInSqlServer(string environment, AcceptanceTestsDbContext dbContext)
         {
             this.environment = environment;
             this.dbContext = dbContext;
@@ -19,16 +18,12 @@ namespace Edubase.AcceptanceTests.Users
         {
             try
             {
-                if (environment == "test")
-                {
-                    var testUser = await dbContext.SystemUsers.SingleAsync(user => user.wsEnabled == 1 && user.saUserId == 3600264);
+                var sourceSaUserId = GetSourceSaUserId(environment);
 
-                    return await CreateUserFromSystemUser(testUser);
-                }
+                var sourceUser = await dbContext.SystemUsers.SingleAsync(user =>
+                    user.enabled == 1 && user.wsEnabled == 1 && user.saUserId == sourceSaUserId);
 
-                var devUser = await dbContext.SystemUsers.SingleAsync(user => user.wsEnabled == 1 && user.saUserId == 3600154);
-
-                return await CreateUserFromSystemUser(devUser);
+                return await CreateUserFromSystemUser(sourceUser);
             }
             catch (InvalidOperationException e)
             {
@@ -41,6 +36,15 @@ namespace Edubase.AcceptanceTests.Users
             }
         }
 
+        public async Task DeleteUser(User user)
+        {
+            var createdUser = await dbContext.SystemUsers.SingleAsync(u => u.saUserId.ToString() == user.AttributeStatementValue);
+
+            dbContext.SystemUsers.Remove(createdUser);
+
+            await dbContext.SaveChangesAsync();
+        }
+
         private async Task<User> CreateUserFromSystemUser(DboSystemUser systemUser)
         {
             var uniqueId = DateTime.Now.Ticks;
@@ -50,7 +54,11 @@ namespace Edubase.AcceptanceTests.Users
                 username = $"Acceptance Test User {uniqueId}",
                 saUserId = uniqueId,
                 wsEnabled = systemUser.wsEnabled,
-                UserGroupCode = systemUser.UserGroupCode
+                enabled = systemUser.enabled,
+                UserGroupCode = systemUser.UserGroupCode,
+                URN = systemUser.URN,
+                UID = systemUser.UID,
+                LocalAuthority = systemUser.LocalAuthority
             };
 
             await dbContext.SystemUsers.AddAsync(newSystemUser);
@@ -63,5 +71,12 @@ namespace Edubase.AcceptanceTests.Users
                 Comment = "GIAS Backoffice - TESTER ONLY"
             };
         }
+
+        private static long GetSourceSaUserId(string environment) => environment.ToLowerInvariant() switch
+        {
+            "test" => 3600264L,
+            "dev" or "sandbox1" or "sandbox2" => 3600154L,
+            _ => throw new ArgumentException($"User cloning is not supported for environment '{environment}'.", nameof(environment))
+        };
     }
 }

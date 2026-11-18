@@ -13,7 +13,7 @@ For local certificate and metadata setup, see [Local SAML setup](LocalSamlSetup.
 3. The website validates the response, asks the backend for the user's roles, and issues a session cookie.
 4. The test uses that cookie for subsequent requests.
 
-There is no browser or separate local sign-in server. Sign-in does not create users or test data.
+There is no browser or separate local sign-in server. The acceptance-test user provider creates a temporary user in the configured SQL database before sign-in by copying the source user's authorization fields and assigning a unique SAML identity. The clone is deleted after each scenario. User cloning is restricted to the dev, test, and sandbox environments; do not point acceptance tests at production.
 
 ## If sign-in fails
 

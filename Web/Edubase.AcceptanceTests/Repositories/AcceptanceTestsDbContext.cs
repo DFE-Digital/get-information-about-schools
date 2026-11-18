@@ -29,6 +29,11 @@ namespace Edubase.AcceptanceTests.Repositories
                 entity.HasKey(user => new { user.username, user.saUserId });
                 entity.Property(user => user.username).HasMaxLength(255).IsUnicode(false);
                 entity.Property(user => user.saUserId).HasPrecision(19, 0);
+                entity.Property(user => user.enabled).HasColumnName("enabled");
+                entity.Property(user => user.UserGroupCode).HasColumnName("UserGroupCode");
+                entity.Property(user => user.URN).HasColumnName("URN");
+                entity.Property(user => user.UID).HasColumnName("UID");
+                entity.Property(user => user.LocalAuthority).HasColumnName("LocalAuthority");
             });
         }
     }
