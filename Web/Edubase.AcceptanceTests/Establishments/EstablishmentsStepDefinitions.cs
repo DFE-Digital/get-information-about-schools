@@ -36,7 +36,7 @@ namespace Edubase.AcceptanceTests.Establishments
         [Given("a back office user is signed in")]
         public async Task GivenTheUserIsABackOfficeUser()
         {
-            var user = users.GetBackOfficeUser();
+            var user = await users.CreateBackOfficeUser();
 
             await giasFrontEnd.SignIn(user);
         }

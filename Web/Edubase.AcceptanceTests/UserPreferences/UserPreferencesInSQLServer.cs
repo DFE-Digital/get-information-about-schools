@@ -1,22 +1,25 @@
+using Edubase.AcceptanceTests.Repositories;
 using Edubase.AcceptanceTests.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Edubase.AcceptanceTests.UserPreferences
 {
-    public sealed class UserPreferencesInSQLServer : IUserPreferencesInMigrationTarget
+    public sealed class UserPreferencesInSqlServer : IUserPreferencesInMigrationTarget
     {
-        private readonly UserPreferencesDbContext dbContext;
+        private readonly AcceptanceTestsDbContext dbContext;
 
-        public UserPreferencesInSQLServer(UserPreferencesDbContext dbContext)
+        public UserPreferencesInSqlServer(AcceptanceTestsDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
         public async Task<IEnumerable<UserPreference>> GetAllUserPreferences()
         {
-            return await dbContext.UserPreferences
+            var userPreferences = await dbContext.UserPreferences
                 .AsNoTracking()
                 .ToListAsync();
+
+            return userPreferences.Select(preference => new UserPreference { SavedSearchToken = preference.SavedSearchToken });
         }
 
         public async Task<string> GetSavedSearchTokenForUser(User user)

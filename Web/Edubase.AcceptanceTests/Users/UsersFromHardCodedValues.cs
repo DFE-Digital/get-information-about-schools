@@ -9,7 +9,7 @@ namespace Edubase.AcceptanceTests.Users
             this.environment = environment;
         }
 
-        public User GetBackOfficeUser()
+        public async Task<User> CreateBackOfficeUser()
         {
             if (environment == "test")
             {

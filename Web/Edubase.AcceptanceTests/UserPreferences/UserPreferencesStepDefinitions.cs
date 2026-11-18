@@ -62,7 +62,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
         [Given("I am a logged-in GIAS user")]
         public async Task GivenIAmALoggedInGIASUser()
         {
-            user = users.GetBackOfficeUser();
+            user = await users.CreateBackOfficeUser();
 
             await giasFrontEnd.SignIn(user);
         }
