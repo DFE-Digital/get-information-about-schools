@@ -35,6 +35,8 @@ jobs:
 
   - job: ${{ parameters.thisJobName }}
     displayName: Smoke Test - ${{ parameters.thisJobName }}
+    pool:
+      vmImage: ${{ parameters.vmImage }}
     condition: and(succeeded(), eq(${{ parameters.enabled }}, 'true'))
     dependsOn:
       - ${{ parameters.previousDeploymentJobName }}

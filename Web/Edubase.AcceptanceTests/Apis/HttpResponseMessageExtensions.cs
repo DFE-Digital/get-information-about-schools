@@ -11,7 +11,7 @@ namespace Edubase.AcceptanceTests.Apis
         public static async Task<IHtmlDocument> GetHtmlDocumentAsync(this HttpResponseMessage response)
         {
             var content = await response.Content.ReadAsStringAsync();
-            var config = Configuration.Default.WithDefaultLoader();
+            var config = AngleSharp.Configuration.Default.WithDefaultLoader();
             var document = await
                 BrowsingContext.New(config)
                         .OpenAsync(ResponseFactory, CancellationToken.None);

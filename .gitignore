@@ -215,3 +215,5 @@ Web/packages
 # Reqnroll generated code
 *.feature.cs
 /Web/.local-signin/
+/.github/copilot-instructions.md
+/gias-dd-backend/src
