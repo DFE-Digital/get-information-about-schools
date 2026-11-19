@@ -7,6 +7,15 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class ValidationExtensions
     {
+        public static void AddToModelState(this ValidationResult result, ModelStateDictionary modelState, string prefix)
+        {
+            foreach (var error in result.Errors)
+            {
+                var key = ModelNames.CreatePropertyModelName(prefix, error.PropertyName);
+                modelState.AddModelError(key, error.ErrorMessage);
+            }
+        }
+
         public static void EduBaseAddToModelState(this ValidationResult result, ModelStateDictionary modelState, string prefix, bool avoidDuplicates = false)
         {
             if (result.IsValid)
