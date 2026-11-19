@@ -19,6 +19,7 @@ internal static class DefaultModelBindingContextTestDoubles
         new()
         {
             ModelName = string.Empty,
+            ModelState = new ModelStateDictionary(),
             ValueProvider = valueProvider,
             ModelMetadata = new EmptyModelMetadataProvider().GetMetadataForType(type),
             Result = ModelBindingResult.Success(null)
@@ -38,6 +39,7 @@ internal static class DefaultModelBindingContextTestDoubles
         new()
         {
             ModelName = string.Empty,
+            ModelState = new ModelStateDictionary(),
             ValueProvider = new ValueProviderTestDoubles.TestValueProvider(values),
             ModelMetadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(TObject)),
             Result = ModelBindingResult.Success(Activator.CreateInstance<TObject>())

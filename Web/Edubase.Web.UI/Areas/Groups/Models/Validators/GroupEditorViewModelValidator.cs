@@ -34,8 +34,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             When(x => x.Action == ActionLinkedEstablishmentSearch, () =>
             {
                 RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                    .NotEmpty().WithMessage("Please enter a valid URN")
-                    .Must(x => x.IsInteger()).WithMessage("The supplied URN is not valid")
+                    .Cascade(CascadeMode.Stop)
+                    .Must(x => x.IsInteger()).WithMessage("Please enter a valid URN")
                     .Must((model, urnText) =>
                     {
                         var urn = urnText.ToInteger();

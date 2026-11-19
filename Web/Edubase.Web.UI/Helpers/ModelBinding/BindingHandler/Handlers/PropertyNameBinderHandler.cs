@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers.Extensions;
@@ -63,13 +64,20 @@ public class PropertyNameBinderHandler(ITypeConverter converter) : PropertyBinde
             return await base.HandleAsync(context, model, property);
         }
 
-        // Convert the raw string to the target type.
-        object converted =
-            converter.Convert(
-                valueResult.FirstValue, property.PropertyType);
+        context.ModelState.SetModelValue(key, valueResult);
 
-        // Assign the converted value.
-        property.SetValue(model, converted);
+        try
+        {
+            object converted =
+                converter.Convert(
+                    valueResult.FirstValue, property.PropertyType);
+
+            property.SetValue(model, converted);
+        }
+        catch (Exception exception) when (exception is FormatException or OverflowException or ArgumentException)
+        {
+            context.ModelState.TryAddModelError(key, $"The value is not valid for {property.Name}");
+        }
 
         return true;
     }
