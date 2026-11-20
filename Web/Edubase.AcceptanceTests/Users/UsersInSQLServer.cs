@@ -1,28 +1,30 @@
+using System.Collections.Concurrent;
+using System.Globalization;
 using Edubase.AcceptanceTests.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Edubase.AcceptanceTests.Users
 {
     internal sealed class UsersInSqlServer : IUsers
     {
         private readonly AcceptanceTestsDbContext dbContext;
+        private readonly IAcceptanceTestLogger logger;
+        private static readonly ConcurrentDictionary<decimal, byte> backOfficeUsers = new();
 
-        private readonly Dictionary<decimal, DboSystemUser> backOfficeUsers = new();
-
-        internal UsersInSqlServer(AcceptanceTestsDbContext dbContext)
+        internal UsersInSqlServer(AcceptanceTestsDbContext dbContext, IAcceptanceTestLogger logger)
         {
             this.dbContext = dbContext;
+            this.logger = logger;
         }
 
         public async Task<User> GetBackOfficeUser()
         {
             foreach (var systemUser in dbContext.SystemUsers.Where(user => user.enabled == 1 && user.wsEnabled == 1))
             {
-                if (!backOfficeUsers.ContainsKey(systemUser.saUserId))
+                if (backOfficeUsers.TryAdd(systemUser.saUserId, 0))
                 {
-                    backOfficeUsers.Add(systemUser.saUserId, systemUser);
+                    logger.LogInformation($"Reserved back-office user {systemUser.saUserId} for testing purposes.");
 
-                    return await CreateUserFromSystemUser(systemUser,"GIAS Backoffice - TESTER ONLY");
+                    return await CreateUserFromSystemUser(systemUser, "GIAS Backoffice - TESTER ONLY");
                 }
             }
 
@@ -31,9 +33,14 @@ namespace Edubase.AcceptanceTests.Users
 
         public async Task RemoveUser(User user)
         {
-            var backOfficeUser = backOfficeUsers.Single(u => u.Value.saUserId.ToString() == user.AttributeStatementValue);
+            var userId = decimal.Parse(
+                user.AttributeStatementValue,
+                CultureInfo.InvariantCulture);
 
-            backOfficeUsers.Remove(backOfficeUser.Key);
+            if (!backOfficeUsers.TryRemove(userId, out _))
+            {
+                throw new InvalidOperationException($"Back-office user {userId} was not reserved.");
+            }
         }
 
         private async Task<User> CreateUserFromSystemUser(DboSystemUser systemUser, string comment)

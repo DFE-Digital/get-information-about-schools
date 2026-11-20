@@ -19,7 +19,11 @@ namespace Edubase.AcceptanceTests.UserPreferences
                 .AsNoTracking()
                 .ToListAsync();
 
-            return userPreferences.Select(preference => new UserPreference { SavedSearchToken = preference.SavedSearchToken });
+            return userPreferences.Select(preference => new UserPreference
+            {
+                RowKey = preference.RowKey,
+                SavedSearchToken = preference.SavedSearchToken
+            });
         }
 
         public async Task<string> GetSavedSearchTokenForUser(User user)

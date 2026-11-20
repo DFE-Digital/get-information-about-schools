@@ -54,7 +54,7 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         private static void AddUsersInSqlServer(this ServiceCollection services, Settings settings)
         {
             services.AddScoped<IUsers, UsersInSqlServer>(sp =>
-                new UsersInSqlServer(sp.GetRequiredService<AcceptanceTestsDbContext>()));
+                new UsersInSqlServer(sp.GetRequiredService<AcceptanceTestsDbContext>(), sp.GetRequiredService<IAcceptanceTestLogger>()));
         }
 
         private static void AddEstablishmentsFromGiasFrontEnd(this ServiceCollection services)

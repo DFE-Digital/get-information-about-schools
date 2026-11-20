@@ -15,6 +15,11 @@ public sealed class ReqnrollLogger : IAcceptanceTestLogger
         Log(LogLevel.Error, message);
     }
 
+    public void LogInformation(string message)
+    {
+        Log(LogLevel.Information, message);
+    }
+
     private void Log(LogLevel logLevel, string message)
     {
         reqnrollOutputHelper.WriteLine($"[{DateTime.Now} {logLevel}] {message}");

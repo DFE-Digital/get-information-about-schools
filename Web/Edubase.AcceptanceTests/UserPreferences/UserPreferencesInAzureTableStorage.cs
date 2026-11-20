@@ -20,6 +20,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
             var userPreferences = pages.SelectMany(page => page.Values)
                 .Select(entity => new UserPreference
                 {
+                    RowKey = entity.RowKey,
                     SavedSearchToken = entity.GetString("SavedSearchToken")
                 });
 
