@@ -7,8 +7,8 @@ namespace Edubase.AcceptanceTests.Repositories
         public byte wsEnabled { get; set; }
         public byte enabled { get; set; }
         public string UserGroupCode { get; set; }
-        public long? URN { get; set; }
-        public long? UID { get; set; }
+        public decimal? URN { get; set; }
+        public decimal? UID { get; set; }
         public string? LocalAuthority { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace Edubase.AcceptanceTests.Users
             this.environment = environment;
         }
 
-        public async Task<User> CreateBackOfficeUser()
+        public async Task<User> GetBackOfficeUser()
         {
             if (environment == "test")
             {
@@ -29,7 +29,7 @@ namespace Edubase.AcceptanceTests.Users
             };
         }
 
-        public async Task DeleteUser(User user)
+        public async Task RemoveUser(User user)
         {
             // do nothing, as this is a hard coded user
         }
