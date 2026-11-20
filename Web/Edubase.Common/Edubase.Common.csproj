@@ -22,7 +22,7 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />    
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.3" />
     <PackageReference Include="Pipelines.Sockets.Unofficial" Version="2.2.8" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.28" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="8.0.1" />            

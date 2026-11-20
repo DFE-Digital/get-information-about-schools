@@ -30,7 +30,7 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
             if (firstNameClaim?.Value != null) claims.Add(new Claim(EduClaimTypes.FirstName, firstNameClaim.Value));
             if (lastNameClaim?.Value != null) claims.Add(new Claim(EduClaimTypes.LastName, lastNameClaim.Value));
 
-            return new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
+            return new ClaimsIdentity(claims, "ApplicationCookie");
         }
     }
 }

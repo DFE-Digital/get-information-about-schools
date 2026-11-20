@@ -1,8 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Web;
-using Azure.Core;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -65,8 +63,8 @@ namespace Edubase.Web.UI.Controllers
                         var exception = ex;
                         var message = ex.GetBaseException().Message;
                         var referrerUrl = ctx.Request.Path;
-                        var userId = ctx?.User?.Identity?.GetUserId();
-                        var userName = ctx?.User?.Identity?.GetUserName();
+                        var userId = ctx?.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                        var userName = ctx?.User?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
 
                         logger.LogCritical("Unhandled Exception Id: {id}, ClientIpAddress: {clientIpAddress}, HttpMethod: {httpMethod}, RequestJsonBody:{requestJsonBody}, URL: {url}, UserAgent: {userAgent}, DateUtc: {dateUtc}, Exception: {exception},  Message: {message}, ReferrerUrl: {referrerUrl}, UserId: {userId}, UserName: {userName}",
                             id,
