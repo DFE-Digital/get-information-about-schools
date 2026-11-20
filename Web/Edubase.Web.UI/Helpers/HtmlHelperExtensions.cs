@@ -9,11 +9,11 @@ using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Governors.Models;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -190,16 +190,6 @@ namespace Edubase.Web.UI.Helpers
             return htmlHelper.PartialAsync(partialViewName, model);
         }
 
-        private class ViewDataContainer : IViewDataContainer
-        {
-            public ViewDataDictionary ViewData { get; set; }
-
-            public ViewDataContainer(ViewDataDictionary viewData)
-            {
-                ViewData = viewData;
-            }
-        }
-
         /// <summary>
         /// Outputs the supplied file size in megabytes and appends 'MB', or returns an empty string if null.
         /// </summary>
@@ -331,7 +321,7 @@ namespace Edubase.Web.UI.Helpers
 
         private static string NameFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
         {
-            return ExpressionHelper.GetExpressionText(expression);
+            return new ModelExpressionProvider(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider()).GetExpressionText(expression);
         }
 
         private static HtmlString Render(this TagBuilder tagBuilder)
@@ -345,13 +335,13 @@ namespace Edubase.Web.UI.Helpers
         /// Where the input contains a raw newline character (<c>\r\n</c>, <c>\r</c>, or <c>\n</c>),
         /// replace it with an HTML newline tag <c>&lt;br/&gt;</c>.
         /// <br/>
-        /// See also <see cref="HtmlNewlines(System.Web.Mvc.HtmlHelper,MvcHtmlString)"/> if wanting
+        /// See also <see cref="HtmlNewlines(IHtmlHelper,HtmlString)"/> if wanting
         /// to retain e.g. MVC-generated HTML during the encoding process.
         /// </summary>
         /// <param name="helper"></param>
         /// <param name="input">The input string to have raw newlines replaced with HTML newline tags.</param>
         /// <returns>
-        ///     The original string as an <see cref="MvcHtmlString"/>.
+        ///     The original string as an <see cref="HtmlString"/>.
         ///     <list type="bullet">
         ///         <item>If no newlines in the input string, it is an as-is copy.</item>
         ///         <item>If one or more raw newlines, these will be HTML newlines.</item>
@@ -370,13 +360,13 @@ namespace Edubase.Web.UI.Helpers
         /// Where the input contains a raw newline character (<c>\r\n</c>, <c>\r</c>, or <c>\n</c>),
         /// replace it with an HTML newline tag <c>&lt;br/&gt;</c>.
         /// <br/>
-        /// See also <see cref="HtmlNewlines(System.Web.Mvc.HtmlHelper,string)"/> if wanting
+        /// See also <see cref="HtmlNewlines(IHtmlHelper,string)"/> if wanting
         /// to treat the whole input as untrusted, therefore to be wholly encoded.
         /// </summary>
         /// <param name="helper"></param>
         /// <param name="input">The input string to have raw newlines replaced with HTML newline tags.</param>
         /// <returns>
-        ///     The original string as an <see cref="MvcHtmlString"/>.
+        ///     The original string as an <see cref="HtmlString"/>.
         ///     <list type="bullet">
         ///         <item>If no newlines in the input string, it is an as-is copy.</item>
         ///         <item>If one or more raw newlines, these will be HTML newlines.</item>
@@ -384,7 +374,7 @@ namespace Edubase.Web.UI.Helpers
         /// </returns>
         public static HtmlString HtmlNewlines(this IHtmlHelper helper, HtmlString input)
         {
-            // Retain context of this being an `MvcHtmlString` when doing the `helper.Encode`,
+            // Retain context of this being an `HtmlString` when doing the `helper.Encode`,
             // to avoid double-encoding of "trusted" HTML in this (e.g., assembled within the view).
             var htmlEncodedString = helper.Encode(input);
             return ConvertRawNewlineToHtmlBr(htmlEncodedString);

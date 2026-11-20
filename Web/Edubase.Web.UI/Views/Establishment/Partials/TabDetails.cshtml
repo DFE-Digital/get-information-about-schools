@@ -2,7 +2,6 @@
 @using Edubase.Services.Enums
 @using Edubase.Services.Security
 @using Edubase.Web.UI.Models
-@using System.Web.WebPages
 @model EstablishmentDetailViewModel
 
 <div id="school-dashboard" class="tab-content">
@@ -53,7 +52,7 @@
         </div>
     }
 
-    @if (!Model.TabWarnings.DetailsTab.IsEmpty())
+    @if (!string.IsNullOrEmpty(Model.TabWarnings.DetailsTab))
     {
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>

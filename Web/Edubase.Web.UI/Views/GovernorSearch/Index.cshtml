@@ -2,7 +2,6 @@
 @using Edubase.Web.UI.Areas.Governors.Models
 @using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models.Search
-@using System.Web.WebPages
 @model GovernorSearchViewModel
 @{
     ViewBag.Title = string.Format("Governor search results");
@@ -223,8 +222,8 @@
                         })
 
                         <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
-                        @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
-                        @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
+                        @Html.HiddenFor(!string.IsNullOrEmpty(Model.GovernorSearchModel.Forename), x => x.GovernorSearchModel.Forename)
+                        @Html.HiddenFor(!string.IsNullOrEmpty(Model.GovernorSearchModel.Surname), x => x.GovernorSearchModel.Surname)
                         @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)
 
                         <div class="filter-additional-controls">
@@ -238,8 +237,8 @@
     </form>
     <form id="clear-filters-form" method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
         @Html.HiddenFor(Model.SortBy.HasValue, x => x.SortBy)
-        @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
-        @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
+        @Html.HiddenFor(!string.IsNullOrEmpty(Model.GovernorSearchModel.Forename), x => x.GovernorSearchModel.Forename)
+        @Html.HiddenFor(!string.IsNullOrEmpty(Model.GovernorSearchModel.Surname), x => x.GovernorSearchModel.Surname)
         @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)        
     </form>
     <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>

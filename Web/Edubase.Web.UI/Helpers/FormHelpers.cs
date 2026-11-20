@@ -1,5 +1,3 @@
-using System.Web.Mvc;
-
 namespace Edubase.Web.UI.Helpers
 {
     using System;
@@ -22,7 +20,6 @@ namespace Edubase.Web.UI.Helpers
                 object htmlAttributes = null)
             {
                 var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-                var name = ExpressionHelper.GetExpressionText(expression);
                 var id = helper.IdFor(expression).ToString();
 
                 if (attributes.ContainsKey("id"))
@@ -103,7 +100,7 @@ namespace Edubase.Web.UI.Helpers
                 string additionalLabelClasses = "",
                 object htmlAttributes = null)
             {
-                var name = ExpressionHelper.GetExpressionText(expression);
+                var name = new ModelExpressionProvider(new EmptyModelMetadataProvider()).GetExpressionText(expression);
                 var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
                 var id = helper.Id(name).ToString();
 
