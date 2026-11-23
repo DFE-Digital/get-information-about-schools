@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
+using System.Web;
 using Edubase.Common.Config;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
@@ -23,6 +21,10 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Models.Grid;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Moq;
 using Xunit;
@@ -80,9 +82,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 }
             }));
 
+            var tempDataProvider = Mock.Of<ITempDataProvider>();
+            var tempData = new TempDataDictionary(context, tempDataProvider);
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext { HttpContext = context, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
+            subject.TempData = tempData;
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
@@ -122,9 +128,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 }
             }));
 
+            var tempDataProvider = Mock.Of<ITempDataProvider>();
+            var tempData = new TempDataDictionary(context, tempDataProvider);
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext { HttpContext = context, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
+            subject.TempData = tempData;
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
@@ -173,9 +183,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 }
             }));
 
+            var tempDataProvider = Mock.Of<ITempDataProvider>();
+            var tempData = new TempDataDictionary(context, tempDataProvider);
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext { HttpContext = context, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
+            subject.TempData = tempData;
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
@@ -228,9 +242,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             }));
 
             upr.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(new UserPreference());
+
+            var tempDataProvider = Mock.Of<ITempDataProvider>();
+            var tempData = new TempDataDictionary(context, tempDataProvider);
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext { HttpContext = context, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
+            subject.TempData = tempData;
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = laestab;
@@ -260,9 +279,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(false));
             ers.Setup(x => x.SearchAsync(It.IsAny<EstablishmentSearchPayload>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<EstablishmentSearchResultModel>(0, new List<EstablishmentSearchResultModel>()));
 
+            var tempDataProvider = Mock.Of<ITempDataProvider>();
+            var tempData = new TempDataDictionary(context, tempDataProvider);
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext { HttpContext = context, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
+            subject.TempData = tempData;
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.AutoSuggestValue = "1256";
@@ -316,8 +339,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 }
             }));
 
+            var tempDataProvider = Mock.Of<ITempDataProvider>();
+            var tempData = new TempDataDictionary(context, tempDataProvider);
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext { HttpContext = context, RouteData = new RouteData() };
+            subject.TempData = tempData;
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "12345678";
@@ -346,9 +373,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             ConfigureUrlHelper(mockUrlHelper);
             ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(true));
 
+            var tempDataProvider = Mock.Of<ITempDataProvider>();
+            var tempData = new TempDataDictionary(context, tempDataProvider);
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext { HttpContext = context, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
+            subject.TempData = tempData;
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "123/45678";
@@ -377,9 +408,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 .Callback<EstablishmentSearchPayload, IPrincipal>((payload, _) => capturedPayload = payload)
                 .ReturnsAsync(() => new ApiPagedResult<EstablishmentSearchResultModel>(2, new List<EstablishmentSearchResultModel>()));
 
+            var tempDataProvider = Mock.Of<ITempDataProvider>();
+            var tempData = new TempDataDictionary(context, tempDataProvider);
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext { HttpContext = context, RouteData = new RouteData() };
             subject.Url = mockUrlHelper.Object;
+            subject.TempData = tempData;
 
             var vm = new EstablishmentSearchViewModel
             {
