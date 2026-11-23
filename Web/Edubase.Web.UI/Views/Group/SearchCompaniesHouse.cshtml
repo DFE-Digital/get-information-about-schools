@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @using Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 @using Edubase.Web.UI.Helpers
 @model SearchCompaniesHouseModel
@@ -96,7 +97,7 @@
                         {
                             <tr class="govuk-table__row">
                                 <td data-label="Name" class="govuk-table__cell">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups", academyTrustRoute = ViewData["academyTrustRoute"] }, null)</td>
-                                <td data-label="Companies House number" class="govuk-table__cell"><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number (opens in new tab)</a></td>
+                                <td data-label="Companies House number" class="govuk-table__cell"><a href="@Configuration["AppSettings:CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number (opens in new tab)</a></td>
                                 <td data-label="Date incorporated" class="govuk-table__cell">@(result.IncorporationDate?.ToString("d MMMM yyyy"))</td>
                                 <td data-label="Address" class="govuk-table__cell">@(result.Address.ToString() ?? "Not recorded")</td>
                             </tr>

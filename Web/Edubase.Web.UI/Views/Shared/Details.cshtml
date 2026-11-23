@@ -3,7 +3,6 @@
 @using Edubase.Common
 @using Edubase.Services.Enums
 @using Edubase.Web.UI.Models.Search
-@using Microsoft.Ajax.Utilities
 @using Microsoft.AspNetCore.Routing
 @model EstablishmentDetailViewModel
 @{
@@ -20,7 +19,7 @@
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
 
-                    @if (!Model.SearchQueryString.IsNullOrWhiteSpace())
+                    @if (!string.IsNullOrWhiteSpace(Model.SearchQueryString))
                     {
                         if (Model.SearchSource == eLookupSearchSource.Governors)
                         {
@@ -44,7 +43,7 @@
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
     var description = "Your changes have been saved";
-    if (!((string)ViewBag.Confirmed).IsNullOrEmpty())
+    if (!string.IsNullOrEmpty((string)ViewBag.Confirmed))
     {
         description = ViewBag.Confirmed == "Governance" ? "Governance information confirmed" : "Details confirmed";
     }
@@ -249,7 +248,7 @@
         <div id="help-text-age-range">
             <h3 class="govuk-heading-s make-modal-header">Age range</h3>
             <p>@Model.AgeRangeToolTip</p>
-            @if (!Model.AgeRangeToolTipLink.IsNullOrEmpty())
+            @if (!string.IsNullOrEmpty(Model.AgeRangeToolTipLink))
             {
                 <p>
                     Link:
@@ -264,7 +263,7 @@
         <div id="help-text-school-capacity">
             <h3 class="govuk-heading-s make-modal-header">School capacity</h3>
             <p class="govuk-body">@Model.SchoolCapacityToolTip</p>
-            @if (!Model.SchoolCapacityToolTipLink.IsNullOrEmpty())
+            @if (!string.IsNullOrEmpty(Model.SchoolCapacityToolTipLink))
             {
                 <p>
                     Link:

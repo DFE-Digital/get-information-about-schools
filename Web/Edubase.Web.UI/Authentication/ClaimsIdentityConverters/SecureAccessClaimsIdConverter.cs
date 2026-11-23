@@ -83,7 +83,7 @@ namespace Edubase.Web.UI.Authentication.ClaimsIdentityConverters
             // Return a new identity configured for the application cookie authentication scheme
             return new ClaimsIdentity(
                 claims,
-                Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie
+                "ApplicationCookie"
             );
         }
     }

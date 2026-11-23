@@ -1,6 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
@@ -29,6 +29,8 @@ namespace Edubase.Web.UI.Controllers
 {
     public class SitemapController : EduBaseController
     {
+        private readonly IConfiguration _configuration;
+
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
         private readonly ICacheAccessor _cacheAccessor;
@@ -36,15 +38,17 @@ namespace Edubase.Web.UI.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         public const int Take = 5000;
         public const string CacheTag = "sitemap";
-        private readonly int _cacheDays = ConfigurationManager.AppSettings["SitemapCacheDays"].ToInteger() ?? 1;
+        private readonly int _cacheDays;
 
         public SitemapController(
             IEstablishmentReadService establishmentReadService,
             IGroupReadService groupReadService,
             ICacheAccessor cacheAccessor,
             ICachedLookupService lookupService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
+            _configuration = configuration;
+            _cacheDays = configuration["AppSettings:SitemapCacheDays"].ToInteger() ?? 1;
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _cacheAccessor = cacheAccessor;
@@ -417,7 +421,7 @@ namespace Edubase.Web.UI.Controllers
 
         private bool ExcludeApiLookup()
         {
-            return (ConfigurationManager.AppSettings["SitemapExcludeApi"].ToInteger() ?? 0) != 0;
+            return (_configuration["AppSettings:SitemapExcludeApi"].ToInteger() ?? 0) != 0;
         }
 
         public static string GetForwardedAwareUrl(HttpRequest request)

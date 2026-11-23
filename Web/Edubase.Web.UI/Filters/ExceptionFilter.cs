@@ -7,7 +7,6 @@ using Edubase.Services;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Texuna;
 using Edubase.Web.UI.Helpers;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -111,7 +110,7 @@ namespace Edubase.Web.UI.Filters
             try
             {
                 userId = ctx?.User?.GetUserId();
-                userName = ctx?.User?.Identity?.GetUserName();
+                userName = ctx?.User?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
             }
             catch
             {

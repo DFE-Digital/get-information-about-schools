@@ -11,7 +11,6 @@ using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Helpers;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -255,7 +254,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [Authorize(Policy = "EdubasePolicy")]
         public async Task<ActionResult> SaveAcademyOpening(EditAcademyOpeningViewModel viewModel)
         {
-            if (viewModel.EstablishmentName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(viewModel.EstablishmentName))
             {
                 ModelState.AddModelError("EstablishmentName", "Please enter the establishment name");
             }

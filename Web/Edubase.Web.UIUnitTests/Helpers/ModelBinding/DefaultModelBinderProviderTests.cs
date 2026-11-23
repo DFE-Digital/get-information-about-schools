@@ -1,10 +1,18 @@
 using System;
+using System.Threading.Tasks;
+using System.Reflection;
+using Edubase.Web.UI.App_Start;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler;
-using Edubase.Web.UI.Helpers.ModelBinding.Factories;
 using Edubase.Web.UIUnitTests.Helpers.ModelBinding.TestDoubles;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Moq;
 using Xunit;
 
 namespace Edubase.Web.UIUnitTests.Helpers.ModelBinding;
@@ -12,109 +20,68 @@ namespace Edubase.Web.UIUnitTests.Helpers.ModelBinding;
 public class DefaultModelBinderProviderTests
 {
     [Fact]
-    public void Constructor_StoresServiceProvider()
-    {
-        // Arrange
-        IServiceProvider services =
-            new ServiceCollection()
-                    .BuildServiceProvider();
-
-        // Act
-        DefaultModelBinderProvider provider = new(services);
-
-        // Assert
-        Assert.NotNull(provider);
-    }
-
-    [Fact]
-    public void GetBinder_ResolvesDefaultModelBinder_WithHandlersAndFactory()
+    public async Task BindModelAsync_UsesCurrentRequestScope_AndDisposesScopedDependencies()
     {
         // Arrange
         ServiceCollection services = new();
-        services.AddScoped<IPropertyBinderHandler, PropertyBinderHandlerTestDoubles>();
-        services.AddScoped<ITypeFactory, TypeFactoryTestDoubles>();
-        IServiceProvider rootProvider = services.BuildServiceProvider();
+        services.AddMvcServices();
+        services.RemoveAll<IPropertyBinderHandler>();
+        services.AddScoped<IPropertyBinderHandler>(_ =>
+        {
+            var handler = new Mock<IPropertyBinderHandler>();
+            handler.As<IDisposable>();
+            handler.Setup(x => x.HandleAsync(It.IsAny<ModelBindingContext>(), It.IsAny<object>(), It.IsAny<PropertyInfo>()))
+                .ReturnsAsync(true);
+            return handler.Object;
+        });
 
-        DefaultModelBinderProvider provider = new(rootProvider);
+        using var rootProvider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
+        DefaultModelBinderProvider provider = new();
+        var providerContext = new ModelBinderProviderContextTestDoubles(typeof(RequestModel));
+        IModelBinder binder = provider.GetBinder(providerContext);
+        IPropertyBinderHandler previousHandler = null;
 
-        ModelBinderProviderContext context =
-            new ModelBinderProviderContextTestDoubles(typeof(string));
+        // Reuse the cached binder across requests.
+        for (var request = 0; request < 2; request++)
+        {
+            Mock<IPropertyBinderHandler> handler;
+            using (var scope = rootProvider.CreateScope())
+            {
+                var requestHandler = scope.ServiceProvider.GetRequiredService<IPropertyBinderHandler>();
+                Assert.NotSame(previousHandler, requestHandler);
+                previousHandler = requestHandler;
+                handler = Mock.Get(requestHandler);
+                var httpContext = new DefaultHttpContext { RequestServices = scope.ServiceProvider };
+                var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+                var bindingContext = DefaultModelBindingContext.CreateBindingContext(actionContext,
+                    new CompositeValueProvider(), providerContext.Metadata, null, "model");
 
-        // Act
-        IModelBinder binder =
-            provider.GetBinder(context);
+                // Act
+                await binder.BindModelAsync(bindingContext);
 
-        // Assert
-        Assert.NotNull(binder);
-        Assert.IsType<DefaultModelBinder>(binder);
-    }
-
-    [Fact]
-    public void GetBinder_MissingScopeFactory_ThrowsInvalidOperationException()
-    {
-        // Arrange
-        IServiceProvider rootProvider =
-            new ServiceCollection()
-                .BuildServiceProvider();
-
-        DefaultModelBinderProvider provider = new(rootProvider);
-
-        ModelBinderProviderContext context =
-            new ModelBinderProviderContextTestDoubles(typeof(string));
-
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(
-            () => provider.GetBinder(context));
-    }
-
-    [Fact]
-    public void GetBinder_MissingHandlers_ThrowsInvalidOperationException()
-    {
-        // Arrange
-        ServiceCollection services = new();
-        services.AddScoped<ITypeFactory, TypeFactoryTestDoubles> ();
-        IServiceProvider rootProvider = services.BuildServiceProvider();
-
-        DefaultModelBinderProvider provider = new(rootProvider);
-
-        ModelBinderProviderContext context =
-            new ModelBinderProviderContextTestDoubles(typeof(string));
-
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(
-            () => provider.GetBinder(context));
-    }
-
-    [Fact]
-    public void GetBinder_MissingFactory_ThrowsInvalidOperationException()
-    {
-        // Arrange
-        ServiceCollection services = new();
-        services.AddScoped<IPropertyBinderHandler, PropertyBinderHandlerTestDoubles>();
-        IServiceProvider rootProvider = services.BuildServiceProvider();
-
-        DefaultModelBinderProvider provider = new(rootProvider);
-
-        ModelBinderProviderContext context =
-            new ModelBinderProviderContextTestDoubles(typeof(string));
-
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(
-            () => provider.GetBinder(context));
+                // Assert
+                Assert.IsType<RequestModel>(bindingContext.Result.Model);
+                handler.Verify(x => x.HandleAsync(bindingContext, bindingContext.Result.Model, It.IsAny<PropertyInfo>()), Times.Once);
+                handler.As<IDisposable>().Verify(x => x.Dispose(), Times.Never);
+            }
+            handler.As<IDisposable>().Verify(x => x.Dispose(), Times.Once);
+        }
     }
 
     [Fact]
     public void GetBinder_BodyBinding_ReturnsNull()
     {
         // Arrange
-        using var services = new ServiceCollection().BuildServiceProvider();
-        var provider = new DefaultModelBinderProvider(services);
-
-        var context = new ModelBinderProviderContextTestDoubles(typeof(string));       
-
+        DefaultModelBinderProvider provider = new();
+        var context = new ModelBinderProviderContextTestDoubles(typeof(string));
         context.BindingInfo.BindingSource = BindingSource.Body;
 
         // Act & Assert
         Assert.Null(provider.GetBinder(context));
+    }
+
+    public class RequestModel
+    {
+        public string Value { get; set; }
     }
 }

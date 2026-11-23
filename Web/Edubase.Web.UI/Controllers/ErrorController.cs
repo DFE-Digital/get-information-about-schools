@@ -1,7 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Web;
-using Azure.Core;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,10 +12,13 @@ namespace Edubase.Web.UI.Controllers
 {
     public class ErrorController : Controller
     {
+        private readonly IConfiguration _configuration;
+
         private ILogger<ErrorController> logger;
 
-        public ErrorController(ILogger<ErrorController> logger)
+        public ErrorController(ILogger<ErrorController> logger, IConfiguration configuration)
         {
+            _configuration = configuration;
             this.logger = logger;
         }
 
@@ -40,7 +42,7 @@ namespace Edubase.Web.UI.Controllers
                 var ex = exceptionFeature.Error;
                 // var path = exceptionFeature.Path;
 
-                if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableErrorReporting"]))
+                if (_configuration.GetValue<bool>("AppSettings:EnableErrorReporting"))
                 {
                     var ctx = HttpContext;
 
@@ -61,8 +63,8 @@ namespace Edubase.Web.UI.Controllers
                         var exception = ex;
                         var message = ex.GetBaseException().Message;
                         var referrerUrl = ctx.Request.Path;
-                        var userId = ctx?.User?.Identity?.GetUserId();
-                        var userName = ctx?.User?.Identity?.GetUserName();
+                        var userId = ctx?.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                        var userName = ctx?.User?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
 
                         logger.LogCritical("Unhandled Exception Id: {id}, ClientIpAddress: {clientIpAddress}, HttpMethod: {httpMethod}, RequestJsonBody:{requestJsonBody}, URL: {url}, UserAgent: {userAgent}, DateUtc: {dateUtc}, Exception: {exception},  Message: {message}, ReferrerUrl: {referrerUrl}, UserId: {userId}, UserName: {userName}",
                             id,

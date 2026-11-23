@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace Edubase.Web.UI.Controllers
     [Route("Home")]
     public class HomeController : EduBaseController
     {
+        private readonly IConfiguration _configuration;
+
         private const string UserPrefsCookieName = "analytics_preferences";
 
         private readonly ILookupService _lookup;
@@ -25,8 +28,9 @@ namespace Edubase.Web.UI.Controllers
         private readonly ICacheAccessor _cacheAccessor;
         private readonly INewsArticleRepository _newsRepository;
 
-        public HomeController(ILookupService lookup, IBlobService blobService, ICacheAccessor cacheAccessor, INewsArticleRepository newsRepository)
+        public HomeController(ILookupService lookup, IBlobService blobService, ICacheAccessor cacheAccessor, INewsArticleRepository newsRepository, IConfiguration configuration)
         {
+            _configuration = configuration;
             _lookup = lookup;
             _blobService = blobService;
             _cacheAccessor = cacheAccessor;
@@ -38,7 +42,12 @@ namespace Edubase.Web.UI.Controllers
         {
             var results = await _newsRepository.GetAllAsync(1000);
             var items = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
-            return View(new HomepageViewModel(items));
+            return View(new HomepageViewModel(items)
+            {
+                FinancialBenchmarkingHomepage = _configuration["AppSettings:FinancialBenchmarkingURL"],
+                FscpdServiceName = _configuration["AppSettings:FscpdServiceName"],
+                FscpdHomepage = _configuration["AppSettings:FscpdHomeUrl"]
+            });
         }
 
         [Route("~/about")]

@@ -118,7 +118,7 @@ class GiasLandingMap {
       position: 'bottomright'
     }).addTo(estabMap);
 
-    L.tileLayer('https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&zoom={z}&x={x}&y={y}&subscription-key=' + window.azureMapsApiKey, {
+    L.tileLayer('https://atlas.microsoft.com/map/tile?api-version=2024-04-01&tilesetId=microsoft.base.road&zoom={z}&x={x}&y={y}&subscription-key=' + window.azureMapsApiKey, {
       attribution: '© ' + new Date().getFullYear() + ' Microsoft, © 1992 - ' + new Date().getFullYear() + ' TomTom',
       maxZoom: 18,
       minZoom: 4,

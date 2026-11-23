@@ -1,8 +1,8 @@
 using System;
 using System.Linq.Expressions;
-using System.Web.Mvc;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Edubase.Web.UI.Views.Shared.EditorTemplates.Extensions;
 
@@ -41,7 +41,7 @@ public static class HtmlHelperExtensions
         Expression<Func<TModel, TValue>> expression)
     {
         var typedHelper = htmlHelper as IHtmlHelper<TModel>;
-        var fieldName = ExpressionHelper.GetExpressionText(expression);
+        var fieldName = new ModelExpressionProvider(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider()).GetExpressionText(expression);
         var fullName = typedHelper.ViewData.TemplateInfo.GetFullHtmlFieldName(fieldName);
 
         var modelState = typedHelper.ViewData.ModelState;

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Edubase.Common;
 using Edubase.Common.Spatial;
@@ -27,15 +28,9 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
             _apiKey = configuration["AppSettings:OSPlacesApiKey"] ?? throw new ArgumentNullException("OSPlacesApiKey is missing");
 
             var retryCsv = configuration["AppSettings:OSPlacesApiServices_RetryIntervals"] ?? "1,2,5";
-            var timeoutValue = configuration["AppSettings:OSPlacesApiServices_Timeout"] ?? "10";
 
             var retryIntervals = PollyUtil.CsvSecondsToTimeSpans(retryCsv);
-            RetryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, timeoutValue);
-        }
-
-        public OSPlacesApiService(HttpClient httpClient)
-        {
-            _osApiClient = httpClient;
+            RetryPolicy = PollyUtil.CreateRetryPolicy(configuration, retryIntervals, "AppSettings:OSPlacesApiServices_Timeout");
         }
 
         public async Task<PlaceDto[]> SearchAsync(string text)
@@ -45,10 +40,10 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 
             if (text != null && Regex.IsMatch(text, @"\b[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}\b", RegexOptions.IgnoreCase))
             {
-                using (var message = await RetryPolicy.ExecuteAsync(async () =>
+                using (var message = await RetryPolicy.ExecuteAsync(async cancellationToken =>
                     {
-                        return await _osApiClient.GetAsync($"search/places/v1/postcode?postcode={text}&key={_apiKey}&output_srs=WGS84&dataset=DPA,LPI");
-                    }))
+                        return await _osApiClient.GetAsync($"search/places/v1/postcode?postcode={text}&key={_apiKey}&output_srs=WGS84&dataset=DPA,LPI", cancellationToken);
+                    }, CancellationToken.None))
                 {
                     if (!message.IsSuccessStatusCode)
                     {

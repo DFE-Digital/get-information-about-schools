@@ -1,7 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -31,7 +30,6 @@ using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -47,6 +45,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     [Route("Establishments/Establishment")]
     public class EstablishmentController : EduBaseController
     {
+        private readonly IConfiguration _configuration;
+
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IEstablishmentWriteService _establishmentWriteService;
@@ -85,8 +85,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ISecurityService securityService,
             IExternalLookupService externalLookupService,
             IUserDependentLookupService lookupService,
-            IGovernorsGridViewModelFactory governorsGridViewModelFactory)
+            IGovernorsGridViewModelFactory governorsGridViewModelFactory, IConfiguration configuration)
         {
+            _configuration = configuration;
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
             _establishmentWriteService = establishmentWriteService;
@@ -353,6 +354,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var viewModel = new EstablishmentDetailViewModel(_externalLookupService)
             {
+                FscpdServiceName = _configuration["AppSettings:FscpdServiceName"],
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 SearchQueryString = searchQueryString,
                 SearchSource = searchSource
@@ -366,7 +368,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.Establishment = result.ReturnValue;
 
-            viewModel.ShowOfstedRatings = "true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowRatings"]);
+            viewModel.ShowOfstedRatings = _configuration.GetValue<bool>("AppSettings:Feature_Ofsted_ShowRatings");
 
             viewModel.TabWarnings = new TabWarningsModel(viewModel.Establishment.TypeId);
 
@@ -411,6 +413,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var viewModel = new EstablishmentDetailViewModel(_externalLookupService)
             {
+                FscpdServiceName = _configuration["AppSettings:FscpdServiceName"],
                 Establishment = result.ReturnValue,
                 ChangeHistory = changes
             };

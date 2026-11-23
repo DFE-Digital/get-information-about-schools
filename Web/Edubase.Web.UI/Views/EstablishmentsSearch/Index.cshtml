@@ -3,7 +3,6 @@
 @using Edubase.Common
 @using Edubase.Services.Enums
 @using M = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
-@using System.Web.WebPages
 @model M
 @{
     ViewBag.Title = $"Search results for '{Model.TextSearchModel.Text}'";
@@ -89,7 +88,7 @@
                     if (Model.TextSearchType == M.eTextSearchType.EstablishmentName ||
                     Model.TextSearchType == M.eTextSearchType.Unknown)
                     {
-                        if (!Model.TextSearchModel.Text.IsEmpty())
+                        if (!string.IsNullOrEmpty(Model.TextSearchModel.Text))
                         {
                             <text>Establishments matching &lsquo;<span class="govuk-!-font-weight-bold">@Model.TextSearchModel.Text</span>&rsquo;</text>
                         }
@@ -418,13 +417,13 @@
 
                         @if (Model.SearchType == eSearchType.Text)
                         {
-                            @Html.HiddenFor(!Model.TextSearchModel.Text.IsEmpty(), x => x.TextSearchModel.Text)
-                            @Html.HiddenFor(!Model.TextSearchModel.AutoSuggestValue.IsEmpty(), x => x.TextSearchModel.AutoSuggestValue)
+                            @Html.HiddenFor(!string.IsNullOrEmpty(Model.TextSearchModel.Text), x => x.TextSearchModel.Text)
+                            @Html.HiddenFor(!string.IsNullOrEmpty(Model.TextSearchModel.AutoSuggestValue), x => x.TextSearchModel.AutoSuggestValue)
                         }
                         else if (Model.SearchType == eSearchType.Location)
                         {
-                            @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
-                            @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
+                            @Html.HiddenFor(!string.IsNullOrEmpty(Model.LocationSearchModel.Text), x => x.LocationSearchModel.Text)
+                            @Html.HiddenFor(!string.IsNullOrEmpty(Model.LocationSearchModel.Text), x => x.LocationSearchModel.AutoSuggestValue)
                         }
 
                         <input type="hidden" id="selected-search-filters" value="@Model.SelectedExtraSearchFilters" />
@@ -453,13 +452,13 @@
         @Html.HiddenFor(Model.SortBy.HasValue, x => x.SortBy)
         @if (Model.SearchType == eSearchType.Text)
         {
-            @Html.HiddenFor(!Model.TextSearchModel.Text.IsEmpty(), x => x.TextSearchModel.Text)
-            @Html.HiddenFor(!Model.TextSearchModel.AutoSuggestValue.IsEmpty(), x => x.TextSearchModel.AutoSuggestValue)
+            @Html.HiddenFor(!string.IsNullOrEmpty(Model.TextSearchModel.Text), x => x.TextSearchModel.Text)
+            @Html.HiddenFor(!string.IsNullOrEmpty(Model.TextSearchModel.AutoSuggestValue), x => x.TextSearchModel.AutoSuggestValue)
         }
         else if (Model.SearchType == eSearchType.Location)
         {
-            @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
-            @Html.HiddenFor(!Model.LocationSearchModel.AutoSuggestValue.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
+            @Html.HiddenFor(!string.IsNullOrEmpty(Model.LocationSearchModel.Text), x => x.LocationSearchModel.Text)
+            @Html.HiddenFor(!string.IsNullOrEmpty(Model.LocationSearchModel.AutoSuggestValue), x => x.LocationSearchModel.AutoSuggestValue)
         }
     </form>
 </div>

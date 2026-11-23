@@ -1,6 +1,5 @@
 @using Edubase.Web.UI.Areas.Establishments.Models.Search
 @using Edubase.Web.UI.Helpers
-@using Microsoft.Ajax.Utilities
 @model EstablishmentSearchDownloadViewModel
 @using Edubase.Web.UI.Models.Search
 @using System.Web
@@ -36,7 +35,7 @@
 
 @section BreadCrumbs
 {
-    @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
+    @if (string.IsNullOrWhiteSpace(Model.SearchQueryString) || Model.SearchSource == null)
     {
         @Html.ActionLink("Search", "Index", "Search", new { area = "" },
             new { @class = "govuk-back-link" })

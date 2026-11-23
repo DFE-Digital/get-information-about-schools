@@ -56,24 +56,7 @@ public class DefaultValueConverter : IValueConverter
 
         if (underlyingType == typeof(int))
         {
-            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed))
-            {
-                return parsed;
-            }
-
-            // Return default (0). Binder will add ModelState error.
-            return 0;
-        }
-
-        if (underlyingType == typeof(int?))
-        {
-            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed))
-            {
-                return parsed;
-            }
-
-            // Return null for nullable int. Binder will add ModelState error.
-            return null;
+            return int.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
         }
 
         // Special handling for DateTime.

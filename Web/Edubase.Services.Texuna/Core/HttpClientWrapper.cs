@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 namespace Edubase.Services
 {
     using Common;
@@ -9,8 +10,7 @@ namespace Edubase.Services
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
-    using System.Diagnostics;
+        using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -30,18 +30,22 @@ namespace Edubase.Services
         private readonly JsonMediaTypeFormatter _formatter;
         private readonly ApiRecorderSessionItemRepository _apiRecorderSessionItemRepository;
         private readonly bool _enableApiLogging;
+        private readonly string _xSourceIpOverride;
+        private readonly ApiTraceList _apiTrace;
         private const string HEADER_SA_USER_ID = "sa_user_id";
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
         private readonly IClientStorage _clientStorage;
 
-        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository)
+        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository, IConfiguration configuration = null, ApiTraceList apiTrace = null)
         {
             _httpClient = httpClient;
             _clientStorage = clientStorage;
             _formatter = formatter;
             _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
+            _xSourceIpOverride = configuration?["AppSettings:xSourceIpOverride"];
+            _apiTrace = apiTrace ?? new ApiTraceList(configuration);
 
-            if (!bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out _enableApiLogging))
+            if (!bool.TryParse(configuration?["AppSettings:EnableApiLogging"], out _enableApiLogging))
             {
                 _enableApiLogging = false;
             }
@@ -475,7 +479,7 @@ public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessa
             UserName = context?.User?.Identity?.Name
         };
 
-        ApiTrace.Data.Add(data);
+        _apiTrace.Add(data);
 #endif
 
         await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, context?.User?.GetUserId());
@@ -537,7 +541,7 @@ public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessa
             // Note that the backend API has an option to validate values supplied in the x-source-ip header.
             // This validation must be disabled if the override value is not a valid IPv4 formatted value.
             //
-            var xSourceIpOverride = ConfigurationManager.AppSettings["xSourceIpOverride"];
+            var xSourceIpOverride = _xSourceIpOverride;
             var value = string.IsNullOrEmpty(xSourceIpOverride) ? _clientStorage.IPAddress : xSourceIpOverride;
             requestMessage.Headers.Add("X-Source-IP", value);
 

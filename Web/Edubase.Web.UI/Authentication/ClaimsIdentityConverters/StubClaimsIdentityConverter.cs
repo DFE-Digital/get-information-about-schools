@@ -3,7 +3,6 @@ using System.Security;
 using System.Security.Claims;
 using Edubase.Common;
 using Edubase.Services.Security;
-using Microsoft.AspNet.Identity;
 
 namespace Edubase.Web.UI.Authentication.ClaimsIdentityConverters;
 
@@ -36,6 +35,6 @@ public class StubClaimsIdentityConverter
             new Claim(EduClaimTypes.UserId, userIdClaim.Value)
         ];
 
-        return new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+        return new ClaimsIdentity(claims, "ApplicationCookie");
     }
 }

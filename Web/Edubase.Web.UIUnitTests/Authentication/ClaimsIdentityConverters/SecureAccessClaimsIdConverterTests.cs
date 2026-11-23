@@ -109,7 +109,7 @@ public class SecureAccessClaimsIdConverterTests
 
         // Assert
         Assert.Equal(
-            Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie,
+            "ApplicationCookie",
             result.AuthenticationType
         );
     }

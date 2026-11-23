@@ -1,5 +1,4 @@
 @using Edubase.Web.UI.Models
-@using System.Web.WebPages
 @model EstablishmentDetailViewModel
 
 <div id="school-location" class="tab-content">
@@ -9,7 +8,7 @@
         @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-location-button", @class = "govuk-button govuk-button--secondary" })
     }
 
-    @if (!Model.TabWarnings.LocationTab.IsEmpty())
+    @if (!string.IsNullOrEmpty(Model.TabWarnings.LocationTab))
     {
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>

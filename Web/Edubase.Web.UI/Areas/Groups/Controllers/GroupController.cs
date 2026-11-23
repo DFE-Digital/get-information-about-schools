@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Common;
     using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
     using Exceptions;
-    using FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.IdentityModel.Tokens;
@@ -39,6 +39,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     [Route("Groups/Group")]
     public class GroupController : Controller
     {
+        private readonly IConfiguration _configuration;
+
         private readonly ICompaniesHouseService _companiesHouseService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
@@ -61,8 +63,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             ICompaniesHouseService companiesHouseService,
             IGovernorsReadService governorsReadApiService,
              IExternalLookupService externalLookupService,
-            IGovernorsGridViewModelFactory governorsGridViewModelFactory)
+            IGovernorsGridViewModelFactory governorsGridViewModelFactory, IConfiguration configuration)
         {
+            _configuration = configuration;
             _lookup = cachedLookupService;
             _securityService = securityService;
             _groupReadService = groupReadService;
@@ -326,6 +329,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             var viewModel = new GroupDetailViewModel(_externalLookupService)
             {
+                FscpdServiceName = _configuration["AppSettings:FscpdServiceName"],
+                CompaniesHouseBaseUrl = _configuration["AppSettings:CompaniesHouseBaseUrl"],
                 SearchQueryString = searchQueryString,
                 SearchSource = searchSource,
                 CanUserEdit = await _groupReadService.CanEditAsync(id, User),
@@ -376,6 +381,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             var viewModel = new GroupDetailViewModel(_externalLookupService)
             {
+                FscpdServiceName = _configuration["AppSettings:FscpdServiceName"],
+                CompaniesHouseBaseUrl = _configuration["AppSettings:CompaniesHouseBaseUrl"],
                 Group = model,
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
                 LocalAuthorityName = await _lookup.GetNameAsync(() => model.LocalAuthorityId),

@@ -4,7 +4,6 @@
 @using Edubase.Web.UI.Areas.Groups.Controllers
 @using Edubase.Web.UI.Helpers.Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models.Search
-@using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Helpers
 @model IDownloadGenerationProgressModel
 @{
@@ -39,7 +38,7 @@
 
 @section BreadCrumbs
 {
-    @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
+    @if (string.IsNullOrWhiteSpace(Model.SearchQueryString) || Model.SearchSource == null)
     {
         @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-back-link" })
     }

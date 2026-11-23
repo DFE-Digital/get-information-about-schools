@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @using Edubase.Web.UI.Areas.Groups.Models
 @using Edubase.Web.UI.Helpers
 @using System.Web
@@ -92,7 +93,7 @@ else
                         @if (Model.Details.CompaniesHouseNumber != null)
                         {
                     <dd class="govuk-summary-list__value">
-                        <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">
+                        <a href="@Configuration["AppSettings:CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">
                             @Model.Details.CompaniesHouseNumber (opens in new tab)</a>
                     </dd>
                         }

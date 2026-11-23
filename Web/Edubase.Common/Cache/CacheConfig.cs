@@ -1,5 +1,5 @@
-﻿using System;
-using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using System;
 
 namespace Edubase.Common.Cache
 {
@@ -32,14 +32,14 @@ namespace Edubase.Common.Cache
 
         public string CacheDomain { get; set; }
 
-        public CacheConfig()
+        public CacheConfig(IConfiguration configuration = null)
         {
-            ConnectionString = ConfigurationManager.ConnectionStrings["Redis"]?.ConnectionString;
+            ConnectionString = configuration?.GetConnectionString("Redis");
             Name = "Cache_" + Guid.NewGuid().ToString("N").ToUpper(); // useful for debugging purposes.
             IsDistributedCachingEnabled = true;
             IsAuditingEnabled = false; // useful for debugging purposes.
             IsCentralCacheEnabled = true;
-            CacheDomain = ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
+            CacheDomain = configuration?["AppSettings:Environment"] ?? string.Empty;
 
             if (CacheDomain.Equals("localdev", StringComparison.OrdinalIgnoreCase))
             {

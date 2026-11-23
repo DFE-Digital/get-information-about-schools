@@ -13,6 +13,7 @@ namespace Edubase.Web.UI
     using Edubase.Web.Resources;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
     using Services.Texuna.ChangeHistory.Models;
 
     public static class LangExt
@@ -39,7 +40,7 @@ namespace Edubase.Web.UI
                                                     string message,
                                                     ModelStateDictionary modelState)
         {
-            var key = System.Web.Mvc.ExpressionHelper.GetExpressionText(ex);
+            var key = new ModelExpressionProvider(new EmptyModelMetadataProvider()).GetExpressionText(ex);
             modelState.AddModelError(key, message);
         }
 

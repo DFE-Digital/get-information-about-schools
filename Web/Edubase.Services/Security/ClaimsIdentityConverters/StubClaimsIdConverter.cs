@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Edubase.Common;
 using Newtonsoft.Json;
-using Microsoft.AspNet.Identity;
 
 namespace Edubase.Services.Security.ClaimsIdentityConverters
 {
@@ -26,7 +25,7 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
 
             var claims = new List<Claim>() { new Claim(EduClaimTypes.UserId, userIdClaim.Value) };
             
-            return new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+            return new ClaimsIdentity(claims, "ApplicationCookie");
         }
 
     }

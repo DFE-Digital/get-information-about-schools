@@ -1,5 +1,5 @@
+using Microsoft.Extensions.Configuration;
 using System;
-using System.Configuration;
 using System.IO;
 using System.Security;
 using Edubase.Common.Cache;
@@ -12,9 +12,10 @@ namespace Edubase.CommonUnitTests.Cache
         [Fact]
         public void ConstructorUsesExpectedDefaultsWhenSettingsAreMissing()
         {
-            ConfigurationManager.AppSettings["Environment"] = string.Empty;
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            configuration["AppSettings:Environment"] = string.Empty;
 
-            var config = new CacheConfig();
+            var config = new CacheConfig(configuration);
 
             Assert.Null(config.ConnectionString);
             Assert.Equal(string.Empty, config.CacheDomain);
@@ -30,9 +31,10 @@ namespace Edubase.CommonUnitTests.Cache
         [Fact]
         public void ConstructorUsesDevSettings()
         {
-            ConfigurationManager.AppSettings["Environment"] = "dev";
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            configuration["AppSettings:Environment"] = "dev";
 
-            var config = new CacheConfig();
+            var config = new CacheConfig(configuration);
 
             Assert.Null(config.ConnectionString);
             Assert.Equal("dev", config.CacheDomain);
@@ -48,9 +50,10 @@ namespace Edubase.CommonUnitTests.Cache
         [Fact]
         public void ConstructorUsesLocalDevSettings()
         {
-            ConfigurationManager.AppSettings["Environment"] = "localdev";
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            configuration["AppSettings:Environment"] = "localdev";
 
-            var config = new CacheConfig();
+            var config = new CacheConfig(configuration);
 
             Assert.Null(config.ConnectionString);
             Assert.Equal($"localdev_{ Environment.MachineName.ToLower()}", config.CacheDomain);

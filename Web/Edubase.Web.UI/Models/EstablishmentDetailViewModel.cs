@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Common;
@@ -238,7 +237,7 @@ namespace Edubase.Web.UI.Models
         public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
 
-        public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
+        public string FscpdServiceName { get; set; }
 
         public string FscpdURL => extService.FscpdURL(Establishment.Urn, Establishment.Name, false);
 

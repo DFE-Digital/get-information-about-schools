@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @using Edubase.Services.Enums;
 @using Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 @using Edubase.Web.UI.Helpers
@@ -67,7 +68,7 @@
                     <div class="govuk-summary-list__row">
                         <dt id="companies-house-number-key" class="govuk-summary-list__key">Companies House number</dt>
                         <dd id="companies-house-number-value" class="govuk-summary-list__value">
-                            <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank" rel="noreferrer noopener">
+                            <a href="@Configuration["AppSettings:CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank" rel="noreferrer noopener">
                                 @Model.CompaniesHouseNumber (opens in new tab)</a>
                         </dd>
                     </div>

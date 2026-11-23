@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Security.Principal;
@@ -53,7 +54,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<IUrlHelper> mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Loose);
         private readonly Mock<IFSCPDService> mockFscpdService = new Mock<IFSCPDService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
-        private readonly Mock<IOfstedService> mockOfstedService = new Mock<IOfstedService>(MockBehavior.Strict);
         private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorsGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Loose);
         private bool disposedValue;
 
@@ -79,7 +79,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 mockSecurityService.Object,
                 mockExternalLookupService.Object,
                 mockLookupService.Object,
-                mockGovernorsGridViewModelFactory.Object);
+                mockGovernorsGridViewModelFactory.Object, new ConfigurationBuilder().AddInMemoryCollection().Build());
 
             SetupController();
         }
@@ -466,7 +466,6 @@ public async Task Estab_Details_TabDisplayPolicy(bool locationDataFieldViewable,
 
     mockExternalLookupService.Setup(x => x.FscpdCheckExists(urn, null, false)).ReturnsAsync(true);
     mockExternalLookupService.Setup(x => x.SfbCheckExists(urn, FbType.School)).ReturnsAsync(true);
-    mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(urn)).ReturnsAsync(true);
 
     var response = await controller.Details(urn);
 
@@ -537,7 +536,6 @@ public async Task Estab_Details_TabEditPolicy(bool locationDataFieldEditable, bo
 
     mockExternalLookupService.Setup(x => x.FscpdCheckExists(urn, null, false)).ReturnsAsync(true);
     mockExternalLookupService.Setup(x => x.SfbCheckExists(urn, FbType.School)).ReturnsAsync(true);
-    mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(urn)).ReturnsAsync(true);
 
     var response = await controller.Details(urn);
 

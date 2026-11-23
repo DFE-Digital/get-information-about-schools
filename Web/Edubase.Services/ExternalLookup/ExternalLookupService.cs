@@ -6,13 +6,11 @@ namespace Edubase.Services.ExternalLookup
     {
         private readonly IFSCPDService _fscpdService;
         private readonly IFBService _fbService;
-        private readonly IOfstedService _ofstedService;
 
-        public ExternalLookupService(IFSCPDService fscpdService, IFBService fbService, IOfstedService ofstedService)
+        public ExternalLookupService(IFSCPDService fscpdService, IFBService fbService)
         {
             _fscpdService = fscpdService;
             _fbService = fbService;
-            _ofstedService = ofstedService;
         }
 
         public async Task<bool> FscpdCheckExists(int? urn, string name, bool mat = false)
@@ -34,17 +32,6 @@ namespace Edubase.Services.ExternalLookup
         {
             return _fbService.PublicURL(lookupId, lookupType);
         }
-
-        public async Task<bool> OfstedReportPageCheckExists(int? urn)
-        {
-            return await _ofstedService.CheckExists(urn);
-        }
-
-        public string OfstedReportUrl(int? urn)
-        {
-            return _ofstedService.PublicURL(urn);
-        }
-
 
     }
 }

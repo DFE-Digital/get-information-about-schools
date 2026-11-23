@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Edubase.Web.UI.Helpers.ModelBinding.BindingHandler.Handlers;
 using Edubase.Web.UI.Helpers.ModelBinding.TypeConverters;
+using Edubase.Web.UI.Helpers.ModelBinding.Factories;
+using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UIUnitTests.Helpers.ModelBinding.BindingHandler.Handlers.TestDoubles;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
@@ -62,6 +64,42 @@ public class PropertyNameBinderHandlerTests
         converter.Verify();
     }
 
+    [Theory]
+    [InlineData("invalid", null, "The value is not valid for UKPRN")]
+    [InlineData("2147483648", null, "The value is not valid for UKPRN")]
+    [InlineData("12345678", 12345678, null)]
+    public async Task HandleAsync_ShouldValidateUkprn(string value, int? expectedValue, string expectedError)
+    {
+        // Arrange
+        DefaultModelBindingContext context =
+            DefaultModelBindingContextTestDoubles.StubForDictionary<GroupEditorViewModel>(
+                new Dictionary<string, string[]>
+                {
+                    { "UKPRN", new[] { value } }
+                });
+        GroupEditorViewModel model = new();
+        PropertyNameBinderHandler handler = new(
+            new DefaultTypeConverter(new DefaultValueConverter(), new CollectionFactory(new TypeFactory())));
+        PropertyInfo property = typeof(GroupEditorViewModel).GetProperty(nameof(GroupEditorViewModel.UKPRN));
+
+        // Act
+        bool result = await handler.HandleAsync(context, model, property);
+
+        // Assert
+        Assert.True(result);
+        Assert.Equal(expectedValue, model.UKPRN);
+        Assert.Equal(value, context.ModelState["UKPRN"].AttemptedValue);
+        if (expectedError == null)
+        {
+            Assert.Equal(0, context.ModelState.ErrorCount);
+        }
+        else
+        {
+            Assert.False(context.ModelState.IsValid);
+            Assert.Equal(expectedError, Assert.Single(context.ModelState["UKPRN"].Errors).ErrorMessage);
+        }
+    }
+
     [Fact]
     public async Task HandleAsync_ShouldDelegate_WhenNoValueFound()
     {
@@ -115,10 +153,14 @@ public class PropertyNameBinderHandlerTests
         PropertyNameBinderHandler handler =
             new PropertyNameBinderHandler(converter.Object);
 
-        // Act & Assert
-        await Assert.ThrowsAsync<FormatException>(async () =>
-            await handler.HandleAsync(context, model, property));
+        // Act
+        bool result = await handler.HandleAsync(context, model, property);
 
+        // Assert
+        Assert.True(result);
+        Assert.False(context.ModelState.IsValid);
+        Assert.Equal("bad", context.ModelState["Age"].AttemptedValue);
+        Assert.Equal("The value is not valid for Age", Assert.Single(context.ModelState["Age"].Errors).ErrorMessage);
         Assert.Equal(0, model.Age); // property not set
     }
 
