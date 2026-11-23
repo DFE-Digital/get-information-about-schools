@@ -17,6 +17,7 @@ using Edubase.Web.UI.Models.DataQuality.Validators;
 using Edubase.Web.UI.Models.Notifications;
 using Edubase.Web.UI.Models.Notifications.Validators;
 using Edubase.Web.UI.Models.Validators;
+using Edubase.Web.UI.Validation;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -48,6 +49,7 @@ namespace Edubase.Web.UI.App_Start
                 .AddScoped<IValidator<BulkCreateFreeSchoolsViewModel>, BulkCreateFreeSchoolsViewModelValidator>()
                 .AddScoped<IValidator<BulkAssociateEstabs2GroupsViewModel>, BulkAssociateEstabs2GroupsViewModelValidator>()
                 .AddScoped<IValidator<CreateEstablishmentViewModel>, CreateEstablishmentViewModelValidator>()
+                .AddScoped<IValidator<CreateChildrensCentreViewModel>, CreateChildrensCentreViewModelValidator>()
                 .AddScoped<IValidator<EditEstablishmentLinksViewModel>, EditEstablishmentLinksViewModelValidator>()
                 .AddScoped<IValidator<ChangeHistoryViewModel>, ChangeHistoryViewModelValidator>()
                 .AddScoped<IValidator<DateTimeViewModel>, DateTimeViewModelValidator>()
@@ -74,6 +76,7 @@ namespace Edubase.Web.UI.App_Start
             // Add services to the container.
             services.AddControllersWithViews(options =>
             {
+                options.Filters.Add<FluentValidationPageFilter>();
                 options.ValueProviderFactories.Add(new TokenValueProviderFactory());
                 options.ModelBinderProviders.Insert(0, new DefaultModelBinderProvider());
             });

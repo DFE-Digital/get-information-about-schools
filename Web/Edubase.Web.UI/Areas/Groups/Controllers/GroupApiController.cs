@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
+using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
@@ -14,15 +16,20 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     public class GroupApiController : ControllerBase
     {
         private readonly IGroupsWriteService groupsWriteService;
+        private readonly IValidator<ValidateChildrensCentreStep2> _childrensCentreValidator;
 
-        public GroupApiController(IGroupsWriteService groupsWriteService)
+        public GroupApiController(IGroupsWriteService groupsWriteService, IValidator<ValidateChildrensCentreStep2> childrensCentreValidator)
         {
             this.groupsWriteService = groupsWriteService;
+            _childrensCentreValidator = childrensCentreValidator;
         }
 
         [HttpPost("CreateChildrensCentre/Validate")]
-        public IActionResult ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
+        public async Task<IActionResult> ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
         {
+            var validation = await _childrensCentreValidator.ValidateAsync(model);
+            validation.EduBaseAddToModelState(ModelState, null, true);
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult(ModelState.Where(m => m.Value.Errors.Any()));

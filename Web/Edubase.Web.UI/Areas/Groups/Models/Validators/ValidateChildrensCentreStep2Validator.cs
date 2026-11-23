@@ -15,12 +15,13 @@ public class ValidateChildrensCentreStep2Validator : AbstractValidator<ValidateC
             .WithSummaryMessage("Please select a local authority for the group");
 
         RuleFor(x => x.OpenDate)
-            .Must(x => !x.IsEmpty())
+            .Must(x => x != null && !x.IsEmpty())
             .WithMessage("Open date missing. Please enter the date")
-            .Must(x => x.IsValid() || x.IsEmpty())
+            .Must(x => x == null || x.IsValid() || x.IsEmpty())
             .WithMessage("Open date is invalid. Please enter a valid date");
 
         RuleFor(x => x.GroupName)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("Enter a group name")
             .MustAsync(async (model, name, ct) =>

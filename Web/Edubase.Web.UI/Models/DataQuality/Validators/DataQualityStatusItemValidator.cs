@@ -8,6 +8,7 @@ public class DataQualityStatusItemValidator : AbstractValidator<DataQualityStatu
     public DataQualityStatusItemValidator()
     {
         RuleFor(x => x.LastUpdated)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Please correct the date")
             .Must(x => x.IsValid()).WithMessage("Please correct the date")
             .Must(x => x.ToDateTime().HasValue && x.ToDateTime().Value <= DateTime.Now.Date)

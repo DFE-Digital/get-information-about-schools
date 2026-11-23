@@ -16,11 +16,30 @@ namespace Edubase.Web.UIUnitTests.Areas.Groups.Models
     public class GroupEditorViewModelValidatorTests
     {
         private readonly Mock<IEstablishmentReadService> _establishmentReadService = new(MockBehavior.Strict);
+        private readonly Mock<IGroupReadService> _groupReadService = new(MockBehavior.Strict);
 
         private GroupEditorViewModelValidator CreateValidator()
         {
-            return new GroupEditorViewModelValidator(Mock.Of<IGroupReadService>(),
+            return new GroupEditorViewModelValidator(_groupReadService.Object,
                 _establishmentReadService.Object, Mock.Of<IPrincipal>(), Mock.Of<ISecurityService>());
+        }
+
+        [Fact]
+        public async Task ValidateAsync_EmptyGroupId_DoesNotCheckBackend()
+        {
+            var model = new GroupEditorViewModel
+            {
+                Action = GroupEditorViewModel.ActionSave,
+                SaveMode = GroupEditorViewModel.eSaveMode.Details,
+                GroupTypeId = (int) eLookupGroupType.MultiacademyTrust,
+                GroupId = ""
+            };
+
+            var result = await CreateValidator().ValidateAsync(model);
+
+            Assert.Contains(result.Errors, error => error.PropertyName == nameof(model.GroupId)
+                && error.ErrorMessage == "Please enter a Group ID");
+            _groupReadService.VerifyNoOtherCalls();
         }
 
         [Theory]

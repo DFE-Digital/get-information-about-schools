@@ -57,6 +57,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             When(x => x.Action == ActionLinkedEstablishmentAdd, () =>
             {
                 RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate)
+                    .Cascade(CascadeMode.Stop)
                     .Must(x => x.IsValid()).WithMessage("This is not a valid date")
                     .Must((model, date) => VerifyJoinedDate(date.ToDateTime(), model))
                     .WithMessage(x => GenerateJoinDateBeforeOpenDateMessage(x));
@@ -66,6 +67,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             When(x => x.Action == ActionLinkedEstablishmentSave, () =>
             {
                 RuleFor(x => x.LinkedEstablishments.Establishments.Single(e => e.EditMode).JoinedDateEditable)
+                    .Cascade(CascadeMode.Stop)
                     .Must(x => x.IsValid()).WithMessage("This is not a valid date")
                     .Must((model, date) => VerifyJoinedDate(date.ToDateTime(), model))
                     .WithMessage(x => GenerateJoinDateBeforeOpenDateMessage(x));
@@ -86,7 +88,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                 RuleFor(x => x.OpenDate)
                     .Must(x => !x.IsEmpty()).WithMessage(x => $"{x.OpenDateLabel} missing. Please enter the date")
-                    .When(x => !x.GroupUId.HasValue)
+                    .When(x => !x.GroupUId.HasValue, ApplyConditionTo.CurrentValidator)
                     .Must(x => x.IsValid() || x.IsEmpty()).WithMessage(x => $"{x.OpenDateLabel} is invalid. Please enter a valid date");
 
                 When(x => x.CloseAndMarkAsCreatedInError && x.StatusId == (int) eLookupGroupStatus.Closed, () =>
@@ -128,6 +130,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 When(x => x.GroupType != eLookupGroupType.SecureSingleAcademyTrust, () =>
                 {
                     RuleFor(x => x.GroupId)
+                        .Cascade(CascadeMode.Stop)
                         .NotEmpty().WithMessage("Please enter a Group ID")
                         .MustAsync(async (model, groupId, ct) =>
                         {
@@ -137,7 +140,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                                 existingGroupUId: model.GroupUId);
                         })
                         .WithMessage("Group ID already exists. Enter a different group ID.")
-                        .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail);
+                        .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
                 });
 
                 When(x => x.OpenDate.ToDateTime().HasValue, () =>

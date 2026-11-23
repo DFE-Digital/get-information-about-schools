@@ -25,7 +25,7 @@ namespace Edubase.Web.UI.Helpers
                 
             foreach (var error in result.Errors)
             {
-                var key = string.IsNullOrEmpty(prefix) ? error.PropertyName : prefix + "." + error.PropertyName;
+                var key = ModelNames.CreatePropertyModelName(prefix, error.PropertyName);
 
                 if (!avoidDuplicates ||
                     !modelState.ContainsKey(key) ||
