@@ -306,7 +306,7 @@ stages:
               version: '10.0.x'
 
           - task: AzureCLI@2
-            displayName: 'Temporarily allow the acceptance agent through SQL and Storage firewalls'
+            displayName: 'Temporarily allow the acceptance agent through the SQL firewall'
             inputs:
               azureSubscription: 'rg-t1dv-edubase'
               scriptType: 'pscore'
@@ -324,6 +324,28 @@ stages:
                 Write-Host "##vso[task.setvariable variable=acceptanceAgentEgressIp]$agentIp"
                 Write-Host "##vso[task.setvariable variable=acceptanceSqlFirewallRuleName]$sqlRuleName"
 
+                $sqlRuleOutput = az sql server firewall-rule create --resource-group 'rg-t1dv-edubase' --server 'sqlsrv-t1dv-edubase' --name $sqlRuleName --start-ip-address $agentIp --end-ip-address $agentIp --only-show-errors --output none 2>&1
+                $sqlCreateExitCode = $LASTEXITCODE
+                if ($sqlCreateExitCode -ne 0) {
+                  throw "Could not add the SQL firewall rule: $($sqlRuleOutput -join ' ')"
+                }
+                Write-Host "##vso[task.setvariable variable=acceptanceSqlFirewallRuleAdded]true"
+
+          - task: AzureCLI@2
+            displayName: 'Temporarily allow the acceptance agent through the Storage firewall'
+            inputs:
+              azureSubscription: 'rg-t1dv-gias'
+              scriptType: 'pscore'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                $agentIp = $env:ACCEPTANCE_AGENT_EGRESS_IP
+                $parsedIp = $null
+                if (-not [System.Net.IPAddress]::TryParse($agentIp, [ref]$parsedIp) -or
+                    $parsedIp.AddressFamily -ne [System.Net.Sockets.AddressFamily]::InterNetwork)
+                {
+                  throw 'The acceptance agent IPv4 egress address is unavailable.'
+                }
+
                 $existingStorageIpRules = @(
                   az storage account network-rule list --resource-group 'rg-t1dv-gias' --account-name 'giasdev' --query "ipRules[].ipAddressOrRange" --output tsv 2>&1
                 )
@@ -333,13 +355,6 @@ stages:
                 }
 
                 $storageRuleExists = $existingStorageIpRules -contains $agentIp -or $existingStorageIpRules -contains "$agentIp/32"
-                $sqlRuleOutput = az sql server firewall-rule create --resource-group 'rg-t1dv-edubase' --server 'sqlsrv-t1dv-edubase' --name $sqlRuleName --start-ip-address $agentIp --end-ip-address $agentIp --only-show-errors --output none 2>&1
-                $sqlCreateExitCode = $LASTEXITCODE
-                if ($sqlCreateExitCode -ne 0) {
-                  throw "Could not add the SQL firewall rule: $($sqlRuleOutput -join ' ')"
-                }
-                Write-Host "##vso[task.setvariable variable=acceptanceSqlFirewallRuleAdded]true"
-
                 if (-not $storageRuleExists) {
                   $storageRuleOutput = az storage account network-rule add --resource-group 'rg-t1dv-gias' --account-name 'giasdev' --ip-address $agentIp --only-show-errors --output none 2>&1
                   $storageAddExitCode = $LASTEXITCODE
@@ -348,6 +363,8 @@ stages:
                   }
                   Write-Host "##vso[task.setvariable variable=acceptanceStorageFirewallRuleAdded]true"
                 }
+            env:
+              ACCEPTANCE_AGENT_EGRESS_IP: $(acceptanceAgentEgressIp)
 
           - task: DotNetCoreCLI@2
             displayName: 'Run acceptance tests against Dev'
@@ -358,7 +375,7 @@ stages:
               publishTestResults: true
 
           - task: AzureCLI@2
-            displayName: 'Remove temporary acceptance-test firewall rules'
+            displayName: 'Remove temporary acceptance-test SQL firewall rule'
             condition: always()
             inputs:
               azureSubscription: 'rg-t1dv-edubase'
@@ -375,21 +392,30 @@ stages:
                   }
                 }
 
-                if ($env:ACCEPTANCE_STORAGE_FIREWALL_RULE_ADDED -eq 'true') {
-                  $storageDeleteOutput = az storage account network-rule remove --resource-group 'rg-t1dv-gias' --account-name 'giasdev' --ip-address $env:ACCEPTANCE_AGENT_EGRESS_IP --only-show-errors --output none 2>&1
-                  $storageDeleteExitCode = $LASTEXITCODE
-                  if ($storageDeleteExitCode -ne 0) {
-                    $cleanupErrors.Add("Could not remove the Storage firewall rule: $($storageDeleteOutput -join ' ')")
-                  }
-                }
-
                 if ($cleanupErrors.Count -gt 0) {
                   throw ($cleanupErrors -join ' ')
                 }
             env:
-              ACCEPTANCE_AGENT_EGRESS_IP: $(acceptanceAgentEgressIp)
               ACCEPTANCE_SQL_FIREWALL_RULE_NAME: $(acceptanceSqlFirewallRuleName)
               ACCEPTANCE_SQL_FIREWALL_RULE_ADDED: $(acceptanceSqlFirewallRuleAdded)
+
+          - task: AzureCLI@2
+            displayName: 'Remove temporary acceptance-test Storage firewall rule'
+            condition: always()
+            inputs:
+              azureSubscription: 'rg-t1dv-gias'
+              scriptType: 'pscore'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                if ($env:ACCEPTANCE_STORAGE_FIREWALL_RULE_ADDED -eq 'true') {
+                  $storageDeleteOutput = az storage account network-rule remove --resource-group 'rg-t1dv-gias' --account-name 'giasdev' --ip-address $env:ACCEPTANCE_AGENT_EGRESS_IP --only-show-errors --output none 2>&1
+                  $storageDeleteExitCode = $LASTEXITCODE
+                  if ($storageDeleteExitCode -ne 0) {
+                    throw "Could not remove the Storage firewall rule: $($storageDeleteOutput -join ' ')"
+                  }
+                }
+            env:
+              ACCEPTANCE_AGENT_EGRESS_IP: $(acceptanceAgentEgressIp)
               ACCEPTANCE_STORAGE_FIREWALL_RULE_ADDED: $(acceptanceStorageFirewallRuleAdded)
 
   ## Run this deploy stage only if conditions met to deploy to this environment
