@@ -73,11 +73,22 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             if (redirectReturnUrlLocation is null)
             {
                 var finalResponseUri = signInButtonResponse.RequestMessage?.RequestUri;
+                var responseHeaders = signInButtonResponse.Headers
+                    .Where(header => header.Key.Equals("WWW-Authenticate", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("Server", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("Via", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("X-Azure-Ref", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("X-Azure-FDID", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("X-Cache", StringComparison.OrdinalIgnoreCase))
+                    .Select(header => $"{header.Key}={string.Join(",", header.Value)}");
+                var responseHeaderDetails = string.Join("; ", responseHeaders);
+
                 throw new InvalidOperationException(
                     $"Expected the sign-in endpoint to return a redirect Location, but it did not. " +
                     $"Request URI: '{signInButton.RequestUri}', final response URI: '{finalResponseUri}', " +
                     $"status: {(int)signInButtonResponse.StatusCode} {signInButtonResponse.StatusCode} " +
-                    $"({signInButtonResponse.ReasonPhrase}).");
+                    $"({signInButtonResponse.ReasonPhrase})." +
+                    (string.IsNullOrEmpty(responseHeaderDetails) ? string.Empty : $" Response headers: {responseHeaderDetails}."));
             }
 
             return (redirectReturnUrlLocation, signInCookies);
