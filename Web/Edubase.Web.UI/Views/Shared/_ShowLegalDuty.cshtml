@@ -5,9 +5,9 @@
 @if (Model.GroupTypeId == (int)eLookupGroupType.SecureSingleAcademyTrust)
 {
     <!-- Viewing the governance tab for a secure single-academy trust. -->
-    @await Html.PartialAsync("~/Areas/Governors/Views/Governor/_LegalDutySecureAcademyTrustStatement.cshtml")
+    @await Html.PartialAsync("~/Views/Governor/_LegalDutySecureAcademyTrustStatement.cshtml")
 }
 else
 {
-    @await Html.PartialAsync("~/Areas/Governors/Views/Governor/_LegalDutyStatement.cshtml")
+    @await Html.PartialAsync("~/Views/Governor/_LegalDutyStatement.cshtml")
 }

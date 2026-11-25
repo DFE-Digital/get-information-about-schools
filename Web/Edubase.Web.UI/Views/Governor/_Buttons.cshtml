@@ -18,10 +18,9 @@
     }
 </button>
 
-@Html.ActionLink(
+@Html.RouteLink(
     "Cancel",
-        "Edit",
-        "Governor",
-        new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn },
+        Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",        
+        new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn },
         new { id = "cancel-button", @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" }
 )

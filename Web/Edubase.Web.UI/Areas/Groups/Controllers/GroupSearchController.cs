@@ -196,9 +196,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return new RedirectResult(Url.RouteUrl(routeDictionary));
         }
 
-        private ActionResult RedirectToDetailPage(int id)
-            => new RedirectToRouteResult(null,
-                new RouteValueDictionary { { "action", "Details" }, { "controller", "Group" }, { "id", id }, { "area", "Groups" } });
+        private ActionResult RedirectToDetailPage(int id) => RedirectToRoute("GroupDetails", new { id });                
 
         private GroupSearchPayload CreateSearchPayload(GroupSearchViewModel model) => new GroupSearchPayload(model.StartIndex, model.PageSize)
         {

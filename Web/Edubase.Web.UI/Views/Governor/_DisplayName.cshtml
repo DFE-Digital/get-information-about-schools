@@ -42,7 +42,7 @@
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
         @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label" })
         <span id="@errorsWrapperId">
-            @Html.ValidationMessageFor(x => x.FirstName, "First name cannot be empty", new { @class = "govuk-error-message" })
+            @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "govuk-error-message" })
         </span>
         @Html.TextBoxFor(x => x.FirstName, new {
             @class = $"govuk-input {Html.TextBoxValidationClass(x => x.FirstName)}",
@@ -72,7 +72,7 @@
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
         @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label" })
         <span id="@errorsWrapperId">
-            @Html.ValidationMessageFor(x => x.LastName, "Last name cannot be empty", new { @class = "govuk-error-message" })
+            @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "govuk-error-message" })
         </span>
         @Html.TextBoxFor(x => x.LastName, new {
             @class = $"govuk-input {Html.TextBoxValidationClass(x => x.LastName)}",

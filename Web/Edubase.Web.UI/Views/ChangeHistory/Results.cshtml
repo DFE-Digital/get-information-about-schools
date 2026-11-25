@@ -152,7 +152,7 @@
                             if (!Model.SingleEstablishment)
                             {
                                 <div class="govuk-grid-column-one-third">
-                                    @await Html.PartialAsync("_StringLookupItemSelector", (
+                                    @await Html.PartialAsync("Partials/_LookupItemSelector", (
                                         "Establishment type",
                                         ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS,
                                         Model.EstablishmentTypes,
@@ -164,7 +164,7 @@
                             }
 
                             <div class="govuk-grid-column-one-third">
-                                @await Html.PartialAsync("_Selector", (
+                                @await Html.PartialAsync("Partials/_StringLookupItemSelector", (
                                     "Updated fields",
                                     ChangeHistoryViewModel.BIND_ALIAS_FIELDS,
                                     Model.EstablishmentFields,
@@ -180,7 +180,7 @@
                             {
                                 <div class="govuk-grid-column-one-third">
 
-                                    @await Html.PartialAsync("_LookupItemSelector", (
+                                    @await Html.PartialAsync("Partials/_LookupItemSelector", (
                                         "Group type",
                                         ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS,
                                         Model.GroupTypes,

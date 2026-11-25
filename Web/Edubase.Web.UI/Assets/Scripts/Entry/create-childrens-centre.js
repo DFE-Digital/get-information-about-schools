@@ -199,29 +199,25 @@ const  ccApp = new Vue({
         data: opData,
         success: function (data) {
           self[dateProp + 'Error'] = data.length > 0;
-          let errors = [];
-          $.each(data,
-            function (n, err) {
-              errors.push(err.Value.Errors[0].ErrorMessage);
-            });
-
-          self[dateProp + 'ErrorMessage'] = errors.join('<br>');
+          self[dateProp + 'ErrorMessage'] = data.join('<br>');
           self.isProcessing = false;
         },
-        error: function() {
+        error: function () {
+          self[dateProp + 'Error'] = true;
+          self[dateProp + 'ErrorMessage'] = 'Unable to validate the date. Please try again.';
           self.isProcessing = false;
+          self.errorFocus();
         }
       });
     },
     step1Continue: function () {
       this.clearErrors();
-      const self = this;
+      const self = this;      
+      self.groupNameError = $.trim(self.groupName) === '';
+      self.laError = self.la === '';
+      self.groupNameApiError = '';
+      self.groupNameWarningMessage = '';
       $.when(this.validateDate('openDate')).done(function () {
-        self.groupNameError = $.trim(self.groupName) === '';
-        self.laError = self.la === '';
-        self.groupNameApiError = '';
-        self.groupNameWarningMessage = '';
-
         if (!self.groupNameError && !self.laError && !self.openDateError) {
           self.isProcessing = true;
           let validationObj = {

@@ -190,7 +190,7 @@
                         @if (Model.CanUserEdit)
                         {
                             <div class="govuk-!-padding-top-4">
-                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
+                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId }, new { @id = "edit-details-bottom-button", @class = "govuk-button govuk-button--secondary" })                                
                             </div>
 
                         }

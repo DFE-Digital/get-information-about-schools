@@ -19,7 +19,7 @@
             <div class="edit-governor">
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DelegationInformation)">
                     @Html.LabelFor(x => x.DelegationInformation, new {@class = "govuk-label"})
-                    @Html.ValidationMessageFor(x => x.DelegationInformation, "Details must be 1000 characters or less", new { @class = "govuk-error-message" })
+                    @Html.ValidationMessageFor(x => x.DelegationInformation, null, new { @class = "govuk-error-message" })
                     @Html.TextAreaFor(x => x.DelegationInformation, new {rows = "6", cols = "60", @class="govuk-textarea"})
                 </div>
 

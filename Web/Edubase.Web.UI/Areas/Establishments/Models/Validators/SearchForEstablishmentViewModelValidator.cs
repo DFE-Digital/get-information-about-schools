@@ -11,6 +11,7 @@ public class SearchForEstablishmentViewModelValidator : AbstractValidator<Search
     public SearchForEstablishmentViewModelValidator(IEstablishmentReadService establishmentReadService, IPrincipal principal)
     {
         RuleFor(x => x.SearchUrn)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Please enter a valid URN")
             .Must(x => x.ToInteger().HasValue)
                 .WithMessage("Please enter a valid URN")

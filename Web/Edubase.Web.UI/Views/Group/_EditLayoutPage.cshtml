@@ -31,7 +31,7 @@
 <p class="establishment-type establishment-fine-detail">@(ViewBag.OriginalGroupTypeName ?? Model.GroupTypeName)</p>
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
-    @Html.Partial("~/Areas/Governors/Views/Governor/_DuplicateGovernor.cshtml", ViewData["DuplicateGovernor"])
+    @Html.Partial("~/Views/Governor/_DuplicateGovernor.cshtml", ViewData["DuplicateGovernor"])
 }
 
 <div class="govuk-grid-row">
