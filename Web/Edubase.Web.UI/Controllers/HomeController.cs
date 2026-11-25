@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Edubase.Common.Cache;
 using Edubase.Data;
 using Edubase.Data.Repositories;
 using Edubase.Services;
-using Edubase.Services.Establishments;
-using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Microsoft.AspNetCore.Http;
@@ -20,30 +17,18 @@ namespace Edubase.Web.UI.Controllers
     {
         private const string UserPrefsCookieName = "analytics_preferences";
 
-        private readonly ILookupService _lookup;
-        private readonly IBlobService _blobService;
-        private readonly ICacheAccessor _cacheAccessor;
-        private readonly INewsArticleRepository _newsRepository;
         private readonly IConfiguration _configuration;
 
         public HomeController(
-            ILookupService lookup,
-            IBlobService blobService,
-            ICacheAccessor cacheAccessor,
-            INewsArticleRepository newsRepository,
             IConfiguration configuration)
         {
-            _lookup = lookup;
-            _blobService = blobService;
-            _cacheAccessor = cacheAccessor;
-            _newsRepository = newsRepository;
             _configuration = configuration;
         }
 
         [HttpGet("~/")]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index([FromServices] INewsArticleRepository newsRepository)
         {
-            var results = await _newsRepository.GetAllAsync(1000);
+            var results = await newsRepository.GetAllAsync(1000);
             var items = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
             return View(new HomepageViewModel(items));
         }
@@ -59,21 +44,21 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpGet("~/content")]
         [Filters.EdubaseAuthorize]
-        public async Task<ActionResult> Container(string file)
+        public async Task<ActionResult> Container(string file, [FromServices] IBlobService blobService)
         {
-            return await GetFileFromContainer("content", file);
+            return await GetFileFromContainer(blobService, "content", file);
         }
 
         [HttpGet("~/content/guidance")]
         [Filters.EdubaseAuthorize]
-        public async Task<ActionResult> Guidance(string file)
+        public async Task<ActionResult> Guidance(string file, [FromServices] IBlobService blobService)
         {
-            return await GetFileFromContainer("guidance", file);
+            return await GetFileFromContainer(blobService, "guidance", file);
         }
 
-        private async Task<ActionResult> GetFileFromContainer(string container, string file)
+        private async Task<ActionResult> GetFileFromContainer(IBlobService blobService, string container, string file)
         {
-            var blob = _blobService.GetBlobReference(container, file);
+            var blob = blobService.GetBlobReference(container, file);
             if (await blob.ExistsAsync())
             {
                 var stream = await blob.OpenReadAsync();

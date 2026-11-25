@@ -1,4 +1,10 @@
 using System;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
+using Edubase.Data;
+using Edubase.Data.Repositories.EF;
+using Edubase.Web.UI.Controllers.Api;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ValueProviders;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,6 +18,9 @@ public static class CoreServiceRegistration
 {
     public static void AddWebUiFoundationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        DbConfiguration.SetConfiguration(new MicrosoftSqlDbConfiguration());
+        DbProviderFactories.RegisterFactory("Microsoft.Data.SqlClient", Microsoft.Data.SqlClient.SqlClientFactory.Instance);
+
         var sessionExpireValue = configuration["SessionExpireTimeSpan"];
         if (!TimeSpan.TryParse(sessionExpireValue, out var sessionExpireTimeSpan))
         {
@@ -20,6 +29,9 @@ public static class CoreServiceRegistration
 
         services.AddRouting();
         services.AddHttpContextAccessor();
+        services.AddScoped<DbConnection>(_ => new Microsoft.Data.SqlClient.SqlConnection(SqlLaNameCodeRepository.BuildConnectionString(configuration)));
+        services.AddScoped<FrontEndDbContext>();
+        services.AddScoped<INewsArticleRepository, SqlNewsArticleRepository>();
         services.AddControllersWithViews(options =>
         {
             CoreFilterConfig.RegisterGlobalFilters(options);

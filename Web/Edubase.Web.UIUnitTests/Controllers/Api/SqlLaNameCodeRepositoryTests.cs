@@ -1,7 +1,7 @@
 using System;
-using System.Configuration;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Xunit;
-using ConfigManager = System.Configuration.ConfigurationManager;
 
 namespace Edubase.Web.UI.Controllers.Api.UnitTests
 {
@@ -9,29 +9,69 @@ namespace Edubase.Web.UI.Controllers.Api.UnitTests
     public class SqlLaNameCodeRepositoryTests 
     {
         [Fact]
-        public void BuildConnectionStringShouldIgnoreAnyLocalDevSetting()
+        public void BuildConnectionStringShouldUseHostedSettings()
         {
-            ConfigManager.AppSettings["Environment"] = "dev";
-            ConfigManager.AppSettings["FrontEndDatabase"] = "FrontEndTestConnectionString";
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                ["Environment"] = "dev",
+                ["FrontEndDatabase"] = "IgnoredLocalConnection",
+                ["SQLServer"] = "test.database.windows.net",
+                ["SQLDatabase"] = "gias-test"
+            }).Build();
 
-            var expected = "Server=tcp:,1433;database=;authentication=Active Directory Default;encrypt=True;TrustServerCertificate=False;";
+            var connectionString = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(
+                SqlLaNameCodeRepository.BuildConnectionString(configuration));
 
-            Assert.Equal(expected, SqlLaNameCodeRepository.BuildConnectionString());
-
-            ConfigManager.AppSettings["FrontEndDatabase"] = string.Empty;
+            Assert.Equal("tcp:test.database.windows.net,1433", connectionString.DataSource);
+            Assert.Equal("gias-test", connectionString.InitialCatalog);
+            Assert.Equal(Microsoft.Data.SqlClient.SqlAuthenticationMethod.ActiveDirectoryDefault, connectionString.Authentication);
+            Assert.False(connectionString.TrustServerCertificate);
         }
 
         [Fact]
         public void BuildConnectionStringShouldUseLocalDevSetting()
         {
-            ConfigManager.AppSettings["Environment"] = "localdev";
-            ConfigManager.AppSettings["FrontEndDatabase"] = "FrontEndTestConnectionString";
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                ["Environment"] = "localdev",
+                ["FrontEndDatabase"] = "Server=(localdb)\\MSSQLLocalDB;Database=gias;Integrated Security=true"
+            }).Build();
 
-            var expected = "FrontEndTestConnectionString";
+            Assert.Equal(configuration["FrontEndDatabase"], SqlLaNameCodeRepository.BuildConnectionString(configuration));
+        }
 
-            Assert.Equal(expected, SqlLaNameCodeRepository.BuildConnectionString());
+        [Theory]
+        [InlineData("localdev")]
+        [InlineData("dev")]
+        public void BuildConnectionStringShouldPreferConfiguredConnectionString(string environment)
+        {
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                ["Environment"] = environment,
+                ["FrontEndDatabase"] = "IgnoredLocalConnection",
+                ["ConnectionStrings:FrontEndDatabase"] = "Server=localhost;Database=gias;Integrated Security=true"
+            }).Build();
 
-            ConfigManager.AppSettings["FrontEndDatabase"] = string.Empty;
+            Assert.Equal(configuration.GetConnectionString("FrontEndDatabase"), SqlLaNameCodeRepository.BuildConnectionString(configuration));
+        }
+
+        [Theory]
+        [InlineData("localdev", null, null)]
+        [InlineData("dev", null, null)]
+        [InlineData("dev", "test.database.windows.net", null)]
+        [InlineData("dev", null, "gias-test")]
+        public void BuildConnectionStringShouldRejectMissingConfiguration(string environment, string server, string database)
+        {
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                ["Environment"] = environment,
+                ["SQLServer"] = server,
+                ["SQLDatabase"] = database
+            }).Build();
+
+            var exception = Assert.Throws<InvalidOperationException>(() => SqlLaNameCodeRepository.BuildConnectionString(configuration));
+
+            Assert.Contains("ConnectionStrings:FrontEndDatabase", exception.Message);
         }
     }
 }

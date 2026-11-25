@@ -2,6 +2,53 @@
 
 This document describes the production deployment shape for Get Information about Schools (GIAS) in Azure.
 
+## .NET 10 release preparation and recovery gates
+
+The .NET 10 upgrade is **not release-ready**. Local artifact publishing, health and static-file checks have passed; rendered-page checks have not. No non-production or production deployment/recovery rehearsal has been performed by this upgrade session. Keep the existing deployment and its configuration intact until the gates below are met.
+
+### Local artifact preparation
+
+Use the .NET 10 SDK and the repository's existing Node/npm tooling. From the repository root, build assets before publishing so the generated bundles are included:
+
+```powershell
+Push-Location .\Web\Edubase.Web.UI
+npm ci
+if ($LASTEXITCODE -ne 0) { Pop-Location; throw "Frontend dependency restore failed" }
+npm run buildCi
+if ($LASTEXITCODE -ne 0) { Pop-Location; throw "Frontend build failed" }
+Pop-Location
+
+dotnet publish .\Web\Edubase.Web.UI\Edubase.Web.UI.csproj -c Release -o .\Web\Edubase.Web.UI\bin\release-candidate
+if ($LASTEXITCODE -ne 0) { throw "Release publish failed" }
+```
+
+Use an empty publish destination for each candidate to avoid stale files. When an existing local app locks default build output, add `-p:OutputPath=bin\release-readiness\`; do not terminate unrelated processes. Package the **contents** of the publish directory, not the parent directory and not a legacy Web Deploy package. Include the SDK-generated ASP.NET Core `web.config`, application DLL/deps/runtimeconfig files, configuration and `public` assets. Do not copy the legacy Framework `Web.config` into the candidate.
+
+Run the published DLL from its publish directory on a free loopback port. Verify `/health`, the `/public/assets/...` CSS and JavaScript URLs, fonts, and actual rendered pages. `/health` is a liveness check only: it does not establish SQL/backend/authentication readiness.
+
+The SQL path reads `IConfiguration`. Supply `ConnectionStrings__FrontEndDatabase` through the approved environment/secret mechanism, or hosted `SQLServer` and `SQLDatabase` with `Environment` set appropriately for the application's configuration. Local development also supports the existing `FrontEndDatabase` setting when `Environment=localdev`. Do not commit credentials. Other remaining legacy configuration consumers still require migration/parity validation.
+
+### Non-production rehearsal and cutover prerequisites
+
+Before any deployment, the deployment owner must identify and approve the non-production target and confirm:
+
+1. Windows App Service/runtime or IIS .NET 10 Hosting Bundle availability and the selected artifact deployment mechanism.
+2. Approved SQL, backend/SOAP, authentication and telemetry configuration, network access and identity permissions.
+3. Passing rendered-page, sign-in/roles/session, SOAP/WSDL, report, download/polling and visual/accessibility checks against representative integrations.
+4. Observability at the agreed Application Insights destination, an agreed monitoring window and explicit abort criteria.
+5. Accepted downtime/session handling and a data-aware rollback plan. No production cutover is authorized by local publishing.
+
+The checked-in CI/deployment templates still need specifically authorized migration from Framework-era packaging and test commands before they can consume this artifact. No template changes or pipeline runs were made during local preparation.
+
+### Recovery rehearsal checklist
+
+- Record the previous known-good artifact/version and retain its matching environment settings, identity configuration and required runtime.
+- Have the database owner establish backward schema compatibility and decide how post-cutover writes are preserved, reconciled or restored. Do not assume a code-only rollback is safe, or automatically roll back a database.
+- In the approved non-production environment, rehearse taking the candidate offline, restoring the previous artifact and configuration, and restoring service. Capture timing, logs and health plus representative business checks.
+- Assign the rollback decision-maker and deployment/database owners. Obtain their acceptance of the measured recovery procedure and treatment of post-cutover data before scheduling a production change.
+
+These are unverified release gates, not evidence that recovery has already succeeded.
+
 It uses focused C4 deployment diagrams rather than one large diagram. The same core resources appear in more than one view, but each diagram answers a different question:
 
 1. What is deployed in the `DFE T1 Production` subscription and resource groups?

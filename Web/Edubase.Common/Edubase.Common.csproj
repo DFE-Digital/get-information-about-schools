@@ -45,4 +45,8 @@
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="8.0.0" />
     <PackageReference Include="System.Runtime.Caching" Version="11.0.0" />
   </ItemGroup>
+  <ItemGroup Label="Compile items excluded from globbing">
+    <Compile Remove="obj\**\*.cs" />
+    <Compile Remove="artifacts\**\*.cs" />
+  </ItemGroup>
 </Project>

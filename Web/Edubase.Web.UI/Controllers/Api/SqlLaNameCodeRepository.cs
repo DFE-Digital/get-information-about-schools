@@ -1,8 +1,8 @@
 using Edubase.Common.Cache;
 using Edubase.Web.UI.Models;
-using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +12,12 @@ namespace Edubase.Web.UI.Controllers.Api
     public class SqlLaNameCodeRepository : ISqlLaNameCodeRepository
     {
         private readonly ICacheAccessor _cacheAccessor;
+        private readonly IConfiguration _configuration;
 
-        public SqlLaNameCodeRepository(ICacheAccessor cacheAccessor)
+        public SqlLaNameCodeRepository(ICacheAccessor cacheAccessor, IConfiguration configuration)
         {
             _cacheAccessor = cacheAccessor;
+            _configuration = configuration;
         }
 
         public async Task<IEnumerable<SqlLaNameCode>> GetAllAsync()
@@ -34,9 +36,9 @@ namespace Edubase.Web.UI.Controllers.Api
                 GetType().Name);
         }
 
-        private static async Task<List<SqlLaNameCode>> QueryAllAsync()
+        private async Task<List<SqlLaNameCode>> QueryAllAsync()
         {
-            using (var context = new LaNameCodesDbContext(new SqlConnection(BuildConnectionString())))
+            using (var context = new LaNameCodesDbContext(new Microsoft.Data.SqlClient.SqlConnection(BuildConnectionString(_configuration))))
             {
                 return await context.LaNameCodes
                     .AsNoTracking()
@@ -46,9 +48,9 @@ namespace Edubase.Web.UI.Controllers.Api
             }
         }
 
-        private static async Task<List<SqlLaNameCode>> QueryByGroupAsync(string groupCode)
+        private async Task<List<SqlLaNameCode>> QueryByGroupAsync(string groupCode)
         {
-            using (var context = new LaNameCodesDbContext(new SqlConnection(BuildConnectionString())))
+            using (var context = new LaNameCodesDbContext(new Microsoft.Data.SqlClient.SqlConnection(BuildConnectionString(_configuration))))
             {
                 return await context.LaNameCodes
                     .AsNoTracking()
@@ -58,18 +60,32 @@ namespace Edubase.Web.UI.Controllers.Api
             }
         }
 
-        internal static string BuildConnectionString()
+        internal static string BuildConnectionString(IConfiguration configuration)
         {
-            // LocalSetup supplies Windows-authenticated local SQL; hosted runs use Azure authentication.
-            if (string.Equals(ConfigurationManager.AppSettings["Environment"], "localdev", System.StringComparison.OrdinalIgnoreCase))
+            var connectionString = configuration.GetConnectionString("FrontEndDatabase");
+            if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                return ConfigurationManager.ConnectionStrings["FrontEndDatabase"]?.ConnectionString
-                    ?? ConfigurationManager.AppSettings["FrontEndDatabase"]
-                    ?? string.Empty;
+                return connectionString;
             }
 
-            var serverName = ConfigurationManager.AppSettings["SQLServer"];
-            var databaseName = ConfigurationManager.AppSettings["SQLDatabase"];
+            if (string.Equals(configuration["Environment"], "localdev", StringComparison.OrdinalIgnoreCase))
+            {
+                connectionString = configuration["FrontEndDatabase"];
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    throw new InvalidOperationException("Configure ConnectionStrings:FrontEndDatabase for local SQL access.");
+                }
+
+                return connectionString;
+            }
+
+            var serverName = configuration["SQLServer"];
+            var databaseName = configuration["SQLDatabase"];
+            if (string.IsNullOrWhiteSpace(serverName) || string.IsNullOrWhiteSpace(databaseName))
+            {
+                throw new InvalidOperationException("Configure ConnectionStrings:FrontEndDatabase or both SQLServer and SQLDatabase for SQL access.");
+            }
+
             return
                 $"Server=tcp:{serverName},1433;" +
                 $"database={databaseName};" +

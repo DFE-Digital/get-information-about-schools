@@ -3,6 +3,8 @@
 **Progress**: 12/15 tasks complete <progress value="80" max="100"></progress> 80%
 **Status**: In Progress - Task 05-release-readiness
 
+**2026-11-24 release gate update**: Local Release build/publish and ZIP health/static-asset checks pass, but Task 05 is not complete. Razor page rendering, configured SQL/integration verification, specifically authorized CI changes and non-production recovery rehearsal remain blocked/unverified. See [Task 05 evidence and ownership](tasks/05-release-readiness/task.md#local-release-preparation-2026-11-24). Earlier Task 04 completion is not proof of end-to-end application parity.
+
 ## Tasks
 
 - ✅ 01-readiness-and-compatibility: Establish toolchain, compatibility baselines and decision gates ([Content](tasks/01-readiness-and-compatibility/task.md), [Progress](tasks/01-readiness-and-compatibility/progress-details.md))

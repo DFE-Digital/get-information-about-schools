@@ -47,6 +47,7 @@
     <PackageReference Include="DocumentFormat.OpenXml.Framework" Version="3.5.1" />
     <PackageReference Include="EntityFramework" Version="6.5.2" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+    <PackageReference Include="Microsoft.EntityFramework.SqlServer" Version="6.5.2" />
   </ItemGroup>
   <ItemGroup>
     
@@ -766,6 +767,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <ItemGroup>
+    <Content Update="Web.config;Web.Debug.config;Web.Release.config;Views\**\Web.config;Areas\**\Views\Web.config" CopyToPublishDirectory="Never" />
+    <Content Remove="public\**" />
+    <Content Include="public\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
   <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="'$(TargetFramework)' == 'net48'">
     <ItemGroup>
       <RoslynFiles Include="$(SolutionDir)packages\Microsoft.Net.Compilers.3.5.0\tools\*" />

@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <Compile Remove="LocalSignInSimulator\**" />
+    <Compile Remove="obj\**" />
+    <Compile Remove="artifacts\**" />
     <EmbeddedResource Remove="LocalSignInSimulator\**" />
     <None Remove="LocalSignInSimulator\**" />
     <ReqnrollFeatureFile Remove="LocalSignInSimulator\**" />
