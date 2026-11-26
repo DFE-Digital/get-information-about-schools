@@ -126,7 +126,7 @@ public class AccountController : Controller
         {
             TempData["SavedToken"] = searchToken;
             TempData["UserId"] = principal.GetUserId();
-            return Redirect($"{Url.RouteUrl("EstabSearch")}?tok={searchToken}");
+            return RedirectToRoute("EstabSearch", new { tok = searchToken });
         }
 
         if (principal.IsInRole(EdubaseRoles.ESTABLISHMENT))

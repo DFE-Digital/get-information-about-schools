@@ -49,7 +49,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _userPreferenceRepository = userPreferenceRepository;
         }
 
-        [HttpGet("index")]
+        [HttpGet("index", Name = "EstabSearch")]
         public async Task<IActionResult> Index([FromQuery] EstablishmentSearchViewModel model)
         {
             model.SearchQueryString = Request.QueryString.Value;
