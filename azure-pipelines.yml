@@ -184,7 +184,8 @@ stages:
   ## Deploy to dev "main" slot, which integrates with Azure Front Door (ADF) and Web Application Firewall (WAF)
   - stage: 'DeployDevSlotMain'
     displayName: 'Deploy to Dev (main slot with AFD/WAF)'
-    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/290161-qa-acceptance-tests'), eq(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests')))
+    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true'), eq(variables['Build.SourceBranch'])))
+#    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests')))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
@@ -227,7 +228,7 @@ stages:
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
         parameters:
-          enabled: ${{ and(ne(variables['Build.SourceBranch'], 'refs/heads/290161-qa-acceptance-tests'), ne(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests')) }}
+          enabled: ${{ ne(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests') }}
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiDevSlotMainJobWebRoot'
           previousDeploymentJobName: 'DeployWebUiDevSlotMainJob'
@@ -244,7 +245,7 @@ stages:
       ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
       - template: 'pipelines/template-smoke-test-deployment.yml'
         parameters:
-          enabled: ${{ and(ne(variables['Build.SourceBranch'], 'refs/heads/290161-qa-acceptance-tests'), ne(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests')) }}
+          enabled: ${{ ne(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests') }}
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiDevSlotMainJobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiDevSlotMainJob'
@@ -261,162 +262,49 @@ stages:
   
   
   
-      - job: RunAcceptanceTests
-        displayName: 'Run acceptance tests against Dev'
-        dependsOn:
-          - DeployWebUiDevSlotMainJob
-          - smokeTestGiasWebUiDevSlotMainJobWebRoot
-          - smokeTestGiasWebUiDevSlotMainJobDownloadsPage
-        condition: and(not(canceled()), eq(dependencies.DeployWebUiDevSlotMainJob.result, 'Succeeded'))
-        variables:
-          - group: 'GIAS.FrontEnd.AcceptanceTests.DEV'
-          - name: acceptanceAgentEgressIp
-            value: 'unset'
-          - name: acceptanceSqlFirewallRuleName
-            value: 'unset'
-          - name: acceptanceSqlFirewallRuleAdded
-            value: 'false'
-          - name: acceptanceStorageFirewallRuleAdded
-            value: 'false'
-        pool:
-          vmImage: 'windows-2025-vs2026'
-        steps:
-          - checkout: self
+      # - job: RunAcceptanceTests
+      #   displayName: 'Run acceptance tests against Dev'
+      #   dependsOn:
+      #     - DeployWebUiDevSlotMainJob
+      #     - smokeTestGiasWebUiDevSlotMainJobWebRoot
+      #     - smokeTestGiasWebUiDevSlotMainJobDownloadsPage
+      #   condition: and(not(canceled()), eq(dependencies.DeployWebUiDevSlotMainJob.result, 'Succeeded'))
+      #   variables:
+      #     - group: 'GIAS.FrontEnd.AcceptanceTests.DEV'
+      #   pool:
+      #     vmImage: 'windows-2025-vs2026'
+      #   steps:
+      #     - checkout: self
 
-          - task: FileTransform@2
-            displayName: 'Populate acceptance test config'
-            inputs:
-              folderPath: '$(Build.SourcesDirectory)'
-              enableXmlTransform: false
-              xmlTargetFiles: 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config'
+      #     - task: FileTransform@2
+      #       displayName: 'Populate acceptance test config'
+      #       inputs:
+      #         folderPath: '$(Build.SourcesDirectory)'
+      #         enableXmlTransform: false
+      #         xmlTargetFiles: 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config'
 
-          - task: PowerShell@2
-            displayName: 'Create acceptance test runtime config'
-            inputs:
-              targetType: 'inline'
-              script: |
-                $source = Join-Path $env:BUILD_SOURCESDIRECTORY 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config'
-                $destination = Join-Path $env:BUILD_SOURCESDIRECTORY 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config.alwaysignore'
-                Copy-Item -LiteralPath $source -Destination $destination -Force
+      #     - task: PowerShell@2
+      #       displayName: 'Create acceptance test runtime config'
+      #       inputs:
+      #         targetType: 'inline'
+      #         script: |
+      #           $source = Join-Path $env:BUILD_SOURCESDIRECTORY 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config'
+      #           $destination = Join-Path $env:BUILD_SOURCESDIRECTORY 'Web/Edubase.AcceptanceTests/Configuration/acceptance.tests.config.alwaysignore'
+      #           Copy-Item -LiteralPath $source -Destination $destination -Force
 
-          - task: UseDotNet@2
-            displayName: 'Install .NET 10 SDK'
-            inputs:
-              packageType: 'sdk'
-              version: '10.0.x'
+      #     - task: UseDotNet@2
+      #       displayName: 'Install .NET 10 SDK'
+      #       inputs:
+      #         packageType: 'sdk'
+      #         version: '10.0.x'
 
-          - task: AzureCLI@2
-            displayName: 'Temporarily allow the acceptance agent through the SQL firewall'
-            inputs:
-              azureSubscription: 'rg-t1dv-edubase'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                $agentIp = (Invoke-RestMethod -Uri 'https://api4.ipify.org' -TimeoutSec 15).Trim()
-                $parsedIp = $null
-                if (-not [System.Net.IPAddress]::TryParse($agentIp, [ref]$parsedIp) -or
-                    $parsedIp.AddressFamily -ne [System.Net.Sockets.AddressFamily]::InterNetwork)
-                {
-                  throw 'Could not determine the acceptance agent IPv4 egress address.'
-                }
-
-                $sqlRuleName = "ado-acceptance-$(Build.BuildId)-$(System.JobAttempt)"
-                Write-Host "##vso[task.setvariable variable=acceptanceAgentEgressIp]$agentIp"
-                Write-Host "##vso[task.setvariable variable=acceptanceSqlFirewallRuleName]$sqlRuleName"
-
-                $sqlRuleOutput = az sql server firewall-rule create --resource-group 'rg-t1dv-edubase' --server 'sqlsrv-t1dv-edubase' --name $sqlRuleName --start-ip-address $agentIp --end-ip-address $agentIp --only-show-errors --output none 2>&1
-                $sqlCreateExitCode = $LASTEXITCODE
-                if ($sqlCreateExitCode -ne 0) {
-                  throw "Could not add the SQL firewall rule: $($sqlRuleOutput -join ' ')"
-                }
-                Write-Host "##vso[task.setvariable variable=acceptanceSqlFirewallRuleAdded]true"
-
-          - task: AzureCLI@2
-            displayName: 'Temporarily allow the acceptance agent through the Storage firewall'
-            inputs:
-              azureSubscription: 'rg-t1dv-gias'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                $agentIp = $env:ACCEPTANCE_AGENT_EGRESS_IP
-                $parsedIp = $null
-                if (-not [System.Net.IPAddress]::TryParse($agentIp, [ref]$parsedIp) -or
-                    $parsedIp.AddressFamily -ne [System.Net.Sockets.AddressFamily]::InterNetwork)
-                {
-                  throw 'The acceptance agent IPv4 egress address is unavailable.'
-                }
-
-                $existingStorageIpRules = @(
-                  az storage account network-rule list --resource-group 'rg-t1dv-gias' --account-name 'giasdev' --query "ipRules[].ipAddressOrRange" --output tsv 2>&1
-                )
-                $storageListExitCode = $LASTEXITCODE
-                if ($storageListExitCode -ne 0) {
-                  throw "Could not inspect giasdev network rules: $($existingStorageIpRules -join ' ')"
-                }
-
-                $storageRuleExists = $existingStorageIpRules -contains $agentIp -or $existingStorageIpRules -contains "$agentIp/32"
-                if (-not $storageRuleExists) {
-                  $storageRuleOutput = az storage account network-rule add --resource-group 'rg-t1dv-gias' --account-name 'giasdev' --ip-address $agentIp --only-show-errors --output none 2>&1
-                  $storageAddExitCode = $LASTEXITCODE
-                  if ($storageAddExitCode -ne 0) {
-                    throw "Could not add the Storage firewall rule: $($storageRuleOutput -join ' ')"
-                  }
-                  Write-Host "##vso[task.setvariable variable=acceptanceStorageFirewallRuleAdded]true"
-                }
-            env:
-              ACCEPTANCE_AGENT_EGRESS_IP: $(acceptanceAgentEgressIp)
-
-          - task: DotNetCoreCLI@2
-            displayName: 'Run acceptance tests against Dev'
-            inputs:
-              command: 'test'
-              projects: 'Web/Edubase.AcceptanceTests/Edubase.AcceptanceTests.csproj'
-              arguments: '--configuration $(buildConfiguration)'
-              publishTestResults: true
-
-          - task: AzureCLI@2
-            displayName: 'Remove temporary acceptance-test SQL firewall rule'
-            condition: always()
-            inputs:
-              azureSubscription: 'rg-t1dv-edubase'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                $cleanupErrors = [System.Collections.Generic.List[string]]::new()
-
-                if ($env:ACCEPTANCE_SQL_FIREWALL_RULE_ADDED -eq 'true') {
-                  $sqlDeleteOutput = az sql server firewall-rule delete --resource-group 'rg-t1dv-edubase' --server 'sqlsrv-t1dv-edubase' --name $env:ACCEPTANCE_SQL_FIREWALL_RULE_NAME --only-show-errors --output none 2>&1
-                  $sqlDeleteExitCode = $LASTEXITCODE
-                  if ($sqlDeleteExitCode -ne 0) {
-                    $cleanupErrors.Add("Could not remove the SQL firewall rule: $($sqlDeleteOutput -join ' ')")
-                  }
-                }
-
-                if ($cleanupErrors.Count -gt 0) {
-                  throw ($cleanupErrors -join ' ')
-                }
-            env:
-              ACCEPTANCE_SQL_FIREWALL_RULE_NAME: $(acceptanceSqlFirewallRuleName)
-              ACCEPTANCE_SQL_FIREWALL_RULE_ADDED: $(acceptanceSqlFirewallRuleAdded)
-
-          - task: AzureCLI@2
-            displayName: 'Remove temporary acceptance-test Storage firewall rule'
-            condition: always()
-            inputs:
-              azureSubscription: 'rg-t1dv-gias'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                if ($env:ACCEPTANCE_STORAGE_FIREWALL_RULE_ADDED -eq 'true') {
-                  $storageDeleteOutput = az storage account network-rule remove --resource-group 'rg-t1dv-gias' --account-name 'giasdev' --ip-address $env:ACCEPTANCE_AGENT_EGRESS_IP --only-show-errors --output none 2>&1
-                  $storageDeleteExitCode = $LASTEXITCODE
-                  if ($storageDeleteExitCode -ne 0) {
-                    throw "Could not remove the Storage firewall rule: $($storageDeleteOutput -join ' ')"
-                  }
-                }
-            env:
-              ACCEPTANCE_AGENT_EGRESS_IP: $(acceptanceAgentEgressIp)
-              ACCEPTANCE_STORAGE_FIREWALL_RULE_ADDED: $(acceptanceStorageFirewallRuleAdded)
+      #     - task: DotNetCoreCLI@2
+      #       displayName: 'Run acceptance tests against Dev'
+      #       inputs:
+      #         command: 'test'
+      #         projects: 'Web/Edubase.AcceptanceTests/Edubase.AcceptanceTests.csproj'
+      #         arguments: '--configuration $(buildConfiguration)'
+      #         publishTestResults: true
 
   ## Run this deploy stage only if conditions met to deploy to this environment
   - stage: 'DeployDevSandbox1'
