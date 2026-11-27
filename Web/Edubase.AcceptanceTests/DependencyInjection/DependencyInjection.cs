@@ -32,7 +32,6 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddGiasFrontEnd(settings);
             services.AddUserPreferencesInPersistentStorage(settings);
 
-
             return services;
         }
 

@@ -99,7 +99,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
                 acceptanceTestLogger.LogInformation(
                     $"Token differs for user '{difference.RowKey}': source='{difference.SourceToken ?? "<null>"}', " +
                     $"target='{difference.TargetToken ?? "<null>"}'.");
-            }
+        }
 
             Assert.Empty(missingSourceUserIds);
             Assert.True(sourceUserPreferences.Count <= targetUserPreferences.Count);
