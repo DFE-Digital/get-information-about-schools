@@ -102,10 +102,10 @@ public class AccountController : Controller
         // Re‑sign in with the application cookie scheme (refresh claims)
         await HttpContext.SignInAsync("ApplicationCookie", principal);
 
-        if (returnUrl != "/")
+        if (!string.IsNullOrWhiteSpace(returnUrl) && returnUrl != "/" && Url.IsLocalUrl(returnUrl))
         {
-            return Redirect(returnUrl);
-        }
+            return LocalRedirect(returnUrl);
+        }        
 
         return await GetLandingPage(principal);
     }
