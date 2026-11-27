@@ -16,18 +16,11 @@ namespace Edubase.AcceptanceTests.UserPreferences
             modelBuilder.Entity<UserPreference>(entity =>
             {
                 entity.ToTable("UserPreferences", "FrontEnd");
-                entity.HasKey(preference => new { preference.PartitionKey, preference.RowKey });
-                entity.Property(preference => preference.PartitionKey).HasMaxLength(64).IsUnicode(false);
+                //entity.HasKey(preference => new { preference.PartitionKey, preference.RowKey });
+                //entity.Property(preference => preference.PartitionKey).HasMaxLength(64).IsUnicode(false);
                 entity.Property(preference => preference.RowKey).HasMaxLength(64).IsUnicode(false);
                 entity.Property(preference => preference.SavedSearchToken).HasMaxLength(256).IsUnicode(false);
             });
         }
-    }
-
-    public sealed class UserPreference
-    {
-        public string PartitionKey { get; set; } = string.Empty;
-        public string RowKey { get; set; } = string.Empty;
-        public string? SavedSearchToken { get; set; }
     }
 }

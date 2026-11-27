@@ -9,7 +9,7 @@ namespace Edubase.AcceptanceTests.Users
             this.environment = environment;
         }
 
-        public User GetBackOfficeUser()
+        public async Task<User> GetBackOfficeUser()
         {
             if (environment == "test")
             {
@@ -27,6 +27,11 @@ namespace Edubase.AcceptanceTests.Users
                 AttributeStatementValue = "3600154",
                 Comment = "GIAS Backoffice - TESTER ONLY"
             };
+        }
+
+        public async Task RemoveUser(User user)
+        {
+            // do nothing, as this is a hard coded user
         }
     }
 }

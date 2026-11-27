@@ -73,11 +73,22 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
             if (redirectReturnUrlLocation is null)
             {
                 var finalResponseUri = signInButtonResponse.RequestMessage?.RequestUri;
+                var responseHeaders = signInButtonResponse.Headers
+                    .Where(header => header.Key.Equals("WWW-Authenticate", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("Server", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("Via", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("X-Azure-Ref", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("X-Azure-FDID", StringComparison.OrdinalIgnoreCase) ||
+                                     header.Key.Equals("X-Cache", StringComparison.OrdinalIgnoreCase))
+                    .Select(header => $"{header.Key}={string.Join(",", header.Value)}");
+                var responseHeaderDetails = string.Join("; ", responseHeaders);
+
                 throw new InvalidOperationException(
                     $"Expected the sign-in endpoint to return a redirect Location, but it did not. " +
                     $"Request URI: '{signInButton.RequestUri}', final response URI: '{finalResponseUri}', " +
                     $"status: {(int)signInButtonResponse.StatusCode} {signInButtonResponse.StatusCode} " +
-                    $"({signInButtonResponse.ReasonPhrase}).");
+                    $"({signInButtonResponse.ReasonPhrase})." +
+                    (string.IsNullOrEmpty(responseHeaderDetails) ? string.Empty : $" Response headers: {responseHeaderDetails}."));
             }
 
             return (redirectReturnUrlLocation, signInCookies);
@@ -148,5 +159,14 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
                 "test" => "https://dfe-sign-in-simulator.azurewebsites.net/e00bdaf5-4cee-47c2-b76c-41b00bb59d02",
                 _ => throw new ArgumentException($"Unexpected environment: {environmentName}", nameof(environmentName))
             };
+
+        public async Task SignOut(User user)
+        {
+            httpClient.DefaultRequestHeaders.Remove("Cookie");
+
+            // Step 1: Initial GET to login page
+            using var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, WebRoutes.SignIn));
+            using var signInButtonResponse = await httpClient.SendAsync(signInButton);
+        }
     }
 }

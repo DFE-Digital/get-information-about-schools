@@ -184,7 +184,8 @@ stages:
   ## Deploy to dev "main" slot, which integrates with Azure Front Door (ADF) and Web Application Firewall (WAF)
   - stage: 'DeployDevSlotMain'
     displayName: 'Deploy to Dev (main slot with AFD/WAF)'
-    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/290161-qa-acceptance-tests')))
+    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
+#    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests')))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
@@ -227,7 +228,7 @@ stages:
       ## Smoke test the base URL to prove that the code has been deployed
       - template: 'pipelines/template-smoke-test-deployment.yml'
         parameters:
-          enabled: ${{ ne(variables['Build.SourceBranch'], 'refs/heads/290161-qa-acceptance-tests') }}
+          enabled: ${{ ne(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests') }}
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiDevSlotMainJobWebRoot'
           previousDeploymentJobName: 'DeployWebUiDevSlotMainJob'
@@ -244,7 +245,7 @@ stages:
       ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
       - template: 'pipelines/template-smoke-test-deployment.yml'
         parameters:
-          enabled: ${{ ne(variables['Build.SourceBranch'], 'refs/heads/290161-qa-acceptance-tests') }}
+          enabled: ${{ ne(variables['Build.SourceBranch'], 'refs/heads/294913-tokens-acceptance-tests') }}
           vmImage: 'ubuntu-latest'
           thisJobName: 'smokeTestGiasWebUiDevSlotMainJobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiDevSlotMainJob'

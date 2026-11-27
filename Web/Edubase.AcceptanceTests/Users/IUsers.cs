@@ -2,6 +2,7 @@ namespace Edubase.AcceptanceTests.Users
 {
     public interface IUsers
     {
-        User GetBackOfficeUser();
+        Task<User> GetBackOfficeUser();
+        Task RemoveUser(User user);
     }
 }

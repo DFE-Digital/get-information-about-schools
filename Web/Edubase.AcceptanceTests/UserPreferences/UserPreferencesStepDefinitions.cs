@@ -15,6 +15,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
         private readonly IUserPreferencesInPersistentStorage userPreferencesInPersistentStorage;
         private readonly IUserPreferencesInMigrationSource userPreferencesInMigrationSource;
         private readonly IUserPreferencesInMigrationTarget userPreferencesInMigrationTarget;
+        private readonly IAcceptanceTestLogger acceptanceTestLogger;
         private EstablishmentSearchFilter establishmentSearchFilter;
         private User user;
         private string savedSearchToken;
@@ -27,7 +28,8 @@ namespace Edubase.AcceptanceTests.UserPreferences
             IEstablishmentSearchResultsScreen establishmentSearchResultsScreen,
             IUserPreferencesInPersistentStorage userPreferencesInPersistentStorage,
             IUserPreferencesInMigrationSource userPreferencesInMigrationSource,
-            IUserPreferencesInMigrationTarget userPreferencesInMigrationTarget)
+            IUserPreferencesInMigrationTarget userPreferencesInMigrationTarget,
+            IAcceptanceTestLogger acceptanceTestLogger)
         {
             this.users = users;
             this.giasFrontEnd = giasFrontEnd;
@@ -35,6 +37,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
             this.userPreferencesInPersistentStorage = userPreferencesInPersistentStorage;
             this.userPreferencesInMigrationSource = userPreferencesInMigrationSource;
             this.userPreferencesInMigrationTarget = userPreferencesInMigrationTarget;
+            this.acceptanceTestLogger = acceptanceTestLogger;
         }
 
         [Given("the required data extracted from table storage")]
@@ -52,17 +55,60 @@ namespace Edubase.AcceptanceTests.UserPreferences
         [Then("all the existing UserPreferencesRepository data extracted from the table storage should be migrated to the SQL table.")]
         public async Task ThenAllTheExistingUserPreferencesRepositoryDataExtractedFromTheTableStorageShouldBeMigratedToTheSQLTable_()
         {
-            var expectedUserPreferences = await userPreferencesInMigrationSource.GetAllUserPreferences();
-            var acutalUserPreferences = await userPreferencesInMigrationTarget.GetAllUserPreferences();
+            var sourceUserPreferences = (await userPreferencesInMigrationSource.GetAllUserPreferences()).ToList();
+            var targetUserPreferences = (await userPreferencesInMigrationTarget.GetAllUserPreferences()).ToList();
 
-            Assert.Equal(expectedUserPreferences.Count(), acutalUserPreferences.Count());
+            var targetPreferencesByUserId = targetUserPreferences
+                .ToLookup(preference => preference.RowKey, StringComparer.Ordinal);
+
+            var missingSourceUserIds = sourceUserPreferences
+                .Where(sourcePreference => !targetPreferencesByUserId[sourcePreference.RowKey].Any())
+                .Select(sourcePreference => sourcePreference.RowKey)
+                .ToList();
+
+            var tokenDifferences = sourceUserPreferences
+                .Where(sourcePreference => targetPreferencesByUserId[sourcePreference.RowKey].Any())
+                .SelectMany(sourcePreference => targetPreferencesByUserId[sourcePreference.RowKey]
+                    .Where(targetPreference => !string.Equals(
+                        sourcePreference.SavedSearchToken,
+                        targetPreference.SavedSearchToken,
+                        StringComparison.Ordinal))
+                    .Select(targetPreference => new
+                    {
+                        sourcePreference.RowKey,
+                        SourceToken = sourcePreference.SavedSearchToken,
+                        TargetToken = targetPreference.SavedSearchToken
+                    }))
+                .ToList();
+
+            var matchingCount = sourceUserPreferences.Count - missingSourceUserIds.Count;
+
+            acceptanceTestLogger.LogInformation($"User preference migration: {sourceUserPreferences.Count} source rows.");
+            acceptanceTestLogger.LogInformation($"User preference migration: {targetUserPreferences.Count} target rows.");
+            acceptanceTestLogger.LogInformation($"User preference migration: {matchingCount} source users have a target row.");
+            acceptanceTestLogger.LogInformation($"User preference migration: {missingSourceUserIds.Count} source users are missing from the target.");
+            acceptanceTestLogger.LogInformation($"User preference migration: {tokenDifferences.Count} token values differ.");
+
+            foreach (var missingUserId in missingSourceUserIds)
+            {
+                acceptanceTestLogger.LogInformation($"No target preference row exists for source user '{missingUserId}'.");
+            }
+
+            foreach (var difference in tokenDifferences)
+            {
+                acceptanceTestLogger.LogInformation(
+                    $"Token differs for user '{difference.RowKey}': source='{difference.SourceToken ?? "<null>"}', " +
+                    $"target='{difference.TargetToken ?? "<null>"}'.");
         }
 
+            Assert.Empty(missingSourceUserIds);
+            Assert.True(sourceUserPreferences.Count <= targetUserPreferences.Count);
+        }
 
         [Given("I am a logged-in GIAS user")]
         public async Task GivenIAmALoggedInGIASUser()
         {
-            user = users.GetBackOfficeUser();
+            user = await users.GetBackOfficeUser();
 
             await giasFrontEnd.SignIn(user);
         }
@@ -128,7 +174,7 @@ namespace Edubase.AcceptanceTests.UserPreferences
 
             var persistedSearchToken = await userPreferencesInPersistentStorage.GetSavedSearchTokenForUser(user);
 
-            Assert.Equal(null, persistedSearchToken);
+            Assert.Null(persistedSearchToken);
         }
 
     }

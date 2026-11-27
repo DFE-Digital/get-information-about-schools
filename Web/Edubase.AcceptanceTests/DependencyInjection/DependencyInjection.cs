@@ -3,6 +3,7 @@ using Edubase.AcceptanceTests.Apis;
 using Edubase.AcceptanceTests.Configuration;
 using Edubase.AcceptanceTests.Establishments;
 using Edubase.AcceptanceTests.GiasFrontEnd;
+using Edubase.AcceptanceTests.Repositories;
 using Edubase.AcceptanceTests.SigninAuthorities;
 using Edubase.AcceptanceTests.UserPreferences;
 using Edubase.AcceptanceTests.Users;
@@ -24,11 +25,12 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddAcceptanceTestLogging();
             services.AddSingleton(settings);
 
-            services.AddHardCodedUsers();
+            //services.AddHardCodedUsers();
+            services.AddSqlServer(settings);
+            services.AddUsersInSqlServer(settings);
             services.AddEstablishmentsFromGiasFrontEnd();
             services.AddGiasFrontEnd(settings);
             services.AddUserPreferencesInPersistentStorage(settings);
-
 
             return services;
         }
@@ -43,6 +45,17 @@ namespace Edubase.AcceptanceTests.DependencyInjection
             services.AddScoped<IUsers>(sp => new UsersFromHardCodedValues(sp.GetRequiredService<Settings>().Environment));
         }
 
+        private static void AddSqlServer(this ServiceCollection services, Settings settings)
+        {
+            services.AddDbContext<AcceptanceTestsDbContext>(options => options.UseSqlServer(settings.ConnectionStrings.AzureSqlServer));
+        }
+
+        private static void AddUsersInSqlServer(this ServiceCollection services, Settings settings)
+        {
+            services.AddScoped<IUsers, UsersInSqlServer>(sp =>
+                new UsersInSqlServer(sp.GetRequiredService<AcceptanceTestsDbContext>(), sp.GetRequiredService<IAcceptanceTestLogger>()));
+        }
+
         private static void AddEstablishmentsFromGiasFrontEnd(this ServiceCollection services)
         {
             services.AddScoped<IEstablishments, EstablishmentsFromGiasFrontEnd>();
@@ -52,20 +65,17 @@ namespace Edubase.AcceptanceTests.DependencyInjection
         private static void AddUserPreferencesInPersistentStorage(this ServiceCollection services, Settings settings)
         {
             services.AddScoped<IUserPreferencesInMigrationSource>(sp => new UserPreferencesInAzureTableStorage(settings.ConnectionStrings.AzureTableStorage));
-            services.AddDbContext<UserPreferencesDbContext>(options => options.UseSqlServer(settings.ConnectionStrings.AzureSqlServer));
-            services.AddScoped<IUserPreferencesInMigrationTarget, UserPreferencesInSQLServer>();
+            services.AddScoped<IUserPreferencesInMigrationTarget, UserPreferencesInSqlServer>();
 
             if (!settings.FeatureFlags.UserPreferencesMigrated)
             {
-                var x = services.BuildServiceProvider().GetRequiredService<IUserPreferencesInMigrationSource>();
-
-                services.AddScoped<IUserPreferencesInPersistentStorage>(sp => x);
+                services.AddScoped<IUserPreferencesInPersistentStorage>(sp =>
+                    sp.GetRequiredService<IUserPreferencesInMigrationSource>());
             }
             else
             {
-                var x = services.BuildServiceProvider().GetRequiredService<IUserPreferencesInMigrationTarget>();
-
-                services.AddScoped<IUserPreferencesInPersistentStorage>(sp => x);
+                services.AddScoped<IUserPreferencesInPersistentStorage>(sp =>
+                    sp.GetRequiredService<IUserPreferencesInMigrationTarget>());
             }
         }
 

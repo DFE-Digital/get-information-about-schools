@@ -143,5 +143,14 @@ namespace Edubase.AcceptanceTests.SigninAuthorities
                 throw new InvalidOperationException($"Expected a sign-in redirect, received {(int) response.StatusCode} from {response.RequestMessage?.RequestUri}.");
             return response.Headers.Location;
         }
+
+        public async Task SignOut(User user)
+        {
+            httpClient.DefaultRequestHeaders.Remove("Cookie");
+
+            // Step 1: Initial GET to login page
+            using var signInButton = new HttpRequestMessage(HttpMethod.Get, new Uri(httpClient.BaseAddress!, WebRoutes.SignIn));
+            using var signInButtonResponse = await httpClient.SendAsync(signInButton);
+        }
     }
 }

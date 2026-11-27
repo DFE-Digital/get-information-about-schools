@@ -88,6 +88,7 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
         public static string PredefinedLASet => "/independent-schools/predefined-local-authority-sets";
         public static string Privacy => "/Privacy";
         public static string SignIn => "/Account/Login?returnUrl=%2F";
+        public static string SignOut => "/Account/Logoff";
         public static string Search => "/Search";
         public static string SearchEstablishment => "/Search?SelectedTab=Establishments";
         public static string SearchEstablishmentGroup => "/Search?SelectedTab=Groups";

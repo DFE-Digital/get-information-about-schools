@@ -91,5 +91,10 @@ namespace Edubase.AcceptanceTests.GiasFrontEnd
 
             response.EnsureSuccessStatusCode();
         }
+
+        public async Task SignOut(User user)
+        {
+            await signInAuthority.SignOut(user);
+        }
     }
 }
